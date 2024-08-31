@@ -247,56 +247,67 @@
 
 
 {{-- Edit visitor Information --}}
+{{-- Batch Edit Visitor Information --}}
 @foreach($latestVisitors as $visit)
 <div class="modal fade" id="updateVisitor-{{ $visit->id }}" tabindex="-1" aria-labelledby="updateVisitorModalLabel-{{ $visit->id }}" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateVisitorModalLabel-{{ $visit->id }}">Edit Visitor</h5>
+                <h5 class="modal-title" id="updateVisitorModalLabel-{{ $visit->id }}">Edit Visitor Entries</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('visitor.update', $visit->id) }}" method="POST">
+                <form action="{{ route('visitor.update') }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="first_name">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ $visit->first_name }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="middle_name">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ $visit->middle_name }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="last_name">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ $visit->last_name }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="person_to_visit">Person to Visit & Company:</label>
-                            <input type="text" class="form-control" id="person_to_visit" name="person_to_visit" value="{{ $visit->person_to_visit }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="purpose">Purpose:</label>
-                            <input type="text" class="form-control" id="purpose" name="purpose" value="{{ $visit->purpose }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="id_type">ID Type:</label>
-                            <select class="form-select" id="id_type" name="id_type" required>
-                                <option value="{{$visit->id_type}}" selected disabled>{{$visit->id_type}}</option>
-                                <option value="Student ID">Student ID</option>
-                                <option value="Driver License ID">Driver License ID</option>
-                                <option value="National ID">National ID</option>
-                                <option value="Employee ID">Employee ID</option>
-                                <option value="PassPort">PassPort</option>
-                                <option value="Other">Other</option>
-                            </select>                            </div>
-                    </div>
-                    <input type="hidden" name="time_in" id="time_in_{{ $visit->id }}" value="{{ $visit->time_in }}">
-                    <input type="hidden" name="time_in" id="time_in_{{ $visit->id }}" value="{{ $visit->time_out }}">
-                        <div class="d-grid gap-1 col-2 pt-2 mx-auto">
-                            <button type="submit" class="btn text-white" style="background-color: #082bca;">Update</button>
-                        </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Initial</th>
+                                <th>Last Name</th>
+                                <th>Person to Visit & Company</th>
+                                <th>Purpose</th>
+                                <th>ID Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($allVisitors->where('last_name', $visit->last_name)->where('first_name', $visit->first_name)->where('middle_name', $visit->middle_name)->where('date', $visit->date) as $entry)
+                            <tr>
+                                <input type="hidden" name="entries[{{ $entry->id }}][id]" value="{{ $entry->id }}">
+                                <td>
+                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][first_name]" value="{{ $entry->first_name }}">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][middle_name]" value="{{ $entry->middle_name }}">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][last_name]" value="{{ $entry->last_name }}">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][person_to_visit]" value="{{ $entry->person_to_visit }}">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][purpose]" value="{{ $entry->purpose }}">
+                                </td>
+                                <td>
+                                    <select class="form-select" name="entries[{{ $entry->id }}][id_type]" required>
+                                        <option value="{{ $entry->id_type }}" selected>{{ $entry->id_type }}</option>
+                                        <option value="Student ID">Student ID</option>
+                                        <option value="Driver License ID">Driver License ID</option>
+                                        <option value="National ID">National ID</option>
+                                        <option value="Employee ID">Employee ID</option>
+                                        <option value="PassPort">PassPort</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -304,6 +315,7 @@
     </div>
 </div>
 @endforeach
+
 
 <script src="{{ asset('js/visitor_admin.js') }}"></script>
 

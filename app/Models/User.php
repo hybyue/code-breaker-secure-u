@@ -82,6 +82,9 @@ class User extends Authenticatable implements CanResetPassword
         return $this->hasMany(Parking::class);
     }
 
+    public function  violation(){
+        return $this->hasMany(Violation::class);
+    }
     public function isOnline()
     {
         return FacadesCache::has('user-is-online-' . $this->id);

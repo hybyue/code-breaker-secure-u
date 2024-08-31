@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Parking;
+use App\Models\Violation;
 use Illuminate\Http\Request;
 use App\Models\Visitor;
 use Illuminate\Support\Facades\Auth;
@@ -280,24 +281,24 @@ public function index(Request $request)
 
 public function filterVisitorAdmin(Request $request)
 {
-    $query = Visitor::query();
+    $query = Visitor::select('visitors.*')
+        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id');
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+        $query->whereDate('visitors.created_at', '>=', $request->start_date)
+              ->whereDate('visitors.created_at', '<=', $request->end_date);
     }
 
-    $latestVisitors = Visitor::select('visitors.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('visitors.created_at', '>=', $request->start_date)
-                         ->whereDate('visitors.created_at', '<=', $request->end_date);
-            }
-        })
-        ->paginate(10);
+    $latestVisitors = $query->paginate(10);
 
-    $allVisitors = $query->get();
+    $allVisitors = Visitor::query();
+
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $allVisitors->whereDate('created_at', '>=', $request->start_date)
+                    ->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    $allVisitors = $allVisitors->get();
 
     return view('admin.visitor_admin', compact('latestVisitors', 'allVisitors'));
 }
@@ -344,13 +345,31 @@ public function edit(string $id)
 /**
  * Update the specified resource in storage.
  */
-public function update(Request $request, string $id)
+public function update(Request $request)
 {
-    $visitors = Visitor::findOrFail($id);
+    $request->validate([
+        'entries.*.id' => 'required|exists:visitors,id',
+        'entries.*.first_name' => 'required|string|max:255',
+        'entries.*.middle_name' => 'nullable|string|max:255',
+        'entries.*.last_name' => 'required|string|max:255',
+        'entries.*.person_to_visit' => 'required|string|max:255',
+        'entries.*.purpose' => 'required|string|max:255',
+        'entries.*.id_type' => 'required|string|max:255',
+    ]);
 
-    $visitors->update($request->all());
+    foreach ($request->entries as $entry) {
+        $visitor = Visitor::findOrFail($entry['id']);
+        $visitor->update([
+            'first_name' => $entry['first_name'],
+            'middle_name' => $entry['middle_name'],
+            'last_name' => $entry['last_name'],
+            'person_to_visit' => $entry['person_to_visit'],
+            'purpose' => $entry['purpose'],
+            'id_type' => $entry['id_type'],
+        ]);
+    }
 
-    return redirect()->route('admin.visitor_admin')->with('success', 'visitor updated successfully');
+    return redirect()->back()->with('success', 'Visitor entries updated successfully.');
 }
 
 
@@ -475,6 +494,67 @@ public function updateVisitorSub(Request $request, string $id)
     return redirect()->route('sub-admin.visitor')->with('success', 'visitor updated successfully');
 }
 
+public function violationView(Request $request)
+{
+    // Initial query for violations
+    $query = Violation::query();
+
+    // Apply date filters if provided
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $query->whereDate('created_at', '>=', $request->start_date)
+              ->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    // Select latest violation per student
+    $violations = Violation::select('violations.*')
+        ->join(DB::raw('(SELECT MAX(id) as id FROM violations GROUP BY student_no) as latest'), 'violations.id', '=', 'latest.id')
+        ->where(function ($subQuery) use ($request) {
+            if ($request->filled('start_date') && $request->filled('end_date')) {
+                $subQuery->whereDate('violations.created_at', '>=', $request->start_date)
+                         ->whereDate('violations.created_at', '<=', $request->end_date);
+            }
+        })
+        ->orderBy('violations.created_at', 'desc')
+        ->paginate(10);
+
+    // Get all violations grouped by student_no
+    $allViolations = $query->get()->groupBy('student_no');
+
+    // Pass both variables to the view
+    return view('admin.violation', compact('violations', 'allViolations'));
+}
+
+
+
+public function store_violation(Request $request)
+{
+    $request->validate([
+        'student_no' => 'required|string|max:255',
+        'first_name' => 'required|string|max:255',
+        'middle_initial' => 'nullable|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'course' => 'required|string|max:255',
+        'violation_type' => 'required|string|max:255',
+        'date' => 'required|date',
+    ]);
+
+    $data = [
+        'user_id' => Auth::id(),
+        'student_no' => $request->student_no,
+        'first_name' => $request->first_name,
+        'middle_initial' => $request->middle_initial,
+        'last_name' => $request->last_name,
+        'course' => $request->course,
+        'violation_type' => $request->violation_type,
+        'date' => $request->date,
+    ];
+
+
+
+    Violation::create($data);
+
+    return redirect()->route('admin.violation')->with('success', 'Vehicle details added successfully.');
+}
 
 }
 

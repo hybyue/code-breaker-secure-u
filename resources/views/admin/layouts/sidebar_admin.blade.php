@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Document')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<link rel="shortcut icon" href="http://example.com/favicon.ico" />
@@ -21,6 +22,7 @@
     border-left: 2px solid #3b7ddd;
     }
     </style>
+    @livewireStyles
 </head>
 <body>
 
@@ -41,7 +43,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-            </li>
+
                     <li class="sidebar-item">
                         <a href="{{ route('admin.employee')}}" class="sidebar-link {{ Route::is('admin.employee') ? 'active' : '' }}">
                             <i class="bi bi-person-circle"></i>
@@ -67,7 +69,7 @@
                                         </a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="{{ route('violation')}}" class="sidebar-link {{ Route::is('violation') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.violation')}}" class="sidebar-link {{ Route::is('admin.violation') ? 'active' : '' }}">
                                             <i class="bi bi-file-earmark-person"></i>
                                             <span>Violation</span>
                                         </a>
@@ -85,7 +87,7 @@
                                         </a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="{{route('admin.event_admin')}}" class="sidebar-link {{ Route::is('admin.event_admin') ? 'active' : '' }}">
+                                        <a href="{{route('admin.events.event_admin')}}" class="sidebar-link {{ Route::is('admin.events.event_admin') ? 'active' : '' }}">
                                             <i class="bi bi-calendar-week-fill"></i>
                                             <span>Events</span>
                                         </a>
@@ -102,6 +104,7 @@
         <div class="main">
             @yield('content')
         </div>
+
     </div>
     {{-- <script src="{{ asset('js/sidebar.js') }}"></script> --}}
     <script>
@@ -132,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 

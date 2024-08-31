@@ -11,6 +11,7 @@ use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Test\Constraint\ResponseFormatSame;
 
 class EventController extends Controller
 {
@@ -85,13 +86,15 @@ class EventController extends Controller
         $event->user_id = Auth::id();
         $event->save();
 
-        return redirect()->back()->with('success', 'Event added successfully.');
-    }
+        return response()->json([
+            'status' => 'success'
+        ]);
+          }
 
     public function eventAdmin()
     {
-        $events = Event::orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.event_admin', compact('events'));
+        $events = Event::latest()->paginate(10);
+        return view('admin.events.event_admin', compact('events'));
     }
 
     public function showEvents()
@@ -119,12 +122,34 @@ class EventController extends Controller
 
     public function updateEventsAdmin(Request $request, string $id)
     {
-        $events = Event::findOrFail($id);
+     $event = Event::find($id);
 
-        $events->update($request->all());
+         // Validate the incoming data
+    $request->validate([
+        'up_title' => 'required|string|max:255',
+        'up_description' => 'required|string',
+        'up_date_start' => 'required|date',
+        'up_date_end' => 'nullable|date|after_or_equal:up_date_start',
+    ]);
 
-        return redirect()->route('admin.event_admin')->with('success', 'Lost and Found updated successfully');
+    // Find the event by ID
+
+    if (!$event) {
+        return response()->json(['status' => 'error', 'message' => 'Event not found'], 404);
     }
+
+    // Update the event
+    $event->title = $request->input('up_title');
+    $event->description = $request->input('up_description');
+    $event->date_start = $request->input('up_date_start');
+    $event->date_end = $request->input('up_date_end');
+
+    // Save the changes to the database
+    $event->save();
+        return response()->json([
+            'status' => 'success'
+        ]);
+          }
 
 
     public function destroy_events(string $id)
@@ -133,7 +158,7 @@ class EventController extends Controller
 
         $events->delete();
 
-        return redirect()->route('admin.event_admin')->with('success', 'Events deleted successfully');
+        return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
     }
 
 

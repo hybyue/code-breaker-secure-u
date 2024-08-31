@@ -118,10 +118,6 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         return view('admin.sched_admin');
     })->name('sched_admin');
 
-    Route::get('/sched_admin', function () {
-        return view('admin.sched_admin');
-    })->name('sched_admin');
-
     Route::get('/employee', function () {
         return view('admin.employee');
     })->name('employee');
@@ -158,11 +154,11 @@ Route::get('/admin/filter_pass_slip_admin', [GlobalController::class, 'filterPas
 
 
 
-Route::get('admin/event', [EventController::class, 'eventAdmin'])->name('admin.event_admin');
-Route::post('admin/event', [EventController::class, 'store_adminEvent'])->name('event.store_admin');
+Route::get('/admin/event', [EventController::class, 'eventAdmin'])->name('admin.events.event_admin');
+Route::post('/add-event', [EventController::class, 'store_adminEvent'])->name('event.store_admin');
 Route::get('/admin', [EventController::class, 'showEvents'])->name('admin.dashboard');
-Route::put('/event/update/{id}', [EventController::class, 'updateEventsAdmin'])->name('update.events_admin');
-Route::delete('/event/archive/{id}', [EventController::class, 'destroy_events'])->name('archive.events');
+Route::put('/admin/event/update/{id}', [EventController::class, 'updateEventsAdmin'])->name('update.events_admin');
+Route::delete('/admin/archive_events/{id}', [EventController::class, 'destroy_events']);
 
 
 // Route::get('/admin/employee', [EmployeeController::class, 'index_employee'])->name('admin.employee');
@@ -180,11 +176,11 @@ Route::delete('/event/archive/{id}', [EventController::class, 'destroy_events'])
 Route::resource('/admin/visitor', TeacherController::class)->names([
     'index' => 'admin.visitor_admin',
     'store' => 'visitor.store',
-    'update' => 'visitor.update',
 ]);
 
 Route::get('/filter_visitor_admin', [TeacherController::class, 'filterVisitorAdmin']);
 Route::post('/admin/visitor/{id}', [TeacherController::class, 'checkoutAdmin'])->name('visitor.checkout_admin');
+Route::post('/admin/visitor/update', [TeacherController::class, 'update'])->name('visitor.update');
 Route::get('admin/search_visitor', [TeacherController::class, 'searchVisitors'])->name('visitor.search');
 
 
@@ -214,6 +210,9 @@ Route::get('admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor
 Route::get('admin/generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-pass');
 Route::get('admin/generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->name('pdf.generate-lost');
 
+
+Route::get('admin/violation', [TeacherController::class, 'violationView'])->name('admin.violation');
+Route::post('admin/violation', [TeacherController::class, 'store_violation'])->name('admin.store_violation');
 });
 
 

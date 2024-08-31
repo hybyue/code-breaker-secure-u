@@ -77,7 +77,23 @@
 
                                                 </div>
                                             </td>
+
+                                            @else
+                                            <td>
+                                                {{ $user->name }}
+                                            </td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>No data </td>
+                                            <td>
+                                                @if(Cache::has('user-is-online-' . $user->id))
+                                                    <span class="text-success">Online</span>
+                                                @else
+                                                    <span class="text-secondary">Offline</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center"> No Employee Information</td>
                                             @endif
+
                                         </tr>
                                     @endforeach
 

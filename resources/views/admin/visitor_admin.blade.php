@@ -246,7 +246,6 @@
 
 
 
-{{-- Edit visitor Information --}}
 {{-- Batch Edit Visitor Information --}}
 @foreach($latestVisitors as $visit)
 <div class="modal fade" id="updateVisitor-{{ $visit->id }}" tabindex="-1" aria-labelledby="updateVisitorModalLabel-{{ $visit->id }}" aria-hidden="true">

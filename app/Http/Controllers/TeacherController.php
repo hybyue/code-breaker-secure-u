@@ -433,7 +433,7 @@ public function filterVisitor(Request $request)
 
     $allVisitors = $query->get();
 
-    return view('sub-admin.visitor', compact('latestVisitors', 'allVisitors'));
+    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors'));
 }
 
 
@@ -462,7 +462,9 @@ public function store_visit(Request $request)
 
     $visitor->save();
 
-    return redirect()->route('sub-admin.visitor');
+    return response()->json([
+        'status' => 'success', 'Visitor added successfully'
+    ]);
 }
 
 public function checkout($id)
@@ -471,7 +473,7 @@ public function checkout($id)
     $visitor->time_out = now()->format('H:i:s');
     $visitor->save();
 
-    return redirect()->route('sub-admin.visitor')->with('success', 'Time out recorded successfully.');
+    return redirect()->route('sub-admin.visitors.visitor')->with('success', 'Time out recorded successfully.');
 }
 
 public function searchVisitor(Request $request)
@@ -484,15 +486,17 @@ public function searchVisitor(Request $request)
     return response()->json($visitors);
 }
 
-//TODO: Fix error not showing modal
 public function updateVisitorSub(Request $request, string $id)
 {
+
     $visitors = Visitor::findOrFail($id);
 
     $visitors->update($request->all());
 
-    return redirect()->route('sub-admin.visitor')->with('success', 'visitor updated successfully');
+
+    return redirect()->back()->with('success', 'Visitor updated successfully');
 }
+
 
 public function violationView(Request $request)
 {

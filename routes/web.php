@@ -53,10 +53,10 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 Route::get('/home', [EventController::class, 'showEvent'])->name('sub-admin.dashboard');
 
 
-Route::get('sub-admin/visitor', [TeacherController::class, 'new_visitor'])->name('sub-admin.visitor');
-Route::post('sub-admin/store', [TeacherController::class, 'store_visit'])->name('sub-admin.store');
+Route::get('sub-admin/visitor', [TeacherController::class, 'new_visitor'])->name('sub-admin.visitors.visitor');
+Route::post('/add-visitor', [TeacherController::class, 'store_visit'])->name('sub-admin.store');
 Route::get('sub-admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor'])->name('pdf.generate-visitor');
-Route::put('sub-admin/visitor/update/{id}', [TeacherController::class, 'updateVisitorSub'])->name('update.visitorSub');
+Route::put('/sub-admin/visitor/update/{id}', [TeacherController::class, 'updateVisitorSub'])->name('update.visitorSub');
 Route::get('/filter_visitor', [TeacherController::class, 'filterVisitor']);
 Route::post('sub-admin/visitor/{id}/checkout', [TeacherController::class, 'checkout'])->name('visitor.checkout');
 Route::get('sub-admin/search_visitor', [TeacherController::class, 'searchVisitor'])->name('visitor.search');

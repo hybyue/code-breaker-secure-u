@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Document')</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<link rel="shortcut icon" href="http://example.com/favicon.ico" />
 	<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
     <link href="{{  asset('css/sidebar_admin.css')}}" rel="stylesheet" >
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+
     @stack('styles')
     @stack('scripts')
     <style>

@@ -34,25 +34,8 @@
                 $('#addNewEventModal').modal('hide');
                 $('#addEventForm')[0].reset();
                 $('.table').load(location.href + ' .table');
-                     const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'bottom-right',
-                    iconColor: 'white',
-                    customClass: {
-                        popup: 'colored-toast',
-                    },
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                    })
 
-                    Toast.fire({
-                        icon: 'success',
-                        title: "Event Added",
-                    })
-
-
-                $('body').removeClass('modal-open');
+                $('body').removeClass('modal-open'); // Removes the extra scrollbar and backdrop from the body
                 $('.modal-backdrop').remove();
               }
             },error:function(err){
@@ -65,7 +48,17 @@
            })
 
        });
+});
 
+   </script>
+
+
+   <script>
+    $(document).ready(function () {
+       function convertDateFormat(date) {
+        const [day, month, year] = date.split('-');
+        return `${year}-${month}-${day}`;
+    }
 
        $(document).on('click', '.update_event', function(e){
     e.preventDefault();
@@ -95,24 +88,6 @@
             $('.table').load(location.href + ' .table');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'bottom-right',
-                iconColor: 'white',
-                customClass: {
-                    popup: 'colored-toast',
-                },
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                })
-
-                Toast.fire({
-                    icon: 'success',
-                    title: "Event Updated",
-                })
-
         }
     },
     error: function(err){
@@ -144,24 +119,6 @@
 				success:function(result)
 				{
                     $("#"+result['tr']).slideUp("slow");
-
-
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'bottom-right',
-                    iconColor: 'white',
-                    customClass: {
-                    popup: 'colored-toast',
-                    },
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                    })
-
-                    Toast.fire({
-                        icon:'success',
-                        title: 'Event Deleted',
-                    });
 				}
 			});
 		}

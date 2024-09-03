@@ -1,9 +1,34 @@
 @extends('layouts.sidebar')
 
 @section('title', 'Visitors')
+<meta name="csrf-token" content="{{ csrf_token()}}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('content')
 
+
+<div class="container my-3">
+    @if (session('success'))
+
+    <script>
+          const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-right',
+        iconColor: 'white',
+        customClass: {
+            popup: 'colored-toast',
+        },
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+        })
+        Toast.fire({
+            icon: 'success',
+            title: "{{ session('success') }}",
+        })
+</script>
+    @endif
+</div>
     <div class="row">
         <div class="col-md-6">
             <h4>Visitor</h4>
@@ -57,7 +82,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <table id="visitorTable" class="same-height-table table table-bordered table-rounded table-striped text-center">
+                <table id="visitorTable" class="table table-bordered table-rounded table-striped text-center same-height-table ">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -104,6 +129,7 @@
                                     <div class="mx-1">
                                         <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitorSub-{{ $visit->id }}"><i class="bi bi-pencil-square"></i></a>
                                     </div>
+
                                 </div>
                             </td>
                         </tr>
@@ -139,7 +165,7 @@
      {{-- Modal for showing all entries of a visitor --}}
      @foreach ($latestVisitors as $visit)
      <div class="modal fade" id="viewEntries-{{ $visit->id }}" tabindex="-1" aria-labelledby="viewEntriesLabel-{{ $visit->id }}" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="viewEntriesLabel-{{ $visit->id }}">Visitor Entries</h5>
@@ -155,6 +181,7 @@
                                 <th>ID Type</th>
                                 <th>Time in</th>
                                 <th>Time out</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,6 +193,9 @@
                                 <td>{{ $entry->id_type }}</td>
                                 <td>{{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</td>
                                 <td>{{ $entry->time_out ? \Carbon\Carbon::parse($entry->time_out)->format('g:i A') : 'N/A' }}</td>
+                                <td>
+                                <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitorSub-{{ $visit->id }}"><i class="bi bi-pencil-square"></i></a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -176,130 +206,52 @@
     </div>
     @endforeach
 
+    @include('sub-admin.visitors.add_visitor')
+    @include('sub-admin.visitors.update_visitor')
+    @include('sub-admin.visitors.visitor_js')
 
-    {{-- Add Visitor --}}
-    <div class="modal fade" id="addVisitorModal" tabindex="-1" aria-labelledby="addVisitorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addVisitorModalLabel">Add Visitor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="visitorForm" action="{{ route('sub-admin.store') }}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12 form-group">
-                                <label for="search_visitor">Search Visitor:</label>
-                                <input type="text" class="form-control" id="search_visitor" placeholder="Search by name" onkeyup="searchVisitor()">
-                                <div id="visitorSuggestions" class="list-group mt-2"></div>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="last_name">Last Name:</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="first_name">First Name:</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="middle_name">Middle Initial:</label>
-                                <input type="text" class="form-control" id="middle_name" placeholder="Optional" name="middle_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="person_to_visit">Person to Visit & Company:</label>
-                                <input type="text" class="form-control" id="person_to_visit" name="person_to_visit" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="purpose">Purpose:</label>
-                                <textarea class="form-control" id="purpose" name="purpose" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="id_type">ID Type:</label>
-                                <select class="form-select" id="id_type" name="id_type" required>
-                                    <option value="" selected disabled>Select ID Type</option>
-                                    <option value="Student ID">Student ID</option>
-                                    <option value="Driver License ID">Driver License ID</option>
-                                    <option value="National ID">National ID</option>
-                                    <option value="Employee ID">Employee ID</option>
-                                    <option value="PassPort">PassPort</option>
-                                    <option value="Other">Other</option>
-                                </select>                            </div>
-                        </div>
-                        <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn text-white" style="background-color: #0B9B19">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    {{-- Edit Visitor --}}
-    @foreach ($latestVisitors as $visitor)
-    <div class="modal fade" id="updateVisitorSub-{{ $visitor->id }}" tabindex="-1" aria-labelledby="updateVisitorSubLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateVisitorSubLabel">Update Visitor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('update.visitorSub', $visitor->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="row">
-                            <div class="col-md-4 form-group">
-                                <label for="last_name_{{ $visitor->id }}">Last Name:</label>
-                                <input type="text" class="form-control" id="last_name_{{ $visitor->id }}" name="last_name" value="{{ $visitor->last_name }}" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="first_name_{{ $visitor->id }}">First Name:</label>
-                                <input type="text" class="form-control" id="first_name_{{ $visitor->id }}" name="first_name" value="{{ $visitor->first_name }}" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="middle_name_{{ $visitor->id }}">Middle Initial:</label>
-                                <input type="text" class="form-control" id="middle_name_{{ $visitor->id }}" name="middle_name" value="{{ $visitor->middle_name }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="person_to_visit_{{ $visitor->id }}">Person to Visit & Company:</label>
-                                <input type="text" class="form-control" id="person_to_visit_{{ $visitor->id }}" name="person_to_visit" value="{{ $visitor->person_to_visit }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="purpose_{{ $visitor->id }}">Purpose:</label>
-                                <textarea class="form-control" id="purpose_{{ $visitor->id }}" name="purpose" required>{{ $visitor->purpose }}</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="id_type">ID Type:</label>
-                                <select class="form-select" id="id_type" name="id_type" required>
-                                    <option value="{{$visitor->id_type}}" selected disabled>{{$visitor->id_type}}</option>
-                                    <option value="Student ID">Student ID</option>
-                                    <option value="Driver License ID">Driver License ID</option>
-                                    <option value="National ID">National ID</option>
-                                    <option value="Employee ID">Employee ID</option>
-                                    <option value="PassPort">PassPort</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                              </div>
-                        </div>
-                        <input type="hidden" name="time_in" id="time_in_{{ $visitor->id }}" value="{{ $visitor->time_in }}">
-                        <input type="hidden" name="time_in" id="time_in_{{ $visitor->id }}" value="{{ $visitor->time_out }}">
-
-                        <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn btn-primary text-white" ">Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-
-<script src="{{ asset('js/visitor_sub.js') }}"></script>
+    <script src="{{ asset('js/visitor_sub.js') }}"></script>
 
 <style>
     .same-height-table td{
         vertical-align: middle;
     }
+
+    .colored-toast.swal2-icon-success {
+  background-color: #3c9b05 !important;
+}
+
+.colored-toast.swal2-icon-error {
+  background-color: #b10b0b !important;
+}
+
+.colored-toast.swal2-icon-warning {
+  background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+  background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+  background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+  color: white;
+}
+
+.colored-toast .swal2-close {
+  color: white;
+}
+
+.colored-toast .swal2-html-container {
+  color: white;
+}
+
+.modal-open {
+    overflow: scroll;
+}
 </style>
 @endsection

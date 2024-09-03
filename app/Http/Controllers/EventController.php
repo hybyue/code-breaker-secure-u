@@ -120,8 +120,9 @@ class EventController extends Controller
         return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalPassSlips', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon'));
     }
 
-    public function updateEventsAdmin(Request $request, string $id)
+    public function updateEventsAdmin(Request $request, $id)
     {
+
      $event = Event::find($id);
 
          // Validate the incoming data
@@ -131,13 +132,6 @@ class EventController extends Controller
         'up_date_start' => 'required|date',
         'up_date_end' => 'nullable|date|after_or_equal:up_date_start',
     ]);
-
-    // Find the event by ID
-
-    if (!$event) {
-        return response()->json(['status' => 'error', 'message' => 'Event not found'], 404);
-    }
-
     // Update the event
     $event->title = $request->input('up_title');
     $event->description = $request->input('up_description');
@@ -149,6 +143,7 @@ class EventController extends Controller
         return response()->json([
             'status' => 'success'
         ]);
+
           }
 
 

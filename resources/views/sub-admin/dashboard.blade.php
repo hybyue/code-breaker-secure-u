@@ -12,7 +12,7 @@
 
     <div class="row mb-4">
         <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.visitor') }}'">
+            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.visitors.visitor') }}'">
                 <div class="card-body d-flex justify-content-between">
                     <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
                     <div class="container">

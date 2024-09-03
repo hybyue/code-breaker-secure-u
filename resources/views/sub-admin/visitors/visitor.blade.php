@@ -162,7 +162,7 @@
         </div>
     </div>
 
-     {{-- Modal for showing all entries of a visitor --}}
+        {{-- Modal for showing all entries of a visitor --}}
      @foreach ($latestVisitors as $visit)
      <div class="modal fade" id="viewEntries-{{ $visit->id }}" tabindex="-1" aria-labelledby="viewEntriesLabel-{{ $visit->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -212,7 +212,6 @@
 
 
     <script src="{{ asset('js/visitor_sub.js') }}"></script>
-
 <style>
     .same-height-table td{
         vertical-align: middle;
@@ -250,8 +249,5 @@
   color: white;
 }
 
-.modal-open {
-    overflow: scroll;
-}
 </style>
 @endsection

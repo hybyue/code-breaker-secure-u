@@ -3,7 +3,6 @@
 @section('title', 'Visitors')
 
 @section('content')
-
 <div class="row mt-4 p-2">
     <div class="col-md-6">
         <h4>Visitor</h4>
@@ -57,7 +56,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <table id="visitorTable" class="table table-light table-bordered table-responsive table-rounded table-striped">
+                <table id="visitorTable" class="table table-light table-bordered table-responsive table-rounded table-striped same-height-table">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -72,7 +71,7 @@
                     </thead>
                     <tbody>
                         @forelse($latestVisitors as $visit)
-                        <tr>
+                        <tr id="tr_{{$visit->id}}">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                             <td>{{ $visit->last_name }},  {{$visit->first_name }} {{ $visit->middle_name }}. </td>
                             <td>{{ $visit->person_to_visit }}</td>
@@ -101,11 +100,10 @@
                                     <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitor-{{ $visit->id }}"><i class="bi bi-pencil-square"></i></a>
                                     </div>
                                     <div class="mx-1">
-                                    <form action="{{ route('visitor.destroy', $visit->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure you want to Archive?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm text-white" style="background-color: #920606"><i class="bi bi-archive-fill"></i></button>
-                                    </form>
+                                        <a href="javascript:void(0)" onclick="deleteVisitor({{$visit->id}})" class="btn btn-sm text-white" style="background-color: #920606">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </a>
+
                                 </div>
                                 </div>
                             </td>
@@ -138,6 +136,11 @@
             </nav>
         </div>
     </div>
+
+    @include('admin.visitors.add_visitor')
+    @include('admin.visitors.update_visitor')
+    @include('admin.visitors.visitor_js')
+
 
       {{-- Modal for showing all entries of a visitor --}}
       @foreach ($latestVisitors as $visit)
@@ -180,142 +183,46 @@
      @endforeach
 
 
-    {{-- add visitor --}}
-    <div class="modal fade" id="addVisitorModal" tabindex="-1" aria-labelledby="addVisitorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addVisitorModalLabel">Add New Visitor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('visitor.store') }}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12 form-group">
-                                <label for="search_visitor">Search Visitor:</label>
-                                <input type="text" class="form-control" id="search_visitor" placeholder="Search by name" onkeyup="searchVisitors()">
-                                <div id="visitorSuggestions" class="list-group mt-2"></div>
-                            </div>
-                        <div class="form-group">
-                            <label for="first_name">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="middle_name">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name">
-                        </div>
-                        <div class="form-group">
-                            <label for="last_name">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="person_to_visit">Person to Visit & Company:</label>
-                            <input type="text" class="form-control" id="person_to_visit" name="person_to_visit" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="purpose">Purpose:</label>
-                            <input type="text" class="form-control" id="purpose" name="purpose" required>
-                        </div>
-                        <input type="hidden" name="time_in" id="time_in" value="{{ now() }}">
-                        <div class="form-group">
-                            <label for="id_type">ID Type:</label>
-                            <select class="form-select" id="id_type" name="id_type" required>
-                                <option value="" selected disabled>Select ID Type</option>
-                                <option value="Student ID">Student ID</option>
-                                <option value="Driver License ID">Driver License ID</option>
-                                <option value="National ID">National ID</option>
-                                <option value="Employee ID">Employee ID</option>
-                                <option value="PassPort">PassPort</option>
-                                <option value="Other">Other</option>
-                            </select>
-                          </div>
-                        {{-- <div class="form-group">
-                            <label for="remarks">Remarks:</label>
-                            <input type="text" class="form-control" id="remarks" name="remarks">
-                        </div> --}}
-                        <div class="d-grid gap-1 col-2 pt-2 mx-auto">
-                            <button type="submit" class="btn text-white" style="background-color: #0B9B19;">Save</button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-{{-- Batch Edit Visitor Information --}}
-@foreach($latestVisitors as $visit)
-<div class="modal fade" id="updateVisitor-{{ $visit->id }}" tabindex="-1" aria-labelledby="updateVisitorModalLabel-{{ $visit->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateVisitorModalLabel-{{ $visit->id }}">Edit Visitor Entries</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('visitor.update') }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Middle Initial</th>
-                                <th>Last Name</th>
-                                <th>Person to Visit & Company</th>
-                                <th>Purpose</th>
-                                <th>ID Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($allVisitors->where('last_name', $visit->last_name)->where('first_name', $visit->first_name)->where('middle_name', $visit->middle_name)->where('date', $visit->date) as $entry)
-                            <tr>
-                                <input type="hidden" name="entries[{{ $entry->id }}][id]" value="{{ $entry->id }}">
-                                <td>
-                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][first_name]" value="{{ $entry->first_name }}">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][middle_name]" value="{{ $entry->middle_name }}">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][last_name]" value="{{ $entry->last_name }}">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][person_to_visit]" value="{{ $entry->person_to_visit }}">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" name="entries[{{ $entry->id }}][purpose]" value="{{ $entry->purpose }}">
-                                </td>
-                                <td>
-                                    <select class="form-select" name="entries[{{ $entry->id }}][id_type]" required>
-                                        <option value="{{ $entry->id_type }}" selected>{{ $entry->id_type }}</option>
-                                        <option value="Student ID">Student ID</option>
-                                        <option value="Driver License ID">Driver License ID</option>
-                                        <option value="National ID">National ID</option>
-                                        <option value="Employee ID">Employee ID</option>
-                                        <option value="PassPort">PassPort</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
 
 <script src="{{ asset('js/visitor_admin.js') }}"></script>
+
+<style>
+    .same-height-table td {
+        vertical-align: middle;
+    }
+
+    .colored-toast.swal2-icon-success {
+  background-color: #3a8f09 !important;
+}
+
+.colored-toast.swal2-icon-error {
+  background-color: #ad1111 !important;
+}
+
+.colored-toast.swal2-icon-warning {
+  background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+  background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+  background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+  color: white;
+}
+
+.colored-toast .swal2-close {
+  color: white;
+}
+
+.colored-toast .swal2-html-container {
+  color: white;
+}
+
+</style>
 
 @endsection

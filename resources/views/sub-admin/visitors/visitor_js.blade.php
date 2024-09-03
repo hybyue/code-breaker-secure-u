@@ -11,12 +11,11 @@
 </script>
 <script>
     $(document).ready(function () {
-       $(document).on('click', '.add_visitor', function(e){
-           e.preventDefault();
 
-           $('.errorMessage').html('');
+    $('#visitorForm').on('submit', function(e) {
+        e.preventDefault();
 
-           let first_name = $('#first_name').val();
+        let first_name = $('#first_name').val();
            let middle_name = $('#middle_name').val();
            let last_name = $('#last_name').val();
            let person_to_visit = $('#person_to_visit').val();
@@ -37,7 +36,7 @@
             },
             success:function(resp){
               if(resp.status=='success'){
-                $('#addVisitorModal').modal('hide');
+                $('.modal-backdrop').remove();
                 $('#visitorForm')[0].reset();
                 $('#visitorTable').load(location.href + ' #visitorTable');
 
@@ -56,9 +55,6 @@
                         icon: 'success',
                         title: 'Visitor added successfully',
                     })
-
-                $('.modal-backdrop').remove();
-
               }
             },error:function(err){
                 $('.errorMessage').html('');
@@ -69,7 +65,10 @@
             }
            })
 
-       });
+
+
+
+    });
 });
 
    </script>

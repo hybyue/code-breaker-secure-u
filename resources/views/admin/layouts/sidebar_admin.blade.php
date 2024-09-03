@@ -54,13 +54,13 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('admin.visitor_admin') }}" class="sidebar-link {{ Route::is('admin.visitor_admin') ? 'active' : '' }}">
+                        <a href="{{ route('admin.visitors.visitor_admin') }}" class="sidebar-link {{ Route::is('admin.visitors.visitor_admin') ? 'active' : '' }}">
                         <i class="bi bi-people-fill"></i>
                             <span>Visitors</span>
                         </a>
                     </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ route('admin.pass_slip_admin') }}" class="sidebar-link {{ Route::is('admin.pass_slip_admin') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.pass_slip.pass_slip_admin') }}" class="sidebar-link {{ Route::is('admin.pass_slip.pass_slip_admin') ? 'active' : '' }}">
                                         <i class="bi bi-pass"></i>
                                         <span>Pass Slip</span>
                                     </a>
@@ -72,7 +72,7 @@
                                         </a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="{{ route('admin.violation')}}" class="sidebar-link {{ Route::is('admin.violation') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.violation.violation')}}" class="sidebar-link {{ Route::is('admin.violation.violation') ? 'active' : '' }}">
                                             <i class="bi bi-file-earmark-person"></i>
                                             <span>Violation</span>
                                         </a>

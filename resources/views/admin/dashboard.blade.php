@@ -45,7 +45,7 @@
     </div>
 
     <div class="col-md-4 col-sm-6 mb-4">
-        <div class="card text-white" style="flex: 1 1 calc(25% - 1rem); background-color: #D9D9D9;" onclick="location.href='{{ route('admin.pass_slip_admin') }}'">
+        <div class="card text-white" style="flex: 1 1 calc(25% - 1rem); background-color: #D9D9D9;" onclick="location.href='{{ route('admin.pass_slip.pass_slip_admin') }}'">
             <div class="card-body d-flex align-items-center">
                 <img src="images/person.png" alt="Person Image" style="width: 80px; height: 80px;">
                 <div>

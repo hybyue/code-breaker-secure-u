@@ -145,7 +145,7 @@ Route::delete('/vehicle_sticker/archive/{id}', [TeacherController::class, 'destr
 Route::get('/filter_vehicle_admin', [TeacherController::class, 'filterVehicleAdmin']);
 
 
-Route::get('admin/pass_slip', [GlobalController::class, 'pass_slip_admin'])->name('admin.pass_slip_admin');
+Route::get('admin/pass_slip', [GlobalController::class, 'pass_slip_admin'])->name('admin.pass_slip.pass_slip_admin');
 Route::post('admin/pass_slip', [GlobalController::class, 'store_slip_admin'])->name('pass_slip.store');
 Route::put('/pass_slip/update/{id}', [GlobalController::class, 'updatePassSlipAdmin'])->name('update.pass_slip_admin');
 Route::delete('/pass_slip/archive/{id}', [GlobalController::class, 'destroy_passSlip'])->name('archive.pass_slip');
@@ -174,13 +174,14 @@ Route::delete('/admin/archive_events/{id}', [EventController::class, 'destroy_ev
 
 
 Route::resource('/admin/visitor', TeacherController::class)->names([
-    'index' => 'admin.visitor_admin',
+    'index' => 'admin.visitors.visitor_admin',
     'store' => 'visitor.store',
 ]);
 
 Route::get('/filter_visitor_admin', [TeacherController::class, 'filterVisitorAdmin']);
 Route::post('/admin/visitor/{id}', [TeacherController::class, 'checkoutAdmin'])->name('visitor.checkout_admin');
 Route::post('/admin/visitor/update', [TeacherController::class, 'update'])->name('visitor.update');
+Route::delete('/admin/delete_visitor/{id}', [TeacherController::class, 'destroy']);
 Route::get('admin/search_visitor', [TeacherController::class, 'searchVisitors'])->name('visitor.search');
 
 
@@ -211,8 +212,10 @@ Route::get('admin/generate-pdf/pass_slip',[PdfController::class, 'generate_passS
 Route::get('admin/generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->name('pdf.generate-lost');
 
 
-Route::get('admin/violation', [TeacherController::class, 'violationView'])->name('admin.violation');
+Route::get('admin/violation', [TeacherController::class, 'violationView'])->name('admin.violation.violation');
 Route::post('admin/violation', [TeacherController::class, 'store_violation'])->name('admin.store_violation');
+Route::delete('/violation/archive/{id}', [TeacherController::class, 'destroy_violation']);
+
 });
 
 

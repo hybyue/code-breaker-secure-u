@@ -289,7 +289,7 @@ public function filterVisitorAdmin(Request $request)
               ->whereDate('visitors.created_at', '<=', $request->end_date);
     }
 
-    $latestVisitors = $query->paginate(10);
+    $latestVisitors = $query->latest()->paginate(10);
 
     $allVisitors = Visitor::query();
 
@@ -300,7 +300,7 @@ public function filterVisitorAdmin(Request $request)
 
     $allVisitors = $allVisitors->get();
 
-    return view('admin.visitor_admin', compact('latestVisitors', 'allVisitors'));
+    return view('admin.visitors.visitor_admin', compact('latestVisitors', 'allVisitors'));
 }
 
 
@@ -331,7 +331,9 @@ public function store(Request $request)
 
     $visitor->save();
 
-    return back()->with('success', 'Visitor added successfully.');
+    return response()->json([
+        'status' => 'success'
+    ]);
 }
 
 
@@ -382,7 +384,7 @@ public function destroy(string $id)
 
     $visitors->delete();
 
-    return redirect()->route('admin.visitor_admin')->with('success', 'product deleted successfully');
+    return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
 }
 
 public function checkoutAdmin($id)
@@ -391,7 +393,7 @@ public function checkoutAdmin($id)
     $visitor->time_out = now()->format('H:i:s');
     $visitor->save();
 
-    return redirect()->route('admin.visitor_admin')->with('success', 'Time out recorded successfully.');
+    return redirect()->route('admin.visitors.visitor_admin')->with('success', 'Time out recorded successfully.');
 }
 
 public function searchVisitors(Request $request)
@@ -463,7 +465,7 @@ public function store_visit(Request $request)
     $visitor->save();
 
     return response()->json([
-        'status' => 'success', 'Visitor added successfully'
+        'status' => 'success'
     ]);
 }
 
@@ -473,7 +475,7 @@ public function checkout($id)
     $visitor->time_out = now()->format('H:i:s');
     $visitor->save();
 
-    return redirect()->route('sub-admin.visitors.visitor')->with('success', 'Time out recorded successfully.');
+    return redirect()->route('sub-admin.visitors.visitor');
 }
 
 public function searchVisitor(Request $request)
@@ -521,11 +523,9 @@ public function violationView(Request $request)
         ->orderBy('violations.created_at', 'desc')
         ->paginate(10);
 
-    // Get all violations grouped by student_no
     $allViolations = $query->get()->groupBy('student_no');
 
-    // Pass both variables to the view
-    return view('admin.violation', compact('violations', 'allViolations'));
+    return view('admin.violation.violation', compact('violations', 'allViolations'));
 }
 
 
@@ -557,7 +557,18 @@ public function store_violation(Request $request)
 
     Violation::create($data);
 
-    return redirect()->route('admin.violation')->with('success', 'Vehicle details added successfully.');
+    return response()->json([
+        'status' => 'success'
+    ]);
+}
+
+public function destroy_violation(string $id)
+{
+    $violations = Violation::findOrFail($id);
+
+    $violations->delete();
+
+    return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
 }
 
 }

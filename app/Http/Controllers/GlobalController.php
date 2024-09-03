@@ -135,7 +135,7 @@ public function filterPassSlipAdmin(Request $request)
     // Fetch all pass slips for viewing older entries in modal
     $allPassSlips = $query->get();
 
-    return view('admin.pass_slip_admin', compact('latestPassSlips', 'allPassSlips'));
+    return view('admin.pass_slip.pass_slip_admin', compact('latestPassSlips', 'allPassSlips'));
 }
 
     public function store_slip_admin(Request $request)
@@ -171,7 +171,9 @@ public function filterPassSlipAdmin(Request $request)
             'time_out' => $request->time_out,
         ]);
 
-        return redirect()->route('admin.pass_slip_admin')->with('success', 'Pass Slip created successfully.');
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     public function updatePassSlipAdmin(Request $request, string $id)
@@ -180,7 +182,7 @@ public function filterPassSlipAdmin(Request $request)
 
         $passSlips->update($request->all());
 
-        return redirect()->route('admin.pass_slip_admin')->with('success', 'Pass Slip updated successfully');
+        return redirect()->route('admin.pass_slip.pass_slip_admin')->with('success', 'Pass Slip updated successfully');
     }
 
 
@@ -190,7 +192,7 @@ public function filterPassSlipAdmin(Request $request)
 
         $passSlips->delete();
 
-        return redirect()->route('admin.pass_slip_admin')->with('success', 'pass slip deleted successfully');
+        return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
     }
 
 

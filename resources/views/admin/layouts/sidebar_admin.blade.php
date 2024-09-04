@@ -66,7 +66,7 @@
                                     </a>
                                 </li>
                                     <li class="sidebar-item">
-                                        <a href="{{ route('admin.vehicle_sticker') }}" class="sidebar-link {{ Route::is('admin.vehicle_sticker') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.vehicle_sticker.vehicle_sticker') }}" class="sidebar-link {{ Route::is('admin.vehicle_sticker.vehicle_sticker') ? 'active' : '' }}">
                                             <i class="bi bi-car-front-fill"></i>
                                             <span>Vehicle Stickers</span>
                                         </a>
@@ -84,7 +84,7 @@
                                         </a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="{{ route('admin.lost_found_admin')}}" class="sidebar-link {{ Route::is('admin.lost_found_admin') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.lost.lost_found_admin')}}" class="sidebar-link {{ Route::is('admin.lost.lost_found_admin') ? 'active' : '' }}">
                                             <i class="bi bi-box-seam-fill"></i>
                                             <span>Lost and Found</span>
                                         </a>

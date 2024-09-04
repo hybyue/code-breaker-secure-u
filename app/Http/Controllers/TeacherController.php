@@ -144,7 +144,7 @@ public function filterParking(Request $request)
     {
         $parkings = Parking::paginate(10);
 
-        return view('admin.vehicle_sticker', compact('parkings'));
+        return view('admin.vehicle_sticker.vehicle_sticker', compact('parkings'));
     }
 
     public function store_park(Request $request)
@@ -200,7 +200,9 @@ public function filterParking(Request $request)
 
     Parking::create($data);
 
-    return redirect()->route('admin.vehicle_sticker')->with('success', 'Vehicle details added successfully.');
+    return response()->json([
+        'status' => 'success'
+    ]);
 }
 
 
@@ -245,16 +247,16 @@ public function updateVehicleAdmin(Request $request, string $id)
 
     $parking->save();
 
-    return redirect()->route('admin.vehicle_sticker')->with('success', 'Sticker updated successfully');
+    return redirect()->route('admin.vehicle_sticker.vehicle_sticker')->with('success', 'Sticker updated successfully');
 }
 
 public function destroy_vehicle(string $id)
 {
-    $parkings = Parking::findOrFail($id);
+    $parking = Parking::findOrFail($id);
 
-    $parkings->delete();
+    $parking->delete();
 
-    return redirect()->route('admin.vehicle_sticker')->with('success', 'Sticker List deleted successfully');
+    return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
 }
 
 public function filterVehicleAdmin(Request $request)
@@ -570,6 +572,18 @@ public function destroy_violation(string $id)
 
     return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
 }
+
+public function update_violationAdmin(Request $request, string $id)
+{
+
+    $violations = Violation::findOrFail($id);
+
+    $violations->update($request->all());
+
+
+    return redirect()->back()->with('success', 'Violation updated successfully');
+}
+
 
 }
 

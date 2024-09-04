@@ -277,7 +277,7 @@ public function filterLostFound(Request $request)
     public function lost_found_admin()
     {
         $lost_found = Lost::all();
-        return view('admin.lost_found_admin', compact('lost_found'));
+        return view('admin.lost.lost_found_admin', compact('lost_found'));
     }
 
    public function store_lost_admin(Request $request)
@@ -308,7 +308,9 @@ public function filterLostFound(Request $request)
 
     Lost::create($data);
 
-    return redirect()->route('admin.lost_found_admin')->with('success', 'Lost and found created successfully.');
+    return response()->json([
+        'status' => 'success'
+    ]);
 }
 
 public function updateLostFoundAdmin(Request $request, string $id)
@@ -337,7 +339,7 @@ public function updateLostFoundAdmin(Request $request, string $id)
       // Save the updated model
       $lost_found->save();
 
-      return redirect()->route('admin.lost_found_admin')->with('success', 'Lost and Found updated successfully');
+      return redirect()->route('admin.lost.lost_found_admin')->with('success', 'Lost and Found updated successfully');
   }
 
     public function destroy_lostFound(string $id)
@@ -346,7 +348,7 @@ public function updateLostFoundAdmin(Request $request, string $id)
 
         $lost_found->delete();
 
-        return redirect()->route('admin.lost_found_admin')->with('success', 'Lost and Found deleted successfully');
+        return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
     }
 
     public function filterLostFoundAdmin(Request $request)

@@ -10,23 +10,27 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
 
-    $('#violationForm').on('submit', function(e){
+$(document).ready(function () {
+    $('#addLostForm').on('submit', function(e){
         e.preventDefault();
 
         $('.errorMessage').html('');
-        let formData = $(this).serialize();
+
+        let formData = new FormData(this);
 
         $.ajax({
-            url: "{{ route('admin.store_violation') }}",
+            url: "{{ route('admin.store') }}",
             method: 'POST',
             data: formData,
+            processData: false,
+            contentType: false,
             success: function(resp) {
                 if(resp.status == 'success') {
-                    $('#addViolationModal').modal('hide');
-                    $('#violationForm')[0].reset();
-                    $('#violationTable').load(location.href + ' #violationTable');
+                    $('#addNewLostModal').modal('hide');
+                    $('#addLostForm')[0].reset();
+                    $('#tableLost').load(location.href + ' #tableLost');
+                    $('body').removeClass('modal-open');
                     Swal.fire({
                         toast: true,
                         position: 'top-right',
@@ -38,10 +42,8 @@
                         timer: 2500,
                         timerProgressBar: true,
                         icon: 'success',
-                        title: 'Violation added successfully',
+                        title: 'Sticker List added successfully',
                     });
-                    $('.modal-backdrop').remove();
-
                 }
             },
             error: function(err) {
@@ -51,25 +53,27 @@
                     $('.errorMessage').append('<span class="text-danger">'+value+'</span>'+'<br>');
                 });
             }
-        })
+        });
     });
 });
+
+
    </script>
 
 <script type="text/javascript">
 
-	function deleteViolation(id)
+	function deleteLostFound(id)
 	{
-      if(confirm("Are you sure to delete violation data"))
+      if(confirm("Are you sure to delete lost and found data?"))
 		{
 			$.ajax({
-
-				url:'/violation/archive/'+id,
+				url:'/lost_found/archive/'+id,
 				type:'DELETE',
 
 				success:function(result)
 				{
                     $("#"+result['tr']).slideUp("slow");
+
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'bottom-right',
@@ -84,9 +88,12 @@
 
                     Toast.fire({
                         icon:'success',
-                        title: 'Violation Deleted Successfully',
+                        title: 'Deleted Successfully',
                     });
-				}
+				},
+                error: function(xhr, status, error) {
+                   alert('An error occurred: ' + xhr.responseText);
+                },
 			});
 		}
 

@@ -58,7 +58,7 @@
                             <a href="#" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewEntries-{{ $violate->id }}"><i class="bi bi-eye"></i></a>
                         </div>
                         <div class="mx-1">
-                        <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitor   "><i class="bi bi-pencil-square"></i></a>
+                        <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateViolationModal-{{ $violate->id }}"><i class="bi bi-pencil-square"></i></a>
                         </div>
                         <div class="mx-1">
                             <a href="javascript:void(0)" onclick="deleteViolation({{$violate->id}})" class="btn btn-sm text-white" style="background-color: #920606">

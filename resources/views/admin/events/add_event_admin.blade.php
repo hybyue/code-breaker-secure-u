@@ -3,16 +3,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addNewEventModalLabel">Add New Event</h5>
+                <h5 class="modal-title" id="addNewEventModalLabel">Add Announcement</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="errorMessage">
             </div>
             <div class="modal-body">
-                <form id="addEventForm" action="" method="post">
+                <form id="addEventForm" action="" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="eventTitle" class="form-label">Event Title</label>
+                        <label for="eventTitle" class="form-label">Title</label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="mb-3">
@@ -28,7 +28,7 @@
                         <input type="date" class="form-control" id="date_end" name="date_end" >
                     </div>
                     <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary add_event">Add Event</button>
+                    <button wire:click="mount" type="submit" class="btn btn-primary add_event">Add</button>
                 </div>
                 </form>
             </div>

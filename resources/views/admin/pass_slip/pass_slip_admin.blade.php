@@ -75,7 +75,7 @@
                 @forelse ($latestPassSlips as $passSlip)
                 <tr id="tr_{{$passSlip->id}}">
                     <td>{{ $passSlip->p_no }}</td>
-                    <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} {{ $passSlip->middle_name }}.</td>
+                    <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
@@ -190,38 +190,5 @@
     .same-height-table td {
         vertical-align: middle;
     }
-
-    .colored-toast.swal2-icon-success {
-  background-color: #3a8f09 !important;
-}
-
-.colored-toast.swal2-icon-error {
-  background-color: #ad1111 !important;
-}
-
-.colored-toast.swal2-icon-warning {
-  background-color: #f8bb86 !important;
-}
-
-.colored-toast.swal2-icon-info {
-  background-color: #3fc3ee !important;
-}
-
-.colored-toast.swal2-icon-question {
-  background-color: #87adbd !important;
-}
-
-.colored-toast .swal2-title {
-  color: white;
-}
-
-.colored-toast .swal2-close {
-  color: white;
-}
-
-.colored-toast .swal2-html-container {
-  color: white;
-}
-
-    </style>
+</style>
 @endsection

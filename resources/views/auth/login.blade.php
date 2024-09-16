@@ -94,11 +94,11 @@
                 </div>
                 @endif
                 <div class="form-group text-start">
-                    <label for="email ">Your email</label>
+                    <label for="email ">Email:</label>
                     <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com" required="">
                 </div>
                 <div class="form-group text-start">
-                    <label for="password">Password</label>
+                    <label for="password">Password:</label>
                     <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required="">
                 </div>
                 <div class="form-group form-check text-start">

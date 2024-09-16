@@ -36,7 +36,7 @@ class Event extends Model
 
     public function getDescriptionForEvent(string $eventName): string
     {
-        return"{$eventName} a Event Information on ID number {$this->id}";
+        return"{$eventName} a Announcement Information on ID number {$this->id} titled '{$this->title}' ";
     }
     public function user()
     {

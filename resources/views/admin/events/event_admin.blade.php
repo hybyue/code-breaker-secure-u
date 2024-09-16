@@ -1,6 +1,6 @@
 @extends('admin.layouts.sidebar_admin')
 
-@section('title', 'Event List')
+@section('title', 'Announcements')
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token()}}">
@@ -44,7 +44,7 @@
             <table class=" table table-striped table-bordered table-condensed same-height-table">
                 <thead>
                     <tr>
-                        <th class="text-center" >Event Title</th>
+                        <th class="text-center" >Title</th>
                         <th class="text-center">Description</th>
                         <th class="text-center" >Date</th>
                         <th class="text-center"></th>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="mx-1">
                                         <a href="javascript:void(0)" onclick="deletepost({{$event->id}})" class="btn btn-sm text-white" style="background-color: #920606">
-                                            <i class="bi bi-archive-fill"></i>
+                                            <i class="bi bi-trash3-fill"></i>
                                         </a>
                                 </div>
                             </div>

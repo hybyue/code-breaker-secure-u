@@ -1,11 +1,11 @@
 @extends('admin.layouts.sidebar_admin')
 
-@section('title', 'Employees')
+@section('title', 'Security Staff')
 
 @section('content')
             <div class="row" style="padding: 16px;">
                         <div class="col-md-6">
-                            <h4>Employees</h4>
+                            <h4>Security Staff</h4>
                         </div>
                     </div>
 

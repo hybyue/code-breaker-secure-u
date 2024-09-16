@@ -202,3 +202,59 @@ a.sidebar-link {
         display: block;
     }
 }
+
+
+#nprogress .bar {
+    background: #3b7ddd; /* Change this to your desired color */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* Customize the thickness of the bar */
+    z-index: 1031; /* Make sure it's on top of the sidebar */
+}
+
+#nprogress .peg {
+    box-shadow: 0 0 10px #3b7ddd, 0 0 5px #3b7ddd; /* Customize the shadow */
+}
+
+#nprogress .spinner {
+    display: none; /* Hide the spinner */
+}
+
+/* Positioning NProgress bar inside the sidebar */
+.sidebar {
+    position: relative; /* Ensure the sidebar has relative positioning */
+}
+
+.sidebar #nprogress .bar {
+    position: fixed; /* Fix it to the sidebar */
+    width: calc(100% - 50px); /* Adjust the width based on the sidebar width */
+    margin-left: 50px; /* Adjust to align with sidebar */
+}
+
+
+.colored-toast.swal2-icon-success {
+    background-color: #3a8f09 !important;
+}
+.colored-toast.swal2-icon-error {
+    background-color: #ad1111 !important;
+}
+.colored-toast.swal2-icon-warning {
+    background-color: #f8bb86 !important;
+}
+.colored-toast.swal2-icon-info {
+    background-color: #3fc3ee !important;
+}
+.colored-toast.swal2-icon-question {
+    background-color: #87adbd !important;
+}
+.colored-toast .swal2-title {
+    color: white;
+}
+.colored-toast .swal2-close {
+    color: white;
+}
+.colored-toast .swal2-html-container {
+    color: white;
+}

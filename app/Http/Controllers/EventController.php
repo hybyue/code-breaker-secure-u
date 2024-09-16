@@ -38,7 +38,7 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::orderBy('created_at', 'desc')->paginate(10);
-        return view('sub-admin.events', compact('events'));
+        return view('sub-admin.event.events', compact('events'));
     }
 
     public function showEvent()
@@ -65,7 +65,7 @@ class EventController extends Controller
 
     $events->update($request->all());
 
-    return redirect()->route('sub-admin.events')->with('success', 'Lost and Found updated successfully');
+    return redirect()->route('sub-admin.event.events')->with('success', 'Lost and Found updated successfully');
 }
 
 
@@ -97,9 +97,8 @@ class EventController extends Controller
         return view('admin.events.event_admin', compact('events'));
     }
 
-    public function showEvents()
+    public function showEvents(Request $request)
     {
-        // Total counts
         $totalEmployee = Employee::count();
         $totalEvents = Event::count();
         $totalPassSlips = PassSlip::count();
@@ -117,9 +116,9 @@ class EventController extends Controller
         $todayEvents = Event::whereDate('date_start', Carbon::today())->get();
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
+
         return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalPassSlips', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon'));
     }
-
     public function updateEventsAdmin(Request $request, $id)
     {
 

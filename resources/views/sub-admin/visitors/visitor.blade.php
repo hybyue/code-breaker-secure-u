@@ -217,37 +217,5 @@
         vertical-align: middle;
     }
 
-    .colored-toast.swal2-icon-success {
-  background-color: #3c9b05 !important;
-}
-
-.colored-toast.swal2-icon-error {
-  background-color: #b10b0b !important;
-}
-
-.colored-toast.swal2-icon-warning {
-  background-color: #f8bb86 !important;
-}
-
-.colored-toast.swal2-icon-info {
-  background-color: #3fc3ee !important;
-}
-
-.colored-toast.swal2-icon-question {
-  background-color: #87adbd !important;
-}
-
-.colored-toast .swal2-title {
-  color: white;
-}
-
-.colored-toast .swal2-close {
-  color: white;
-}
-
-.colored-toast .swal2-html-container {
-  color: white;
-}
-
 </style>
 @endsection

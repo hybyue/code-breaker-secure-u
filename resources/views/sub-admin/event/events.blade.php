@@ -1,6 +1,6 @@
 @extends('layouts.sidebar')
 
-@section('title', 'Event List')
+@section('title', 'Announcements')
 
 <link href='{{ asset('fullcalendar/main.min.css') }}' rel='stylesheet' />
 
@@ -41,7 +41,7 @@
             <table class="table table-striped table-bordered table-condensed w-100 same-height-table" style="table-layout: fixed;">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 20%;">Event Title</th>
+                        <th class="text-center" style="width: 20%;">Title</th>
                         <th class="text-center" style="width: 50%;">Description</th>
                         <th class="text-center" style="width: 20%;">Date</th>
                         <th class="text-center" style="width: 10%;"></th>

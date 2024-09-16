@@ -36,7 +36,7 @@
                         <input type="file" class="form-control" id="lostImage" name="object_img">
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="submit" class="btn btn-success" id="lostSubmmit">Save</button>
                     </div>
                 </div>
                 </form>

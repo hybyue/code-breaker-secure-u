@@ -66,7 +66,7 @@
                         </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary" wire:click="mount">Save</button>
                         </div>
                     </div>
                 </form>

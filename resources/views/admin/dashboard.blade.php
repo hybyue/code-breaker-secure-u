@@ -4,6 +4,23 @@
 
 @section('content')
 
+        @if(session('success'))
+                <script>
+                     Swal.fire({
+                        toast: true,
+                        position: 'top-right',
+                        iconColor: 'white',
+                        customClass: {
+                            popup: 'colored-toast',
+                        },
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true,
+                        icon: 'success',
+                        title: success,
+                    });
+                </script>
+        @endif
 <div class="d-flex justify-content-between bg-black align-items-center mb-3" style="padding: 0; margin: 0;">
     <h5 class="text-white mb-0 p-2">DASHBOARD</h5>
     <span class="text-white p-2"><i class="bi bi-person-fill-lock text-warning p-1"></i>Quick Access</span>

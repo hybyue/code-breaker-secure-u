@@ -173,7 +173,11 @@ class AuthController extends Controller
             $user->save();
         }
 
-        return back()->with('success', 'Password changed successfully.');
+         if (Auth::user()->type == 'admin') {
+            return redirect()->route('admin.dashboard')->with('success', 'password change successfully');
+        } else {
+            return redirect()->route('sub-admin.dashboard')->with('success', 'password change successfully');
+        }
     }
 
 

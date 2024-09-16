@@ -15,6 +15,7 @@
         "@fullcalendar/daygrid": "^6.1.15",
         "@fullcalendar/interaction": "^6.1.15",
         "@hotwired/turbo": "^8.0.5",
-        "alpinejs": "^3.14.1"
+        "alpinejs": "^3.14.1",
+        "nprogress": "^0.2.0"
     }
 }

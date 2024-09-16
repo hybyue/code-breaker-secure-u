@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.vehicle_sticker_list') }}'">
+            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.sticker.vehicle_sticker_list') }}'">
                 <div class="card-body d-flex justify-content-between">
                     <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
                     <div class="container">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.pass_slip') }}'">
+            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.pass_slip.pass_slip') }}'">
                 <div class="card-body d-flex justify-content-between">
                     <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
                     <div class="container">

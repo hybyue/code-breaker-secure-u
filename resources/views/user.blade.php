@@ -64,7 +64,7 @@
                         <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                             <li><a class="dropdown-item" href="{{ url('/home')}}">Home</a></li>
                             <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{{ route('auth.change-password')}}">Change password</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/sub-admin/change-password')}}">Change password</a></li>
                             <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
                         </ul>
                     </div>

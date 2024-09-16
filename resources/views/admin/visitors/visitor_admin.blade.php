@@ -8,9 +8,9 @@
         <h4>Visitor</h4>
     </div>
     <div class="col-md-6 text-end">
-        <button class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
+        <a href="javascript:void(0)" id="add-visitor-btn" class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
             <i class="bi bi-plus-circle-fill"></i> Add New
-        </button>
+        </a>
         <a href="{{ route('pdf.generate-visitor', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-visitors.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
     </div>
 </div>
@@ -36,7 +36,7 @@
         </div>
     </form>
 </div>
-    <div class="container p-2 bg-body-secondary rounded">
+    {{-- <div class="container p-2 bg-body-secondary rounded">
         <div class="row mb-3">
             <div class="col-md-6 d-flex align-items-center">
                 <label for="entries" class="mr-2">Show</label>
@@ -53,8 +53,9 @@
             <div class="col-md-6 d-flex justify-content-end align-items-center">
                 <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;" onkeyup="searchTable()">
             </div>
-        </div>
-        <div class="row">
+        </div> --}}
+        <div class="container p-2 bg-body-secondary rounded">
+        <div class="row p-4">
             <div class="col-12">
                 <table id="visitorTable" class="table table-light table-bordered table-responsive table-rounded table-striped same-height-table">
                     <thead>
@@ -73,7 +74,7 @@
                         @forelse($latestVisitors as $visit)
                         <tr id="tr_{{$visit->id}}">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
-                            <td>{{ $visit->last_name }},  {{$visit->first_name }} {{ $visit->middle_name }}. </td>
+                            <td>{{ $visit->last_name }},  {{$visit->first_name }} @if($visit->middle_name){{ $visit->middle_name }}.@endif </td>
                             <td>{{ $visit->person_to_visit }}</td>
                             <td>{{ $visit->purpose }}</td>
                             <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }}</td>
@@ -117,7 +118,8 @@
                 </table>
             </div>
         </div>
-        <div class="d-flex justify-content-between">
+    </div>
+        {{-- <div class="d-flex justify-content-between">
             <div>Showing {{ $latestVisitors->count() }} of {{ $latestVisitors->total() }} entries</div>
             <nav>
                 <ul class="pagination">
@@ -135,7 +137,7 @@
                 </ul>
             </nav>
         </div>
-    </div>
+    </div> --}}
 
     @include('admin.visitors.add_visitor')
     @include('admin.visitors.update_visitor')
@@ -191,38 +193,9 @@
         vertical-align: middle;
     }
 
-    .colored-toast.swal2-icon-success {
-  background-color: #3a8f09 !important;
-}
-
-.colored-toast.swal2-icon-error {
-  background-color: #ad1111 !important;
-}
-
-.colored-toast.swal2-icon-warning {
-  background-color: #f8bb86 !important;
-}
-
-.colored-toast.swal2-icon-info {
-  background-color: #3fc3ee !important;
-}
-
-.colored-toast.swal2-icon-question {
-  background-color: #87adbd !important;
-}
-
-.colored-toast .swal2-title {
-  color: white;
-}
-
-.colored-toast .swal2-close {
-  color: white;
-}
-
-.colored-toast .swal2-html-container {
-  color: white;
-}
-
+    .error{
+        color: rgb(209, 20, 20);
+    }
 </style>
 
 @endsection

@@ -47,7 +47,7 @@ public function filterPassSlip(Request $request)
     // Fetch all pass slips for viewing older entries in modal
     $allPassSlips = $query->get();
 
-    return view('sub-admin.pass_slip', compact('latestPassSlips', 'allPassSlips'));
+    return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips'));
 }
 
     public function store_slip(Request $request)
@@ -83,7 +83,9 @@ public function filterPassSlip(Request $request)
             'time_out' => $request->time_out,
         ]);
 
-        return redirect()->route('sub-admin.pass_slip')->with('success', 'Pass Slip created successfully.');
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     public function updatePassSlip(Request $request, string $id)
@@ -92,7 +94,7 @@ public function filterPassSlip(Request $request)
 
     $passSlips->update($request->all());
 
-    return redirect()->route('sub-admin.pass_slip')->with('success', 'Pass Slip updated successfully');
+    return redirect()->route('sub-admin.pass_slip.pass_slip')->with('success', 'Pass Slip updated successfully');
 }
 
 
@@ -200,7 +202,7 @@ public function filterPassSlipAdmin(Request $request)
     public function lost_found()
 {
     $lost_found = Lost::orderBy('created_at', 'desc')->paginate(10);
-    return view('sub-admin.lost_found', compact('lost_found'));
+    return view('sub-admin.lost.lost_found', compact('lost_found'));
 }
 
    public function store_lost(Request $request)
@@ -231,7 +233,9 @@ public function filterPassSlipAdmin(Request $request)
 
     Lost::create($data);
 
-    return redirect()->route('sub-admin.lost_found')->with('success', 'Lost and found created successfully.');
+    return response()->json([
+        'status' => 'success'
+    ]);
 }
 
 public function updateLostFound(Request $request, string $id)
@@ -256,7 +260,7 @@ public function updateLostFound(Request $request, string $id)
 
     $lost_found->save();
 
-    return redirect()->route('sub-admin.lost_found')->with('success', 'Lost and Found updated successfully');
+    return redirect()->route('sub-admin.lost.lost_found')->with('success', 'Lost and Found updated successfully');
 }
 
 public function filterLostFound(Request $request)
@@ -270,7 +274,7 @@ public function filterLostFound(Request $request)
 
     $lost_found = $query->orderBy('created_at', 'desc')->paginate(10);
 
-    return view('sub-admin.lost_found', compact('lost_found'));
+    return view('sub-admin.lost.lost_found', compact('lost_found'));
 }
 
 
@@ -290,7 +294,6 @@ public function filterLostFound(Request $request)
         'course' => 'required|string|max:255',
         'object_img' => 'nullable|image|max:3048',
     ]);
-
     $data = [
         'user_id' => Auth::id(),
         'object_type' => $request->object_type,
@@ -299,17 +302,16 @@ public function filterLostFound(Request $request)
         'last_name' => $request->last_name,
         'course' => $request->course,
     ];
-
     if ($request->hasFile('object_img')) {
         $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
         $path = $request->file('object_img')->storeAs('lost_images', $fileName, 'public');
         $data['object_img'] = '/storage/' . $path;
     }
-
-    Lost::create($data);
+    $lost = Lost::create($data);
 
     return response()->json([
-        'status' => 'success'
+        'status' => 'success',
+        'data' => $lost
     ]);
 }
 

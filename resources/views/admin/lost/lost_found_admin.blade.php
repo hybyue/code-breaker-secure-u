@@ -2,6 +2,7 @@
 
 @section('title', 'Lost and Found')
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('content')
@@ -38,7 +39,9 @@
         </thead>
         <tbody>
                 @forelse($lost_found as $item)
+
                 <tr id="tr_{{$item->id}}" class="text-center">
+
                     <td>{{ $item->object_type }}</td>
                     <td>{{ $item->first_name }} {{ $item->middle_name }}. {{ $item->last_name }} </td>
                     <td>{{ $item->course }}</td>
@@ -52,7 +55,7 @@
                     <td>
                         <div class="d-flex justify-content-center">
                             <div class="mx-1">
-                                <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateLostFound-{{ $item->id }}">
+                                <a href="javascript:void(0)" class="btn btn-sm text-white" data-id="{{$item->id}}" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateLostFound-{{ $item->id }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
@@ -95,44 +98,11 @@
 @include('admin.lost.update_lost')
 @include('admin.lost.lost_js')
 
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <style>
     .same-height-table td {
         vertical-align: middle;
     }
-
-    .colored-toast.swal2-icon-success {
-  background-color: #3a8f09 !important;
-}
-
-.colored-toast.swal2-icon-error {
-  background-color: #ad1111 !important;
-}
-
-.colored-toast.swal2-icon-warning {
-  background-color: #f8bb86 !important;
-}
-
-.colored-toast.swal2-icon-info {
-  background-color: #3fc3ee !important;
-}
-
-.colored-toast.swal2-icon-question {
-  background-color: #87adbd !important;
-}
-
-.colored-toast .swal2-title {
-  color: white;
-}
-
-.colored-toast .swal2-close {
-  color: white;
-}
-
-.colored-toast .swal2-html-container {
-  color: white;
-}
 
 </style>
 

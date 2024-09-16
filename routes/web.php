@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GlobalController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ListController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
@@ -61,26 +62,26 @@ Route::get('/filter_visitor', [TeacherController::class, 'filterVisitor']);
 Route::post('sub-admin/visitor/{id}/checkout', [TeacherController::class, 'checkout'])->name('visitor.checkout');
 Route::get('sub-admin/search_visitor', [TeacherController::class, 'searchVisitor'])->name('visitor.search');
 
-Route::get('sub-admin/pass_slip', [GlobalController::class, 'pass_slip'])->name('sub-admin.pass_slip');
+Route::get('sub-admin/pass_slip', [GlobalController::class, 'pass_slip'])->name('sub-admin.pass_slip.pass_slip');
 Route::post('sub-admin/pass_slip', [GlobalController::class, 'store_slip'])->name('pass_slips.store');
 Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-pass');
 Route::put('sub-admin/pass_slip/update/{id}', [GlobalController::class, 'updatePassSlip'])->name('update.pass_slips');
 Route::get('/filter_pass_slip', [GlobalController::class, 'filterPassSlip']);
 
 
-Route::get('sub-admin/parking', [TeacherController::class, 'parking_sub'])->name('sub-admin.vehicle_sticker_list');
+Route::get('sub-admin/parking', [TeacherController::class, 'parking_sub'])->name('sub-admin.sticker.vehicle_sticker_list');
 Route::post('sub-admin/store_parking', [TeacherController::class, 'store_parks'])->name('store_parkings');
 Route::put('sub-admin/vehicle_sticker/update/{id}', [TeacherController::class, 'updateVehicle'])->name('update.vehicle_sticker');
 Route::get('/filter_vehicle', [TeacherController::class, 'filterParking']);
 
 
-Route::get('sub-admin/events', [EventController::class, 'index'])->name('sub-admin.events');
+Route::get('sub-admin/events', [EventController::class, 'index'])->name('sub-admin.event.events');
 Route::post('sub-admin/events', [EventController::class, 'store'])->name('events.store');
 Route::put('sub-admin/events/update/{id}', [EventController::class, 'updateEvents'])->name('update.events');
 
 
 
-Route::get('sub-admin/lost_found', [GlobalController::class, 'lost_found'])->name('sub-admin.lost_found');
+Route::get('sub-admin/lost_found', [GlobalController::class, 'lost_found'])->name('sub-admin.lost.lost_found');
 Route::post('sub-admin/store_lost', [GlobalController::class, 'store_lost'])->name('sub-admin.store_losts');
 Route::put('sub-admin/lost_found/update/{id}', [GlobalController::class, 'updateLostFound'])->name('update.lost_found');
 Route::get('/filter_lost_found', [GlobalController::class, 'filterLostFound']);
@@ -90,7 +91,12 @@ Route::get('generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->n
 Route::get('sub-admin/profile', [EmployeesController::class, 'showProfile'])->name('profile');
 Route::post('sub-admin/profile', [EmployeesController::class, 'addInformation'])->name('profile.store');
 Route::put('sub-admin/profile/update/{id}', [EmployeesController::class, 'editInformation'])->name('profile.update');
-Route::get('sub-admin/change-password', [EmployeesController::class, 'changePassword'])->name('auth.change-password');
+Route::get('/sub-admin/change-password', [EmployeesController::class, 'changePassword'])->name('auth.change-password');
+
+
+Route::get('sub-admin/violation', [TeacherController::class, 'violation'])->name('sub-admin.violation.violation');
+Route::post('sub-admin/violation', [TeacherController::class, 'store_violate'])->name('sub-admin.store_violate');
+Route::put('/violation/update/{id}', [TeacherController::class, 'update_violation'])->name('store_violation');
 
 });
 
@@ -138,6 +144,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         return view('admin.violation');
     })->name('violation');
 
+
+
 Route::get('admin/vehicle_sticker', [TeacherController::class, 'parking_admin'])->name('admin.vehicle_sticker.vehicle_sticker');
 Route::post('admin/store_parking', [TeacherController::class, 'store_park'])->name('store_parking');
 Route::put('/vehicle_sticker/update/{id}', [TeacherController::class, 'updateVehicleAdmin'])->name('update.vehicle_sticker_admin');
@@ -154,10 +162,10 @@ Route::get('/admin/filter_pass_slip_admin', [GlobalController::class, 'filterPas
 
 
 
-Route::get('/admin/event', [EventController::class, 'eventAdmin'])->name('admin.events.event_admin');
-Route::post('/add-event', [EventController::class, 'store_adminEvent'])->name('event.store_admin');
+Route::get('/admin/announcement', [EventController::class, 'eventAdmin'])->name('admin.events.event_admin');
+Route::post('/admin/announcement', [EventController::class, 'store_adminEvent'])->name('event.store_admin');
 Route::get('/admin', [EventController::class, 'showEvents'])->name('admin.dashboard');
-Route::put('/admin/event/update/{id}', [EventController::class, 'updateEventsAdmin'])->name('update.events_admin');
+Route::put('/admin/announcement/update/{id}', [EventController::class, 'updateEventsAdmin'])->name('update.events_admin');
 Route::delete('/admin/archive_events/{id}', [EventController::class, 'destroy_events']);
 
 
@@ -187,7 +195,7 @@ Route::get('admin/search_visitor', [TeacherController::class, 'searchVisitors'])
 
 
 
-Route::resource('/admin/employee', EmployeesController::class)->names([
+Route::resource('/admin/security_staff', EmployeesController::class)->names([
     'index' => 'admin.employee',
     'store' => 'employee.store',
     'update' => 'employee.update',
@@ -216,6 +224,13 @@ Route::get('admin/violation', [TeacherController::class, 'violationView'])->name
 Route::post('admin/violation', [TeacherController::class, 'store_violation'])->name('admin.store_violation');
 Route::put('/violation/update/{id}', [TeacherController::class, 'update_violationAdmin'])->name('store_violation');
 Route::delete('/violation/archive/{id}', [TeacherController::class, 'destroy_violation']);
+
+Route::get('/admin/students', [ListController::class, 'student_admin'])->name('admin.students.student');
+Route::post('/admin/students', [ListController::class, 'store_student_admin'])->name('store_admin.student');
+
+
+Route::get('/admin/employees', [ListController::class, 'all_employee_admin'])->name('admin.employees.all_employee');
+Route::post('/admin/employees', [ListController::class, 'store_all_employee_admin'])->name('store_admin.employee');
 
 });
 

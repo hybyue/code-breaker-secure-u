@@ -40,6 +40,14 @@ class ListController extends Controller
 
             return redirect()->back()->with('success', 'Student added successfully');
     }
+    public function destroy_student_admin(string $id)
+    {
+        $student = Student::findOrFail($id);
+
+        $student->delete();
+
+        return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
+    }
 
     public function all_employee_admin()
     {
@@ -73,5 +81,34 @@ class ListController extends Controller
             AllEmployee::create($data);
 
             return redirect()->back()->with('success', 'Employee added successfully');
+    }
+
+    public function destroy_all_employee_admin(string $id)
+    {
+        $allEmployee = AllEmployee::findOrFail($id);
+
+        $allEmployee->delete();
+
+        return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
+    }
+    public function searchEmployee(Request $request) {
+        $query = AllEmployee::query();
+
+        // Check if search term is ID or name
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where('employee_id', $searchTerm)
+                  ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+
+        }
+
+        $employees = $query->limit(5)->get();
+
+        if ($employees->count() > 0) {
+            return response()->json(['success' => true, 'employees' => $employees]);
+        } else {
+            return response()->json(['success' => false]);
+        }
     }
 }

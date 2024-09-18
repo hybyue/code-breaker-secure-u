@@ -66,12 +66,12 @@
                         <span>Pass Slip</span>
                     </a>
                 </li>
-                {{-- <li class="sidebar-item">
+                <li class="sidebar-item">
                     <a href="{{ route('admin.vehicle_sticker.vehicle_sticker') }}" class="sidebar-link {{ Route::is('admin.vehicle_sticker.vehicle_sticker') ? 'active' : '' }}">
                         <i class="bi bi-car-front-fill"></i>
                         <span>Vehicle Stickers</span>
                     </a>
-                </li> --}}
+                </li>
                 <li class="sidebar-item">
                     <a href="{{ route('admin.violation.violation')}}" class="sidebar-link {{ Route::is('admin.violation.violation') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-person"></i>

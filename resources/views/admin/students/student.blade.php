@@ -43,7 +43,7 @@
                         <a href="javascript:void(0)" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $student->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $student->id }}"><i class="bi bi-pencil-square"></i></a>
                         </div>
                         <div class="mx-1">
-                            <a href="javascript:void(0)" onclick="deleteViolation({{$student->id}})" class="btn btn-sm text-white" style="background-color: #920606">
+                            <a href="javascript:void(0)" onclick="deleteStudent({{$student->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                     </div>
@@ -67,8 +67,8 @@
 </div>
 
 @include('admin.students.add_student')
-{{-- @include('admin.students.update_student')
-@include('admin.students.students_js') --}}
+{{-- @include('admin.students.update_student')--}}
+@include('admin.students.student_js')
 
 
 {{-- Modal for showing all entries of a student

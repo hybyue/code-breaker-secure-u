@@ -25,7 +25,7 @@
                 <label for="end_date"> End Date: </label>
                 <input type="date" name="end_date" id="end_date" class="form-control" required>
             </div>
-            <div class="col-md-1 mt-4 pt-2">
+            <div class="col-md-1 mt-4">
                 <button type="submit" class="btn btn-dark">Filter</button>
             </div>
             @if(request('start_date') || request('end_date'))

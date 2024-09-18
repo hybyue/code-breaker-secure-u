@@ -52,30 +52,26 @@
                                                 @endif
                                             </td>
                                             <td>{{ $user->email }}</td>
-                                            <td>
+                                            <td class="text-center">
 
                                                 {{ $user->employ->employment_type }}
 
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if(Cache::has('user-is-online-' . $user->id))
-                                                    <span class="text-success">Online</span>
+                                                    <span class="text-success text-center">Online</span>
                                                 @else
-                                                    <span class="text-secondary">Offline</span>
+                                                    <span class="text-secondary text-center">Offline</span>
                                                 @endif
                                             </td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <div class="p-1">
-                                                        <a href="#" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewDataInformation-{{ $user->employ->id }}"><i class="bi bi-eye"></i></a>
-                                                        <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateEmployee-{{ $user->employ->id }}"><i class="bi bi-pencil-square"></i></a>
+                                            <td class="text-center">
+                                                        <a href="#" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewDataInformation-{{ $user->employ->id }}"><i class="bi bi-eye"> View</i></a>
+                                                        {{-- <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateEmployee-{{ $user->employ->id }}"><i class="bi bi-pencil-square"></i></a>
                                                         <form action="{{ route('employee.destroy', $user->employ->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure you want to Archive?')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button class="btn btn-sm text-white" style="background-color: #920606"><i class="bi bi-archive-fill"></i></button>
-                                                        </form>
-
-
-                                                </div>
+                                                        </form> --}}
                                             </td>
 
                                             @else
@@ -83,7 +79,7 @@
                                                 {{ $user->name }}
                                             </td>
                                             <td>{{ $user->email }}</td>
-                                            <td>No data </td>
+                                            <td class="text-center">No data </td>
                                             <td>
                                                 @if(Cache::has('user-is-online-' . $user->id))
                                                     <span class="text-success">Online</span>

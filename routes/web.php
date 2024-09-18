@@ -199,6 +199,7 @@ Route::resource('/admin/security_staff', EmployeesController::class)->names([
     'index' => 'admin.employee',
     'store' => 'employee.store',
     'update' => 'employee.update',
+    'destroy' => 'employee.destroy',
 ]);
 Route::get('admin/lost_found', [GlobalController::class, 'lost_found_admin'])->name('admin.lost.lost_found_admin');
 Route::post('admin/store_lost', [GlobalController::class, 'store_lost_admin'])->name('admin.store');
@@ -227,10 +228,15 @@ Route::delete('/violation/archive/{id}', [TeacherController::class, 'destroy_vio
 
 Route::get('/admin/students', [ListController::class, 'student_admin'])->name('admin.students.student');
 Route::post('/admin/students', [ListController::class, 'store_student_admin'])->name('store_admin.student');
+Route::delete('/admin/student/delete/{id}', [ListController::class, 'destroy_student_admin']);
 
 
 Route::get('/admin/employees', [ListController::class, 'all_employee_admin'])->name('admin.employees.all_employee');
 Route::post('/admin/employees', [ListController::class, 'store_all_employee_admin'])->name('store_admin.employee');
+Route::delete('/employee/delete/{id}', [ListController::class, 'destroy_all_employee_admin']);
+route::post('/search-employee', [ListController::class, 'searchEmployee'])->name('search_employee');
+
+
 
 });
 

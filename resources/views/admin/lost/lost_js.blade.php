@@ -31,8 +31,6 @@ $(document).ready(function () {
             contentType: false,
             success: function(resp) {
                 if(resp.status == 'success') {
-                    $('.modal-backdrop').remove();
-                    $('#addNewLostModal').modal('hide');
                     $('#addLostForm')[0].reset();
                     $('body').removeClass('modal-open');
 
@@ -61,6 +59,10 @@ $(document).ready(function () {
                             </td>
                         </tr>`
                     );
+                    $('.modal').modal({
+                                backdrop: 'static',
+                                keyboard: true
+                            });
 
 
                     Swal.fire({

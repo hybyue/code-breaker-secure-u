@@ -98,3 +98,75 @@
 
 
 </script>
+
+
+
+<script>
+    function clearEmployeeFields() {
+    let fields = [ 'last_name', 'first_name', 'middle_name', 'department', 'designation', 'status'];
+
+    fields.forEach(field => {
+        let element = document.getElementById(field);
+        if (element) {
+            element.value = '';
+        }
+    });
+}
+
+
+function searchEmployee() {
+    let searchValue = document.getElementById('search_employee').value;
+
+    if (searchValue.length >= 2) {
+        let formData = new FormData();
+        formData.append('search', searchValue);
+
+        fetch('{{ route('search_employee') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.employees.length > 0) {
+                let resultsContainer = document.getElementById('employee_results');
+                resultsContainer.innerHTML = ''; // Clear previous results
+
+                // Display the employee suggestions
+                data.employees.forEach(employee => {
+                    let resultItem = document.createElement('div');
+                    resultItem.classList.add('result-item');
+                    resultItem.innerHTML = `
+                        <a href="#" class="btn btn-primary">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
+                    `;
+
+                    resultItem.onclick = function() {
+                        // Autofill the form fields when the user clicks an item
+                        document.getElementById('last_name').value = employee.last_name;
+                        document.getElementById('first_name').value = employee.first_name;
+                        document.getElementById('middle_name').value = employee.middle_name || '';
+                        document.getElementById('department').value = employee.department;
+                        document.getElementById('designation').value = employee.designation;
+                        document.getElementById('status').value = employee.status;
+
+                        // Clear the results after selection
+                        resultsContainer.innerHTML = '';
+                    };
+
+                    resultsContainer.appendChild(resultItem);
+                });
+            } else {
+                clearEmployeeFields();
+                document.getElementById('employee_results').innerHTML = '<div class="no-results">No matching employees found</div>';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        clearEmployeeFields();
+        document.getElementById('employee_results').innerHTML = '';
+    }
+}
+
+    </script>

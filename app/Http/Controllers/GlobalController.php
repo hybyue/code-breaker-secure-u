@@ -152,7 +152,6 @@ public function filterPassSlipAdmin(Request $request)
             'destination' => 'required|string|max:255',
             'employee_type' => 'required|string|max:255',
             'purpose' => 'required|string|max:255',
-            'date' => 'required|date',
             'time_in' => 'nullable|date_format:H:i',
             'time_out' => 'required|date_format:H:i',
         ]);
@@ -168,7 +167,7 @@ public function filterPassSlipAdmin(Request $request)
             'destination' => $request->destination,
             'employee_type' => $request->employee_type,
             'purpose' => $request->purpose,
-            'date' => $request->date,
+            'date' => now()->format('Y-m-d H:i:s'),
             'time_in' => $request->time_in,
             'time_out' => $request->time_out,
         ]);

@@ -251,7 +251,7 @@
 });
 
    </script>
-
+ --}}
 <script type="text/javascript">
 
 	function deleteVisitor(id)
@@ -289,4 +289,4 @@
 	}
 
 
-</script> --}}
+</script>

@@ -10,11 +10,11 @@
                     <form id="addVisitorForm" action="" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-12 form-group">
+                            {{-- <div class="col-12 form-group">
                                 <label for="search_visitor">Search Visitor:</label>
                                 <input type="text" class="form-control" id="search_visitor" placeholder="Search by name" onkeyup="searchVisitors()">
                                 <div id="visitorSuggestions" class="list-group mt-2"></div>
-                            </div>
+                            </div> --}}
                         <div class="col-md-4  form-group">
                             <label for="last_name">Last Name:</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" required>

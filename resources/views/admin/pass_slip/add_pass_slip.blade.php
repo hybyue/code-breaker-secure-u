@@ -13,7 +13,7 @@
                     @csrf
 
                     <div class="row">
-                        <div class="mb-5 position-relative">
+                        <div class="mb-2 position-relative">
                             <input type="text" class="form-control" id="search_employee" placeholder="Type ID or Name"  oninput="searchEmployee()">
                             <div id="employee_results" class="col-md-12 results-container"></div> <!-- This will show suggestions -->
                         </div>
@@ -30,6 +30,7 @@
                                     <option value="Other">Other</option>
                                 </select>
                         </div>
+                        <input hidden type="text" class="form-control" id="employee_id" name="employee_id" >
                         <div class="col-md-4 mb-2">
                             <label for="last_name" class="form-label">Last Name:</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" required>

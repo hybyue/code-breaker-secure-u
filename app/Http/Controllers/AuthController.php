@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\RateLimiter as FacadesRateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
@@ -118,29 +119,75 @@ class AuthController extends Controller
     }
 
     public function loginAction(Request $request)
-    {
-        Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
-        ])->validate();
+{
+    $this->checkTooManyFailedAttempts($request);
+    // Validate input
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed')
-            ]);
-        }
-
-        $request->session()->regenerate();
-
-
-        if (Auth::user()->type == 'admin') {
-            return redirect()->route('admin.dashboard');
-        } else {
-            return redirect()->route('sub-admin.dashboard');
-        }
-
-        // return redirect()->route('dashboard');
+    // If validation fails, return error as JSON
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'errors' => $validator->errors()
+        ], 422); // Unprocessable Entity status code
     }
+
+    // Attempt to login
+    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        // Check if email exists in the system to provide a more specific message
+        if (!User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email is not registered'
+            ], 404); // Not Found
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Incorrect password'
+        ], 401); // Unauthorized
+    }
+
+    // Regenerate session on successful login
+    $request->session()->regenerate();
+
+    // Check if the user is admin or sub-admin
+    if (Auth::user()->type == 'admin') {
+        return response()->json([
+            'status' => 'success',
+            'redirect' => route('admin.dashboard')
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'success',
+            'redirect' => route('sub-admin.dashboard')
+        ]);
+    }
+}
+
+    // Check for too many failed attempts
+    protected function checkTooManyFailedAttempts($request)
+    {
+        if (FacadesRateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
+            $seconds = FacadesRateLimiter::availableIn($this->throttleKey($request));
+            $minutes = ceil($seconds / 60); // Convert seconds to minutes, rounding up
+
+            throw ValidationException::withMessages([
+                'email' => "Too many login attempts. Please try again in $minutes minute(s).",
+                'seconds' => $seconds // Return the remaining lockout time in seconds
+            ])->status(429);
+        }
+    }
+
+    protected function throttleKey(Request $request)
+    {
+        return strtolower($request->input('email')) . '|' . $request->ip();
+    }
+
 
     public function changePassword(Request $request)
     {

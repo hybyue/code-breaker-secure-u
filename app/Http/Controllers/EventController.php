@@ -46,7 +46,6 @@ class EventController extends Controller
         // Total counts
         $totalVisitors = Visitor::count();
         $totalPassSlips = PassSlip::count();
-        $totalVehicleStickers = Parking::count();
 
         // Today's counts
         $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
@@ -56,7 +55,7 @@ class EventController extends Controller
         $todayEvents = Event::whereDate('date_start', Carbon::today())->get();
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
-        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'totalVehicleStickers', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents'));
+        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents'));
     }
 
     public function updateEvents(Request $request, string $id)

@@ -144,6 +144,7 @@ function searchEmployee() {
 
                     resultItem.onclick = function() {
                         // Autofill the form fields when the user clicks an item
+                        document.getElementById('employee_id').value = employee.employee_id || '';
                         document.getElementById('last_name').value = employee.last_name;
                         document.getElementById('first_name').value = employee.first_name;
                         document.getElementById('middle_name').value = employee.middle_name || '';

@@ -75,7 +75,7 @@ body {
     height: auto;
     min-height: 100vh;
     overflow: hidden;
-    transition: all 0.35s ease-in-out;
+    transition: all 2.30s ease-in-out;
     background-color: #fafbfe;
 }
 #sidebar {

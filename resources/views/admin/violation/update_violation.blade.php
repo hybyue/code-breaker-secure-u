@@ -1,4 +1,4 @@
-{{-- Add Violation --}}
+{{-- update Violation --}}
 @foreach ($violations as $violate)
 <div class="modal fade" id="updateViolationModalAd-{{$violate->id}}" tabindex="-1" aria-labelledby="updateViolationModalAdLabel-{{$violate->id}}" aria-hidden="true">
     <div class="modal-dialog">

@@ -9,6 +9,8 @@
     <meta name="author" content="UCU">
     <title>Login</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
     <style>
         body {
             background: url('{{ asset('images/bg-ucu.jpg') }}') no-repeat center center fixed;
@@ -63,6 +65,33 @@
         .login-form {
             text-align: center;
         }
+        .colored-toast.swal2-icon-success {
+    background-color: #48941c !important;
+}
+.colored-toast.swal2-icon-error {
+    background-color: #ff4747 !important;
+}
+.colored-toast.swal2-icon-warning {
+    background-color: #f8bb86 !important;
+}
+.colored-toast.swal2-icon-info {
+    background-color: #3fc3ee !important;
+}
+.colored-toast.swal2-icon-question {
+    background-color: #87adbd !important;
+}
+.colored-toast .swal2-title {
+    color: white;
+}
+.colored-toast .swal2-close {
+    color: white;
+}
+.colored-toast .swal2-html-container {
+    color: white;
+}
+.border-red-500 {
+    border-color: #ff4747 !important;
+}
     </style>
 </head>
 
@@ -75,17 +104,17 @@
             </div>
         </div>
     </nav>
-    <div class=" d-flex flex-column align-items-center justify-content-center min-vh-100">
+    <div class="d-flex flex-column align-items-center justify-content-center min-vh-100">
         <div class="login-header">
             <img src="{{ URL('images/UCU-logo.png') }}" alt="UCU Logo" class="logo">
             <h1 class="h3 font-weight-normal text-white">Secure-U</h1>
         </div>
-        <div class="login-container">
-            <form method="post" action="{{ route('login.action') }}" class="login-form">
+        <div class="login-container mb-5">
+            <form class="space-y-4" method="post" action="{{ route('login.action') }}">
                 @csrf
                 @if ($errors->any())
-                <div class="alert alert-danger" role="alert">
-                    <strong>Error!</strong>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Error!</strong>
                     <ul>
                         @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -93,29 +122,124 @@
                     </ul>
                 </div>
                 @endif
-                <div class="form-group text-start">
-                    <label for="email ">Email:</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com" required="">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-900">Your email</label>
+                    <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@company.com" required>
+                    <span class="text-red-500" id="emailError"></span>
                 </div>
-                <div class="form-group text-start">
-                    <label for="password">Password:</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required="">
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-900">Password</label>
+                    <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
+                    <span class="text-red-500" id="passwordError"></span>
                 </div>
-                <div class="form-group form-check text-start">
-                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                    <label class="form-check-label" for="remember">Remember me</label>
+                <div class="flex items-center justify-between">
+                    <label for="remember" class="flex items-center">
+                        <input type="checkbox" id="remember" class="form-checkbox h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-sm text-blue-900">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-                <p >
-                    <a href="{{route('password.request')}}">Forgot password?</a>
-                </p>
-                {{-- <p >Don’t have an account? <a href="{{ route('register') }}">Sign up</a></p> --}}
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-white-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Sign in</button>
             </form>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "{{ route('login.action') }}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            window.location.href = response.redirect;
+                        } else {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                iconColor: 'white',
+                                customClass: {
+                                    popup: 'colored-toast',
+                                },
+                                showConfirmButton: false,
+                                timer: 2500,
+                                timerProgressBar: true,
+                                icon: 'error',
+                                title: response.message,
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                if (xhr.status === 404 || xhr.status === 401) {
+                    if (xhr.status === 404) {
+                        $('#emailError').text(xhr.responseJSON.message);
+                        $('#email').addClass('border-red-500');
+                    }
+                    if (xhr.status === 401) {
+                        $('#passwordError').text(xhr.responseJSON.message);
+                        $('#password').addClass('border-red-500');
+                    }
+                } else if (xhr.status === 429) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                iconColor: 'white',
+                                customClass: {
+                                    popup: 'colored-toast',
+                                },
+                                showConfirmButton: false,
+                                timer: 2500,
+                                timerProgressBar: true,
+                                icon: 'error',
+                                title: "Too many login attempts. Please try again in 10 minutes.",
+                            });
+                        } else if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            const errorMessage = Object.values(errors).flat().join('\n');
+
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                iconColor: 'white',
+                                customClass: {
+                                    popup: 'colored-toast',
+                                },
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                icon: 'error',
+                                title: errorMessage,
+                            });
+                        } else {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                iconColor: 'white',
+                                customClass: {
+                                    popup: 'colored-toast',
+                                },
+                                showConfirmButton: false,
+                                timer: 2500,
+                                timerProgressBar: true,
+                                icon: 'error',
+                                title: 'An unexpected error occurred',
+                            });
+                        }
+                    }
+                });
+            });
+        });
+        </script>
+
 </body>
 
 </html>

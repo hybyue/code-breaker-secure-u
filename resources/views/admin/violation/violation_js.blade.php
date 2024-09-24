@@ -14,6 +14,17 @@
     $(document).ready(function () {
         const dataTable = $("#violationTable").DataTable();
 
+        $('.editModal').on('click', function() {
+          let id = $(this).data('id');
+            let targetModal = '#updateViolationModalAd-' + id;
+
+            $(targetModal).find('.modal-header').html('Violation ID: ' + id);
+
+          $(targetModal).modal('show');
+
+          console.log("Edit violation with ID: " + id);
+       });
+
         $('#violationFormAdmin').on('submit', function(e){
             e.preventDefault();
 
@@ -30,45 +41,15 @@
 
                         $('#violationTable').load(location.href + ' #violationTable', function() {
 
-                            $('.modal').modal({
-                                backdrop: 'static',
-                                keyboard: true
-                            });
+                                // Reinitialize the editModal event listener for the new buttons
+                                $('.editModal').on('click', function() {
+                            let id = $(this).data('id'); // Get the violation ID from the data attribute
+                            let targetModal = '#updateViolationModalAd-' + id; // Build the correct modal ID
 
-                            $('.viewModal').on('click', function() {
-                                let id = $(this).data('id');  // Get the violation ID from the data attribute
-                                let targetModal = $(this).data('bs-target');  // Get the target modal ID
+                            $(targetModal).modal('show');
 
-                                $(targetModal).find('.modal-body').html('Violation ID: ' + id);
-
-                                // Check if modal instance exists and dispose of it
-                                let modalInstance = bootstrap.Modal.getInstance(document.querySelector(targetModal));
-                                if (modalInstance) {
-                                    modalInstance.dispose();
-                                }
-
-
-                                $(targetModal).modal('show');
-                                console.log("View violation with ID: " + id);
-                            });
-
-                            $('.editModal').on('click', function() {
-                                let id = $(this).data('id');
-                                let targetModal = $(this).data('bs-target');
-
-                                $(targetModal).find('.modal-body').html('Edit Violation ID: ' + id);
-
-                                // Check if modal instance exists and dispose of it
-                                let modalInstance = bootstrap.Modal.getInstance(document.querySelector(targetModal));
-                                if (modalInstance) {
-                                    modalInstance.dispose();
-                                }
-                                $(targetModal).modal('show');
-
-                                console.log("Edit violation with ID: " + id);  // This log shows the violation ID
-                            });
-
-
+                            console.log("Edit violation with ID: " + id);  // Log for debugging
+                        });
                         });
 
                         Swal.fire({

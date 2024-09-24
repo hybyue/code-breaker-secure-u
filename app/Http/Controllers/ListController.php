@@ -91,24 +91,5 @@ class ListController extends Controller
 
         return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
     }
-    public function searchEmployee(Request $request) {
-        $query = AllEmployee::query();
 
-        // Check if search term is ID or name
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where('employee_id', $searchTerm)
-                  ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
-
-        }
-
-        $employees = $query->limit(5)->get();
-
-        if ($employees->count() > 0) {
-            return response()->json(['success' => true, 'employees' => $employees]);
-        } else {
-            return response()->json(['success' => false]);
-        }
-    }
 }

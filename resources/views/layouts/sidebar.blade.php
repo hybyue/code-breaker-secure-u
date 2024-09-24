@@ -62,12 +62,12 @@
                         <span>Pass Slip</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                {{-- <li class="sidebar-item">
                     <a href="{{ route('sub-admin.sticker.vehicle_sticker_list') }}" class="sidebar-link {{ Route::is('sub-admin.sticker.vehicle_sticker_list') ? 'active' : '' }}">
                         <i class="bi bi-car-front-fill"></i>
                         <span>Vehicle Stickers</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="sidebar-item">
                     <a href="{{route('sub-admin.lost.lost_found')}}" class="sidebar-link {{ Route::is('sub-admin.lost.lost_found') ? 'active' : '' }}">
                         <i class="bi bi-box-seam-fill"></i>

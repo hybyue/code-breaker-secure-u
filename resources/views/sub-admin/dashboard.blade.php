@@ -28,12 +28,12 @@
             </div>
         </div>
         <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.sticker.vehicle_sticker_list') }}'">
+            <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='#'">
                 <div class="card-body d-flex justify-content-between">
                     <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
                     <div class="container">
-                        <h5 class="card-title text-black">Vehicle Sticker</h5>
-                        <h4 class="text-end text-black">{{ $totalVehicleStickers }}</h4>
+                        <h5 class="card-title text-black">Violations</h5>
+                        <h4 class="text-end text-black">4</h4>
                     </div>
                 </div>
             </div>

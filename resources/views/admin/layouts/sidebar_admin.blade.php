@@ -66,12 +66,12 @@
                         <span>Pass Slip</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                {{-- <li class="sidebar-item">
                     <a href="{{ route('admin.vehicle_sticker.vehicle_sticker') }}" class="sidebar-link {{ Route::is('admin.vehicle_sticker.vehicle_sticker') ? 'active' : '' }}">
                         <i class="bi bi-car-front-fill"></i>
                         <span>Vehicle Stickers</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="sidebar-item">
                     <a href="{{ route('admin.violation.violation')}}" class="sidebar-link {{ Route::is('admin.violation.violation') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-person"></i>
@@ -125,7 +125,8 @@
     <script src="{{ asset('js/sidebar_admin.js') }}"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js"></script>
     @livewireScripts
 </body>

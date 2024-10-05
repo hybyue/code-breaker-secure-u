@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
-
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -21,6 +20,17 @@ class HomeController extends Controller
     public function adminHome()
     {
         return view('admin.dashboard');
+    }
+
+    public function backButton()
+    {
+
+        if (Auth::user()->type == 'admin') {
+
+        return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('sub-admin.dashboard');
+        }
     }
 
 }

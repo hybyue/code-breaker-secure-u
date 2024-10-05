@@ -9,6 +9,8 @@
     <meta name="author" content="UCU">
     <title>Login</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+
     <style>
         body {
             background: url('{{ asset('images/bg-ucu.jpg') }}') no-repeat center center fixed;
@@ -98,17 +100,16 @@
                 @endif
 
                 <div class="container">
-                    <h4 class="text-center">Request a password email reset link</h4>
+                    <h3 class="text-center text-lg font-extrabold">Request reset password link</h3>
                 </div>
                 <div class="form-group text-start mt-2">
                     <label for="email ">Your email</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com" required="">
+                    <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@company.com" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
 
-                <p >
-                    <a href="{{route('login')}}">Login</a>
-                </p>
+                <button type="submit" class="w-full flex justify-center py-2 mt-2 mb-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-white-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Send Request</button>
+                <a href="{{URL('/login')}}" class="text-md underline text-blue-600">Go to login?</a>
+
             </form>
         </div>
     </div>

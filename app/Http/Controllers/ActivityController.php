@@ -9,7 +9,7 @@ class ActivityController extends Controller
 {
     public function index()
     {
-        $activities = Activity::with('causer')->orderBy('created_at', 'desc')->paginate(10);
+        $activities = Activity::with('causer')->latest()->get();
 
         return view('admin.activity', compact('activities'));
     }

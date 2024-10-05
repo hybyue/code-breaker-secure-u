@@ -15,7 +15,7 @@
 
 <script>
     $(document).ready(function () {
-    const dataTable = $("#visitorTable").DataTable();
+    $("#visitorTable").DataTable();
 
     $("#add-visitor-btn").click(function () {
         $("#addVisitorModal #last_name").val("");

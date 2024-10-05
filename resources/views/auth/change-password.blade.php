@@ -68,9 +68,9 @@
 </head>
 <body>
     <div class="p-3 mt-2">
-        <button onclick="window.history.go(-1);" class="btn btn-outline-dark">
+        <a href="{{ url('/back') }}" class="btn btn-outline-dark">
             <i class="bi bi-arrow-left"></i> Back
-        </button>
+        </a>
     </div>
 
     <div class="row d-flex justify-content-center align-items-center">

@@ -9,6 +9,7 @@
     <meta name="author" content="UCU">
     <title>Login</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
     <style>
         body {
             background: url('{{ asset('images/bg-ucu.jpg') }}') no-repeat center center fixed;
@@ -76,10 +77,6 @@
         </div>
     </nav>
     <div class=" d-flex flex-column align-items-center justify-content-center min-vh-100">
-        <div class="login-header">
-            <img src="{{ URL('images/UCU-logo.png') }}" alt="UCU Logo" class="logo">
-            <h1 class="h3 font-weight-normal text-white">Secure-U</h1>
-        </div>
         <div class="login-container">
             <form method="post" action="{{route('password.update')}}" class="login-form">
                 @csrf
@@ -96,33 +93,35 @@
                     {{ session('status') }}
                 </div>
                 @endif
-
+                <div class="container">
+                    <h3 class="text-center text-lg font-extrabold">Reset your password</h3>
+                </div>
                 <input type="hidden" name="token" value="{{$token}}">
                 <div class="form-group text-start">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com" required value="{{ old('email') }}">
+                    <label for="email" class="block text-md font-medium text-gray-900">Your email</label>
+                    <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@company.com" required value="{{ old('email') }}">
                     @error('email')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group text-start">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+                    <label for="password" class="block text-md font-medium text-gray-900">Password</label>
+                    <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
                     @error('password')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group text-start">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="••••••••" required>
+                    <label for="password_confirmation" class="block text-md font-medium text-gray-900">Confirm Password</label>
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
                     @error('password_confirmation')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
+                <button type="submit" class="w-full flex justify-center py-2 mt-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-white-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Submit</button>
 
                 <p >
-                    <a href="{{route('login')}}">Login</a>
+                    <a href="{{URL('/login')}}" class="text-md underline text-blue-600">Go to login?</a>
                 </p>
             </form>
         </div>

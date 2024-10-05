@@ -41,8 +41,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('password.change');
 });
 
-//for sub-admin
+Route::get('/back', [HomeController::class, 'backButton']);
 
+
+//for sub-admin
 Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('sub-admin.dashboard');
 
@@ -99,7 +101,6 @@ Route::put('/violation/update/{id}', [ViolationController::class, 'update_violat
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/admin', [HomeController::class, 'adminHome'])->name('admin.dashboard');
-
 
     Route::get('admin/profile', function () {
         return view('profile_admin');

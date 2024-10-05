@@ -14,15 +14,15 @@
         <div class="col-md-4 col-sm-6 mb-4">
             <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.visitors.visitor') }}'">
                 <div class="card-body d-flex justify-content-between">
-                    <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
+                    <div class="icon-container text-center d-flex justify-content-center align-items-center" >
+                        <i class="bi bi-person-fill" style="font-size: 50px; color: white; vertical-align: middle;"></i>
+                    </div>
                     <div class="container">
                         <h5 class="card-title text-black">Total Visitor</h5>
                         <div class="row d-flex justify-content-between align-items-between">
                             <div class="col-md-4"> <small class="text-end text-black">Today: {{ $todayVisitors }}</small></div>
                             <div class="col-md-4"><h4 class="text-end text-black">{{ $totalVisitors }}</h4></div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -30,7 +30,9 @@
         <div class="col-md-4 col-sm-6 mb-4">
             <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='#'">
                 <div class="card-body d-flex justify-content-between">
-                    <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
+                    <div class="icon-container text-center d-flex justify-content-center align-items-center" >
+                        <i class="bi bi-file-earmark-person" style="font-size: 50px; color: white; vertical-align: middle;"></i>
+                    </div>
                     <div class="container">
                         <h5 class="card-title text-black">Violations</h5>
                         <h4 class="text-end text-black">4</h4>
@@ -41,7 +43,9 @@
         <div class="col-md-4 col-sm-6 mb-4">
             <div class="card-onclick card text-white" style="background-color:#D9D9D9;" onclick="location.href='{{ route('sub-admin.pass_slip.pass_slip') }}'">
                 <div class="card-body d-flex justify-content-between">
-                    <img src="images/person.png" alt="Person Image" class="" style="width: 80px; height: 80px;">
+                    <div class="icon-container text-center d-flex justify-content-center align-items-center" >
+                        <i class="bi bi-pass" style="font-size: 50px; color: white; vertical-align: middle;"></i>
+                    </div>
                     <div class="container">
                         <h5 class="card-title text-black">Pass Slip</h5>
                         <div class="row d-flex justify-content-between align-items-between">
@@ -177,6 +181,15 @@
 
     .event-title {
         font-weight: bold;
+    }
+    .icon-container{
+        background-color:#A10D0D;
+        width: 100px;
+        height: 80px;
+        border-radius: 5px;
+    }
+    .icon-container i{
+        vertical-align: middle;
     }
 </style>
 @endsection

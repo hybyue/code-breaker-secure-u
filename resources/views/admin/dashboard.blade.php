@@ -15,10 +15,10 @@
                 popup: 'colored-toast',
             },
             showConfirmButton: false,
-            timer: 2500,
+            timer: 5000,
             timerProgressBar: true,
             icon: 'success',
-            title: session.success,
+            title: {{ session('success') }},
         });
     </script>
 @endif
@@ -158,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-// <!-- Custom CSS for nested boxes -->
 <style>
     .event-box {
         border: 1px solid #303030;

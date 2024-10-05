@@ -16,6 +16,7 @@
         "@fullcalendar/interaction": "^6.1.15",
         "@hotwired/turbo": "^8.0.5",
         "alpinejs": "^3.14.1",
+        "datatables.net-buttons": "^3.1.2",
         "nprogress": "^0.2.0"
     }
 }

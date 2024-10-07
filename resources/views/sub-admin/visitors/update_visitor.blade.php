@@ -47,7 +47,7 @@
                               </div>
                         </div>
                         <input type="hidden" name="time_in" id="time_in_{{ $visitor->id }}" value="{{ $visitor->time_in }}">
-                        <input type="hidden" name="time_in" id="time_in_{{ $visitor->id }}" value="{{ $visitor->time_out }}">
+                        <input type="hidden" name="time_out" id="time_out_{{ $visitor->id }}" value="{{ $visitor->time_out }}">
 
                         <div class="form-group text-center mt-3">
                             <button type="submit" class="btn btn-primary text-white" ">Update</button>

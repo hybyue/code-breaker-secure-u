@@ -19,14 +19,7 @@
     </div>
 
     <div class="container p-3 mt-4 bg-body-secondary rounded">
-        <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
 
-            </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;">
-            </div>
-        </div>
     <table id="tableLost" class="table table-bordered same-height-table">
         <thead>
             <tr>
@@ -74,22 +67,6 @@
             @endforelse            </tr>
         </tbody>
     </table>
-    <div class="d-flex justify-content-between">
-        <div>Showing 1 to 2 of 2 entries</div>
-        <nav>
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 </div>
 
 </div>

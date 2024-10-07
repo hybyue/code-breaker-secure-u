@@ -150,28 +150,27 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    //TODO:copy paste mo ito pag natapos na website
     <script>
         $(document).ready(function() {
             $('form').on('submit', function(e) {
                 e.preventDefault();
 
                 var $submitButton = $('button[type="submit"]');
-                var originalButtonText = $submitButton.html(); // Save original button text
+                var originalButtonText = $submitButton.html();
 
                 $.ajax({
                     url: "{{ route('login.action') }}",
                     type: "POST",
                     data: $(this).serialize(),
                     beforeSend: function() {
-                        // Disable the button and show loading text
+
                         $submitButton.prop('disabled', true);
                         $submitButton.html('<span class="spinner-border spinner-border-sm"></span>&nbsp;  Signing in...'); // Loading spinner with text
                     },
                     success: function(response) {
                         if (response.status === 'success') {
                             window.location.href = response.redirect;
-                            $submitButton.html('<span class="spinner-border spinner-border-sm"></span>&nbsp;  Signing in...'); // Loading spinner with text
-
                         } else {
                             Swal.fire({
                                 toast: true,
@@ -189,15 +188,12 @@
                         }
                     },
                     error: function(xhr) {
-                        if (xhr.status === 404 || xhr.status === 401) {
-                            if (xhr.status === 404) {
+                        if (xhr.status === 404) {
                                 $('#emailError').text(xhr.responseJSON.message);
                                 $('#email').addClass('border-red-500');
-                            }
-                            if (xhr.status === 401) {
-                                $('#passwordError').text(xhr.responseJSON.message);
-                                $('#password').addClass('border-red-500');
-                            }
+                        } else if( xhr.status === 401){
+                            $('#passwordError').text(xhr.responseJSON.message);
+                            $('#password').addClass('border-red-500');
                         } else if (xhr.status === 429) {
                             Swal.fire({
                                 toast: true,
@@ -245,10 +241,11 @@
                             });
                         }
                     },
-                    complete: function() {
-                        // Re-enable the button and reset its text
+                    complete: function(xhr, status) {
+                        if (status !== 'success') {
                         $submitButton.prop('disabled', false);
                         $submitButton.html(originalButtonText);
+                    }
                     }
                 });
             });

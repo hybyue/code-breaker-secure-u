@@ -15,7 +15,25 @@
 
 <script>
     $(document).ready(function () {
-    $("#visitorTable").DataTable();
+
+    //     $('#visitorTable').DataTable({
+    //     dom: 'Bfrtip',
+    //     responsive: true,
+    //     ordering: false,
+    //     buttons: [
+    //         'copy', 'csv', 'excel', 'pdf', 'print'
+    //     ]
+    // });
+
+    new DataTable('#visitorTable', {
+        responsive: true,
+        ordering: false,
+        dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+
+        });
 
     $("#add-visitor-btn").click(function () {
         $("#addVisitorModal #last_name").val("");

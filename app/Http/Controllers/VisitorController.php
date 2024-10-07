@@ -26,7 +26,7 @@ public function filterVisitorAdmin(Request $request)
               ->whereDate('visitors.created_at', '<=', $request->end_date);
     }
 
-    $latestVisitors = $query->get();
+    $latestVisitors = $query->paginate();
 
     $allVisitors = Visitor::query();
 
@@ -172,8 +172,8 @@ public function filterVisitor(Request $request)
                          ->whereDate('visitors.created_at', '<=', $request->end_date);
             }
         })
-        ->orderBy('visitors.created_at', 'desc')
-        ->paginate(10);
+        ->latest()
+        ->paginate();
 
     $allVisitors = $query->get();
 

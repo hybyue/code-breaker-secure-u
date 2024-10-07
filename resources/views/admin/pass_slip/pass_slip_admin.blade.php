@@ -51,14 +51,6 @@
             </form>
         </div>
     <div class="container p-3 mt-4 bg-body-secondary rounded">
-        <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
-
-            </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;" onkeyup="searchTable()">
-            </div>
-        </div>
         <table id="passTable" class="table table-bordered same-height-table">
             <thead>
                 <tr>
@@ -96,7 +88,7 @@
                             </div>
                         </div>
                     </td>
-                    <td hidden>{{ $passSlip->employee_type }}</td>
+                    <p hidden>{{ $passSlip->employee_type }}</p>
                 </tr>
             @empty
                 <tr>
@@ -105,24 +97,6 @@
             @endforelse
         </tbody>
     </table>
-    <div class="d-flex justify-content-between">
-        <div>Showing {{ $latestPassSlips->count() }} of {{ $latestPassSlips->total() }} entries</div>
-        <nav>
-            <ul class="pagination">
-                <li class="page-item {{ $latestPassSlips->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $latestPassSlips->previousPageUrl() }}" tabindex="-1">Previous</a>
-                </li>
-                @for ($i = 1; $i <= $latestPassSlips->lastPage(); $i++)
-                    <li class="page-item {{ $latestPassSlips->currentPage() == $i ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $latestPassSlips->url($i) }}">{{ $i }}</a>
-                    </li>
-                @endfor
-                <li class="page-item {{ $latestPassSlips->hasMorePages() ? '' : 'disabled' }}">
-                    <a class="page-link" href="{{ $latestPassSlips->nextPageUrl() }}">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 </div>
 </div>
 

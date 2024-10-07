@@ -12,7 +12,7 @@ class ListController extends Controller
 {
     public function student_admin()
 {
-    $students = Student::latest()->get();
+    $students = Student::latest()->paginate();
 
     return view('admin.students.student', compact('students'));
 }
@@ -51,7 +51,7 @@ class ListController extends Controller
 
     public function all_employee_admin()
     {
-        $allEmployees = AllEmployee::all();
+        $allEmployees = AllEmployee::latest()->paginate();
 
         return view('admin.employees.all_employee', compact('allEmployees'));
     }

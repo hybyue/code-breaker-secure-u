@@ -10,9 +10,19 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
+
 
         $(document).ready(function () {
+
+            new DataTable('#passTable', {
+        responsive: true,
+        ordering: false,
+        dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+        });
+
     $('#addPassForm').on('submit', function(e){
         e.preventDefault();
 
@@ -53,9 +63,6 @@
             }
         });
     });
-});
-
-
 });
 
    </script>

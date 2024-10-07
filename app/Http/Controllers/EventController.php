@@ -92,7 +92,7 @@ class EventController extends Controller
 
     public function eventAdmin()
     {
-        $events = Event::latest()->paginate(10);
+        $events = Event::latest()->paginate();
         return view('admin.events.event_admin', compact('events'));
     }
 

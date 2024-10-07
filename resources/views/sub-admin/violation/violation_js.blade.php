@@ -12,6 +12,16 @@
 <script>
     $(document).ready(function () {
 
+        let table = new DataTable('#violationTable', {
+            responsive: true,
+            ordering: false,
+            dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+        });
+
+
     $('#violationForms').on('submit', function(e){
         e.preventDefault();
 

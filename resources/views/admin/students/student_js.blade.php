@@ -12,7 +12,10 @@
 
    <script>
     $(document).ready(function () {
-        const dataTable = $("#violationTable").DataTable();
+        new DataTable('#studentTable', {
+        responsive: true,
+        ordering: false,
+        });
 
         $('#violationFormAdmin').on('submit', function(e){
             e.preventDefault();

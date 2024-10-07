@@ -13,6 +13,13 @@
 <script>
 
 $(document).ready(function () {
+
+    new DataTable('#tableLost', {
+        responsive: true,
+        ordering: false,
+        });
+
+
     $('#addLostForm').on('submit', function(e){
         e.preventDefault();
 

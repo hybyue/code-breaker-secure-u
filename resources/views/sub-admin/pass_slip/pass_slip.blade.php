@@ -12,53 +12,48 @@
             <a href="#" class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addPassSlipModal">
                 <i class="bi bi-plus-circle-fill text-center"></i> Add New
             </a>
-            <a href="{{ route('pdf.generate-pass', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
+            <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
                 <i class="bi bi-file-earmark-pdf-fill"></i> PDF
             </a>
 
                     </div>
 
-        <div class="container mt-4">
-            <form action="/filter_pass_slip" method="GET">
-                <div class="row pb-3">
-                    <div class="col-md-3">
-                        <label for="start_date"> Start Date: </label>
-                        <input type="date" name="start_date" id="start_date" class="form-control" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="end_date"> End Date: </label>
-                        <input type="date" name="end_date" id="end_date" class="form-control" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="employee_type">Employee Type:</label>
-                        <select class="form-select" id="employee_type" name="employee_type">
-                            <option value="">All</option>
-                            <option value="Teaching" {{ request('employee_type') == 'Teaching' ? 'selected' : '' }}>Teaching</option>
-                            <option value="Non-Teaching" {{ request('employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
-                        </select>
-                    </div>
-                    <div class="col-md-1 mt-4 pt-2">
-                        <button type="submit"class="btn btn-dark">Filter</button>
+                    <div class="container mt-4">
+                        <form action="/filter_pass_slip" method="GET">
+                            <div class="row pb-3">
+                                <div class="col-md-3">
+                                    <label for="start_date">Start Date:</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="end_date">End Date:</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="employee_type">Employee Type:</label>
+                                    <select class="form-select" id="employee_type" name="employee_type">
+                                        <option value="">All</option>
+                                        <option value="Teaching" {{ request('employee_type') == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                        <option value="Non-Teaching" {{ request('employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 mt-4 pt-2">
+                                    <button type="submit" class="btn btn-dark">Filter</button>
+                                </div>
+
+                                @if(request('start_date') || request('end_date') || request('employee_type'))
+                                <div class="col-md-0 mt-4 pt-2">
+                                    <a href="/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
+                                </div>
+                                @endif
+                            </div>
+                        </form>
                     </div>
 
-                    @if(request('start_date') || request('end_date'))
-                    <div class="col-md-0 mt-4 pt-2">
-                        <a href="/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
-                    </div>
-                    @endif
-                </div>
-            </form>
-        </div>
+
 
     <div class="container p-3 bg-body-secondary rounded">
-        <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
 
-            </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;" onkeyup="searchTable()">
-            </div>
-        </div>
         <table id="passTable" class="table table-bordered same-height-table">
             <thead>
                 <tr>
@@ -96,7 +91,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td hidden>{{ $passSlip->employee_type }}</td>
+                        <p hidden>{{ $passSlip->employee_type }}</p>
                     </tr>
                 @empty
                     <tr>
@@ -105,25 +100,7 @@
                 @endforelse
             </tbody>
         </table>
-        <div class="d-flex justify-content-between">
-            <div>Showing {{ $latestPassSlips->count() }} of {{ $latestPassSlips->total() }} entries</div>
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item {{ $latestPassSlips->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $latestPassSlips->previousPageUrl() }}" tabindex="-1">Previous</a>
-                    </li>
-                    @for ($i = 1; $i <= $latestPassSlips->lastPage(); $i++)
-                        <li class="page-item {{ $latestPassSlips->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $latestPassSlips->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-                    <li class="page-item {{ $latestPassSlips->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link" href="{{ $latestPassSlips->nextPageUrl() }}">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
+
 </div>
 
 @include('sub-admin.pass_slip.add_pass')
@@ -141,6 +118,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="row d-flex align-items-between">
+                <div class="col">
+                    <h6 class="text-start"><strong>Departure count:</strong>  {{ $passSlip->exit_count }}</h6>
+                </div>
+                <div class="col">
+                    <h6 class="text-end"> <strong>{{ $passSlip->employee_type }}</strong></h6>
+                </div>
+            </div>
                 @foreach($allPassSlips->where('last_name', $passSlip->last_name)->where('first_name', $passSlip->first_name)->where('middle_name', $passSlip->middle_name)->where('date', $passSlip->date) as $entry)
                 <div class="card mt-2 p-2">
                     <div class="card-body p-3">
@@ -151,7 +136,6 @@
                         <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</p>
                         <p><strong>Time Out:</strong> {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}</p>
                         <p><strong>Time In:</strong> {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</p>
-                        <p><strong>Time Out Count:</strong> {{ $entry->exit_count }}</p>
                     </div>
                 </div>
                 @endforeach
@@ -184,6 +168,25 @@
             }
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const startDateInput = document.getElementById('start_date');
+    const endDateInput = document.getElementById('end_date');
+
+    startDateInput.addEventListener('change', function () {
+        endDateInput.min = this.value; // Set minimum value for end date
+    });
+
+    endDateInput.addEventListener('change', function () {
+        startDateInput.max = this.value; // Set maximum value for start date
+    });
+
+    // Automatically set end date to start date if end date is empty
+    if (startDateInput.value && !endDateInput.value) {
+        endDateInput.value = startDateInput.value;
+    }
+});
+
 </script>
 
 

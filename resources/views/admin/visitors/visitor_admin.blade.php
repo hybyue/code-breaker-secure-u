@@ -56,8 +56,8 @@
         </div> --}}
         <div class="container p-2 bg-body-secondary rounded">
         <div class="row p-4">
-            <div class="col-12">
-                <table id="visitorTable" class="table table-light table-bordered table-responsive table-rounded table-striped same-height-table">
+            <div class="col-12 p-1">
+                <table id="visitorTable" class="table table-light p-3 table-bordered table-responsive table-rounded table-striped same-height-table">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -119,25 +119,6 @@
             </div>
         </div>
     </div>
-        {{-- <div class="d-flex justify-content-between">
-            <div>Showing {{ $latestVisitors->count() }} of {{ $latestVisitors->total() }} entries</div>
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item {{ $latestVisitors->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $latestVisitors->previousPageUrl() }}" tabindex="-1">Previous</a>
-                    </li>
-                    @for ($i = 1; $i <= $latestVisitors->lastPage(); $i++)
-                        <li class="page-item {{ $latestVisitors->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $latestVisitors->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-                    <li class="page-item {{ $latestVisitors->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link" href="{{ $latestVisitors->nextPageUrl() }}">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div> --}}
 
     @include('admin.visitors.add_visitor')
     @include('admin.visitors.update_visitor')

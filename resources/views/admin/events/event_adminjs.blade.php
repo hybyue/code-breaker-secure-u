@@ -11,6 +11,10 @@
 </script>
 <script>
     $(document).ready(function () {
+        new DataTable('#announceTable', {
+        responsive: true,
+        ordering: false,
+        });
        $(document).on('click', '.add_event', function(e){
            e.preventDefault();
 
@@ -33,7 +37,7 @@
               if(resp.status=='success'){
                 $('#addNewEventModal').modal('hide');
                 $('#addEventForm')[0].reset();
-                $('.table').load(location.href + ' .table');
+                $('#announceTable').load(location.href + ' #announceTable');
                      const Toast = Swal.mixin({
                     toast: true,
                     position: 'bottom-right',

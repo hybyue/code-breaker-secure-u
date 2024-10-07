@@ -37,7 +37,7 @@
             <button class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
                 <i class="bi bi-plus-circle-fill"></i> Add New
             </button>
-            <a href="{{ route('pdf.generate-visitor', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-visitors.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="{{ route('pdf.generate-visitors', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-visitors.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
         </div>
     </div>
     <div class="container mt-2">
@@ -63,23 +63,6 @@
         </form>
     </div>
     <div class="container p-2 bg-body-secondary rounded">
-        <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
-                <label for="entries" class="mr-2">Show</label>
-                <select id="entries" class="form-control w-auto m-2" onchange="changeEntries()">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="110">110</option>
-                    <option value="125">125</option>
-                </select>
-                <label for="entries" class="ml-2">entries</label>
-            </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;" onkeyup="searchTable()">
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <table id="visitorTable" class="table table-bordered table-rounded table-striped text-center same-height-table ">
@@ -142,24 +125,7 @@
                 </table>
             </div>
         </div>
-        <div class="d-flex justify-content-between">
-            <div>Showing {{ $latestVisitors->count() }} of {{ $latestVisitors->total() }} entries</div>
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item {{ $latestVisitors->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $latestVisitors->previousPageUrl() }}" tabindex="-1">Previous</a>
-                    </li>
-                    @for ($i = 1; $i <= $latestVisitors->lastPage(); $i++)
-                        <li class="page-item {{ $latestVisitors->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $latestVisitors->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-                    <li class="page-item {{ $latestVisitors->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link" href="{{ $latestVisitors->nextPageUrl() }}">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+
     </div>
 
         {{-- Modal for showing all entries of a visitor --}}

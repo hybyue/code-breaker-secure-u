@@ -2,9 +2,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-$(document).ready(function () {
-
     $(document).ready(function () {
+
+        let table = new DataTable('#passTable', {
+            responsive: true,
+            "ordering": false,
+        });
+
 $('#addPassForm').on('submit', function(e){
     e.preventDefault();
 
@@ -45,6 +49,4 @@ $('#addPassForm').on('submit', function(e){
     });
 });
 });
-
-})
 </script>

@@ -12,43 +12,50 @@ use Illuminate\Support\Facades\DB;
 class PassSlipController extends Controller
 {
     public function pass_slip(Request $request)
-{
-    return $this->filterPassSlip($request);
-}
-
-public function filterPassSlip(Request $request)
-{
-    $query = PassSlip::query();
-
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+    {
+        return $this->filterPassSlip($request);
     }
 
-    if ($request->filled('employee_type')) {
-        $query->where('employee_type', $request->employee_type);
+    public function filterPassSlip(Request $request)
+    {
+        $query = PassSlip::query();
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        if ($request->filled('employee_type')) {
+            $query->where('employee_type', $request->employee_type);
+        }
+
+        // Fetch the latest pass slips per user for the specified date range
+        $latestPassSlips = PassSlip::select('pass_slips.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
+            ->where(function ($subQuery) use ($request) {
+                if ($request->filled('start_date')) {
+                    $subQuery->whereDate('pass_slips.created_at', '>=', $request->start_date);
+                }
+                if ($request->filled('end_date')) {
+                    $subQuery->whereDate('pass_slips.created_at', '<=', $request->end_date);
+                }
+                if ($request->filled('employee_type')) {
+                    $subQuery->where('pass_slips.employee_type', $request->employee_type);
+                }
+            })
+            ->latest()
+            ->paginate() // Paginate results
+            ->appends($request->all()); // Append filters to pagination links
+
+        // Fetch all pass slips for viewing older entries in modal
+        $allPassSlips = $query->get();
+
+        return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips'));
     }
 
-    // Fetch the latest pass slips per user for the specified date range
-    $latestPassSlips = PassSlip::select('pass_slips.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('pass_slips.created_at', '>=', $request->start_date)
-                         ->whereDate('pass_slips.created_at', '<=', $request->end_date);
-            }
-            if ($request->filled('employee_type')) {
-                $subQuery->where('pass_slips.employee_type', $request->employee_type);
-            }
-        })
-        ->orderBy('pass_slips.created_at', 'desc')
-        ->paginate(10);
-
-    // Fetch all pass slips for viewing older entries in modal
-    $allPassSlips = $query->get();
-
-    return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips'));
-}
 
     public function store_slip(Request $request)
     {
@@ -131,8 +138,8 @@ public function filterPassSlipAdmin(Request $request)
                 $subQuery->where('pass_slips.employee_type', $request->employee_type);
             }
         })
-        ->orderBy('pass_slips.created_at', 'desc')
-        ->paginate(10);
+        ->latest()
+        ->paginate();
 
     // Fetch all pass slips for viewing older entries in modal
     $allPassSlips = $query->get();

@@ -10,9 +10,12 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
-
         $(document).ready(function () {
+            new DataTable('#employeeTable', {
+        responsive: true,
+        ordering: false,
+        });
+
     $('#addPassForm').on('submit', function(e){
         e.preventDefault();
 
@@ -28,7 +31,7 @@
                     $('.modal-backdrop').remove();
                     $('#addPassSlipModal').modal('hide');
                     $('#addPassForm')[0].reset();
-                    $('#passTable').load(location.href + ' #passTable');
+                    $('#employeeTable').load(location.href + ' #employeeTable');
                     Swal.fire({
                         toast: true,
                         position: 'top-right',
@@ -54,11 +57,7 @@
         });
     });
 });
-
-
-});
-
-   </script>
+</script>
 
 <script type="text/javascript">
 

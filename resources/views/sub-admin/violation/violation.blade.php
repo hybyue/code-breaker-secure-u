@@ -13,19 +13,36 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#violationModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-lost', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="{{ route('pdf.generate-violation', array_merge(request()->query())) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-violation.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
         </div>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded">
-        <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
+    <div class="container mt-4">
+        <form action="/filter_violation" method="GET">
+            <div class="row pb-3">
+                <div class="col-md-3">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                </div>
+                <div class="col-md-1 mt-4 pt-2">
+                    <button type="submit" class="btn btn-dark">Filter</button>
+                </div>
 
+                @if(request('start_date') || request('end_date'))
+                <div class="col-md-0 mt-4 pt-2">
+                    <a href="/filter_violation" class="btn btn-secondary">Clear Filter</a>
+                </div>
+                @endif
             </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;">
-            </div>
-        </div>
+        </form>
+    </div>
+
+
+    <div class="container p-3 mt-4 bg-body-secondary rounded">
     <table id="violationTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
@@ -70,22 +87,6 @@
             @endforelse
         </tbody>
     </table>
-    <div class="d-flex justify-content-between">
-        <div>Showing 1 to 2 of 2 entries</div>
-        <nav>
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 </div>
 
 </div>

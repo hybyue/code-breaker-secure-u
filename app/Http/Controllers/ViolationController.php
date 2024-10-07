@@ -94,14 +94,18 @@ public function update_violationAdmin(Request $request, string $id)
 
 public function violation(Request $request)
 {
-    // Initial query for violations
+ return $this->filterViolation($request);
+}
+
+public function filterViolation(Request $request)
+{
     $query = Violation::query();
 
-    // Apply date filters if provided
     if ($request->filled('start_date') && $request->filled('end_date')) {
         $query->whereDate('created_at', '>=', $request->start_date)
               ->whereDate('created_at', '<=', $request->end_date);
     }
+
 
     // Select latest violation per student
     $violations = Violation::select('violations.*')
@@ -112,14 +116,13 @@ public function violation(Request $request)
                          ->whereDate('violations.created_at', '<=', $request->end_date);
             }
         })
-        ->orderBy('violations.created_at', 'desc')
-        ->paginate(10);
+        ->latest()
+        ->paginate();
 
     $allViolations = $query->get()->groupBy('student_no');
 
     return view('sub-admin.violation.violation', compact('violations', 'allViolations'));
 }
-
 
 
 public function store_violate(Request $request)

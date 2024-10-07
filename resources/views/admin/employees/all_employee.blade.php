@@ -16,7 +16,7 @@
     </div>
 
     <div class="container p-3 mt-4 bg-body-secondary rounded">
-    <table id="studentTable" class="table table-bordered same-height-table">
+    <table id="employeeTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
                 <th>Employee ID </th>

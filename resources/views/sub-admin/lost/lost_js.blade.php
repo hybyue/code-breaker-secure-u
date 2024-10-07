@@ -13,6 +13,12 @@
 <script>
 
 $(document).ready(function () {
+
+    let table = new DataTable('#lostTable', {
+            responsive: true,
+            "ordering": false,
+        });
+
     $('#addLostForm').on('submit', function(e){
         e.preventDefault();
         let formData = new FormData(this);
@@ -57,44 +63,3 @@ $(document).ready(function () {
 
 </script>
 
-<script type="text/javascript">
-
-	function deleteLostFound(id)
-	{
-      if(confirm("Are you sure to delete lost and found data?"))
-		{
-			$.ajax({
-				url:'/lost_found/archive/'+id,
-				type:'DELETE',
-
-				success:function(result)
-				{
-                    $("#"+result['tr']).slideUp("slow");
-
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'bottom-right',
-                    iconColor: 'white',
-                    customClass: {
-                    popup: 'colored-toast',
-                    },
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                    })
-
-                    Toast.fire({
-                        icon:'success',
-                        title: 'Deleted Successfully',
-                    });
-				},
-                error: function(xhr, status, error) {
-                   alert('An error occurred: ' + xhr.responseText);
-                },
-			});
-		}
-
-	}
-
-
-</script>

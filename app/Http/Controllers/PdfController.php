@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Lost;
 use App\Models\PassSlip;
+use App\Models\Violation;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -92,4 +93,29 @@ class PdfController extends Controller
         return $pdf->stream('report-losts.pdf');
 
     }
+
+    public function generate_violation(Request $request)
+    {
+        $query = Violation::query();
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date)
+                  ->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $violations = $query->get();
+        $user = Auth::user();
+        $data = [
+            'title' => 'Reports for Violation',
+            'date' => now()->format('F d, Y'),
+            'violations' => $violations,
+            'user' => $user
+        ];
+
+        $pdf = Pdf::loadView('pdf.generate-visitor', $data);
+
+        return $pdf->stream('report-violation.pdf');
+
+    }
 }
+

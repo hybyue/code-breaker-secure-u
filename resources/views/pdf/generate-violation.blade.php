@@ -85,10 +85,7 @@
             @foreach($violations as $violate)
             <tr>
                 <td>{{$violate->student_no}}</td>
-                <td>{{$violate->last_name}}, {{$violate->first_name}}
-                    @if($violate->middle_initial)
-                     {{$violate->middle_initial}}.
-                    @endif
+                <td>{{$violate->last_name}}, {{$violate->first_name}} @if($violate->middle_initial){{$violate->middle_initial}}.@endif
                 </td>
                 <td>{{$violate->course}}</td>
                 <td>{{$violate->violation_type}}</td>

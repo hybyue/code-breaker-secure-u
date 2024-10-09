@@ -24,3 +24,14 @@ const hamburger = document.querySelector("#toggle-btn");
             window.addEventListener("resize", adjustSidebar);
         })
 
+
+
+        window.addEventListener("load", () => {
+            const loading = document.querySelector(".loading-bar");
+
+            loading.classList.add("loading-bar-hidden");
+
+            loading.addEventListener("transitionend", () => {
+                loading.parentNode.removeChild(loading);
+            });
+        });

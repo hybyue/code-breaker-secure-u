@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
+
     @stack('styles')
     @stack('scripts')
 
@@ -27,12 +29,19 @@
             border-left: 2px solid #3b7ddd;
         }
 
+        .table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        }
     </style>
 
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
 
 </head>
 <body>
+    <div class="loading-bar"></div>
 
     <nav>@include('user')</nav>
 
@@ -41,7 +50,7 @@
             <div class="container">
                 <button id="toggle-btn" type="button"><i class="bi bi-list"></i></button>
                 <div class="sidebar-logo sidebar-header">
-                    <a href="#" style="font-size: 16px"> <span>Sub-Admin</span></a>
+                    <h4 class="text-white text-center">Secure-U</h4>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -83,6 +92,7 @@
                 </li>
             </ul>
         </aside>
+
 
         <div class="main p-3">
             @yield('content')

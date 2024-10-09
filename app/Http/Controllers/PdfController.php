@@ -112,7 +112,7 @@ class PdfController extends Controller
             'user' => $user
         ];
 
-        $pdf = Pdf::loadView('pdf.generate-visitor', $data);
+        $pdf = Pdf::loadView('pdf.generate-violation', $data);
 
         return $pdf->stream('report-violation.pdf');
 

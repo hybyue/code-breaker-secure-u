@@ -37,7 +37,7 @@
         </form>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded">
+    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
         <table id="lostTable" class="table table-bordered same-height-table">
             <thead>
                 <tr>

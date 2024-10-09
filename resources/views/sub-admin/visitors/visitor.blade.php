@@ -64,7 +64,7 @@
     </div>
     <div class="container p-2 bg-body-secondary rounded">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12" style="overflow-x:auto;">
                 <table id="visitorTable" class="table table-bordered table-rounded table-striped text-center same-height-table ">
                     <thead>
                         <tr>

@@ -9,7 +9,6 @@ use App\Http\Controllers\ListController;
 use App\Http\Controllers\LostFoundController;
 use App\Http\Controllers\PassSlipController;
 use App\Http\Controllers\PdfController;
-use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +40,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('password.change');
 });
 
-Route::get('/back', [HomeController::class, 'backButton']);
+Route::get('/back', [HomeController::class, 'backButton'])->name('back');
 
 
 //for sub-admin
@@ -70,7 +69,7 @@ Route::controller(PassSlipController::class)->group(function () {
     Route::get('sub-admin/pass_slip',  'pass_slip')->name('sub-admin.pass_slip.pass_slip');
     Route::post('sub-admin/pass_slip',  'store_slip')->name('pass_slips.store');
     Route::put('sub-admin/pass_slip/update/{id}',  'updatePassSlip')->name('update.pass_slips');
-    Route::get('/filter_pass_slip',  'filterPassSlip');
+    Route::get('/sub-admin/pass_slip/filter_pass_slip',  'filterPassSlip');
 });
 Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
 
@@ -155,22 +154,22 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 // Route::delete('/vehicle_sticker/archive/{id}', [TeacherController::class, 'destroy_vehicle']);
 // Route::get('/filter_vehicle_admin', [TeacherController::class, 'filterVehicleAdmin']);
 
+Route::controller(PassSlipController::class)->group(function (){
+    Route::get('admin/pass_slip',  'pass_slip_admin')->name('admin.pass_slip.pass_slip_admin');
+    Route::post('admin/pass_slip',  'store_slip_admin')->name('pass_slip.store');
+    Route::put('/pass_slip/update/{id}',  'updatePassSlipAdmin')->name('update.pass_slip_admin');
+    Route::delete('/pass_slip/archive/{id}',  'destroy_passSlip')->name('archive.pass_slip');
+    Route::get('/admin/filter_pass_slip_admin',  'filterPassSlipAdmin');
+    route::post('/search-employee', 'searchEmployee')->name('search_employee');
+});
 
-Route::get('admin/pass_slip', [PassSlipController::class, 'pass_slip_admin'])->name('admin.pass_slip.pass_slip_admin');
-Route::post('admin/pass_slip', [PassSlipController::class, 'store_slip_admin'])->name('pass_slip.store');
-Route::put('/pass_slip/update/{id}', [PassSlipController::class, 'updatePassSlipAdmin'])->name('update.pass_slip_admin');
-Route::delete('/pass_slip/archive/{id}', [PassSlipController::class, 'destroy_passSlip'])->name('archive.pass_slip');
-Route::get('/admin/filter_pass_slip_admin', [PassSlipController::class, 'filterPassSlipAdmin']);
-
-
-
-
-Route::get('/admin/announcement', [EventController::class, 'eventAdmin'])->name('admin.events.event_admin');
-Route::post('/admin/announcement', [EventController::class, 'store_adminEvent'])->name('event.store_admin');
-Route::get('/admin', [EventController::class, 'showEvents'])->name('admin.dashboard');
-Route::put('/admin/announcement/update/{id}', [EventController::class, 'updateEventsAdmin'])->name('update.events_admin');
-Route::delete('/admin/archive_events/{id}', [EventController::class, 'destroy_events']);
-
+Route::controller(EventController::class)->group(function () {
+    Route::get('/admin/announcement', 'eventAdmin')->name('admin.events.event_admin');
+    Route::post('/admin/announcement', 'store_adminEvent')->name('event.store_admin');
+    Route::get('/admin', 'showEvents')->name('admin.dashboard');
+    Route::put('/admin/announcement/update/{id}', 'updateEventsAdmin')->name('update.events_admin');
+    Route::delete('/admin/archive_events/{id}', 'destroy_events');
+});
 
 // Route::get('/admin/employee', [EmployeeController::class, 'index_employee'])->name('admin.employee');
 // Route::post('/admin/employee/store', [GlobalController::class, 'store_employee'])->name('admin.store_employees');
@@ -189,11 +188,14 @@ Route::resource('/admin/visitor', VisitorController::class)->names([
     'store' => 'visitor.store',
 ]);
 
-Route::get('/filter_visitor_admin', [VisitorController::class, 'filterVisitorAdmin']);
-Route::post('/admin/visitor/{id}', [VisitorController::class, 'checkoutAdmin'])->name('visitor.checkout_admin');
-Route::post('/admin/visitor/update', [VisitorController::class, 'update'])->name('visitor.update');
-Route::delete('/admin/delete_visitor/{id}', [VisitorController::class, 'destroy']);
-Route::get('admin/search_visitor', [VisitorController::class, 'searchVisitors'])->name('visitor.search');
+Route::controller(VisitorController::class)->group(function () {
+    Route::get('/filter_visitor_admin', 'filterVisitorAdmin');
+    Route::post('/admin/visitor/{id}', 'checkoutAdmin')->name('visitor.checkout_admin');
+    Route::post('/admin/visitor/update', 'update')->name('visitor.update');
+    Route::delete('/admin/delete_visitor/{id}', 'destroy');
+    Route::get('admin/search_visitor', 'searchVisitors')->name('visitor.search');
+});
+
 
 
 
@@ -204,40 +206,52 @@ Route::resource('/admin/security_staff', EmployeesController::class)->names([
     'update' => 'employee.update',
     'destroy' => 'employee.destroy',
 ]);
-Route::get('admin/lost_found', [LostFoundController::class, 'lost_found_admin'])->name('admin.lost.lost_found_admin');
-Route::post('admin/store_lost', [LostFoundController::class, 'store_lost_admin'])->name('admin.store');
-Route::put('/lost_found/update/{id}', [LostFoundController::class, 'updateLostFoundAdmin'])->name('update.lost_found_admin');
-Route::delete('/lost_found/archive/{id}', [LostFoundController::class, 'destroy_lostFound'])->name('archive.lost_found');
-Route::get('/filter_lost_found', [LostFoundController::class, 'filterLostFoundAdmin']);
+Route::controller(LostFoundController::class)->group(function () {
+    Route::get('admin/lost_found', 'lost_found_admin')->name('admin.lost.lost_found_admin');
+    Route::post('admin/store_lost', 'store_lost_admin')->name('admin.store');
+    Route::put('/lost_found/update/{id}', 'updateLostFoundAdmin')->name('update.lost_found_admin');
+    Route::delete('/lost_found/archive/{id}', 'destroy_lostFound')->name('archive.lost_found');
+    Route::get('/filter_lost_found', 'filterLostFoundAdmin');
+});
+
 
 
 Route::get('/admin/activity-log', [ActivityController::class, 'index'])->name('admin.activity');
 
-Route::get('admin/profile', [EmployeesController::class, 'showProfileAdmin'])->name('admin.layouts.profile_admin');
-Route::post('admin/profile', [EmployeesController::class, 'addInformationAdmin'])->name('profile.stores');
-Route::put('admin/profile/update/{id}', [EmployeesController::class, 'editInformationAdmin'])->name('profile.updates');
-Route::get('admin/change-password', [EmployeesController::class, 'changePasswordAdmin'])->name('auth.change-password');
+Route::controller(EmployeesController::class)->group(function (){
+    Route::get('admin/profile', 'showProfileAdmin')->name('admin.layouts.profile_admin');
+    Route::post('admin/profile', 'addInformationAdmin')->name('profile.stores');
+    Route::put('admin/profile/update/{id}', 'editInformationAdmin')->name('profile.updates');
+    Route::get('admin/change-password', 'changePasswordAdmin')->name('auth.change-password');
+});
 
 
-Route::get('admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor'])->name('pdf.generate-visitor');
-Route::get('admin/generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-pass');
-Route::get('admin/generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->name('pdf.generate-lost');
+Route::controller(PdfController::class)->group(function (){
+    Route::get('admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitor');
+    Route::get('admin/generate-pdf/pass_slip', 'generate_passSlip')->name('pdf.generate-pass');
+    Route::get('admin/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-lost');
+});
 
 
-Route::get('admin/violation', [ViolationController::class, 'violationView'])->name('admin.violation.violation');
-Route::post('admin/violation', [ViolationController::class, 'store_violation'])->name('admin.store_violation');
-Route::put('/violation/update/{id}', [ViolationController::class, 'update_violationAdmin'])->name('store_violation');
-Route::delete('/violation/archive/{id}', [ViolationController::class, 'destroy_violation']);
+Route::controller(ViolationController::class)->group(function (){
+    Route::get('admin/violation', 'violationView')->name('admin.violation.violation');
+    Route::post('admin/violation', 'store_violation')->name('admin.store_violation');
+    Route::put('/violation/update/{id}', 'update_violationAdmin')->name('store_violation');
+    Route::delete('/violation/archive/{id}', 'destroy_violation');
 
-Route::get('/admin/students', [ListController::class, 'student_admin'])->name('admin.students.student');
-Route::post('/admin/students', [ListController::class, 'store_student_admin'])->name('store_admin.student');
-Route::delete('/admin/student/delete/{id}', [ListController::class, 'destroy_student_admin']);
+});
 
 
-Route::get('/admin/employees', [ListController::class, 'all_employee_admin'])->name('admin.employees.all_employee');
-Route::post('/admin/employees', [ListController::class, 'store_all_employee_admin'])->name('store_admin.employee');
-Route::delete('/employee/delete/{id}', [ListController::class, 'destroy_all_employee_admin']);
-route::post('/search-employee', [PassSlipController::class, 'searchEmployee'])->name('search_employee');
+Route::controller(ListController::class)->group(function (){
+    Route::get('/admin/students', 'student_admin')->name('admin.students.student');
+    Route::post('/admin/students', 'store_student_admin')->name('store_admin.student');
+    Route::delete('/admin/student/delete/{id}', 'destroy_student_admin');
+
+    Route::get('/admin/employees', 'all_employee_admin')->name('admin.employees.all_employee');
+    Route::post('/admin/employees', 'store_all_employee_admin')->name('store_admin.employee');
+    Route::delete('/employee/delete/{id}', 'destroy_all_employee_admin');
+});
+
 
 
 

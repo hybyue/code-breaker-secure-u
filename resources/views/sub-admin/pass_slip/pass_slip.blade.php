@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="container mt-4">
-                        <form action="/filter_pass_slip" method="GET">
+                        <form action="/sub-admin/pass_slip/filter_pass_slip" method="GET">
                             <div class="row pb-3">
                                 <div class="col-md-3">
                                     <label for="start_date">Start Date:</label>
@@ -43,7 +43,7 @@
 
                                 @if(request('start_date') || request('end_date') || request('employee_type'))
                                 <div class="col-md-0 mt-4 pt-2">
-                                    <a href="/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
+                                    <a href="/pass_slip/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
                                 </div>
                                 @endif
                             </div>
@@ -52,7 +52,7 @@
 
 
 
-    <div class="container p-3 bg-body-secondary rounded">
+    <div class="container p-3 bg-body-secondary rounded" style="overflow-x:auto;">
 
         <table id="passTable" class="table table-bordered same-height-table">
             <thead>

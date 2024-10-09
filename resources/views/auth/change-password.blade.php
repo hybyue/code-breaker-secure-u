@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Change Password</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <style>
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
         .profile-card {
             width: 100%;
             margin: 20px auto;
@@ -67,8 +84,18 @@
     </style>
 </head>
 <body>
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #A10D0D">
+            <div class="container-fluid">
+                <div class="navbar-left">
+                    <img src="{{ URL('images/UCU-logo.png') }}" alt="Logo" class="navbar-logo">
+                    <span class="navbar-title text-white">Urdaneta City University</span>
+                </div>
+            </div>
+        </nav>
+    </div>
     <div class="p-3 mt-2">
-        <a href="{{ url('/back') }}" class="btn btn-outline-dark">
+        <a href="{{ url('/back') }}" class="back btn btn-outline-dark">
             <i class="bi bi-arrow-left"></i> Back
         </a>
     </div>
@@ -79,7 +106,7 @@
                 <div class="card-body">
                     <img src="{{ asset('images/zoro.png') }}" alt="Profile Picture" class="profile-picture">
                     <h3 class="card-title">{{ $user->name }}</h3>
-                    <p class="card-text"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></p>
+                    <p class="card-text">{{ $user->email }}</p>
                     @if ($employees)
                         <p class="card-text">ID No.: {{ $employees->id_number }}</p>
                     @endif
@@ -87,7 +114,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="profile-card card text-center text-lg-start border-0 mt-5 p-2 rounded shadow">
+            <div class="profile-card card text-center text-lg-start border-0 mt-4 p-2 rounded shadow">
                 <div class="card-body p-4">
                     <h5 class="card-title">Change Password</h5>
                     <form method="POST" action="{{ route('password.change') }}" class="login-form mt-3">
@@ -166,9 +193,9 @@
     $(document).ready(function(){
 
         function generatePassword(){
-            let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_!@#$%^&*()<>?";
+            let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567891011121314151617181920_!@#$^;''-[]/()<>?";
             let password = "";
-            let length= 12;
+            let length= 8;
 
             for (let i = 0; i < length; i++) {
                 password += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -194,6 +221,8 @@
         });
     });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </body>
 </html>

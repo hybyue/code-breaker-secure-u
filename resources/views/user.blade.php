@@ -29,7 +29,7 @@
         }
 
         .drop-me {
-            z-index: 1000; /* Ensure the dropdown is on top */
+            z-index: 3000;
         }
         .notification-button {
             display: flex;

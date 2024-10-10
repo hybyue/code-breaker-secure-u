@@ -29,12 +29,6 @@
             border-left: 2px solid #3b7ddd;
         }
 
-        .table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100%;
-        border: 1px solid #ddd;
-        }
     </style>
 
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
@@ -94,7 +88,7 @@
         </aside>
 
 
-        <div class="main p-3">
+        <div class="main p-3" style="background-color: #f5f3f3;">
             @yield('content')
         </div>
     </div>
@@ -113,5 +107,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+
 </body>
 </html>

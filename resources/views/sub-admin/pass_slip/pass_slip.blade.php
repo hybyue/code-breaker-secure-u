@@ -52,7 +52,7 @@
 
 
 
-    <div class="container p-3 bg-body-secondary rounded" style="overflow-x:auto;">
+    <div class="container bg-body-secondary rounded" style="overflow-x:auto; width:100%;">
 
         <table id="passTable" class="table table-bordered same-height-table">
             <thead>
@@ -196,6 +196,10 @@
 <style>
     .same-height-table td {
         vertical-align: middle;
+    }
+
+    .table{
+        min-width: 750px;
     }
 </style>
 @endsection

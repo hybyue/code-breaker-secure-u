@@ -11,6 +11,7 @@ use App\Http\Controllers\PassSlipController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\VisitorController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -62,7 +63,11 @@ Route::controller(VisitorController::class)->group(function () {
     Route::get('/filter_visitor',  'filterVisitor');
     Route::post('sub-admin/visitor/{id}/checkout',  'checkout')->name('visitor.checkout');
     Route::get('sub-admin/search_visitor',  'searchVisitor')->name('visitor.search');
+    Route::get('/visitor-stats/{timeframe}', 'getVisitorStats');
+    Route::get('/visitor-data', 'getVisitorData');
+
 });
+
 Route::get('sub-admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor'])->name('pdf.generate-visitors');
 
 Route::controller(PassSlipController::class)->group(function () {

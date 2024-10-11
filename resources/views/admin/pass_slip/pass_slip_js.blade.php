@@ -17,10 +17,6 @@
             new DataTable('#passTable', {
         responsive: true,
         ordering: false,
-        dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
         });
 
     $('#addPassForm').on('submit', function(e){
@@ -77,6 +73,9 @@
 
 				url:'/pass_slip/archive/'+id,
 				type:'DELETE',
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
 
 				success:function(result)
 				{

@@ -30,13 +30,13 @@
                             <input type="text" class="form-control" id="lastName-{{ $item->id }}" name="last_name" value="{{ $item->last_name }}">
                         </div>
                         <div class="mb-3">
-                            <label for="lostCourse-{{ $item->id }}" class="form-label">Course:</label>
+                            <label for="lostCourse-{{ $item->id }}" class="form-label">Role:</label>
                             <input type="text" class="form-control" id="lostCourse-{{ $item->id }}" name="course" value="{{ $item->course }}">
                         </div>
                         <div class="mb-3">
                             <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
                             <input type="file" class="form-control" id="lostImage-{{ $item->id }}" name="object_img" onchange="previewImage(event, {{ $item->id }})">
-                            <div class="d-flex justify-content-center">
+                            {{-- <div class="d-flex justify-content-center">
                                 <div class="container p-1">
                                     <p>Current Image:</p>
                                     @if($item->object_img)
@@ -49,9 +49,9 @@
                                     <p>Updated Image:</p>
                                     <img id="newImagePreview-{{ $item->id }}" class="img-fluid mt-2" style="max-width: 100px; display: none;">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center mt-3">
                             <button type="submit" class="btn btn-primary">update</button>
                         </div>
                     </div>

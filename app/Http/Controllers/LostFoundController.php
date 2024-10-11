@@ -11,7 +11,7 @@ class LostFoundController extends Controller
 {
     public function lost_found()
     {
-        $lost_found = Lost::latest()->paginate();
+        $lost_found = Lost::latest()->get();
         return view('sub-admin.lost.lost_found', compact('lost_found'));
     }
 
@@ -82,7 +82,7 @@ class LostFoundController extends Controller
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $lost_found = $query->orderBy('created_at', 'desc')->paginate(10);
+        $lost_found = $query->orderBy('created_at', 'desc')->get();
 
         return view('sub-admin.lost.lost_found', compact('lost_found'));
     }
@@ -90,7 +90,7 @@ class LostFoundController extends Controller
 
         public function lost_found_admin()
         {
-            $lost_found = Lost::latest()->paginate();
+            $lost_found = Lost::latest()->get();
             return view('admin.lost.lost_found_admin', compact('lost_found'));
         }
 
@@ -172,7 +172,7 @@ class LostFoundController extends Controller
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $lost_found = $query->orderBy('created_at', 'desc')->paginate(10);
+        $lost_found = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.lost_found_admin', compact('lost_found'));
     }

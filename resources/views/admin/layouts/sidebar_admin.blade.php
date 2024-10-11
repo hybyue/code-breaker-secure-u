@@ -31,17 +31,18 @@
     </style>
 </head>
 <body>
-
-    <div class="loading-bar"></div>
+    <div class="loading"></div>
 
     <nav>@include('admin.layouts.admin')</nav>
 
     <div class="wrapper">
         <aside id="sidebar">
-            <div class="container d-flex">
+            <div class="container">
                 <button id="toggle-btn" type="button"><i class="bi bi-list"></i></button>
-                <div class="sidebar-logo sidebar-header">
-                    <a href="#"><span class="underline-flase">Admin</span></a>
+
+                <div class="sidebar-logo mt-3">
+                    <h4 class="text-start text-white">Secure-U</h4>
+
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -124,11 +125,14 @@
         </div>
     </div>
 
+
+
     @yield('header')
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/sidebar_admin.js') }}"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js"></script>

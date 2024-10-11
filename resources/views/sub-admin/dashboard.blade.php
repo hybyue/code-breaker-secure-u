@@ -37,7 +37,7 @@
                     </div>
                     <div class="container">
                         <h5 class="card-title">Violations</h5>
-                        <h4 class="text-end">4</h4>
+                        <h4 class="text-end">{{ $totalViolation }}</h4>
                     </div>
                 </div>
             </div>

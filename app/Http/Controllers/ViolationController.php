@@ -117,7 +117,7 @@ public function filterViolation(Request $request)
             }
         })
         ->latest()
-        ->paginate();
+        ->get();
 
     $allViolations = $query->get()->groupBy('student_no');
 

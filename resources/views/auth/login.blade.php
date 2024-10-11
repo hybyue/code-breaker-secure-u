@@ -110,7 +110,7 @@
             <h1 class="h3 font-weight-normal text-white">Secure-U</h1>
         </div>
         <div class="login-container mb-5">
-            <form class="space-y-1" method="post" action="{{ route('login.action') }}">
+            <form method="post" action="{{ route('login.action') }}">
                 @csrf
                 {{-- @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
@@ -122,8 +122,12 @@
                     </ul>
                 </div>
                 @endif --}}
-                <div>
-                    <label for="email" class="block text-md font-medium text-gray-900">Your email</label>
+                <div class="container m-0 p-0">
+                    <h3 class="text-center text-2xl font-extrabold">Login</h3>
+                    <p class="text-center">Good day! welcome to Sercure-U website</p>
+                </div>
+                <div class="mt-2">
+                    <label for="email" class="block text-md font-medium text-gray-900">Email</label>
                     <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@company.com" required>
                     <span class="text-red-500" id="emailError"></span>
                 </div>

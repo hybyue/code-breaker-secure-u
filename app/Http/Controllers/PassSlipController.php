@@ -69,26 +69,27 @@ class PassSlipController extends Controller
             'destination' => 'required|string|max:255',
             'employee_type' => 'required|string|max:255',
             'purpose' => 'required|string|max:255',
-            'date' => 'required|date',
             'time_in' => 'nullable|date_format:H:i',
             'time_out' => 'required|date_format:H:i',
         ]);
 
-        PassSlip::create([
-            'user_id' => Auth::id(),
-            'p_no' => $request->p_no,
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'department' => $request->department,
-            'designation' => $request->designation,
-            'destination' => $request->destination,
-            'employee_type' => $request->employee_type,
-            'purpose' => $request->purpose,
-            'date' => $request->date,
-            'time_in' => $request->time_in,
-            'time_out' => $request->time_out,
-        ]);
+        $passSlip = new PassSlip();
+
+        $passSlip->user_id = Auth::id();
+        $passSlip->p_no = $request->p_no;
+        $passSlip->first_name = $request->first_name;
+        $passSlip->middle_name = $request->middle_name;
+        $passSlip->last_name = $request->last_name;
+        $passSlip->department = $request->department;
+        $passSlip->designation = $request->designation;
+        $passSlip->destination = $request->destination;
+        $passSlip->employee_type = $request->employee_type;
+        $passSlip->purpose = $request->purpose;
+        $passSlip->time_in = $request->time_in;
+        $passSlip->time_out = $request->time_out;
+        $passSlip->date = now()->format('Y-m-d H:i:s') ;
+
+        $passSlip->save();
 
         return response()->json([
             'status' => 'success'

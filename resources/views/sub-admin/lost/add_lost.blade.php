@@ -27,7 +27,7 @@
                             <input type="text" class="form-control" id="lastName" name="last_name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="lostCourse" class="form-label">Course:</label>
+                            <label for="lostCourse" class="form-label">Role:</label>
                             <input type="text" class="form-control" id="lostCourse" name="course" required>
                         </div>
                         <div class="mb-3">

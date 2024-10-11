@@ -190,15 +190,16 @@ Route::controller(EventController::class)->group(function () {
 
 Route::resource('/admin/visitor', VisitorController::class)->names([
     'index' => 'admin.visitors.visitor_admin',
-    'store' => 'visitor.store',
 ]);
 
 Route::controller(VisitorController::class)->group(function () {
     Route::get('/filter_visitor_admin', 'filterVisitorAdmin');
+    Route::post('/admin/visitor',  'store')->name('visitor.store');
     Route::post('/admin/visitor/{id}', 'checkoutAdmin')->name('visitor.checkout_admin');
     Route::post('/admin/visitor/update', 'update')->name('visitor.update');
-    Route::delete('/admin/delete_visitor/{id}', 'destroy');
     Route::get('admin/search_visitor', 'searchVisitors')->name('visitor.search');
+    Route::delete('/admin/delete_visitor/{id}', 'destroy');
+
 });
 
 

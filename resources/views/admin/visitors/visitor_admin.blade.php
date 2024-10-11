@@ -1,7 +1,7 @@
 @extends('admin.layouts.sidebar_admin')
 
 @section('title', 'Visitors')
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
 <div class="row mt-4 p-2">
     <div class="col-md-6">

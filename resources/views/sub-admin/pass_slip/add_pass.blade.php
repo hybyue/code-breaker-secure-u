@@ -47,13 +47,9 @@
                             <label for="destination" class="form-label">Destination:</label>
                             <input class="form-control" id="destination" name="destination" required></input>
                         </div>
-                        <div class="col-md-6">
+                        <div class="">
                             <label for="purpose" class="form-label">Purpose:</label>
                             <textarea class="form-control" id="purpose" name="purpose" rows="1" required></textarea>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>

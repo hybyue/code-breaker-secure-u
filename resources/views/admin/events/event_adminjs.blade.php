@@ -144,7 +144,9 @@
 
 				url:'/admin/archive_events/'+id,
 				type:'DELETE',
-
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
 				success:function(result)
 				{
                     $("#"+result['tr']).slideUp("slow");

@@ -59,28 +59,24 @@
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
-                    <th>College/Department</th>
                     <th>Designation</th>
-                    <th>Destination</th>
                     <th>Date</th>
-                    <th>Time Out</th>
+                    <th>Departure Time</th>
                     <th>Time In</th>
-                    <th>Time Out Count</th>
+                    <th>Departure Count</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($latestPassSlips as $passSlip)
                     <tr>
-                        <td>{{ $passSlip->p_no }}</td>
-                        <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} {{ $passSlip->middle_name }}.</td>
-                        <td>{{ $passSlip->department }}</td>
-                        <td>{{ $passSlip->designation }}</td>
-                        <td>{{ $passSlip->destination }}</td>
-                        <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
-                        <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
-                        <td>{{ $passSlip->exit_count }}</td>
+                    <td>{{ $passSlip->p_no }}</td>
+                    <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
+                    <td>{{ $passSlip->designation}}</td>
+                    <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
+                    <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
+                    <td>{{ $passSlip->exit_count }}</td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class="mx-1">

@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Event;
 use App\Models\Parking;
 use App\Models\PassSlip;
+use App\Models\Violation;
 use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class EventController extends Controller
 
     public function index()
     {
-        $events = Event::orderBy('created_at', 'desc')->paginate(10);
+        $events = Event::orderBy('created_at', 'desc')->get();
         return view('sub-admin.event.events', compact('events'));
     }
 
@@ -46,6 +47,7 @@ class EventController extends Controller
         // Total counts
         $totalVisitors = Visitor::count();
         $totalPassSlips = PassSlip::count();
+        $totalViolation = Violation::count();
 
         // Today's counts
         $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
@@ -55,7 +57,7 @@ class EventController extends Controller
         $todayEvents = Event::whereDate('date_start', Carbon::today())->get();
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
-        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents'));
+        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents', 'totalViolation'));
     }
 
     public function updateEvents(Request $request, string $id)
@@ -92,7 +94,7 @@ class EventController extends Controller
 
     public function eventAdmin()
     {
-        $events = Event::latest()->paginate();
+        $events = Event::latest()->get();
         return view('admin.events.event_admin', compact('events'));
     }
 

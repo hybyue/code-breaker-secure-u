@@ -12,8 +12,11 @@
 
    <script>
     $(document).ready(function () {
-        const dataTable = $("#violationTable").DataTable();
 
+        new DataTable('#violationTable', {
+        responsive: true,
+        ordering: false,
+        });
         $('.editModal').on('click', function() {
           let id = $(this).data('id');
             let targetModal = '#updateViolationModalAd-' + id;
@@ -93,7 +96,9 @@
 
 				url:'/violation/archive/'+id,
 				type:'DELETE',
-
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
 				success:function(result)
 				{
                     $("#"+result['tr']).slideUp("slow");

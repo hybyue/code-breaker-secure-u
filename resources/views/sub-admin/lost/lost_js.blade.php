@@ -14,10 +14,12 @@
 
 $(document).ready(function () {
 
-    let table = new DataTable('#lostTable', {
+    if ($('#lostTable tbody tr').length > 0) {
+        let table = new DataTable('#lostTable', {
             responsive: true,
             "ordering": false,
         });
+    }
 
     $('#addLostForm').on('submit', function(e){
         e.preventDefault();
@@ -34,7 +36,15 @@ $(document).ready(function () {
                     $('#addNewLostModal').modal('hide');
                     $('#addLostForm')[0].reset();
                     $('body').removeClass('modal-open');
-                    $('#lostTable').load(location.href + ' #lostTable');
+                    $('#lostTable').load(location.href + ' #lostTable', function() {
+                        // Reinitialize DataTable after loading content
+                        if ($('#lostTable tbody tr').length > 0) {
+                            new DataTable('#lostTable', {
+                                responsive: true,
+                                "ordering": false,
+                            });
+                        }
+                    });
                     Swal.fire({
                         toast: true,
                         position: 'top-right',

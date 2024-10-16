@@ -63,21 +63,27 @@ Route::controller(VisitorController::class)->group(function () {
     Route::get('/filter_visitor',  'filterVisitor');
     Route::post('sub-admin/visitor/{id}/checkout',  'checkout')->name('visitor.checkout');
     Route::get('sub-admin/search_visitor',  'searchVisitor')->name('visitor.search');
-    Route::get('/visitor-stats/{timeframe}', 'getVisitorStats');
     Route::get('/visitor-data', 'getVisitorData');
+    Route::get('/visitor-total-data',  'getVisitorTotalData');
 
 });
 
-Route::get('sub-admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor'])->name('pdf.generate-visitors');
 
 Route::controller(PassSlipController::class)->group(function () {
     Route::get('sub-admin/pass_slip',  'pass_slip')->name('sub-admin.pass_slip.pass_slip');
     Route::post('sub-admin/pass_slip',  'store_slip')->name('pass_slips.store');
     Route::put('sub-admin/pass_slip/update/{id}',  'updatePassSlip')->name('update.pass_slips');
     Route::get('/sub-admin/pass_slip/filter_pass_slip',  'filterPassSlip');
+    Route::post('/sub-admin/passS_slip/{id}', 'checkoutPassSlip')->name('passSlip.checkout');
 });
-Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
 
+Route::controller(PdfController::class)->group(function () {
+    Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
+    Route::get('/pass-slip/preview',  'previewPassSlip')->name('pdf.preview-pass-slip');
+    Route::get('generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->name('pdf.generate-losts');
+    Route::get('generate-pdf/violation',[PdfController::class, 'generate_violation'])->name('pdf.generate-violation');
+    Route::get('sub-admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor'])->name('pdf.generate-visitors');
+});
 
 
 Route::controller(LostFoundController::class)->group(function () {
@@ -88,7 +94,6 @@ Route::controller(LostFoundController::class)->group(function () {
     Route::get('/filter_lost_founds',  'filterLostFounds');
 
 });
-Route::get('generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->name('pdf.generate-losts');
 
 Route::controller(EmployeesController::class)->group(function () {
     Route::get('sub-admin/profile',  'showProfile')->name('profile');
@@ -104,7 +109,6 @@ Route::controller(ViolationController::class)->group(function () {
 Route::get('/filter_violation',  'filterViolation');
 
 });
-Route::get('generate-pdf/violation',[PdfController::class, 'generate_violation'])->name('pdf.generate-violation');
 
 });
 
@@ -166,6 +170,11 @@ Route::controller(PassSlipController::class)->group(function (){
     Route::delete('/pass_slip/archive/{id}',  'destroy_passSlip')->name('archive.pass_slip');
     Route::get('/admin/filter_pass_slip_admin',  'filterPassSlipAdmin');
     route::post('/search-employee', 'searchEmployee')->name('search_employee');
+    Route::post('/admin/passS_slip/{id}', 'checkoutAdmin')->name('passSlip.checkout_admin');
+    Route::get('/admin/visitor-data', 'getVisitorData');
+    Route::get('/admin/visitor-total-data',  'getVisitorTotalData');
+    Route::get('/admin/generate_number/',  'generateNextPassNumber')->name('pass_slip.next_number');
+
 });
 
 Route::controller(EventController::class)->group(function () {
@@ -194,12 +203,11 @@ Route::resource('/admin/visitor', VisitorController::class)->names([
 
 Route::controller(VisitorController::class)->group(function () {
     Route::get('/filter_visitor_admin', 'filterVisitorAdmin');
-    Route::post('/admin/visitor',  'store')->name('visitor.store');
+    Route::post('/admin/add-visitor',  'store')->name('visitor.store');
     Route::post('/admin/visitor/{id}', 'checkoutAdmin')->name('visitor.checkout_admin');
     Route::post('/admin/visitor/update', 'update')->name('visitor.update');
     Route::get('admin/search_visitor', 'searchVisitors')->name('visitor.search');
     Route::delete('/admin/delete_visitor/{id}', 'destroy');
-
 });
 
 

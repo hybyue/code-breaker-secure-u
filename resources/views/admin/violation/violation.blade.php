@@ -22,26 +22,20 @@
     <table id="violationTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
-                <th>Student Number</th>
-                <th>Name</th>
-                <th>Course</th>
-                <th>Violation</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th></th>
+                <th class="text-center">Student Number</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Course</th>
+                <th class="text-center">Violation</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Status</th>
+                <th class="text-center"></th>
             </tr>
-
-            <script>
-                function testFunction() {
-                  console.log("clicked button");
-                }
-            </script>
         </thead>
         <tbody>
 
             @forelse ($violations as $violate)
-            <tr  id="tr_{{$violate->id}}">
-                <td>{{$violate->student_no}}</td>
+            <tr class="text-center" id="tr_{{$violate->id}}">
+                <td class="text-center">{{$violate->student_no}}</td>
                 <td>{{$violate->last_name}}, {{$violate->first_name}}
                     @if($violate->middle_initial)
                      {{$violate->middle_initial}}.
@@ -65,11 +59,11 @@
                         <div class="mx-1">
                         <a href="#" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $violate->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $violate->id }}"><i class="bi bi-pencil-square"></i></a>
                         </div>
-                        <div class="mx-1">
+                        {{-- <div class="mx-1">
                             <a href="javascript:void(0)" onclick="deleteViolation({{$violate->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- <div><button onclick="testFunction()">test</button></div> --}}
                 </td>

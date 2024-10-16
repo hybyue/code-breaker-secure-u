@@ -14,6 +14,7 @@ class SendPasswordMail extends Mailable
     use Queueable, SerializesModels;
 
     public $name;
+    public $email;
     public $password;
 
     /**
@@ -21,9 +22,10 @@ class SendPasswordMail extends Mailable
      *
      * @return void
      */
-    public function __construct($name, $password)
+    public function __construct($name, $email, $password)
     {
         $this->name = $name;
+        $this->email = $email;
         $this->password = $password;
     }
 
@@ -52,6 +54,7 @@ class SendPasswordMail extends Mailable
             view: 'emails.sendPasswordMail',
             with: [
                 'name' => $this->name,
+                'email' => $this->email,
                 'password' => $this->password,
             ],
         );

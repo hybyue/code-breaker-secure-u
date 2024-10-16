@@ -19,11 +19,11 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="p_no" class="form-label">Pass Number:</label>
-                            <input type="text" class="form-control" name="p_no" id="p_no" value="{{ 'P-' . now()->format('Ymd') . '-' }}">
+                            <input type="text" class="form-control" name="p_no" id="p_no" value="{{ $passNumber ?? '' }}" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                                <select class="form-select" id="status" name="employee_type" required>
+                                <select class="form-select" id="status" name="employee_type" readonly required>
                                     <option value="" selected disabled>Select Employee Type</option>
                                     <option value="Teaching">Teaching</option>
                                     <option value="Non-Teaching">Non-Teaching</option>
@@ -33,23 +33,23 @@
                         <input hidden type="text" class="form-control" id="employee_id" name="employee_id" >
                         <div class="col-md-4 mb-2">
                             <label for="last_name" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <input type="text" class="form-control" id="last_name" name="last_name" readonly required>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="first_name" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            <input type="text" class="form-control" id="first_name" name="first_name" readonly required>
                         </div>
                         <div class="col-md-4  mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Optional" >
+                            <input type="text" class="form-control" id="middle_name" name="middle_name"  readonly placeholder="Optional" >
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="department" class="form-label">Department:</label>
-                            <input type="text" class="form-control" id="department" name="department" required>
+                            <input type="text" class="form-control" id="department" name="department" readonly required>
                         </div>
                         <div class="col-md-6">
                             <label for="designation" class="form-label">Designation:</label>
-                            <input class="form-control" id="designation" name="designation" rows="3" required></input>
+                            <input class="form-control" id="designation" name="designation" rows="3" readonly required></input>
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
@@ -59,18 +59,10 @@
                             <label for="purpose" class="form-label">Purpose:</label>
                             <textarea class="form-control" id="purpose" name="purpose" rows="1" required></textarea>
                         </div>
-                        {{-- <div class="col-md-6 mb-2">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
-                        </div> --}}
                         <div class=" mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
                             <input type="time" class="form-control" id="time_out" name="time_out" required>
                         </div>
-                        {{-- <div class="col-md-6 mb-2">
-                            <label for="time_in" class="form-label">Time In</label>
-                            <input type="time" class="form-control" id="time_in" name="time_in" >
-                        </div> --}}
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" wire:click="mount">Save</button>

@@ -37,7 +37,9 @@
             <button class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
                 <i class="bi bi-plus-circle-fill"></i> Add New
             </button>
-            <a href="{{ route('pdf.generate-visitors', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-visitors.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalVisitor()">Generate Report</a>
+
+            {{-- <a href="{{ route('pdf.generate-visitors', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-visitors.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a> --}}
         </div>
     </div>
     <div class="container mt-2">
@@ -70,25 +72,21 @@
                         <tr>
                             <th>Date</th>
                             <th>Visitor's Name</th>
-                            <th>Person to visit & Company</th>
-                            <th>Purpose</th>
-                            <th>Time in</th>
-                            <th>Time out</th>
-                            <th>Entry Count</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th class="text-start">Entry Count</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($latestVisitors as $visit)
-                        <tr>
+                        <tr class="text-center">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                             <td>{{ $visit->last_name }},  {{$visit->first_name }}
                                 @if($visit->middle_name)
                                 {{ $visit->middle_name }}.
                                 @endif
                             </td>
-                            <td>{{ $visit->person_to_visit }}</td>
-                            <td>{{ $visit->purpose }}</td>
                             <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }}</td>
                             <td id="time-out-{{ $visit->id }}" class="text-center">
                                 @if(is_null($visit->time_out))
@@ -103,7 +101,7 @@
                                 {{ \Carbon\Carbon::parse($visit->time_out)->format('g:i A') }}
                                 @endif
                             </td>
-                            <td>{{ $visit->entry_count }}</td>
+                            <td class="text-center">{{ $visit->entry_count }}</td>
                             <td>
                                 <div class="d-flex justify-content-center align-items-center">
                                     <div class="mx-1">
@@ -178,6 +176,22 @@
 
 
     <script src="{{ asset('js/visitor_sub.js') }}"></script>
+
+    <script>
+        function showPdfModalVisitor() {
+            document.getElementById('loadingBar').style.display = 'block';
+            document.getElementById('pdfPreviewContent').style.display = 'none';
+
+            $('#pdfModalVisitor').modal('show');
+
+            setTimeout(function() {
+                document.getElementById('loadingBar').style.display = 'none';
+                document.getElementById('pdfPreviewContent').style.display = 'block';
+            }, 1000);
+        }
+
+        </script>
+
 <style>
     .same-height-table td{
         vertical-align: middle;

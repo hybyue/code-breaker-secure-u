@@ -1,7 +1,4 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" integrity="sha384-4M7GcTbZBdHj1XOpjLci8tUZzJOTiFS7pkXeGguH4d9hZhg7Z7IHu/hgRo6eo35c" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -142,53 +139,40 @@
    $(document).ready(function () {
     new DataTable('#visitorTable', {
         responsive: true,
-        ordering: false,
+        'ordering': false,
         });
 
     $('#addVisitorForm').on('submit', function(e){
         e.preventDefault();
 
-        $('.errorMessage').html('');
 
-        let first_name = $('#first_name').val();
-        let middle_name = $('#middle_name').val();
-        let last_name = $('#last_name').val();
-        let person_to_visit = $('#person_to_visit').val();
-        let purpose = $('#purpose').val();
-        let id_type = $('#id_type').val();
+        $('.errorMessage').html('');
+        let formData = $(this).serialize();
 
         $.ajax({
             url: "{{ route('visitor.store') }}",
             method: 'POST',
-            data: {
-                last_name: last_name,
-                first_name: first_name,
-                middle_name: middle_name,
-                person_to_visit: person_to_visit,
-                purpose: purpose,
-                id_type: id_type,
-            },
+            data: formData,
             success:function(resp){
-                if(resp.status == 'success'){
-                    $('.modal-backdrop').hide();
-                    $('#addVisitorForm')[0].reset();
-                    $('#visitorTable').load(location.href + ' #visitorTable');
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-right',
-                        iconColor: 'white',
-                        customClass: {
-                            popup: 'colored-toast',
-                        },
-                        showConfirmButton: false,
-                        timer: 2500,
-                        timerProgressBar: true,
-                    });
+            if(resp.status=='success'){
+                $('#addVisitorForm')[0].reset();
+                $('#visitorTable').load(location.href + ' #visitorTable');
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-right',
+                    iconColor: 'white',
+                    customClass: {
+                        popup: 'colored-toast',
+                    },
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                    })
                     Toast.fire({
                         icon: 'success',
                         title: 'Visitor added successfully',
-                    });
-                }
+                    })
+            }
             },
             error: function(err){
                 $('.errorMessage').html('');

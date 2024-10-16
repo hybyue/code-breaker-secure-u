@@ -108,7 +108,7 @@ class AuthController extends Controller
         ]);
 
         // Send password email
-        Mail::to($user->email)->send(new SendPasswordMail($user->name, $user->email, $request->password));
+        Mail::to($user->email)->send(new SendPasswordMail($user->name, $request->password));
 
         return redirect()->route('admin.register')->with('success', 'Account created successfully.');
     }

@@ -9,7 +9,7 @@
     <meta name="author" content="UCU">
     <title>Login</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ asset('tailwindcharts/css/tailwind.min.css')}}" rel="stylesheet" />
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
     <style>
         body {

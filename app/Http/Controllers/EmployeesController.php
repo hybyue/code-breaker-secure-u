@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,8 @@ class EmployeesController extends Controller
     public function index()
     {
         $subAdmins = User::where('type', 0)
-                         ->with('employ')
-                         ->get();
+            ->with('employ')
+            ->get();
         return view('admin.employee', compact('subAdmins'));
     }
     /**

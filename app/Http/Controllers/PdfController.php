@@ -117,41 +117,5 @@ class PdfController extends Controller
         return $pdf->stream('report-violation.pdf');
 
     }
-
-    public function previewPassSlip(Request $request)
-{
-    $query = PassSlip::query();
-
-    // Apply filters
-    if ($request->filled('start_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date);
-    }
-
-    if ($request->filled('end_date')) {
-        $query->whereDate('created_at', '<=', $request->end_date);
-    }
-
-    if ($request->filled('employee_type')) {
-        $query->where('employee_type', $request->employee_type);
-    }
-
-    $passSlips = $query->get();
-    $user = Auth::user();
-
-    $data = [
-        'title' => 'Reports for Pass Slip',
-        'date' => now()->format('F d, Y'),
-        'passSlips' => $passSlips,
-        'user' => $user,
-        'employeeType' => $request->employee_type ?? 'All',
-        'startDate' => $request->start_date,
-        'endDate' => $request->end_date,
-    ];
-
-    $pdf = Pdf::loadView('pdf.generate-pass', $data);
-
-    return $pdf->stream();
-}
-
 }
 

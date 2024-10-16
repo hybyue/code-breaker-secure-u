@@ -9,7 +9,7 @@
     <meta name="author" content="UCU">
     <title>Login</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ asset('tailwindcharts/css/tailwind.min.css')}}" rel="stylesheet" />
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
     <style>
         body {
             background: url('{{ asset('images/bg-ucu.jpg') }}') no-repeat center center fixed;

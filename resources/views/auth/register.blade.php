@@ -80,44 +80,33 @@
 <script>
     $(document).ready(function(){
 
-        function generatePassword() {
-    let charsetLower = "abcdefghijklmnopqrstuvwxyz";
-    let charsetUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let charsetNumbers = "0123456789";
-    let charsetSymbols = "_!@#$%^&*()<>?";
-    let password = "";
+        function generatePassword(){
+            let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_!@#$%^&*()<>?";
+            let password = "";
+            let length= 12;
 
-    password += charsetLower.charAt(Math.floor(Math.random() * charsetLower.length));
-    password += charsetUpper.charAt(Math.floor(Math.random() * charsetUpper.length));
-    password += charsetNumbers.charAt(Math.floor(Math.random() * charsetNumbers.length));
-    password += charsetSymbols.charAt(Math.floor(Math.random() * charsetSymbols.length));
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return password;
+        }
 
-    let length = 8;
-    let allCharset = charsetLower + charsetUpper + charsetNumbers + charsetSymbols;
+        $('.generate-password').on('click', function(){
 
-    for (let i = password.length; i < length; i++) {
-        password += allCharset.charAt(Math.floor(Math.random() * allCharset.length));
-    }
+            let password = generatePassword();
 
-    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+            $('#password').val(password);
+            $('#password_confirmation').val(password);
+        });
 
-    return password;
-}
+        $('.show-password').on('click', function(){
+            let passwordInput = $(this).closest('.input-group').find('input');
+            let passwordFieldType = passwordInput.attr('type');
+            let newPasswordFieldType= passwordFieldType=='password' ? 'text' : 'password';
+            passwordInput.attr('type', newPasswordFieldType);
+            $(this).html(newPasswordFieldType=='password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>');
 
-$('.generate-password').on('click', function() {
-    let password = generatePassword();
-    $('#password').val(password);
-    $('#password_confirmation').val(password);
-});
-
-$('.show-password').on('click', function() {
-    let passwordInput = $(this).closest('.input-group').find('input');
-    let passwordFieldType = passwordInput.attr('type');
-    let newPasswordFieldType = passwordFieldType == 'password' ? 'text' : 'password';
-    passwordInput.attr('type', newPasswordFieldType);
-    $(this).html(newPasswordFieldType == 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>');
-});
-
+        });
     });
 </script>
 @endsection

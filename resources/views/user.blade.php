@@ -29,7 +29,7 @@
         }
 
         .drop-me {
-            z-index: 5000;
+            z-index: 3000;
         }
         .notification-button {
             display: flex;
@@ -81,18 +81,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('bootstrap-5.3.3-dist/bootstrap.js') }}"></script>
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    var dropdownElements = document.querySelectorAll('.dropdown-toggle');
-    dropdownElements.forEach(function (dropdown) {
-        new bootstrap.Dropdown(dropdown);
-    });
-});
-
-    </script>
 </body>
 
 </html>

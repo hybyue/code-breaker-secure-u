@@ -70,6 +70,12 @@
                         <span>Pass Slip</span>
                     </a>
                 </li>
+                {{-- <li class="sidebar-item">
+                    <a href="{{ route('admin.vehicle_sticker.vehicle_sticker') }}" class="sidebar-link {{ Route::is('admin.vehicle_sticker.vehicle_sticker') ? 'active' : '' }}">
+                        <i class="bi bi-car-front-fill"></i>
+                        <span>Vehicle Stickers</span>
+                    </a>
+                </li> --}}
                 <li class="sidebar-item">
                     <a href="{{ route('admin.violation.violation')}}" class="sidebar-link {{ Route::is('admin.violation.violation') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-person"></i>
@@ -101,6 +107,12 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
+                    <a href="{{route('admin.events.event_admin')}}" class="sidebar-link {{ Route::is('admin.events.event_admin') ? 'active' : '' }}">
+                        <i class="bi bi-calendar-week-fill"></i>
+                        <span>Announcements</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
                     <a href="{{ route('admin.activity') }}" class="sidebar-link {{ Route::is('admin.activity') ? 'active' : '' }}">
                         <i class="bi bi-arrow-right-circle"></i>
                         <span>Activity Log</span>
@@ -121,7 +133,7 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>

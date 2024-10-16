@@ -23,6 +23,9 @@ class UserAccess
         if (auth()->user()->type == $userType) {
             return $next($request);
         }
+        // if (1) {
+        //     return $next($request);
+        // }
 
         abort(401);
         /* return response()->view('errors.check-permission'); */

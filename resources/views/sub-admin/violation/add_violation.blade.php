@@ -12,8 +12,11 @@
                     @csrf
                     <div class="row">
                         <div class="form-group">
-                            <label for="student_no">Student Number:</label>
-                            <input type="text" class="form-control" id="student_no" name="student_no" required>
+                            <div class="form-group">
+                                <label for="student_no">Student Number:</label>
+                                <input type="text" class="form-control" id="student_no" name="student_no" required>
+                            </div>
+                            <div id="student_results" class="col-md-12 results-container"></div>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="last_name">Last Name:</label>

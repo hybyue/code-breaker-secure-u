@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllStudent;
 use App\Models\Violation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ViolationController extends Controller
 {
@@ -67,7 +69,7 @@ public function store_violation(Request $request)
     Violation::create($data);
 
     return response()->json([
-        'status' => 'success'
+        'status' => 'success',
     ]);
 }
 
@@ -169,4 +171,29 @@ public function update_violation(Request $request, string $id)
 
 
 }
+
+public function searchStudent(Request $request)
+    {
+        try {
+            $query = AllStudent::query();
+
+            // Check if search term is ID or name
+            if ($request->filled('student_no')) {
+                $searchTerm = $request->student_no;
+                $query->where('student_no', $searchTerm)
+                      ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+            }
+
+            $students = $query->limit(5)->get();
+
+            if ($students->count() > 0) {
+                return response()->json(['success' => true, 'data' => $students]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

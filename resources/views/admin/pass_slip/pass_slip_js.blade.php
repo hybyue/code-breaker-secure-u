@@ -35,6 +35,8 @@
                     $('#addPassSlipModal').modal('hide');
                     $('#addPassForm')[0].reset();
                     $('#passTable').load(location.href + ' #passTable');
+                    $('#latestPassSlips').load(location.href + ' #latestPassSlips');
+                    $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
                     Swal.fire({
                         toast: true,
                         position: 'top-right',

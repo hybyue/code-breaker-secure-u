@@ -1,6 +1,7 @@
 
 {{-- Edit pass slip Information --}}
 @foreach($latestPassSlips as $passSlip)
+<div id="latestUpdatePassSlip">
 <div class="modal fade" id="updatePassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="updatePassSlipModalLabel-{{ $passSlip->id }}" aria-hidden="true">
 <div class="modal-dialog">
     <div class="modal-content">
@@ -77,3 +78,4 @@
 </div>
 </div>
 @endforeach
+</div>

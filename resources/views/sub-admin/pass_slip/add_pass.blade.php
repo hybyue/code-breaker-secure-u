@@ -10,9 +10,16 @@
                 <form id="addPassForm" action="" method="POST">
                     @csrf
                     <div class="row">
+                        <div class="mb-2 position-relative">
+                            <input type="text" class="form-control" id="search_employee"
+                                placeholder="Type ID or Name" oninput="searchEmployee()">
+                            <div id="employee_results" class="col-md-12 results-container"></div>
+                            <!-- This will show suggestions -->
+                        </div>
                         <div class="col-md-6 mb-2">
                             <label for="p_no" class="form-label">Pass Number:</label>
-                            <input type="text" class="form-control" name="p_no" id="p_no" value="{{ 'P-' . now()->format('Ymd') . '-' }}">
+                            <input type="text" class="form-control" name="p_no" id="p_no"
+                                value="{{ 'P-' . now()->format('Ymd') . '-' }}">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
@@ -33,7 +40,8 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Optional" >
+                            <input type="text" class="form-control" id="middle_name" name="middle_name"
+                                placeholder="Optional">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="department" class="form-label">Department:</label>
@@ -41,7 +49,8 @@
                         </div>
                         <div class="col-md-6">
                             <label for="designation" class="form-label">Designation:</label>
-                            <input class="form-control" id="designation" name="designation" rows="3" required></input>
+                            <input class="form-control" id="designation" name="designation" rows="3"
+                                required></input>
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
@@ -57,7 +66,7 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_in" class="form-label">Time In</label>
-                            <input type="time" class="form-control" id="time_in" name="time_in" >
+                            <input type="time" class="form-control" id="time_in" name="time_in">
                         </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

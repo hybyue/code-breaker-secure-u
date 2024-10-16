@@ -57,7 +57,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 Route::get('/home', [EventController::class, 'showEvent'])->name('sub-admin.dashboard');
 
 Route::controller(VisitorController::class)->group(function () {
-    Route::get('sub-admin/visitor',  'new_visitor')->name('sub-admin.visitors.visitor');
+    Route::get('/sub-admin/visitor',  'new_visitor')->name('visitors.subadmin');
     Route::post('/add-visitor', 'store_visit')->name('sub-admin.store');
     Route::put('/sub-admin/visitor/update/{id}',  'updateVisitorSub')->name('update.visitorSub');
     Route::get('/filter_visitor',  'filterVisitor');
@@ -75,6 +75,8 @@ Route::controller(PassSlipController::class)->group(function () {
     Route::post('sub-admin/pass_slip',  'store_slip')->name('pass_slips.store');
     Route::put('sub-admin/pass_slip/update/{id}',  'updatePassSlip')->name('update.pass_slips');
     Route::get('/sub-admin/pass_slip/filter_pass_slip',  'filterPassSlip');
+    route::post('sub-admin/search-employee', action: 'searchEmployee')->name('subadmin.search_employee');
+    route::post('sub-admin/search-test', 'searchTest')->name('search_test');
 });
 Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
 
@@ -101,8 +103,8 @@ Route::controller(ViolationController::class)->group(function () {
     Route::get('sub-admin/violation',  'violation')->name('sub-admin.violation.violation');
     Route::post('sub-admin/violation',  'store_violate')->name('sub-admin.store_violate');
     Route::put('/violation/update/{id}',  'update_violation')->name('store_violation');
-Route::get('/filter_violation',  'filterViolation');
-
+    Route::get('/filter_violation',  'filterViolation');
+    Route::post('sub-admin/search-student',  'searchStudent')->name('sub-admin.search_student');
 });
 Route::get('generate-pdf/violation',[PdfController::class, 'generate_violation'])->name('pdf.generate-violation');
 
@@ -244,6 +246,8 @@ Route::controller(ViolationController::class)->group(function (){
     Route::post('admin/violation', 'store_violation')->name('admin.store_violation');
     Route::put('/violation/update/{id}', 'update_violationAdmin')->name('store_violation');
     Route::delete('/violation/archive/{id}', 'destroy_violation');
+    Route::post('/search-student',  'searchStudent')->name('admin.search_student');
+
 
 });
 

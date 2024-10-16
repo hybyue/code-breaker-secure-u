@@ -104,7 +104,7 @@
 @include('admin.pass_slip.update_pass_slip')
 @include('admin.pass_slip.pass_slip_js')
 
-
+<div id="latestPassSlips">
 @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="viewPassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="viewPassSlipLabel-{{ $passSlip->id }}" aria-hidden="true">
 <div class="modal-dialog">
@@ -133,7 +133,7 @@
 </div>
 </div>
 @endforeach
-
+</div>
 
 <script>
     function searchTable() {

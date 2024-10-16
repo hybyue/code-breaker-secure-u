@@ -125,6 +125,8 @@
     @include('admin.visitors.visitor_js')
 
 
+    <div id="dynamicModals">
+
       {{-- Modal for showing all entries of a visitor --}}
       @foreach ($latestVisitors as $visit)
       <div class="modal fade" id="viewEntries-{{ $visit->id }}" tabindex="-1" aria-labelledby="viewEntriesLabel-{{ $visit->id }}" aria-hidden="true">
@@ -164,6 +166,7 @@
          </div>
      </div>
      @endforeach
+    </div>
 
 
 

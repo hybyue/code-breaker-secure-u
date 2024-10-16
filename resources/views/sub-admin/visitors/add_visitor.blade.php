@@ -25,11 +25,13 @@
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="middle_name">Middle Initial:</label>
-                                <input type="text" class="form-control" id="middle_name" placeholder="Optional" name="middle_name">
+                                <input type="text" class="form-control" id="middle_name" placeholder="Optional"
+                                    name="middle_name">
                             </div>
                             <div class="form-group">
                                 <label for="person_to_visit">Person to Visit & Company:</label>
-                                <input type="text" class="form-control" id="person_to_visit" name="person_to_visit" required>
+                                <input type="text" class="form-control" id="person_to_visit" name="person_to_visit"
+                                    required>
                             </div>
                             <div class="form-group">
                                 <label for="purpose">Purpose:</label>
@@ -45,10 +47,12 @@
                                     <option value="Employee ID">Employee ID</option>
                                     <option value="PassPort">PassPort</option>
                                     <option value="Other">Other</option>
-                                </select>                            </div>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn text-white add_visitor" style="background-color: #0B9B19">Submit</button>
+                            <button type="submit" class="btn text-white add_visitor" data-bs-dismiss="modal"
+                                style="background-color: #0B9B19">Submit</button>
                         </div>
                     </form>
                 </div>

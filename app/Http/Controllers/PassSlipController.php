@@ -8,7 +8,7 @@ use App\Models\PassSlip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Exception;
 class PassSlipController extends Controller
 {
     public function pass_slip(Request $request)
@@ -204,24 +204,32 @@ public function filterPassSlipAdmin(Request $request)
         return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
     }
 
-    public function searchEmployee(Request $request) {
-        $query = AllEmployee::query();
+    public function searchEmployee(Request $request)
+    {
+        try {
+            $query = AllEmployee::query();
 
-        // Check if search term is ID or name
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where('employee_id', $searchTerm)
-                  ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+            // Check if search term is ID or name
+            if ($request->filled('search')) {
+                $searchTerm = $request->search;
+                $query->where('employee_id', $searchTerm)
+                      ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+            }
 
+            $employees = $query->limit(5)->get();
+
+            if ($employees->count() > 0) {
+                return response()->json(['success' => true, 'employees' => $employees]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
 
-        $employees = $query->limit(5)->get();
-
-        if ($employees->count() > 0) {
-            return response()->json(['success' => true, 'employees' => $employees]);
-        } else {
-            return response()->json(['success' => false]);
-        }
+    public function searchTest() {
+        return response()->json(['success' => true]);
     }
 }

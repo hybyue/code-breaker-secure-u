@@ -13,7 +13,9 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#violationModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-violation', array_merge(request()->query())) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-violation.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalViolation()">Generate Report</a>
+
+            {{-- <a href="{{ route('pdf.generate-violation', array_merge(request()->query())) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-violation.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a> --}}
         </div>
     </div>
 
@@ -130,6 +132,21 @@
 </div>
 @endforeach
 
+
+<script>
+    function showPdfModalViolation() {
+        document.getElementById('loadingBar').style.display = 'block';
+        document.getElementById('pdfPreviewContent').style.display = 'none';
+
+        $('#pdfModalViolation').modal('show');
+
+        setTimeout(function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            document.getElementById('pdfPreviewContent').style.display = 'block';
+        }, 1000);
+    }
+
+    </script>
 
 <style>
     .same-height-table td {

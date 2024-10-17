@@ -10,7 +10,10 @@
         </div>
         <div class="col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addNewLostModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-losts', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLost()">Generate Report</a>
+
+            {{-- <a href="{{ route('pdf.generate-losts', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a> --}}
         </div>
     </div>
 
@@ -118,6 +121,21 @@
         vertical-align: middle;
     }
 </style>
+
+<script>
+    function showPdfModalLost() {
+        document.getElementById('loadingBar').style.display = 'block';
+        document.getElementById('pdfPreviewContent').style.display = 'none';
+
+        $('#pdfModalLost').modal('show');
+
+        setTimeout(function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            document.getElementById('pdfPreviewContent').style.display = 'block';
+        }, 1000);
+    }
+
+    </script>
 
 <script>
     function previewImage(event, id) {

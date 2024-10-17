@@ -1,5 +1,6 @@
 
     {{-- Edit Visitor --}}
+    <div id="updateDynamicModals">
     @foreach ($latestVisitors as $visitor)
     <div class="modal fade" id="updateVisitorSub-{{ $visitor->id }}" tabindex="-1" aria-labelledby="updateVisitorSubLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -58,3 +59,4 @@
         </div>
     </div>
     @endforeach
+</div>

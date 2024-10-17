@@ -161,6 +161,7 @@ public function new_visitor(Request $request)
 public function filterVisitor(Request $request)
 {
     $query = Visitor::query();
+    $user = Auth::user();
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
         $query->whereDate('created_at', '>=', $request->start_date)
@@ -180,7 +181,7 @@ public function filterVisitor(Request $request)
 
     $allVisitors = $query->get();
 
-    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors'));
+    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors', 'request', 'user'));
 }
 
 

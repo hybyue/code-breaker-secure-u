@@ -17,16 +17,16 @@
         responsive: true,
         ordering: false,
         });
-        $('.editModal').on('click', function() {
-          let id = $(this).data('id');
-            let targetModal = '#updateViolationModalAd-' + id;
+    //     $('.editModal').on('click', function() {
+    //       let id = $(this).data('id');
+    //         let targetModal = '#updateViolationModalAd-' + id;
 
-            $(targetModal).find('.modal-header').html('Violation ID: ' + id);
+    //         $(targetModal).find('.modal-header').html('Violation ID: ' + id);
 
-          $(targetModal).modal('show');
+    //       $(targetModal).modal('show');
 
-          console.log("Edit violation with ID: " + id);
-       });
+    //       console.log("Edit violation with ID: " + id);
+    //    });
 
         $('#violationFormAdmin').on('submit', function(e){
             e.preventDefault();
@@ -41,19 +41,9 @@
                 success: function(response) {
                     if(response.status == 'success') {
                         $('#violationFormAdmin')[0].reset();
-
-                        $('#violationTable').load(location.href + ' #violationTable', function() {
-
-                                // Reinitialize the editModal event listener for the new buttons
-                                $('.editModal').on('click', function() {
-                            let id = $(this).data('id'); // Get the violation ID from the data attribute
-                            let targetModal = '#updateViolationModalAd-' + id; // Build the correct modal ID
-
-                            $(targetModal).modal('show');
-
-                            console.log("Edit violation with ID: " + id);  // Log for debugging
-                        });
-                        });
+                        $('#violationTable').load(location.href + ' #violationTable');
+                        $('#latestViolations').load(location.href + ' #latestViolations');
+                        $('#latestUpdateViolation').load(location.href + ' #latestUpdateViolation');
 
                         Swal.fire({
                             toast: true,
@@ -81,6 +71,70 @@
         });
 
     });
+
+    async function searchStudent() {
+        const studentNo = $('#student_no').val();
+        const formData = new FormData();
+        formData.append('student_no', studentNo);
+
+        try {
+            const response = await $.ajax({
+                url: '{{ route('admin.search_student') }}',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                processData: false,
+                contentType: false
+            });
+
+            const students = response.data || [];
+            // Update the div with the response data
+            const resultsDiv = $('#student_results');
+            resultsDiv.empty();
+
+            if (students.length > 0) {
+                students.forEach(student => {
+                    const studentInfo = $('<a></a>')
+                        .attr('href', '#')
+                        .addClass('btn btn-primary')
+                        .text(`Name: ${student.first_name} ${student.last_name}, Course: ${student.course}`)
+                        .on('click', () => populateForm(student));
+                    resultsDiv.append(studentInfo);
+                });
+            } else {
+                resultsDiv.text('No results found.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function populateForm(student) {
+        $('#student_no').val(student.student_no);
+        $('#last_name').val(student.last_name);
+        $('#first_name').val(student.first_name);
+        $('#middle_initial').val(student.middle_initial || '');
+        $('#course').val(student.course);
+
+         // Clear the search results
+         $('#student_results').empty();
+    }
+
+    // Debounce the searchStudent function
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    const debouncedSearchStudent = debounce(searchStudent, 300);
+
+    // Attach the debounced function to the input event
+    $('#student_no').on('input', debouncedSearchStudent);
 </script>
 
 

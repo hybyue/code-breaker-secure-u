@@ -30,6 +30,8 @@
             if(resp.status=='success'){
                 $('#visitorForm')[0].reset();
                 $('#visitorTable').load(location.href + ' #visitorTable');
+                $('#viewDynamicModal').load(location.href + ' #viewDynamicModal');
+                $('#updateDynamicModal').load(location.href + ' #updateDynamicModal');
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-right',

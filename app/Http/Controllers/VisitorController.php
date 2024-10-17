@@ -71,15 +71,9 @@ public function store(Request $request)
 
     $visitor->save();
 
-    //Fetch the latest visitors
-    $latestVisitor = Visitor::select('visitors.*')
-    ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, entry_count) as latest'), 'visitors.id', '=', 'latest.id')
-    ->latest('visitors.created_at')
-    ->first();
-
     // if($visitor){
-    return response()->json(['status' => 'success', 'message' => 'Visitor added successfully', 'visitor' => $visitor, 'latestVisitor' => $latestVisitor]);
-        // }else{
+        return response()->json(['status' => 'success', 'message' => 'Visitor added Successfully', 'visitor' => $visitor]);
+    // }else{
     //     return response()->json([
     //        'status' => 'error', 'message' => 'Failed to add Visitor '
     //     ]);
@@ -108,7 +102,6 @@ public function update(Request $request)
         'entries.*.person_to_visit' => 'required|string|max:255',
         'entries.*.purpose' => 'required|string|max:255',
         'entries.*.id_type' => 'required|string|max:255',
-        'entries.*.entry_count' => 'required|integer',
     ]);
 
     foreach ($request->entries as $entry) {
@@ -120,7 +113,6 @@ public function update(Request $request)
             'person_to_visit' => $entry['person_to_visit'],
             'purpose' => $entry['purpose'],
             'id_type' => $entry['id_type'],
-            'entry_count' => $entry['entry_count'],
         ]);
     }
 
@@ -228,7 +220,7 @@ public function checkout($id)
     $visitor->time_out = now()->format('H:i:s');
     $visitor->save();
 
-    return redirect()->route('visitors.subadmin');
+    return redirect()->route('sub-admin.visitors.visitor');
 }
 
 public function searchVisitor(Request $request)
@@ -366,5 +358,21 @@ public function getVisitorStats($timeframe)
             'violation' => $violation_count
             ]);
     }
+
+    public function getVisitorTotalData()
+{
+    $visitorCount = Visitor::count();
+    $passSlipCount = PassSlip::count();
+    $lostFoundCount = Lost::count();
+    $violationCount = Violation::count();
+
+    return response()->json([
+        'visitor' => $visitorCount,
+        'passSlip' => $passSlipCount,
+        'lost' => $lostFoundCount,
+        'violation' => $violationCount
+    ]);
+}
+
 
 }

@@ -49,7 +49,7 @@
                             </select>
                           </div>
                         <div class="d-grid gap-1 col-2 pt-2 mx-auto">
-                            <button type="submit" class="btn text-white" data-bs-dismiss="modal" style="background-color: #0B9B19;">Save</button>
+                            <button type="submit" class="btn text-white" style="background-color: #0B9B19;">Save</button>
                         </div>
                     </div>
                     </form>

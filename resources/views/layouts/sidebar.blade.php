@@ -55,7 +55,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('visitors.subadmin') }}" class="sidebar-link {{ Route::is('visitors.subadmin') ? 'active' : '' }}">
+                    <a href="{{ route('sub-admin.visitors.visitor') }}" class="sidebar-link {{ Route::is('sub-admin.visitors.visitor') ? 'active' : '' }}">
                         <i class="bi bi-people-fill"></i>
                         <span>Visitors</span>
                     </a>

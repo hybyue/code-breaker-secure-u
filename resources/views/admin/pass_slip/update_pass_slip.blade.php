@@ -1,7 +1,6 @@
 
 {{-- Edit pass slip Information --}}
 @foreach($latestPassSlips as $passSlip)
-<div id="latestUpdatePassSlip">
 <div class="modal fade" id="updatePassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="updatePassSlipModalLabel-{{ $passSlip->id }}" aria-hidden="true">
 <div class="modal-dialog">
     <div class="modal-content">
@@ -37,7 +36,7 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="middle_name" class="form-label">Middle Initial:</label>
-                        <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{$passSlip->middle_name}}" required>
+                        <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{$passSlip->middle_name}}" >
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="department" class="form-label">Department:</label>
@@ -78,4 +77,3 @@
 </div>
 </div>
 @endforeach
-</div>

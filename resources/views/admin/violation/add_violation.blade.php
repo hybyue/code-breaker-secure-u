@@ -1,3 +1,4 @@
+
 {{-- Add Violation --}}
 <div class="modal fade" id="addViolationModalAd" tabindex="-1" aria-labelledby="addViolationModalAdLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -14,8 +15,6 @@
                             <label for="student_no">Student Number:</label>
                             <input type="text" class="form-control" id="student_no" name="student_no" required>
                         </div>
-                        <div id="student_results" class="col-md-12 results-container"></div>
-
                         <div class="col-md-4 form-group">
                             <label for="last_name">Last Name:</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" required>
@@ -54,13 +53,10 @@
 
 
                     <div class="form-group text-center mt-3">
-                        <button type="submit" class="btn text-white" data-bs-dismiss="addViolationModalAd" style="background-color: #0B9B19">Submit</button>
+                        <button type="submit" class="btn text-white" style="background-color: #0B9B19">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<script>
-  
-</script>

@@ -59,7 +59,7 @@
                     <th>Date</th>
                     <th>Out</th>
                     <th>In</th>
-                    <th>Time Out Count</th>
+                    <th class="text-start">Time Out Count</th>
                     <th></th>
                 </tr>
             </thead>
@@ -70,8 +70,20 @@
                     <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
-                    <td>{{ $passSlip->exit_count }}</td>
+                    <td id="time-in-{{ $passSlip->id }}" class="text-center">
+                        @if(is_null($passSlip->time_in))
+                        <div>
+                            <span id="time-in-display-{{ $passSlip->id }}"></span>
+                            <form action="{{ route('passSlip.checkout_admin', $passSlip->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
+                            </form>
+                        </div>
+                        @else
+                        {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                        @endif
+                    </td>
+                    <td class="text-start">{{ $passSlip->exit_count }}</td>
                     <td>
                         <div class="d-flex justify-content-center align-items-center">
                             <div class="mx-1">
@@ -80,19 +92,18 @@
                             <div class="mx-1">
                                 <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlip-{{ $passSlip->id }}"><i class="bi bi-pencil-square"></i></a>
                             </div>
-                            <div class="mx-1">
+                            {{-- <div class="mx-1">
                                 <a href="javascript:void(0)" onclick="deletePassSlip({{$passSlip->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                     <i class="bi bi-trash3-fill"></i>
                                 </a>
-
-                            </div>
+                            </div> --}}
                         </div>
                     </td>
                     <p hidden>{{ $passSlip->employee_type }}</p>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="text-center">No Data available in table</td>
+                    <td colspan="7" class="text-center">No Data available in table</td>
                 </tr>
             @endforelse
         </tbody>
@@ -104,7 +115,7 @@
 @include('admin.pass_slip.update_pass_slip')
 @include('admin.pass_slip.pass_slip_js')
 
-<div id="latestPassSlips">
+
 @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="viewPassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="viewPassSlipLabel-{{ $passSlip->id }}" aria-hidden="true">
 <div class="modal-dialog">
@@ -133,7 +144,7 @@
 </div>
 </div>
 @endforeach
-</div>
+
 
 <script>
     function searchTable() {

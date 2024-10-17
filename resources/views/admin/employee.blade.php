@@ -10,23 +10,6 @@
                     </div>
 
                     <div class="container p-3" style="background-color:#D9D9D9;">
-                        <div class="row mb-3">
-                            <div class="col-md-6 d-flex align-items-center">
-                                <label for="entries" class="mr-2">Show</label>
-                                <select id="entries" class="form-control w-auto m-2">
-                                    <option>10</option>
-                                    <option>25</option>
-                                    <option>50</option>
-                                    <option>100</option>
-                                    <option>110</option>
-                                    <option>125</option>
-                                </select>
-                                <label for="entries" class="ml-2">entries</label>
-                            </div>
-                            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;">
-                            </div>
-                        </div>
 
                         <!-- Table -->
                         <div class="row">
@@ -89,23 +72,6 @@
 
                                     </tbody>
                                 </table>
-
-                        <div class="d-flex justify-content-between">
-                            <div>Showing 1 to 2 of 2 entries</div>
-                            <nav>
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
                     </div>
 
 

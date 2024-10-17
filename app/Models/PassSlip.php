@@ -75,6 +75,8 @@ class PassSlip extends Model
         $today = Carbon::today();
         $existingEntriesToday = PassSlip::where('first_name', $model->first_name)
             ->where('last_name', $model->last_name)
+            ->where('department', $model->department)
+            ->where('designation', $model->designation)
             ->whereDate('created_at', $today)
             ->count();
 

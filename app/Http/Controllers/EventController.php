@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllEmployee;
 use App\Models\Employee;
 use App\Models\Event;
-use App\Models\Parking;
+use App\Models\Lost;
 use App\Models\PassSlip;
+use App\Models\Student;
 use App\Models\Violation;
 use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Test\Constraint\ResponseFormatSame;
 
 class EventController extends Controller
 {
@@ -102,7 +103,13 @@ class EventController extends Controller
     {
         $totalEmployee = Employee::count();
         $totalEvents = Event::count();
-        $totalPassSlips = PassSlip::count();
+        $totalEmployees = AllEmployee::count();
+        $totalStudent = Student::count();
+        $totalVisitor = Visitor::count();
+        $totalViolation = Violation::count();
+        $totalLostFound = Lost::count();
+        $totalPassSlip = PassSlip::count();
+
 
         // Today's counts
         $totalRegular = Employee::where('employment_type', 'Full-Time')->count();
@@ -118,7 +125,7 @@ class EventController extends Controller
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
 
-        return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalPassSlips', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon'));
+        return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon', 'totalEmployees', 'totalStudent', 'totalVisitor', 'totalViolation', 'totalLostFound', 'totalPassSlip'));
     }
     public function updateEventsAdmin(Request $request, $id)
     {

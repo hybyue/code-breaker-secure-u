@@ -1,6 +1,5 @@
 
     {{-- Edit Visitor --}}
-    <div id="updateDynamicModal">
     @foreach ($latestVisitors as $visitor)
     <div class="modal fade" id="updateVisitorSub-{{ $visitor->id }}" tabindex="-1" aria-labelledby="updateVisitorSubLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -35,10 +34,6 @@
                                 <textarea class="form-control" id="purpose_{{ $visitor->id }}" name="purpose" required>{{ $visitor->purpose }}</textarea>
                             </div>
                             <div class="form-group">
-                                <label for="entry_count_{{ $visitor->id }}">Entry Count:</label>
-                                <input type="number" class="form-control" id="entry_count_{{ $visitor->id }}" name="entry_count" value="{{ $visitor->entry_count }}" required>
-                            </div>
-                            <div class="form-group">
                                 <label for="id_type">ID Type:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="{{$visitor->id_type}}" selected disabled>{{$visitor->id_type}}</option>
@@ -55,7 +50,7 @@
                         <input type="hidden" name="time_out" id="time_out_{{ $visitor->id }}" value="{{ $visitor->time_out }}">
 
                         <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn btn-primary text-white" data-bs-dismiss="updateVisitorSub-{{ $visitor->id }}">Update</button>
+                            <button type="submit" class="btn btn-primary text-white" ">Update</button>
                         </div>
                     </form>
                 </div>
@@ -63,5 +58,3 @@
         </div>
     </div>
     @endforeach
-
-    </div>

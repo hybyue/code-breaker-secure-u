@@ -12,9 +12,11 @@
             <a href="#" class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addPassSlipModal">
                 <i class="bi bi-plus-circle-fill text-center"></i> Add New
             </a>
-            <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
-                <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-            </a>
+            {{-- <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
+                 <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+            </a> --}}
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModal()">Generate Report</a>
+
 
                     </div>
 
@@ -43,7 +45,7 @@
 
                                 @if(request('start_date') || request('end_date') || request('employee_type'))
                                 <div class="col-md-0 mt-4 pt-2">
-                                    <a href="/pass_slip/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
+                                    <a href="/sub-admin/pass_slip/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
                                 </div>
                                 @endif
                             </div>
@@ -68,15 +70,26 @@
                 </tr>
             </thead>
             <tbody>
-
                 @forelse ($latestPassSlips as $passSlip)
                     <tr>
                     <td>{{ $passSlip->p_no }}</td>
                     <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
                     <td>{{ $passSlip->designation}}</td>
-                    <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
+                    <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A') }}</td>
+                    <td id="time-in-{{ $passSlip->id }}" class="text-center">
+                        @if(is_null($passSlip->time_in))
+                        <div>
+                            <span id="time-in-display-{{ $passSlip->id }}"></span>
+                            <form action="{{ route('passSlip.checkout', $passSlip->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
+                            </form>
+                        </div>
+                        @else
+                        {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                        @endif
+                    </td>
                     <td>{{ $passSlip->exit_count }}</td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
@@ -105,7 +118,37 @@
 @include('sub-admin.pass_slip.pass_js')
 
 
-<div id="latestPassSlips">
+
+
+
+
+
+<script>
+function showPdfModal() {
+    document.getElementById('loadingBar').style.display = 'block';
+    document.getElementById('pdfPreviewContent').style.display = 'none';
+
+
+
+
+    // Show the modal after data is prepared
+    $('#pdfModal').modal('show');
+
+    setTimeout(function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        document.getElementById('pdfPreviewContent').style.display = 'block';
+    }, 1000);
+}
+
+</script>
+
+
+
+
+
+
+
+
 @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="viewPassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="viewPassSlipLabel-{{ $passSlip->id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -141,7 +184,7 @@
     </div>
 </div>
 @endforeach
-</div>
+
 
 
 <script>

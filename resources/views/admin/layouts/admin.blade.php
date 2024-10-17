@@ -9,7 +9,6 @@
     <meta name="author" content="">
     <title>@yield('title')</title>
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <style>
@@ -32,7 +31,6 @@
         .drop-me {
             z-index: 1000;
         }
-
         .notification-button {
             display: flex;
             align-items: center;
@@ -55,59 +53,27 @@
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
                     @if (Route::has('login'))
-                        @auth
-                            <div class="dropdown">
-                                <button class="btn btn-dark notification-button position-relative" id="notificationDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-bell-fill"></i>
-                                    <span
-                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ $students->count() }}
-                                        <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </button>
-                                <div class="dropdown-menu notification-lists position-absolute"
-                                    aria-labelledby="notificationDropdown"
-                                    style="max-height: 400px; overflow-y: auto; left: -11rem;">
-                                    <div class="card" style="width: 18rem;">
-                                        <div class="card-header">
-                                            Notifications
-                                        </div>
-                                        <ul class="list-unstyled">
-                                           @foreach ($students as $s)
-                                           <li>
-                                            <a class="dropdown-item" href="{{ route('admin.violation.violation') }}">
-                                             {{ $s->student_no }} - 3rd violation
-                                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                            </a>
-                                        </li>
-                                           @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown2">
-                                <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <img class="rounded-circle"
-                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiyWg33WlX7U9e3dvdcAO0VQ3VM9RUlXJBcA&s"
-                                        alt="User" width="40" height="40">
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
-                                    <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Home</a></li>
-                                    <li><a class="dropdown-item"
-                                            href="{{ route('admin.layouts.profile_admin') }}">Profile</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('auth.change-password') }}">Change
-                                            password</a></li>
-                                    <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
-                                </ul>
-                            </div>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn btn-outline-light ms-2">Register</a>
-                            @endif
-                        @endauth
+                    @auth
+                    <button class="btn btn-dark notification-button ">
+                        <i class="bi bi-bell-fill"></i>
+                    </button>
+                    <div class="dropdown">
+                        <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiyWg33WlX7U9e3dvdcAO0VQ3VM9RUlXJBcA&s" alt="User" width="40" height="40">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
+                            <li><a class="dropdown-item" href="{{ route('admin.dashboard')}}">Home</a></li>
+                            <li><a class="dropdown-item" href="{{ route('admin.layouts.profile_admin') }}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ route('auth.change-password')}}">Change password</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
+                        </ul>
+                    </div>
+                    @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
+                    @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="btn btn-outline-light ms-2">Register</a>
+                    @endif
+                    @endauth
                     @endif
                 </div>
             </div>
@@ -115,8 +81,18 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    var dropdownElements = document.querySelectorAll('.dropdown-toggle');
+    dropdownElements.forEach(function (dropdown) {
+        new bootstrap.Dropdown(dropdown);
+    });
+});
+
+    </script>
 </body>
 
 </html>

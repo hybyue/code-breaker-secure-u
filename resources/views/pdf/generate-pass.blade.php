@@ -62,19 +62,17 @@
         <div class="header">
             <img src="{{ public_path('images/UCU-logo.png') }}" alt="UCU Logo">
             <p class="university">Urdaneta City University&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="report-title">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Reports list of Pass Slip&nbsp;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>
-            <p class="department">Security Management Office Report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="report-title">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Reports list of Pass Slip&nbsp;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>            <p class="department">Security Management Office Report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
         </div>
     </div>
     <div>
         <p class="text-start">Title: {{ $title }}</p>
         <p class="text-start">Date: {{ $date }}</p>
 
-        @if(!empty($employeeType))
-        <p class="text-start">Employee Type: {{ $employeeType }}</p>
-    @endif
-    @if(!empty($startDate) && !empty($endDate))
-        <p class="text-start">Date Range: {{ $startDate }} - {{ $endDate }}</p>
+       @if(!empty($employee_type))<p> ({{ $employee_type }} Employee's)</p>@endif
+
+    @if(!empty($start_date) && !empty($end_date))
+        <p class="text-start">Date Range: {{ $start_date }} - {{ $end_date }}</p>
     @endif
     </div>
     <div class="container">

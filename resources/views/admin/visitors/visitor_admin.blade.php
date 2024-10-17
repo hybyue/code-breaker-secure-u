@@ -36,24 +36,6 @@
         </div>
     </form>
 </div>
-    {{-- <div class="container p-2 bg-body-secondary rounded">
-        <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
-                <label for="entries" class="mr-2">Show</label>
-                <select id="entries" class="form-control w-auto m-2" onchange="changeEntries()">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="110">110</option>
-                    <option value="125">125</option>
-                </select>
-                <label for="entries" class="ml-2">entries</label>
-            </div>
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                <input type="text" id="search" class="form-control" placeholder="Search" style="max-width: 300px;" onkeyup="searchTable()">
-            </div>
-        </div> --}}
         <div class="container p-2 bg-body-secondary rounded">
         <div class="row p-4">
             <div class="col-12 p-1">
@@ -62,11 +44,9 @@
                         <tr>
                             <th>Date</th>
                             <th>Visitor's Name</th>
-                            <th>Person to visit & Company</th>
-                            <th>Purpose</th>
-                            <th>Time in</th>
-                            <th>Time out</th>
-                            <th>Entry Count</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th class="text-start">Entry Count</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -75,8 +55,6 @@
                         <tr id="tr_{{$visit->id}}">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                             <td>{{ $visit->last_name }},  {{$visit->first_name }} @if($visit->middle_name){{ $visit->middle_name }}.@endif </td>
-                            <td>{{ $visit->person_to_visit }}</td>
-                            <td>{{ $visit->purpose }}</td>
                             <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }}</td>
                             <td id="time-out-{{ $visit->id }}" class="text-center">
                                 @if(is_null($visit->time_out))
@@ -91,7 +69,7 @@
                                 {{ \Carbon\Carbon::parse($visit->time_out)->format('g:i A') }}
                                 @endif
                             </td>
-                            <td>{{ $visit->entry_count }}</td>
+                            <td class="text-center">{{ $visit->entry_count }}</td>
                             <td>
                                 <div class="d-flex justify-content-center align-items-center">
                                     <div class="mx-1">
@@ -100,12 +78,11 @@
                                     <div class="mx-1">
                                     <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitor-{{ $visit->id }}"><i class="bi bi-pencil-square"></i></a>
                                     </div>
-                                    <div class="mx-1">
+                                    {{-- <div class="mx-1">
                                         <a href="javascript:void(0)" onclick="deleteVisitor({{$visit->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                             <i class="bi bi-trash3-fill"></i>
                                         </a>
-
-                                </div>
+                                    </div> --}}
                                 </div>
                             </td>
                         </tr>
@@ -124,8 +101,6 @@
     @include('admin.visitors.update_visitor')
     @include('admin.visitors.visitor_js')
 
-
-    <div id="dynamicModals">
 
       {{-- Modal for showing all entries of a visitor --}}
       @foreach ($latestVisitors as $visit)
@@ -166,7 +141,6 @@
          </div>
      </div>
      @endforeach
-    </div>
 
 
 

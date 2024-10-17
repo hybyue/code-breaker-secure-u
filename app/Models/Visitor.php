@@ -25,6 +25,7 @@ class Visitor extends Model
         'remarks',
         'time_out',
         'id_type',
+        'entry_count',
     ];
 
     protected static $logAttributes = [
@@ -39,13 +40,14 @@ class Visitor extends Model
         'remarks',
         'time_out',
         'id_type',
+        'entry_count',
     ];
 
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['user_id', 'date', 'first_name', 'middle_name', 'last_name', 'person_to_visit', 'purpose', 'time_in', 'remarks', 'time_out', 'id_type'])
+            ->logOnly(['user_id', 'date', 'first_name', 'middle_name', 'last_name', 'person_to_visit', 'purpose', 'time_in', 'remarks', 'time_out', 'id_type', 'entry_count'])
             ->logOnlyDirty();
     }
 

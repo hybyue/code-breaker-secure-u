@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LostFoundController extends Controller
 {
-    public function lost_found()
+    public function lost_found(Request $request)
     {
-        $lost_found = Lost::latest()->get();
-        return view('sub-admin.lost.lost_found', compact('lost_found'));
+        return $this->filterLostFounds($request);
     }
 
        public function store_lost(Request $request)
@@ -24,6 +23,9 @@ class LostFoundController extends Controller
             'last_name' => 'required|string|max:255',
             'course' => 'required|string|max:255',
             'object_img' => 'nullable|image|max:3048',
+            'location' => 'required|string|max:255',
+            'is_claimed' => 'required|boolean',
+            'description' => 'nullable|string',
         ]);
 
         $data = [
@@ -33,6 +35,10 @@ class LostFoundController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'course' => $request->course,
+            'location' => $request->location,
+            'security_staff' => Auth::user()->name,
+            'is_claimed' => $request->is_claimed,
+            'description' => $request->description,
         ];
 
         if ($request->hasFile('object_img')) {
@@ -47,6 +53,21 @@ class LostFoundController extends Controller
             'status' => 'success'
         ]);
     }
+
+    public function updateClaimedSub(Request $request, $id)
+    {
+        $lostItem = Lost::find($id);
+
+        if ($lostItem) {
+            $lostItem->is_claimed = $request->is_claimed;
+            $lostItem->save();
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false], 404);
+        }
+    }
+
 
     public function updateLostFound(Request $request, string $id)
     {
@@ -76,6 +97,7 @@ class LostFoundController extends Controller
     public function filterLostFounds(Request $request)
     {
         $query = Lost::query();
+        $user = Auth::user();
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereDate('created_at', '>=', $request->start_date)
@@ -84,8 +106,22 @@ class LostFoundController extends Controller
 
         $lost_found = $query->orderBy('created_at', 'desc')->get();
 
-        return view('sub-admin.lost.lost_found', compact('lost_found'));
+        return view('sub-admin.lost.lost_found', compact('lost_found', 'request', 'user'));
     }
+
+    public function updateClaimed(Request $request, $id)
+{
+    $lostItem = Lost::find($id);
+
+    if ($lostItem) {
+        $lostItem->is_claimed = $request->is_claimed;
+        $lostItem->save();
+
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false], 404);
+    }
+}
 
 
         public function lost_found_admin()
@@ -103,7 +139,11 @@ class LostFoundController extends Controller
             'last_name' => 'required|string|max:255',
             'course' => 'required|string|max:255',
             'object_img' => 'nullable|image|max:3048',
+            'location' => 'required|string|max:255',
+            'is_claimed' => 'required|boolean',
+            'description' => 'nullable|string',
         ]);
+
         $data = [
             'user_id' => Auth::id(),
             'object_type' => $request->object_type,
@@ -111,6 +151,10 @@ class LostFoundController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'course' => $request->course,
+            'location' => $request->location,
+            'security_staff' => Auth::name()->name,
+            'is_claimed' => $request->is_claimed,
+            'description' => $request->description,
         ];
         if ($request->hasFile('object_img')) {
             $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
@@ -141,12 +185,15 @@ class LostFoundController extends Controller
             $path = $request->file('object_img')->storeAs('lost_images', $fileName, 'public');
             $lost_found->object_img = '/storage/' . $path;
         }
-          // Update other fields
-          $lost_found->object_type = $request->input('object_type');
-          $lost_found->first_name = $request->input('first_name');
-          $lost_found->middle_name = $request->input('middle_name');
-          $lost_found->last_name = $request->input('last_name');
-          $lost_found->course = $request->input('course');
+        $lost_found->object_type = $request->input('object_type');
+        $lost_found->first_name = $request->input('first_name');
+        $lost_found->middle_name = $request->input('middle_name');
+        $lost_found->last_name = $request->input('last_name');
+        $lost_found->course = $request->input('course');
+        $lost_found->location = $request->input('location');
+        $lost_found->security_staff = $request->input('security_staff');
+        $lost_found->is_claimed = $request->input('is_claimed');
+        $lost_found->description = $request->input('description');
 
           // Save the updated model
           $lost_found->save();

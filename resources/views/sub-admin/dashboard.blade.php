@@ -14,7 +14,7 @@
 
     <div class="row mb-4">
         <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card-onclick card text-white" style="background-color:#2c3539;" onclick="location.href='{{ route('sub-admin.visitors.visitor') }}'">
+            <div class="card-onclick card text-white" style="background-color:#2c3539;" onclick="location.href='{{ route('visitors.subadmin') }}'">
                 <div class="card-body d-flex justify-content-between">
                     <div class="icon-container text-center d-flex justify-content-center align-items-center" >
                         <i class="bi bi-person-fill" style="font-size: 50px; color: white; vertical-align: middle;"></i>

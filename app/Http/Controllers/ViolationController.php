@@ -14,16 +14,14 @@ class ViolationController extends Controller
 {
     public function violationView(Request $request)
 {
-    // Initial query for violations
     $query = Violation::query();
+    $user = Auth::user();
 
-    // Apply date filters if provided
     if ($request->filled('start_date') && $request->filled('end_date')) {
         $query->whereDate('created_at', '>=', $request->start_date)
               ->whereDate('created_at', '<=', $request->end_date);
     }
 
-    // Select latest violation per student
     $violations = Violation::select('violations.*')
         ->join(DB::raw('(SELECT MAX(id) as id FROM violations GROUP BY student_no) as latest'), 'violations.id', '=', 'latest.id')
         ->where(function ($subQuery) use ($request) {
@@ -36,7 +34,7 @@ class ViolationController extends Controller
 
     $allViolations = $query->get()->groupBy('student_no');
 
-    return view('admin.violation.violation', compact('violations', 'allViolations'));
+    return view('admin.violation.violation', compact('violations', 'allViolations', 'request', 'user'));
 }
 
 
@@ -102,6 +100,7 @@ public function violation(Request $request)
 public function filterViolation(Request $request)
 {
     $query = Violation::query();
+    $user = Auth::user();
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
         $query->whereDate('created_at', '>=', $request->start_date)
@@ -123,7 +122,7 @@ public function filterViolation(Request $request)
 
     $allViolations = $query->get()->groupBy('student_no');
 
-    return view('sub-admin.violation.violation', compact('violations', 'allViolations'));
+    return view('sub-admin.violation.violation', compact('violations', 'allViolations', 'user', 'request'));
 }
 
 

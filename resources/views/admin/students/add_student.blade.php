@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <form id="studentFormAdmin" action="{{route('store_admin.student')}}" method="POST">
+            <form id="studentFormAdmin" action="" method="POST">
                     @csrf
                     <div class="row">
                         <div class="form-group">

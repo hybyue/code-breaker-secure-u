@@ -25,11 +25,6 @@ $(document).ready(function () {
 
         let formData = new FormData(this);
 
-        // Remove this click handler since the button click is not needed here
-        // $("#lostSubmmit").click(function () {
-        //     $("#addNewLostModal").modal("toggle");
-        // });
-
         $.ajax({
             url: "{{ route('admin.store') }}",
             method: 'POST',
@@ -39,37 +34,11 @@ $(document).ready(function () {
             success: function(resp) {
                 if(resp.status == 'success') {
                     $('#addLostForm')[0].reset();
-                    $('body').removeClass('modal-open');
 
-                    // Append the new entry to the table
-                    $('#tableLost').append(
-                        `<tr class="text-center" id="tr_${resp.data.id}">
-                            <td>${resp.data.object_type}</td>
-                            <td>${resp.data.first_name} ${resp.data.middle_name}. ${resp.data.last_name}</td>
-                            <td>${resp.data.course}</td>
-                            <td>
-                                ${resp.data.object_img ? `<img src="${resp.data.object_img}" alt="Object Image" width="100">` : 'No Image'}
-                            </td>
-                            <td>
-                            <div class="d-flex justify-content-center">
-                                <div class="mx-1">
-                                    <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateLostFound-${resp.data.id}">
-                                    <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </div>
-                                <div class="mx-1">
-                                    <a href="javascript:void(0)" onclick="deleteLostFound(${resp.data.id})" class="btn btn-sm text-white" style="background-color: #920606">
-                                    <i class="bi bi-trash3-fill"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            </td>
-                        </tr>`
-                    );
-                    $('.modal').modal({
-                                backdrop: 'static',
-                                keyboard: true
-                            });
+                    $('#tableLost').load(location.href + ' #tableLost');
+                    $('#lostFoundUpdate').load(location.href + ' #lostFoundUpdate');
+                    $('#viewLostFoundAd').load(location.href + ' #viewLostFoundAd');
+
 
 
                     Swal.fire({

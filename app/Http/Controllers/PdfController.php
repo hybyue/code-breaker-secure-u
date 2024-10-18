@@ -42,7 +42,7 @@ class PdfController extends Controller
 
     $pdf = Pdf::loadView('pdf.generate-pass', $data);
 
-    return $pdf->stream('report-pass-slip.pdf');
+    return $pdf->stream();
 }
 
 

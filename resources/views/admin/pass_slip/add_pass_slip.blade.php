@@ -19,11 +19,11 @@
                         <div class="col-md-6 mb-2">
                             <label for="p_no" class="form-label">Pass Number:</label>
                             <input type="text" class="form-control" name="p_no" id="p_no"
-                                value="{{ 'P-' . now()->format('Ymd') . '-' }}">
+                            value="{{ $passNumber ?? '' }}" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="status" name="employee_type" required>
+                            <select class="form-select" id="status" name="employee_type" required readonly>
                                 <option value="" selected disabled>Select Employee Type</option>
                                 <option value="Teaching">Teaching</option>
                                 <option value="Non-Teaching">Non-Teaching</option>
@@ -33,25 +33,53 @@
                         <input hidden type="text" class="form-control" id="employee_id" name="employee_id">
                         <div class="col-md-4 mb-2">
                             <label for="last_name" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required readonly>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="first_name" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required readonly>
                         </div>
                         <div class="col-md-4  mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name"
+                            <input type="text" class="form-control" id="middle_name" name="middle_name" readonly
                                 placeholder="Optional">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="department" class="form-label">Department:</label>
-                            <input type="text" class="form-control" id="department" name="department" required>
+                            <input type="text" class="form-control" id="department" name="department" required readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="designation" class="form-label">Designation:</label>
                             <input class="form-control" id="designation" name="designation" rows="3"
-                                required></input>
+                                required readonly></input>
+                        </div>
+                        <div class="row mb-2 ms-3">
+                            <label class="form-label">Check Business:</label>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="commute" name="check_business" value="Commute">
+                                <label class="form-check-label" for="commute">Commute</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="own_vehicle" name="check_business" value="Use own vehicle">
+                                <label class="form-check-label" for="own_vehicle">Use own vehicle</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="university_vehicle" name="check_business" value="With the use of university vehicle">
+                                <label class="form-check-label" for="university_vehicle">With the use of university vehicle</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="official_business" name="check_business" value="Official business">
+                                <label class="form-check-label" for="official_business">Official business</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="personal_business" name="check_business" value="Personal business">
+                                <label class="form-check-label" for="personal_business">Personal business</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="driver_name" class="form-label">Driver Name:</label>
+                            <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="Optional">
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
@@ -65,7 +93,7 @@
                             <label for="date" class="form-label">Date</label>
                             <input type="date" class="form-control" id="date" name="date" required>
                         </div> --}}
-                        <div class=" mb-2">
+                        <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
                             <input type="time" class="form-control" id="time_out" name="time_out" required>
                         </div>

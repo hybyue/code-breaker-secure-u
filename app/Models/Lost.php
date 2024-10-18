@@ -22,6 +22,10 @@ class Lost extends Model
         'last_name',
         'course',
         'object_img',
+        'location',
+        'is_claimed',
+        'security_staff',
+        'description'
     ];
 
 

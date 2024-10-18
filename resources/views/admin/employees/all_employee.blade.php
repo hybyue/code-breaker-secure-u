@@ -39,20 +39,21 @@
             <td>{{$allEmployee->department}}</td>
             <td>{{$allEmployee->status}}</td>
 
-                <td>
-                    <div class="d-flex justify-content-center align-items-center">
+                <td class="text-center">
+                    <a href="javascript:void(0)" class="editModal btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateEmployeeModalAd-{{$allEmployee->id}}"><i class="bi bi-pencil-square"></i></a>
+
+                    {{-- <div class="d-flex justify-content-center align-items-center">
                         <div class="mx-1">
                             <a href="javascript:void(0)" class="viewModal btn btn-sm text-white" style="background-color: #1e1f1e" data-id="{{ $allEmployee->id }}"   data-bs-toggle="modal" data-bs-target="#viewViolationAd-{{ $allEmployee->id }}"><i class="bi bi-eye"></i></a>
                         </div>
                         <div class="mx-1">
-                        <a href="javascript:void(0)" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $allEmployee->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $allEmployee->id }}"><i class="bi bi-pencil-square"></i></a>
                         </div>
                         <div class="mx-1">
                             <a href="javascript:void(0)" onclick="deleteEmployee({{$allEmployee->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                     </div>
-                    </div>
+                    </div> --}}
                 </td>
             </tr>
             @empty
@@ -72,6 +73,8 @@
 </div>
 
 @include('admin.employees.add_employee')
+@include('admin.employees.update_employee')
+
 @include('admin.employees.employee_js')
 
 

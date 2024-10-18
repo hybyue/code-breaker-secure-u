@@ -59,7 +59,7 @@
                     <th>Date</th>
                     <th>Out</th>
                     <th>In</th>
-                    <th>Time Out Count</th>
+                    <th class="text-start">Time Out Count</th>
                     <th></th>
                 </tr>
             </thead>
@@ -70,8 +70,20 @@
                     <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
-                    <td>{{ $passSlip->exit_count }}</td>
+                    <td id="time-in-{{ $passSlip->id }}" class="text-center">
+                        @if(is_null($passSlip->time_in))
+                        <div>
+                            <span id="time-in-display-{{ $passSlip->id }}"></span>
+                            <form action="{{ route('passSlip.checkout_admin', $passSlip->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
+                            </form>
+                        </div>
+                        @else
+                        {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                        @endif
+                    </td>
+                    <td class="text-center">{{ $passSlip->exit_count }}</td>
                     <td>
                         <div class="d-flex justify-content-center align-items-center">
                             <div class="mx-1">
@@ -124,7 +136,29 @@
                     <p><strong>Destination:</strong> {{ $entry->destination }}</p>
                     <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</p>
                     <p><strong>Time Out:</strong> {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}</p>
+                    <p><strong>Time out by:</strong>
+                        @if ($entry->time_out_by)
+                        @php
+                            $user = App\Models\User::find($entry->time_out_by);
+                        @endphp
+                        {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                    @else
+                        N/A
+                    @endif
+                    </p>
+
+
                     <p><strong>Time In:</strong> {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</p>
+                    <p><strong>Time in by:</strong>
+                        @if ($entry->time_in_by)
+                        @php
+                            $user = App\Models\User::find($entry->time_in_by);
+                        @endphp
+                        {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                    @else
+                        N/A
+                    @endif
+                </p>
                 </div>
             </div>
             @endforeach

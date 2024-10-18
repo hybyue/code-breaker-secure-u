@@ -48,7 +48,7 @@ Route::get('/back', [HomeController::class, 'backButton'])->name('back');
 Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('sub-admin.dashboard');
 
-    Route::get('sub-admin/profile', function () {
+    Route::get('/sub-admin/profile', function () {
         return view('profile');
     })->name('profile');
 
@@ -65,6 +65,7 @@ Route::controller(VisitorController::class)->group(function () {
     Route::get('sub-admin/search_visitor',  'searchVisitor')->name('visitor.search');
     Route::get('/visitor-stats/{timeframe}', 'getVisitorStats');
     Route::get('/visitor-data', 'getVisitorData');
+    Route::get('/visitor-total-data',  'getVisitorTotalData');
 
 });
 
@@ -77,8 +78,11 @@ Route::controller(PassSlipController::class)->group(function () {
     Route::get('/sub-admin/pass_slip/filter_pass_slip',  'filterPassSlip');
     route::post('sub-admin/search-employee', action: 'searchEmployee')->name('subadmin.search_employee');
     route::post('sub-admin/search-test', 'searchTest')->name('search_test');
+    Route::post('/sub-admin/pass_slip/{id}', 'checkoutPassSlip')->name('passSlip.checkout');
+    Route::get('/sub-admin/generate_no/',  'generateNextPassSub')->name('pass_slip.next_number_sub');
+
 });
-Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
+Route::get('/generate-passSlip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
 
 
 
@@ -87,6 +91,8 @@ Route::controller(LostFoundController::class)->group(function () {
     Route::get('sub-admin/lost_found',  'lost_found')->name('sub-admin.lost.lost_found');
     Route::post('sub-admin/store_lost',  'store_lost')->name('sub-admin.store_losts');
     Route::put('sub-admin/lost_found/update/{id}',  'updateLostFound')->name('update.lost_found');
+    Route::post('/sub-admin/update_claimed/{id}', 'updateClaimedSub');
+
     Route::get('/filter_lost_founds',  'filterLostFounds');
 
 });
@@ -168,6 +174,11 @@ Route::controller(PassSlipController::class)->group(function (){
     Route::delete('/pass_slip/archive/{id}',  'destroy_passSlip')->name('archive.pass_slip');
     Route::get('/admin/filter_pass_slip_admin',  'filterPassSlipAdmin');
     route::post('/search-employee', 'searchEmployee')->name('search_employee');
+    route::post('/search-employee', 'searchEmployee')->name('search_employee');
+    Route::post('/admin/passS_slip/{id}', 'checkoutAdmin')->name('passSlip.checkout_admin');
+    Route::get('/admin/visitor-data', 'getVisitorData');
+    Route::get('/admin/visitor-total-data',  'getVisitorTotalData');
+    Route::get('/admin/generate_number/',  'generateNextPassNumber')->name('pass_slip.next_number');
 });
 
 Route::controller(EventController::class)->group(function () {
@@ -220,6 +231,7 @@ Route::controller(LostFoundController::class)->group(function () {
     Route::put('/lost_found/update/{id}', 'updateLostFoundAdmin')->name('update.lost_found_admin');
     Route::delete('/lost_found/archive/{id}', 'destroy_lostFound')->name('archive.lost_found');
     Route::get('/filter_lost_found', 'filterLostFoundAdmin');
+    Route::post('/admin/update_claimed/{id}', 'updateClaimed')->name('update_claimed');
 });
 
 
@@ -235,9 +247,9 @@ Route::controller(EmployeesController::class)->group(function (){
 
 
 Route::controller(PdfController::class)->group(function (){
-    Route::get('admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitor');
-    Route::get('admin/generate-pdf/pass_slip', 'generate_passSlip')->name('pdf.generate-pass');
-    Route::get('admin/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-lost');
+    Route::get('/admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitor');
+    Route::get('/generate-passSlipAdmin', 'generate_passSlip')->name('pdf.generate-pass');
+    Route::get('/admin/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-lost');
 });
 
 
@@ -256,9 +268,11 @@ Route::controller(ListController::class)->group(function (){
     Route::get('/admin/students', 'student_admin')->name('admin.students.student');
     Route::post('/admin/students', 'store_student_admin')->name('store_admin.student');
     Route::delete('/admin/student/delete/{id}', 'destroy_student_admin');
+    Route::put('/admin/student/update/{id}', 'updateStudentAdmin')->name('update_admin.student');
 
     Route::get('/admin/employees', 'all_employee_admin')->name('admin.employees.all_employee');
     Route::post('/admin/employees', 'store_all_employee_admin')->name('store_admin.employee');
+    Route::put('/employee/update/{id}', 'updateEmployeeAdmin')->name('update_admin.employee');
     Route::delete('/employee/delete/{id}', 'destroy_all_employee_admin');
 });
 

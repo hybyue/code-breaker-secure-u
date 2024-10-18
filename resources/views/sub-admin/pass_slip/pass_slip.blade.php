@@ -12,9 +12,10 @@
             <a href="#" class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addPassSlipModal">
                 <i class="bi bi-plus-circle-fill text-center"></i> Add New
             </a>
-            <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
+            {{-- <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
                 <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-            </a>
+            </a> --}}
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModal()">Generate Report</a>
 
                     </div>
 
@@ -43,7 +44,7 @@
 
                                 @if(request('start_date') || request('end_date') || request('employee_type'))
                                 <div class="col-md-0 mt-4 pt-2">
-                                    <a href="/pass_slip/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
+                                    <a href="/sub-admin/pass_slip/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
                                 </div>
                                 @endif
                             </div>
@@ -61,7 +62,7 @@
                     <th>Name</th>
                     <th>Designation</th>
                     <th>Date</th>
-                    <th>Departure Time</th>
+                    <th>Time Out</th>
                     <th>Time In</th>
                     <th>Departure Count</th>
                     <th></th>
@@ -76,8 +77,20 @@
                     <td>{{ $passSlip->designation}}</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A')}}</td>
-                    <td>{{ $passSlip->exit_count }}</td>
+                    <td id="time-in-{{ $passSlip->id }}" class="text-center">
+                        @if(is_null($passSlip->time_in))
+                        <div>
+                            <span id="time-in-display-{{ $passSlip->id }}"></span>
+                            <form action="{{ route('passSlip.checkout', $passSlip->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
+                            </form>
+                        </div>
+                        @else
+                        {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                        @endif
+                    </td>
+                    <td class="text-center">{{ $passSlip->exit_count }}</td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class="mx-1">
@@ -131,8 +144,29 @@
                         <p><strong>Designation:</strong> {{ $entry->designation }}</p>
                         <p><strong>Destination:</strong> {{ $entry->destination }}</p>
                         <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</p>
-                        <p><strong>Time Out:</strong> {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}</p>
+                        <p><strong>Time out by:</strong>
+                            @if ($entry->time_out_by)
+                            @php
+                                $user = App\Models\User::find($entry->time_out_by);
+                            @endphp
+                            {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                        @else
+                            N/A
+                        @endif
+                        </p>
+
+
                         <p><strong>Time In:</strong> {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</p>
+                        <p><strong>Time in by:</strong>
+                            @if ($entry->time_in_by)
+                            @php
+                                $user = App\Models\User::find($entry->time_in_by);
+                            @endphp
+                            {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                        @else
+                            N/A
+                        @endif
+                    </p>
                     </div>
                 </div>
                 @endforeach
@@ -186,9 +220,52 @@
 
 </script>
 
+<!-- Modal Structure -->
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Loading spinner -->
+                <div id="loadingBar" style="display: none;">Loading...</div>
 
-{{-- <script src="{{ asset('js/pass_slip_sub.js') }}"></script> --}}
+                <!-- PDF display iframe -->
+                <iframe id="pdfIframe" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<script>
+    function showPdfModal() {
+    // Display loading bar initially
+    document.getElementById('loadingBar').style.display = 'block';
+    document.getElementById('pdfIframe').style.display = 'none';
+
+    // You can pass the necessary parameters here if needed
+    const url = '/generate-passSlip?' + $.param({
+        start_date: $('#start_date').val(), // example of passing data from input fields
+        end_date: $('#end_date').val(),
+        employee_type: $('#employee_type').val()
+    });
+
+    // Set iframe src to generated PDF URL
+    document.getElementById('pdfIframe').src = url;
+
+    // Show modal after setting the src
+    $('#pdfModal').modal('show');
+
+    // Hide loading bar and show iframe after some delay (can be adjusted)
+    setTimeout(function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        document.getElementById('pdfIframe').style.display = 'block';
+    }, 1000); // 1 second delay to simulate loading
+}
+    </script>
 
 <style>
     .same-height-table td {

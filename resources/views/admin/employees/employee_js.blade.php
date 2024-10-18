@@ -16,22 +16,22 @@
         ordering: false,
         });
 
-    $('#addPassForm').on('submit', function(e){
+    $('#addEmployeeForm').on('submit', function(e){
         e.preventDefault();
 
         $('.errorMessage').html('');
         let formData = $(this).serialize();
 
         $.ajax({
-            url: "{{ route('pass_slip.store') }}",
+            url: "{{ route('store_admin.employee') }}",
             method: 'POST',
             data: formData,
             success: function(resp) {
                 if(resp.status == 'success') {
-                    $('.modal-backdrop').remove();
-                    $('#addPassSlipModal').modal('hide');
-                    $('#addPassForm')[0].reset();
+                    $('#addEmployeeForm')[0].reset();
                     $('#employeeTable').load(location.href + ' #employeeTable');
+                    $('#updateEmployeesAdmin').load(location.href + ' #updateEmployeesAdmin');
+
                     Swal.fire({
                         toast: true,
                         position: 'top-right',
@@ -43,7 +43,7 @@
                         timer: 2500,
                         timerProgressBar: true,
                         icon: 'success',
-                        title: 'Pass Slip added successfully',
+                        title: 'Employee added successfully',
                     });
                 }
             },

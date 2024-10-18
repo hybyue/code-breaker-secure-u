@@ -6,6 +6,25 @@
 <script>
     $(document).ready(function() {
 
+        $('#addPassSlipModal').on('show.bs.modal', function() {
+    // Fetch the next pass number from the server when the modal opens
+    $.ajax({
+        url: "{{ route('pass_slip.next_number_sub') }}", // Your new route for generating the next pass number
+        method: 'GET',
+        success: function(resp) {
+            // Update the pass number field with the next available pass number
+            $('#p_no').val(resp.passNumber);
+        },
+        error: function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to generate the next pass number',
+            });
+        }
+    });
+});
+
         let table = new DataTable('#passTable', {
             responsive: true,
             "ordering": false,
@@ -22,8 +41,21 @@
                 data: formData,
                 success: function(resp) {
                     if (resp.status == 'success') {
-                        $('.modal-backdrop').remove();
-                        $('#addPassSlipModal').modal('hide');
+                        $.ajax({
+                            url: "{{ route('pass_slip.next_number_sub') }}", // Your new route for generating the next pass number
+                            method: 'GET',
+                            success: function(resp) {
+                                // Update the pass number field with the next available pass number
+                                $('#p_no').val(resp.passNumber);
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Failed to generate the next pass number',
+                                });
+                            }
+                        });
                         $('#addPassForm')[0].reset();
                         $('#passTable').load(location.href + ' #passTable');
                         $('#latestPassSlips').load(location.href + ' #latestPassSlips');

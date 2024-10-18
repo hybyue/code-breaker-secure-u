@@ -17,16 +17,6 @@
         responsive: true,
         ordering: false,
         });
-    //     $('.editModal').on('click', function() {
-    //       let id = $(this).data('id');
-    //         let targetModal = '#updateViolationModalAd-' + id;
-
-    //         $(targetModal).find('.modal-header').html('Violation ID: ' + id);
-
-    //       $(targetModal).modal('show');
-
-    //       console.log("Edit violation with ID: " + id);
-    //    });
 
         $('#violationFormAdmin').on('submit', function(e){
             e.preventDefault();

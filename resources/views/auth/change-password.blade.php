@@ -105,10 +105,10 @@
             <div class="profile-card card text-center text-white" style="background-color: #2C3539;">
                 <div class="card-body">
                     <img src="{{ asset('images/zoro.png') }}" alt="Profile Picture" class="profile-picture">
-                    <h3 class="card-title">{{ $user->name }}</h3>
+                    <h3 class="card-title">{{ $user->first_name }} @if($user->middle_name){{ $user->first_name }}. @endif {{ $user->last_name }}</h3>
                     <p class="card-text">{{ $user->email }}</p>
-                    @if ($employees)
-                        <p class="card-text">ID No.: {{ $employees->id_number }}</p>
+                    @if ($user)
+                        <p class="card-text">ID No.: {{ $user->id_number }}</p>
                     @endif
                 </div>
             </div>

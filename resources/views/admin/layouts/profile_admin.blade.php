@@ -49,10 +49,10 @@
             <div class="profile-card card text-center text-white" style="background-color: #2C3539;">
                 <div class="card-body">
                     <img src="{{ asset('images/zoro.png') }}" alt="Profile Picture" class="profile-picture">
-                    @if ($employees)
-                    <h3 class="card-title">{{ $employees->first_name }} @if($employees->middle_name){{ $employees->middle_name }}. @endif {{ $employees->last_name }}</h3>
+                    @if ($user)
+                    <h3 class="card-title">{{ $user->first_name }} @if($user->middle_name){{ $user->middle_name }}. @endif {{ $user->last_name }}</h3>
                     <p class="card-text">{{ $user->email }}</p>
-                    <p class="card-text">ID No. {{ $employees->id_number }}</p>
+                    <p class="card-text">ID No. {{ $user->id_number }}</p>
                     @endif
                 </div>
             </div>
@@ -60,22 +60,22 @@
         <div class="col-md-6">
             <div class="profile-card card">
                 <div class="card-body">
-                    @if ($employees)
+                    @if ($user)
                         <div class="row personal-info">
                             <h3>Personal Information</h3>
-                                <p><span class="info-title">Civil Status:</span> {{ $employees->civil_status }}</p>
-                                <p><span class="info-title">Gender:</span> {{ $employees->gender }}</p>
-                                <p><span class="info-title">Contact No:</span> {{ $employees->contact_no }}</p>
-                                <p><span class="info-title">Date of Birth:</span> {{ \Carbon\Carbon::parse($employees->date_birth)->format('F d, Y') }}</p>
-                                <p><span class="info-title">Employment Type:</span> {{ $employees->employment_type }}</p>
+                                <p><span class="info-title">Civil Status:</span> {{ $user->civil_status }}</p>
+                                <p><span class="info-title">Gender:</span> {{ $user->gender }}</p>
+                                <p><span class="info-title">Contact No:</span> {{ $user->contact_no }}</p>
+                                <p><span class="info-title">Date of Birth:</span> {{ \Carbon\Carbon::parse($user->date_birth)->format('F d, Y') }}</p>
+                                <p><span class="info-title">Employment Type:</span> {{ $user->employment_type }}</p>
                             </div>
                     @else
                         <p>No employee information available.</p>
                     @endif
                 </div>
                 <div class="text-end">
-                    @if ($employees)
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updatePersonalInformation-{{ $employees->id }}">Edit Profile</button>
+                    @if ($user)
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updatePersonalInformation-{{ $user->id }}">Edit Profile</button>
                     @else
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPersonalInformatioinModal">Add Profile Information</button>
                     @endif
@@ -159,9 +159,9 @@
         </div>
     </div>
 
-    @if ($employees)
+    @if ($user)
         <!-- Update Personal Information Modal -->
-        <div class="modal fade" id="updatePersonalInformation-{{ $employees->id }}" tabindex="-1" aria-labelledby="updatePersonalInformationLabel" aria-hidden="true">
+        <div class="modal fade" id="updatePersonalInformation-{{ $user->id }}" tabindex="-1" aria-labelledby="updatePersonalInformationLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -169,57 +169,57 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('profile.updates', ['id' => $employees->id]) }}" method="POST">
+                        <form action="{{ route('profile.updates', ['id' => $user->id]) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_number" class="form-label">ID Number:</label>
-                                    <input type="text" class="form-control" id="id_number" name="id_number" value="{{ $employees->id_number }}" required>
+                                    <input type="text" class="form-control" id="id_number" name="id_number" value="{{ $user->id_number }}" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="first_name" class="form-label">First Name:</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ $employees->first_name }}" required>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ $user->first_name }}" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="middle_name" class="form-label">Middle Name:</label>
-                                    <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ $employees->middle_name }}">
+                                    <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ $user->middle_name }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="last_name" class="form-label">Last Name:</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ $employees->last_name }}" required>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ $user->last_name }}" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="gender" class="form-label">Gender:</label>
                                     <select class="form-select" id="gender" name="gender" required>
                                         <option value="" selected disabled>Select Gender</option>
-                                        <option value="Male" {{ $employees->gender == 'Male' ? 'selected' : '' }}>Male</option>
-                                        <option value="Female" {{ $employees->gender == 'Female' ? 'selected' : '' }}>Female</option>
-                                        <option value="Other" {{ $employees->gender == 'Other' ? 'selected' : '' }}>Other</option>
+                                        <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
+                                        <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                                        <option value="Other" {{ $user->gender == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="civil_status" class="form-label">Civil Status:</label>
                                     <select class="form-select" id="civil_status" name="civil_status" required>
                                         <option value="" selected disabled>Select Civil Status</option>
-                                        <option value="Single" {{ $employees->civil_status == 'Single' ? 'selected' : '' }}>Single</option>
-                                        <option value="Married" {{ $employees->civil_status == 'Married' ? 'selected' : '' }}>Married</option>
-                                        <option value="Divorced" {{ $employees->civil_status == 'Divorced' ? 'selected' : '' }}>Divorced</option>
-                                        <option value="Widowed" {{ $employees->civil_status == 'Widowed' ? 'selected' : '' }}>Widowed</option>
+                                        <option value="Single" {{ $user->civil_status == 'Single' ? 'selected' : '' }}>Single</option>
+                                        <option value="Married" {{ $user->civil_status == 'Married' ? 'selected' : '' }}>Married</option>
+                                        <option value="Divorced" {{ $user->civil_status == 'Divorced' ? 'selected' : '' }}>Divorced</option>
+                                        <option value="Widowed" {{ $user->civil_status == 'Widowed' ? 'selected' : '' }}>Widowed</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="contact_no" class="form-label">Contact No:</label>
-                                    <input type="text" class="form-control" id="contact_no" name="contact_no" value="{{ $employees->contact_no }}" required>
+                                    <input type="text" class="form-control" id="contact_no" name="contact_no" value="{{ $user->contact_no }}" required>
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <label for="date_birth" class="form-label">Date of Birth:</label>
-                                    <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ \Carbon\Carbon::parse($employees->date_birth)->format('Y-m-d') }}" >
+                                    <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ \Carbon\Carbon::parse($user->date_birth)->format('Y-m-d') }}" >
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Employment Type:</label>
                                     <select class="form-select" name="employment_type">
-                                        <option value="" selected disabled>{{ $employees->employment_type }}</option>
+                                        <option value="" selected disabled>{{ $user->employment_type }}</option>
                                         <option value="Part-Time">Part-Time</option>
                                         <option value="Full-Time">Full-Time</option>
                                         <option value="Other">Other</option>

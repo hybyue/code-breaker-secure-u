@@ -368,4 +368,19 @@ public function getVisitorStats($timeframe)
             ]);
     }
 
+    public function getVisitorTotalData()
+    {
+        $visitorCount = Visitor::count();
+        $passSlipCount = PassSlip::count();
+        $lostFoundCount = Lost::count();
+        $violationCount = Violation::count();
+
+        return response()->json([
+            'visitor' => $visitorCount,
+            'passSlip' => $passSlipCount,
+            'lost' => $lostFoundCount,
+            'violation' => $violationCount
+        ]);
+    }
+
 }

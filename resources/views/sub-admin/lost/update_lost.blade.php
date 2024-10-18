@@ -1,5 +1,6 @@
 
 {{-- edit lost and found details --}}
+<div id="updateLostFounds">
 @foreach($lost_found as $item)
 <div class="modal fade" id="updateLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="updateLostFoundModalLabel-{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -61,3 +62,4 @@
     </div>
 </div>
 @endforeach
+</div>

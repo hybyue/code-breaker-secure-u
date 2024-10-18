@@ -29,6 +29,10 @@ class PassSlip extends Model
         'time_out',
         'employee_type',
         'purpose',
+        'check_business',
+        'driver_name',
+        'time_out_by',
+        'time_in_by',
     ];
 
     protected $casts = [
@@ -51,6 +55,10 @@ class PassSlip extends Model
         'time_out',
         'empployee_type',
         'purpose',
+        'check_business',
+        'driver_name',
+        'time_out_by',
+        'time_in_by',
         ])->logOnlyDirty();
     }
 

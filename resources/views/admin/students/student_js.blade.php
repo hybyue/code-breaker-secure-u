@@ -17,62 +17,23 @@
         ordering: false,
         });
 
-        $('#violationFormAdmin').on('submit', function(e){
+        $('#studentFormAdmin').on('submit', function(e){
             e.preventDefault();
 
             $('.errorMessage').html('');
             let formData = $(this).serialize();
 
             $.ajax({
-                url: "{{ route('admin.store_violation') }}",
+                url: "{{ route('store_admin.student') }}",
                 method: 'POST',
                 data: formData,
-                success: function(response) {
-                    if(response.status == 'success') {
-                        $('#violationFormAdmin')[0].reset();
+                success: function(resp) {
+                    if(resp.status == 'success') {
+                        $('#studentFormAdmin')[0].reset();
 
-                        $('#violationTable').load(location.href + ' #violationTable', function() {
+                        $('#studentTable').load(location.href + ' #studentTable');
+                        $('#updatesStudentAdmin').load(location.href + ' #updatesStudentAdmin');
 
-                            $('.modal').modal({
-                                backdrop: 'static',
-                                keyboard: true
-                            });
-
-                            $('.viewModal').on('click', function() {
-                                let id = $(this).data('id');  // Get the violation ID from the data attribute
-                                let targetModal = $(this).data('bs-target');  // Get the target modal ID
-
-                                $(targetModal).find('.modal-body').html('Violation ID: ' + id);
-
-                                // Check if modal instance exists and dispose of it
-                                let modalInstance = bootstrap.Modal.getInstance(document.querySelector(targetModal));
-                                if (modalInstance) {
-                                    modalInstance.dispose();
-                                }
-
-
-                                $(targetModal).modal('show');
-                                console.log("View violation with ID: " + id);
-                            });
-
-                            $('.editModal').on('click', function() {
-                                let id = $(this).data('id');
-                                let targetModal = $(this).data('bs-target');
-
-                                $(targetModal).find('.modal-body').html('Edit Violation ID: ' + id);
-
-                                // Check if modal instance exists and dispose of it
-                                let modalInstance = bootstrap.Modal.getInstance(document.querySelector(targetModal));
-                                if (modalInstance) {
-                                    modalInstance.dispose();
-                                }
-                                $(targetModal).modal('show');
-
-                                console.log("Edit violation with ID: " + id);  // This log shows the violation ID
-                            });
-
-
-                        });
 
                         Swal.fire({
                             toast: true,
@@ -85,7 +46,7 @@
                             timer: 2500,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Violation added successfully',
+                            title: 'Student added successfully',
                         });
                     }
                 },

@@ -26,6 +26,7 @@
                 <th>Types of Object</th>
                 <th>Finder's Name</th>
                 <th>Role</th>
+                <th>Status</th>
                 <th></th>
             </tr>
         </thead>
@@ -38,6 +39,13 @@
                     <td>{{ $item->last_name }}, {{ $item->first_name }}  @if($item->middle_name) {{ $item->middle_name }}. @endif
                      </td>
                     <td>{{ $item->course }}</td>
+                    <td>
+                        @if($item->is_claimed == 0)
+                            <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                        @else
+                            <p class="text-success">Claimed</p>
+                        @endif
+                    </td>
                     <td>
                         <div class="d-flex justify-content-center">
                             <div class="mx-1">
@@ -66,7 +74,7 @@
 </div>
 
 </div>
-
+<div id="viewLostFoundAd">
 @foreach($lost_found as $item)
 <!-- View Modal -->
 <div class="modal fade" id="viewLostFoundAdmin-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
@@ -99,12 +107,46 @@
     </div>
 </div>
 @endforeach
+</div>
 
 @include('admin.lost.add_lost')
 @include('admin.lost.update_lost')
 @include('admin.lost.lost_js')
 
 
+
+<script>
+    function markAsClaimed(id) {
+    $.ajax({
+        url: `/admin/update_claimed/${id}`, // Make sure this route exists
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            is_claimed: 1
+        },
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'The item has been marked as claimed!',
+                confirmButtonColor: '#0B9B19'
+            }).then(() => {
+
+            });
+        },
+        error: function(xhr) {
+            console.error(xhr);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'There was a problem updating the claim status. Please try again.',
+                confirmButtonColor: '#920606'
+            });
+        }
+    });
+}
+
+</script>
 <style>
     .same-height-table td {
         vertical-align: middle;

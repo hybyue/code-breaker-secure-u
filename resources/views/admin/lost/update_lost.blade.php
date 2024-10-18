@@ -1,5 +1,6 @@
 
 {{-- edit lost and found details --}}
+<div id="lostFoundUpdate">
 @foreach($lost_found as $item)
 <div class="modal fade" id="updateLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="updateLostFoundModalLabel-{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -51,6 +52,25 @@
                                 </div>
                             </div> --}}
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="location-{{ $item->id }}" class="form-label">Location:</label>
+                            <input type="text" class="form-control" id="location-{{ $item->id }}" name="location" value="{{ $item->location }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="securityStaff-{{ $item->id }}" class="form-label">Security Staff:</label>
+                            <input type="text" class="form-control" id="securityStaff-{{ $item->id }}" name="security_staff" value="{{ $item->security_staff }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="isClaimed-{{ $item->id }}" class="form-label">Is Claimed:</label>
+                            <select class="form-control" id="isClaimed-{{ $item->id }}" name="is_claimed">
+                                <option value="1" {{ $item->is_claimed ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ !$item->is_claimed ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description-{{ $item->id }}" class="form-label">Description:</label>
+                            <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
+                        </div>
                         <div class="d-flex justify-content-center mt-3">
                             <button type="submit" class="btn btn-primary">update</button>
                         </div>
@@ -61,3 +81,4 @@
     </div>
 </div>
 @endforeach
+</div>

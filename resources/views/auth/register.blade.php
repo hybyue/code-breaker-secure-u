@@ -23,14 +23,37 @@
         <form method="post" action="{{ route('register.save') }}" class="login-form">
             @csrf
             <div class="form-group text-start">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" class="form-control" placeholder="Name" required value="{{ old('name') }}">
+                <label for="name">Username:</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="username" required value="{{ old('name') }}">
                 @error('name')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
+            <div class="row">
+                <div class="col-md-4 form-group text-start">
+                    <label for="name">Last Name:</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="last name"  value="{{ old('last_name') }}">
+                    @error('last_name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-4 form-group text-start">
+                    <label for="name">First Name: </label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="first name" required value="{{ old('first_name') }}">
+                    @error('first_name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-4 form-group text-start">
+                    <label for="name">Middle Initial:</label>
+                    <input type="text" name="middle_name" id="middle_name" class="form-control" placeholder="middle initial"  value="{{ old('middle_name') }}">
+                    @error('middle_name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
             <div class="form-group text-start">
-                <label for="email">Email</label>
+                <label for="email">Email:</label>
                 <input type="email" name="email" id="email" class="form-control" placeholder="name@company.com" required value="{{ old('email') }}">
                 @error('email')
                 <span class="text-danger">{{ $message }}</span>
@@ -38,7 +61,7 @@
             </div>
             <div class="form-group row text-start">
                <div class="col-md-12">
-                <label for="password">Password</label>
+                <label for="password">Password:</label>
                 <div class="input-group">
                 <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
 
@@ -56,7 +79,7 @@
             </div>
             <div class="form-group row text-start">
                 <div class="col-md-12">
-                <label for="password_confirmation">Confirm Password</label>
+                <label for="password_confirmation">Confirm Password:</label>
                 <div class="input-group">
                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="••••••••" required>
                 <div class="input-group-append">
@@ -129,7 +152,7 @@ $('.show-password').on('click', function() {
         padding: 30px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
+        max-width: 500px;
         width: 100%;
     }
 

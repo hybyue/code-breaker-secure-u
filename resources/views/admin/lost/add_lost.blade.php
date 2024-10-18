@@ -29,11 +29,38 @@
                     </div>
                     <div class="mb-3">
                         <label for="lostCourse" class="form-label">Role:</label>
-                        <input type="text" class="form-control" id="lostCourse" name="course" required>
+                        <select class="form-select" id="course" name="course">
+                            <option value="Student">Student</option>
+                            <option value="Employee">Employee</option>
+                            <option value="Janitor">Janitor</option>
+                            <option value="Visitor">Visitor</option>
+                            <option value="Head">Head</option>
+                            <option value="President">President</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="lostImage" class="form-label">Image:</label>
                         <input type="file" class="form-control" id="lostImage" name="object_img">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="location" class="form-label">Location:</label>
+                        <input type="text" class="form-control" id="location" name="location" required>
+                    </div>
+                    {{-- <div class="col-md-6 mb-3">
+                        <label for="securityStaff" class="form-label">Security Staff:</label>
+                        <input type="text" class="form-control" id="securityStaff" name="security_staff" required>
+                    </div> --}}
+
+                    <div class="col-md-6 mb-3">
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="isClaimed" class="form-label">Is Claimed:</label>
+                        <select class="form-select" id="isClaimed" name="is_claimed">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-success" id="lostSubmmit">Save</button>

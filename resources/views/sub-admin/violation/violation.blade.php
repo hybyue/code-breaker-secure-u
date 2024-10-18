@@ -48,11 +48,11 @@
     <table id="violationTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
-                <th>Student Number</th>
+                <th class="text-start">Student Number</th>
                 <th>Name</th>
                 <th>Course</th>
                 <th>Violation</th>
-                <th>Date</th>
+                <th class="text-start">Date</th>
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -61,7 +61,7 @@
 
             @forelse ($violations as $violate)
             <tr  id="tr_{{$violate->id}}">
-                <td>{{$violate->student_no}}</td>
+                <td class="text-center">{{$violate->student_no}}</td>
                 <td>{{$violate->last_name}}, {{$violate->first_name}}
                     @if($violate->middle_initial)
                      {{$violate->middle_initial}}.
@@ -69,7 +69,7 @@
                 </td>
                 <td>{{$violate->course}}</td>
                 <td>{{$violate->violation_type}}</td>
-                <td>{{$violate->date}}</td>
+                <td class="text-center">{{$violate->date}}</td>
                 <td>{{$violate->violation_count}} violation(s)</td>
                 <td>
                     <div class="d-flex justify-content-center align-items-center">

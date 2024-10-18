@@ -14,25 +14,52 @@
                             <label for="lostType" class="form-label">Object type:</label>
                             <input type="text" class="form-control" id="lostType" name="object_type" required>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="firstName" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="firstName" name="first_name" required>
+                        <div class="col-md-6  mb-3">
+                            <label for="lostName" class="form-label">First Name:</label>
+                            <input type="text" class="form-control" id="lostName" name="first_name" required>
+                        </div>
+                        <div class="col-md-6  mb-3">
+                            <label for="lostName" class="form-label">Middle Initial:</label>
+                            <input type="text" class="form-control" id="lostName" name="middle_name" >
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="middleName" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middleName" placeholder="Optional" name="middle_name">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lastName" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="lastName" name="last_name" required>
+                            <label for="lostName" class="form-label">Last Name:</label>
+                            <input type="text" class="form-control" id="lostName" name="last_name" required>
                         </div>
                         <div class="mb-3">
                             <label for="lostCourse" class="form-label">Role:</label>
-                            <input type="text" class="form-control" id="lostCourse" name="course" required>
+                            <select class="form-select" id="course" name="course">
+                                <option value="Student">Student</option>
+                                <option value="Employee">Employee</option>
+                                <option value="Janitor">Janitor</option>
+                                <option value="Visitor">Visitor</option>
+                                <option value="Head">Head</option>
+                                <option value="President">President</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="lostImage" class="form-label">Image:</label>
                             <input type="file" class="form-control" id="lostImage" name="object_img">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="location" class="form-label">Location:</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                        </div>
+                        {{-- <div class="col-md-6 mb-3">
+                            <label for="securityStaff" class="form-label">Security Staff:</label>
+                            <input type="text" class="form-control" id="securityStaff" name="security_staff" required>
+                        </div> --}}
+
+                        <div class="col-md-6 mb-3">
+                            <label for="description" class="form-label">Description:</label>
+                            <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="isClaimed" class="form-label">Is Claimed:</label>
+                            <select class="form-select" id="isClaimed" name="is_claimed">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
                         </div>
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn btn-success">Save</button>
@@ -52,7 +79,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel">Pass Slip Report</h5>
+                <h5 class="modal-title" id="pdfModalLabel">Lost and Found Report</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -68,7 +95,7 @@
                         <div class="header">
                             <img src="{{ asset('images/UCU-logo.png') }}" alt="UCU Logo">
                             <p class="university">Urdaneta City University</p>
-                            <p class="report-title">Reports list of Visitor</p>
+                            <p class="report-title">Reports list of Lost and Found</p>
                             <p class="department">Security Management Office Report</p>
                         </div>
                     </div>
@@ -86,45 +113,43 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Name</th>
-                                    <th>Department</th>
-                                    <th>Designation</th>
-                                    <th>Destination</th>
-                                    <th>Date</th>
-                                    <th>Time Out</th>
+                                    <th>Types of Object</th>
+                                        <th>Name</th>
+                                        <th>Course</th>
+                                        <th>Image</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @forelse ($allPassSlips as $passSlip)
-                                    <tr>
-                                        <td>{{ $passSlip->p_no }}</td>
-                                        <td>{{ $passSlip->first_name }} {{ $passSlip->middle_name }}. {{ $passSlip->last_name }}</td>
-                                        <td>{{ $passSlip->department }}</td>
-                                        <td>{{ $passSlip->designation }}</td>
-                                        <td>{{ $passSlip->destination }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A') }}</td>
+                                @forelse($lost_found as $item)
+                                    <tr class="text-center">
+                                        <td>{{ $item->object_type }}</td>
+                                        <td>{{ $item->first_name }} {{ $item->middle_name }}. {{ $item->last_name }}</td>
+                                        <td>{{ $item->course }}</td>
+                                        <td>
+                                            @if($item->object_img)
+                                                <img src="{{ asset($item->object_img) }}" alt="Object Image" class="img-fluid" style="max-width: 100px;">
+                                            @else
+                                                <span class="text-muted">No Image</span>
+                                            @endif
+                                        </td>
                                     </tr>
-                                @empty
+                                    @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No Data available in table</td>
+                                        <td colspan="5" class="text-center">No Data available in table</td>
                                     </tr>
-                                @endforelse --}}
+                                    @endforelse
                             </tbody>
                         </table>
                     </div>
                     <div class="text-start mt-4">
-                        <!-- Displaying authenticated user's name -->
-                        {{-- <p>Generated by: {{ $user->name }}</p> --}}
+                        <p>Generated by: {{ $user->name }}</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
-                    <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-                </a>
+                <a href="{{ route('pdf.generate-losts', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
             </div>
         </div>
     </div>

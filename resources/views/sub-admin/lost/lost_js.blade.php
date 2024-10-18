@@ -14,12 +14,8 @@
 
 $(document).ready(function () {
 
-    if ($('#lostTable tbody tr').length > 0) {
-        let table = new DataTable('#lostTable', {
-            responsive: true,
-            "ordering": false,
-        });
-    }
+
+
 
     $('#addLostForm').on('submit', function(e){
         e.preventDefault();
@@ -32,19 +28,11 @@ $(document).ready(function () {
             contentType: false,
             success: function(resp) {
                 if(resp.status == 'success') {
-                    $('.modal-backdrop').remove();
-                    $('#addNewLostModal').modal('hide');
                     $('#addLostForm')[0].reset();
-                    $('body').removeClass('modal-open');
-                    $('#lostTable').load(location.href + ' #lostTable', function() {
-                        // Reinitialize DataTable after loading content
-                        if ($('#lostTable tbody tr').length > 0) {
-                            new DataTable('#lostTable', {
-                                responsive: true,
-                                "ordering": false,
-                            });
-                        }
-                    });
+                    $('#lostTable').load(location.href + ' #lostTable');
+                    $('#updateLostFounds').load(location.href + '#updateLostFounds');
+                    $('#viewModalLostFound').load(location.href + '#viewModalLostFound');
+
                     Swal.fire({
                         toast: true,
                         position: 'top-right',

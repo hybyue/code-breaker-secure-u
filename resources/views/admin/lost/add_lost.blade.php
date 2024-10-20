@@ -28,6 +28,10 @@
                         <input type="text" class="form-control" id="lostName" name="last_name" required>
                     </div>
                     <div class="mb-3">
+                        <label for="lostLocation" class="form-label">Location Lost:</label>
+                        <input type="text" class="form-control" id="lostLocation" name="location" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="lostCourse" class="form-label">Role:</label>
                         <input type="text" class="form-control" id="lostCourse" name="course" required>
                     </div>
@@ -36,7 +40,7 @@
                         <input type="file" class="form-control" id="lostImage" name="object_img">
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-success" id="lostSubmmit">Save</button>
+                        <button type="submit" class="btn btn-success" id="lostSubmmit" data-bs-dismiss="#addNewLostModal">Save</button>
                     </div>
                 </div>
                 </form>

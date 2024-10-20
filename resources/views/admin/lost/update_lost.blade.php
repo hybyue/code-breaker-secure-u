@@ -1,5 +1,5 @@
+<div id="latestLostAndFound">
 
-{{-- edit lost and found details --}}
 @foreach($lost_found as $item)
 <div class="modal fade" id="updateLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="updateLostFoundModalLabel-{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -34,6 +34,10 @@
                             <input type="text" class="form-control" id="lostCourse-{{ $item->id }}" name="course" value="{{ $item->course }}">
                         </div>
                         <div class="mb-3">
+                            <label for="lostLocation-{{ $item->id }}" class="form-label">Location Lost:</label>
+                            <input type="text" class="form-control" id="lostLocation-{{ $item->id }}" name="location" value="{{ $item->location }}">
+                        </div>
+                        <div class="mb-3">
                             <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
                             <input type="file" class="form-control" id="lostImage-{{ $item->id }}" name="object_img" onchange="previewImage(event, {{ $item->id }})">
                             {{-- <div class="d-flex justify-content-center">
@@ -61,3 +65,5 @@
     </div>
 </div>
 @endforeach
+
+</div>

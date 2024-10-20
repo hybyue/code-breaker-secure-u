@@ -26,6 +26,7 @@
                 <th>Types of Object</th>
                 <th>Finder's Name</th>
                 <th>Role</th>
+                <th>Location</th>
                 <th></th>
             </tr>
         </thead>
@@ -38,6 +39,7 @@
                     <td>{{ $item->last_name }}, {{ $item->first_name }}  @if($item->middle_name) {{ $item->middle_name }}. @endif
                      </td>
                     <td>{{ $item->course }}</td>
+                    <td>{{ $item->location }}</td>
                     <td>
                         <div class="d-flex justify-content-center">
                             <div class="mx-1">
@@ -48,11 +50,11 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
-                            {{-- <div class="mx-1">
+                            <div class="mx-1">
                                 <a href="javascript:void(0)" onclick="deleteLostFound({{$item->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                     <i class="bi bi-trash3-fill"></i>
                                 </a>
-                            </div> --}}
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -67,6 +69,7 @@
 
 </div>
 
+<div id="latestLostAndFound">
 @foreach($lost_found as $item)
 <!-- View Modal -->
 <div class="modal fade" id="viewLostFoundAdmin-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
@@ -82,7 +85,7 @@
                     @if($item->middle_name) {{ $item->middle_name }}. @endif
                 </p>
                 <p><strong>Role:</strong> {{ $item->course }}</p>
-
+                <p><strong>Location:</strong> {{ $item->location }}</p>
                 <!-- Display Image in Modal -->
                 <div class="d-flew justify-content-center align-items-center mb-3">
                     @if($item->object_img)
@@ -99,6 +102,7 @@
     </div>
 </div>
 @endforeach
+</div>
 
 @include('admin.lost.add_lost')
 @include('admin.lost.update_lost')

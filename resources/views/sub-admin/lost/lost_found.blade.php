@@ -75,6 +75,8 @@
     </div>
 </div>
 
+<div id="latestLostAndFound">
+    {{ $lost_found->links() }}
 @foreach($lost_found as $item)
 <!-- View Modal -->
 <div class="modal fade" id="viewLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
@@ -107,7 +109,7 @@
     </div>
 </div>
 @endforeach
-
+</div>
 
 @include('sub-admin.lost.add_lost')
 @include('sub-admin.lost.update_lost')

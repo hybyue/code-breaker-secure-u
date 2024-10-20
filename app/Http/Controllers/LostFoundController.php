@@ -103,6 +103,8 @@ class LostFoundController extends Controller
             'last_name' => 'required|string|max:255',
             'course' => 'required|string|max:255',
             'object_img' => 'nullable|image|max:3048',
+            'location' => 'required|string|max:255',
+            
         ]);
         $data = [
             'user_id' => Auth::id(),
@@ -111,6 +113,7 @@ class LostFoundController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'course' => $request->course,
+            'location' => $request->location,
         ];
         if ($request->hasFile('object_img')) {
             $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
@@ -147,6 +150,7 @@ class LostFoundController extends Controller
           $lost_found->middle_name = $request->input('middle_name');
           $lost_found->last_name = $request->input('last_name');
           $lost_found->course = $request->input('course');
+          $lost_found->location = $request->input('location');
 
           // Save the updated model
           $lost_found->save();

@@ -35,4 +35,29 @@ window.addEventListener("load", () => {
 });
 
 
+$(document).ready(function() {
+    $.fn.initializeModal = function() {
+        this.modal({
+            backdrop: 'static',
+            keyboard: false,
+            focus: false,
+            show: false,
+            scrollY: false,
+            scrollX: true,
+            width: '100%',
+            height: 'auto',
+            aspectRatio: 1.5,
+            responsive: true,
+            zoom: {
+                enabled: true,
+                scroll: true,
+                wheel: false,
+                pinch: false
+            }
+        });
+        return this; // Allow chaining
+    };
+});
+
+
 

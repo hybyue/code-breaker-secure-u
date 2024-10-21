@@ -3,6 +3,28 @@
 @section('title', 'Employees')
 
 @section('content')
+<div class="container">
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-right',
+                    iconColor: 'white',
+                    customClass: {
+                        popup: 'colored-toast',
+                    },
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                });
+            });
+        </script>
+    @endif
+</div>
+
 <div class="container mt-3 pass-slip">
 
     <div class="row">
@@ -11,8 +33,15 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addEmployeeModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-lost', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <form action="{{route('import.employee')}}" method="POST" enctype="multipart/form-data" class="d-inline-flex align-items-center">
+                @csrf
+                <label for="file" class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;">
+                    <i class="bi bi-download"></i> Import Excel
+                    <input type="file" class="d-none" id="file" name="excel_file_employees" onchange="this.form.submit()">
+                </label>
+            </form>
         </div>
+     </div>
     </div>
 
     <div class="container p-3 mt-4 bg-body-secondary rounded">

@@ -23,12 +23,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="status" name="employee_type" required readonly>
-                                <option value="" selected disabled>Select Employee Type</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <input class="form-select" id="status" name="employee_type" required readonly>
+                            </input>
                         </div>
                         <input hidden type="text" class="form-control" id="employee_id" name="employee_id">
                         <div class="col-md-4 mb-2">
@@ -113,40 +109,3 @@
 </div>
 
 
-<style>
-    /* Styling the search bar */
-    #search_employee {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 25px;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.3s ease;
-    }
-
-    #search_employee:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-    }
-
-    /* Styling the search button */
-    .btn-search {
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        border-radius: 25px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-search:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-search:active {
-        transform: scale(0.98);
-    }
-</style>

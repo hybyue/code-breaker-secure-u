@@ -20,7 +20,7 @@
     </div>
 
     <div class="container mt-4">
-        <form action="/filter_violation" method="GET">
+        <form action="/sub-admin/violation" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
                     <label for="start_date">Start Date:</label>
@@ -36,7 +36,7 @@
 
                 @if(request('start_date') || request('end_date'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="/filter_violation" class="btn btn-secondary">Clear Filter</a>
+                    <a href="/sub-admin/violation" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -134,17 +134,58 @@
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const startDateViolate = document.getElementById('start_date');
+    const endDateViolate = document.getElementById('end_date');
+
+    startDateViolate.addEventListener('change', function () {
+        endDateViolate.min = this.value;
+        if (!endDateViolate.value) {
+            endDateViolate.value = this.value;
+        }
+    });
+
+    endDateViolate.addEventListener('change', function () {
+        startDateViolate.max = this.value;
+    });
+
+    if (startDateViolate.value && !endDateViolate.value) {
+        endDateViolate.value = startDateViolate.value;
+    }
+    if (endDateViolate.value && !startDateViolate.value) {
+        startDateViolate.value = endDateViolate.value;
+    }
+});
+    </script>
+
+<script>
     function showPdfModalViolation() {
         document.getElementById('loadingBar').style.display = 'block';
-        document.getElementById('pdfPreviewContent').style.display = 'none';
+        document.getElementById('pdfViolationFrame').style.display = 'none';
 
-        $('#pdfModalViolation').modal('show');
+        const url = '/generate-pdf/violation?'  + $.param({
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val(),
+        });;
+
+     document.getElementById('pdfViolationFrame').src = url;
+
+     $('#pdfModalViolation').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+    });
+
+     $('#pdfModalViolation').modal('show');
 
         setTimeout(function() {
             document.getElementById('loadingBar').style.display = 'none';
-            document.getElementById('pdfPreviewContent').style.display = 'block';
+            document.getElementById('pdfViolationFrame').style.display = 'block';
         }, 1000);
     }
+
 
     </script>
 

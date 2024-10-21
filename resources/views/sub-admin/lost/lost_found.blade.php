@@ -18,22 +18,22 @@
     </div>
 
     <div class="container mt-4">
-        <form action="/filter_lost_founds" method="GET">
+        <form action="/sub-admin/lost_found" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
                     <label for="start_date"> Start Date: </label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" required>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
                 </div>
                 <div class="col-md-3">
                     <label for="end_date"> End Date: </label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" required>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" required>
                 </div>
                 <div class="col-md-1 mt-4 pt-2">
                     <button type="submit"class="btn btn-dark">Filter</button>
                 </div>
                 @if(request('start_date') || request('end_date'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="/filter_lost_founds" class="btn btn-secondary">Clear Filter</a>
+                    <a href="/sub-admin/lost_found" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -44,7 +44,8 @@
         <table id="lostTable" class="table table-bordered same-height-table">
             <thead>
                 <tr>
-                    <th>Types of Object</th>
+                    <th>Date</th>
+                    <th>Type of Object</th>
                     <th>Finder's Name</th>
                     <th>Role</th>
                     <th>Status</th>
@@ -54,6 +55,7 @@
             <tbody>
                 @forelse($lost_found as $item)
                 <tr class="text-center">
+                    <td>{{\Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
                     <td>{{ $item->object_type }}</td>
                     <td>{{ $item->last_name }}, {{ $item->first_name }}
                         @if($item->middle_name) {{ $item->middle_name }}. @endif </td>
@@ -157,6 +159,30 @@
     });
 }
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const startDateLost = document.getElementById('start_date');
+    const endDateLost = document.getElementById('end_date');
+
+    startDateLost.addEventListener('change', function () {
+        endDateLost.min = this.value;
+        if (!endDateLost.value) {
+            endDateLost.value = this.value;
+        }
+    });
+
+    endDateLost.addEventListener('change', function () {
+        startDateLost.max = this.value;
+    });
+
+    if (startDateLost.value && !endDateLost.value) {
+        endDateLost.value = startDateLost.value;
+    }
+    if (endDateLost.value && !startDateLost.value) {
+        startDateLost.value = endDateLost.value;
+    }
+});
+
 </script>
 
 <style>
@@ -168,14 +194,41 @@
 <script>
     function showPdfModalLost() {
         document.getElementById('loadingBar').style.display = 'block';
-        document.getElementById('pdfPreviewContent').style.display = 'none';
+    document.getElementById('pdfLostFrame').style.display = 'none';
 
-        $('#pdfModalLost').modal('show');
+    const url = '/generate-pdf/lost_found?' + $.param({
+        start_date: $('#start_date').val(),
+        end_date: $('#end_date').val()
+    });
 
-        setTimeout(function() {
-            document.getElementById('loadingBar').style.display = 'none';
-            document.getElementById('pdfPreviewContent').style.display = 'block';
-        }, 1000);
+    document.getElementById('pdfLostFrame').src = url;
+
+    $('#pdfModalLost').modal({
+        backdrop:'static',
+        keyboard: false,
+        focus: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+        width: '100%',
+        height: 'auto',
+        aspectRatio: 1.5,
+        responsive: true,
+        // Enable zooming
+        zoom: {
+            enabled: true,
+            scroll: true, // Enable scroll zooming
+            wheel: false, // Disable wheel zooming
+            pinch: false // Disable pinch zooming
+        }
+    });
+
+    $('#pdfModalLost').modal('show');
+
+    setTimeout(function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        document.getElementById('pdfLostFrame').style.display = 'block';
+    }, 2000);
     }
 
     </script>

@@ -51,3 +51,63 @@ function fillVisitorForm(visitor) {
     document.getElementById("purpose").value = visitor.purpose;
     document.getElementById("visitorSuggestions").innerHTML = "";
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const startDateVisit = document.getElementById('start_date');
+    const endDateVisit = document.getElementById('end_date');
+
+    startDateVisit.addEventListener('change', function () {
+        endDateVisit.min = this.value;
+        if (!endDateVisit.value) {
+            endDateVisit.value = this.value;
+        }
+    });
+
+    endDateVisit.addEventListener('change', function () {
+        startDateVisit.max = this.value;
+    });
+
+    // Automatically set end date to start date if end date is empty
+    if (startDateVisit.value && !endDateVisit.value) {
+        endDateVisit.value = startDateVisit.value;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle "Person to Visit & Company" select
+    const personToVisitSelect = document.getElementById('person_to_visit');
+    personToVisitSelect.addEventListener('change', function () {
+        handleOtherOption(this, 'personToVisitOtherInput');
+    });
+
+    // Handle "ID Type" select
+    const idTypeSelect = document.getElementById('id_type');
+    idTypeSelect.addEventListener('change', function () {
+        handleOtherOption(this, 'idTypeOtherInput');
+    });
+});
+
+function handleOtherOption(selectElement, inputId) {
+    const otherInputId = `${inputId}`;
+    const otherInput = document.getElementById(otherInputId);
+
+    if (selectElement.value === 'Other') {
+        if (!otherInput) {
+
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.id = otherInputId;
+            inputField.name = selectElement.name;
+            inputField.className = 'form-control mt-2';
+            inputField.placeholder = 'Please specify';
+
+            selectElement.parentNode.appendChild(inputField);
+        }
+    } else {
+        if (otherInput) {
+            otherInput.remove();
+        }
+    }
+}
+

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DepartmentNotification;
 use App\Models\Lost;
 use App\Models\PassSlip;
 use App\Models\Violation;
@@ -10,6 +11,7 @@ use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class VisitorController extends Controller
 {
@@ -171,17 +173,22 @@ public function filterVisitor(Request $request)
     $query = Visitor::query();
     $user = Auth::user();
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+    if ($request->filled('start_date')) {
+        $query->whereDate('date', '>=', $request->start_date);
+    }
+
+    if ($request->filled('end_date')) {
+        $query->whereDate('date', '<=', $request->end_date);
     }
 
     $latestVisitors = Visitor::select('visitors.*')
         ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id')
         ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('visitors.created_at', '>=', $request->start_date)
-                         ->whereDate('visitors.created_at', '<=', $request->end_date);
+            if ($request->filled('start_date')) {
+                $subQuery->whereDate('visitors.date', '>=', $request->start_date);
+            }
+            if ($request->filled('end_date')) {
+                $subQuery->whereDate('visitors.date', '<=', $request->end_date);
             }
         })
         ->latest()
@@ -189,7 +196,7 @@ public function filterVisitor(Request $request)
 
     $allVisitors = $query->get();
 
-    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors', 'request', 'user'));
+    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors'));
 }
 
 
@@ -217,6 +224,21 @@ public function store_visit(Request $request)
     $visitor->user_id = Auth::id();
 
     $visitor->save();
+
+    $departmentEmails = [
+        'Department 1' => 'gabriellodavid47@gmail.com',
+        'Department 2' => 'department2@example.com',
+        'Department 3' => 'department3@example.com',
+        'Department 4' => 'department4@example.com',
+        'Department 5' => 'department5@example.com',
+    ];
+
+    if (isset($departmentEmails[$visitor->person_to_visit])) {
+        $departmentEmail = $departmentEmails[$visitor->person_to_visit];
+
+        Mail::to($departmentEmail)->send(new DepartmentNotification($visitor, $departmentEmail));
+    }
+
 
     return response()->json([
         'status' => 'success'

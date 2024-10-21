@@ -5,26 +5,26 @@
 
 
 @section('content')
-
 <div class="container">
-@if(session('success'))
-    <script>
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            icon: 'success',
-            title: {{ session('success') }},
-        });
-    </script>
-@endif
-</div>
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-right',
+                iconColor: 'white',
+                customClass: {
+                    popup: 'colored-toast',
+                },
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                icon: 'success',
+                title: "{{ session('success') }}", // Wrap session value in quotes
+            });
+        </script>
+    @endif
+    </div>
+
 <div class="container mt-3">
     <h5 class="text-black mb-0 p-2">DASHBOARD</h5>
 </div>

@@ -20,7 +20,7 @@
                     </div>
 
                     <div class="container mt-4">
-                        <form action="/sub-admin/pass_slip/filter_pass_slip" method="GET">
+                        <form action="/sub-admin/pass_slip" method="GET">
                             <div class="row pb-3">
                                 <div class="col-md-3">
                                     <label for="start_date">Start Date:</label>
@@ -44,7 +44,7 @@
 
                                 @if(request('start_date') || request('end_date') || request('employee_type'))
                                 <div class="col-md-0 mt-4 pt-2">
-                                    <a href="/sub-admin/pass_slip/filter_pass_slip" class="btn btn-secondary">Clear Filter</a>
+                                    <a href="/sub-admin/pass_slip" class="btn btn-secondary">Clear Filter</a>
                                 </div>
                                 @endif
                             </div>
@@ -60,7 +60,7 @@
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
-                    <th>Designation</th>
+                    <th>Department</th>
                     <th>Date</th>
                     <th>Time Out</th>
                     <th>Time In</th>
@@ -74,7 +74,7 @@
                     <tr>
                     <td>{{ $passSlip->p_no }}</td>
                     <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
-                    <td>{{ $passSlip->designation}}</td>
+                    <td>{{ $passSlip->department}}</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
                     <td id="time-in-{{ $passSlip->id }}" class="text-center">
@@ -144,6 +144,7 @@
                         <p><strong>Designation:</strong> {{ $entry->designation }}</p>
                         <p><strong>Destination:</strong> {{ $entry->destination }}</p>
                         <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</p>
+                        <p><strong>Time Out:</strong> {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}</p>
                         <p><strong>Time out by:</strong>
                             @if ($entry->time_out_by)
                             @php
@@ -200,37 +201,46 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-    const startDateInput = document.getElementById('start_date');
-    const endDateInput = document.getElementById('end_date');
+   document.addEventListener('DOMContentLoaded', function () {
+    const startDatePass = document.getElementById('start_date');
+    const endDatePass = document.getElementById('end_date');
 
-    startDateInput.addEventListener('change', function () {
-        endDateInput.min = this.value; // Set minimum value for end date
+    startDatePass.addEventListener('change', function () {
+        endDatePass.min = this.value;
+        if (!endDatePass.value) {
+            endDatePass.value = this.value;
+        }
     });
 
-    endDateInput.addEventListener('change', function () {
-        startDateInput.max = this.value; // Set maximum value for start date
+    endDatePass.addEventListener('change', function () {
+        startDatePass.max = this.value;
     });
 
-    // Automatically set end date to start date if end date is empty
-    if (startDateInput.value && !endDateInput.value) {
-        endDateInput.value = startDateInput.value;
+    if (startDatePass.value && !endDatePass.value) {
+        endDatePass.value = startDatePass.value;
+    }
+    if (endDatePass.value && !startDatePass.value) {
+        startDatePass.value = endDatePass.value;
     }
 });
+
 
 </script>
 
 <!-- Modal Structure -->
 <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Loading spinner -->
-                <div id="loadingBar" style="display: none;">Loading...</div>
+                <div id="loadingBar" style="display:none; text-align: center;">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
 
                 <!-- PDF display iframe -->
                 <iframe id="pdfIframe" src="" style="width: 100%; height: 500px; border: none;"></iframe>
@@ -246,24 +256,40 @@
     document.getElementById('loadingBar').style.display = 'block';
     document.getElementById('pdfIframe').style.display = 'none';
 
-    // You can pass the necessary parameters here if needed
     const url = '/generate-passSlip?' + $.param({
-        start_date: $('#start_date').val(), // example of passing data from input fields
+        start_date: $('#start_date').val(),
         end_date: $('#end_date').val(),
         employee_type: $('#employee_type').val()
     });
 
-    // Set iframe src to generated PDF URL
     document.getElementById('pdfIframe').src = url;
 
-    // Show modal after setting the src
+    $('#pdfModal').modal({
+        backdrop:'static',
+        keyboard: false,
+        focus: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+        width: '100%',
+        height: 'auto',
+        aspectRatio: 1.5,
+        responsive: true,
+        // Enable zooming
+        zoom: {
+            enabled: true,
+            scroll: true, // Enable scroll zooming
+            wheel: false, // Disable wheel zooming
+            pinch: false // Disable pinch zooming
+        }
+    });
+
     $('#pdfModal').modal('show');
 
-    // Hide loading bar and show iframe after some delay (can be adjusted)
     setTimeout(function() {
         document.getElementById('loadingBar').style.display = 'none';
         document.getElementById('pdfIframe').style.display = 'block';
-    }, 1000); // 1 second delay to simulate loading
+    }, 2000);
 }
     </script>
 

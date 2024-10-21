@@ -15,6 +15,7 @@
 $(document).ready(function () {
 
 
+$('#addNewLostModal').initializeModal();
 
 
     $('#addLostForm').on('submit', function(e){

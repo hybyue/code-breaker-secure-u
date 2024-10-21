@@ -72,6 +72,12 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
+                    <a href="{{ route('admin.lost.lost_found_admin')}}" class="sidebar-link {{ Route::is('admin.lost.lost_found_admin') ? 'active' : '' }}">
+                        <i class="bi bi-box-seam-fill"></i>
+                        <span>Lost and Found</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
                     <a href="{{ route('admin.violation.violation')}}" class="sidebar-link {{ Route::is('admin.violation.violation') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-person"></i>
                         <span>Violation</span>
@@ -83,12 +89,7 @@
                         <span>Create Account</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="{{ route('admin.lost.lost_found_admin')}}" class="sidebar-link {{ Route::is('admin.lost.lost_found_admin') ? 'active' : '' }}">
-                        <i class="bi bi-box-seam-fill"></i>
-                        <span>Lost and Found</span>
-                    </a>
-                </li>
+
                 <li class="sidebar-item">
                     <a href="{{route('admin.employees.all_employee')}}" class="sidebar-link {{ Route::is('admin.employees.all_employee') ? 'active' : '' }}">
                         <i class="bi bi-person-vcard-fill"></i>

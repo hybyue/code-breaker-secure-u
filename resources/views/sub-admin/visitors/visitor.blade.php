@@ -66,22 +66,22 @@ function editBtn(id) {
         </div>
     </div>
     <div class="container mt-2">
-        <form action="/filter_visitor" method="GET">
+        <form action="/sub-admin/visitor" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
                     <label for="start_date"> Start Date: </label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" required>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
                 </div>
                 <div class="col-md-3">
                     <label for="end_date"> End Date: </label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" required>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                 </div>
                 <div class="col-md-1 mt-4 pt-2">
                     <button type="submit" class="btn btn-dark">Filter</button>
                 </div>
                 @if (request('start_date') || request('end_date'))
                     <div class="col-md-0 mt-4 pt-2">
-                        <a href="/filter_visitor" class="btn btn-secondary">Clear Filter</a>
+                        <a href="/sub-admin/visitor" class="btn btn-secondary">Clear Filter</a>
                     </div>
                 @endif
             </div>
@@ -218,17 +218,35 @@ function editBtn(id) {
     <script>
         function showPdfModalVisitor() {
             document.getElementById('loadingBar').style.display = 'block';
-            document.getElementById('pdfPreviewContent').style.display = 'none';
+            document.getElementById('pdfVisitorFrame').style.display = 'none';
 
-            $('#pdfModalVisitor').modal('show');
+            const url = '/sub-admin/generate-pdf/visitor?'  + $.param({
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val(),
+            });;
+
+         document.getElementById('pdfVisitorFrame').src = url;
+
+         $('#pdfModalVisitor').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false,
+            scrollY: false,
+            scrollX: true,
+        });
+
+         $('#pdfModalVisitor').modal('show');
 
             setTimeout(function() {
                 document.getElementById('loadingBar').style.display = 'none';
-                document.getElementById('pdfPreviewContent').style.display = 'block';
+                document.getElementById('pdfVisitorFrame').style.display = 'block';
             }, 1000);
         }
 
+
         </script>
+
+
     <style>
         .same-height-table td {
             vertical-align: middle;

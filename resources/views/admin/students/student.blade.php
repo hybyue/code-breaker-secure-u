@@ -3,17 +3,52 @@
 @section('title', 'Students')
 
 @section('content')
+
+<div class="container">
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-right',
+                    iconColor: 'white',
+                    customClass: {
+                        popup: 'colored-toast',
+                    },
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                });
+            });
+        </script>
+    @endif
+</div>
+
+
 <div class="container mt-3 pass-slip">
 
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Students</h4>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Students</h4>
+            </div>
+
+            <div class="col-md-6 text-end">
+                <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addStudentModalAd">
+                    <i class="bi bi-plus-circle-fill text-center"></i> Add New
+                </button>
+                <form action="{{ route('import.student') }}" method="POST" enctype="multipart/form-data" class="d-inline-flex align-items-center">
+                    @csrf
+                    <label for="file" class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;">
+                        <i class="bi bi-download"></i> Import Excel
+                        <input type="file" class="d-none" id="file" name="excel_file_students" onchange="this.form.submit()">
+                    </label>
+                </form>
+            </div>
         </div>
-        <div class=" col-md-6 text-end">
-            <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addStudentModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-lost', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
-        </div>
-    </div>
+
 
     <div class="container p-3 mt-4 bg-body-secondary rounded">
     <table id="studentTable" class="table table-bordered same-height-table">
@@ -34,7 +69,7 @@
             @endif</td>
             <td>{{$student->course}}</td>
 
-                <td>
+                <td class="text-center">
                     <a href="" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateStudentModalAd-{{ $student->id }}">
                         <i class="bi bi-pencil-square"></i>
                     </a>

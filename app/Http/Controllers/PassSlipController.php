@@ -25,11 +25,12 @@ class PassSlipController extends Controller
         $user = Auth::user();
 
         if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+            $query->whereDate('date', '>=', $request->start_date);
         }
 
+
         if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+            $query->whereDate('date', '<=', $request->end_date);
         }
 
         if ($request->filled('employee_type')) {
@@ -41,10 +42,10 @@ class PassSlipController extends Controller
             ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
             ->where(function ($subQuery) use ($request) {
                 if ($request->filled('start_date')) {
-                    $subQuery->whereDate('pass_slips.created_at', '>=', $request->start_date);
+                    $subQuery->whereDate('pass_slips.date', '>=', $request->start_date);
                 }
                 if ($request->filled('end_date')) {
-                    $subQuery->whereDate('pass_slips.created_at', '<=', $request->end_date);
+                    $subQuery->whereDate('pass_slips.date', '<=', $request->end_date);
                 }
                 if ($request->filled('employee_type')) {
                     $subQuery->where('pass_slips.employee_type', $request->employee_type);

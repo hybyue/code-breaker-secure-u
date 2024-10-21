@@ -61,12 +61,14 @@ class PdfController extends Controller
             'title' => 'Reports for Visitors',
             'date' => now()->format('F d, Y'),
             'visitors' => $visitors,
-            'user' => $user
+            'user' => $user,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
         ];
 
         $pdf = Pdf::loadView('pdf.generate-visitor', $data);
 
-        return $pdf->stream('report-visitors.pdf');
+        return $pdf->stream();
 
     }
 
@@ -114,7 +116,7 @@ class PdfController extends Controller
 
         $pdf = Pdf::loadView('pdf.generate-violation', $data);
 
-        return $pdf->stream('report-violation.pdf');
+        return $pdf->stream();
 
     }
 

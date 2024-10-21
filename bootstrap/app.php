@@ -20,9 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'user-activity' => \App\Http\Middleware\UserActivity::class,
         ]);
 
-        $middleware->appendToGroup('web', WebRequestMonitoring::class)
-        ->appendToGroup('api', WebRequestMonitoring::class)
-        ->appendToGroup('web', UserActivity::class);
+        $middleware->appendToGroup('web', UserActivity::class);
 
     })
     ->withExceptions(function (Exceptions $exceptions) {

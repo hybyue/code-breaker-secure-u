@@ -146,6 +146,27 @@
     });
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const startDateLost = document.getElementById('start_date');
+    const endDateLost = document.getElementById('end_date');
+
+    startDateLost.addEventListener('change', function () {
+        endDateLost.min = this.value;
+        if (!endDateLost.value) {
+            endDateLost.value = this.value;
+        }
+    });
+
+    endDateLost.addEventListener('change', function () {
+        startDateLost.max = this.value;
+    });
+
+    // Automatically set end date to start date if end date is empty
+    if (startDateLost.value && !endDateLost.value) {
+        endDateLost.value = startDateLost.value;
+    }
+});
+
 </script>
 <style>
     .same-height-table td {

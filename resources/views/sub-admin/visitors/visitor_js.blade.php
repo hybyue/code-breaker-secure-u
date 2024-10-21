@@ -28,8 +28,14 @@
             data: formData,
             success:function(resp){
             if(resp.status=='success'){
+
                 $('#visitorForm')[0].reset();
-                $('#visitorTable').load(location.href + ' #visitorTable');
+                    removeDynamicFields();
+
+                    // Reload the table and modals dynamically
+                    $('#visitorTable').load(location.href + ' #visitorTable', function () {
+                        table.draw(); // Redraw the DataTable after reload
+                    });
 
                 $('#viewDynamicModal').load(location.href + ' #viewDynamicModal');
                 $('#updateDynamicModal').load(location.href + ' #updateDynamicModal');
@@ -60,6 +66,12 @@
 
             });
 
+
+            function removeDynamicFields() {
+        // Remove dynamically added fields (like the 'Other' inputs)
+        $('#personToVisitOtherInput').remove();
+        $('#idTypeOtherInput').remove();
+    }
 });
 
    </script>

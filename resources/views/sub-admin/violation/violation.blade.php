@@ -76,9 +76,9 @@
                         <div class="mx-1">
                             <a href="#" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewEntries-{{ $violate->id }}"><i class="bi bi-eye"></i></a>
                         </div>
-                        <divextends class="mx-1">
+                        <div class="mx-1">
                         <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateViolationModal-{{ $violate->id }}"><i class="bi bi-pencil-square"></i></a>
-                        </divextends(
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -131,32 +131,6 @@
     </div>
 </div>
 @endforeach
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const startDateViolate = document.getElementById('start_date');
-    const endDateViolate = document.getElementById('end_date');
-
-    startDateViolate.addEventListener('change', function () {
-        endDateViolate.min = this.value;
-        if (!endDateViolate.value) {
-            endDateViolate.value = this.value;
-        }
-    });
-
-    endDateViolate.addEventListener('change', function () {
-        startDateViolate.max = this.value;
-    });
-
-    if (startDateViolate.value && !endDateViolate.value) {
-        endDateViolate.value = startDateViolate.value;
-    }
-    if (endDateViolate.value && !startDateViolate.value) {
-        startDateViolate.value = endDateViolate.value;
-    }
-});
-    </script>
 
 <script>
     function showPdfModalViolation() {

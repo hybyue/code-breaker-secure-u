@@ -20,46 +20,59 @@ class PassSlipController extends Controller
     }
 
     public function filterPassSlip(Request $request)
-    {
-        $query = PassSlip::query();
-        $user = Auth::user();
+{
+    $query = PassSlip::query();
+    $user = Auth::user();
 
-        if ($request->filled('start_date')) {
-            $query->whereDate('date', '>=', $request->start_date);
-        }
-
-
-        if ($request->filled('end_date')) {
-            $query->whereDate('date', '<=', $request->end_date);
-        }
-
-        if ($request->filled('employee_type')) {
-            $query->where('employee_type', $request->employee_type);
-        }
-
-        // Fetch the latest pass slips per user for the specified date range
-        $latestPassSlips = PassSlip::select('pass_slips.*')
-            ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
-            ->where(function ($subQuery) use ($request) {
-                if ($request->filled('start_date')) {
-                    $subQuery->whereDate('pass_slips.date', '>=', $request->start_date);
-                }
-                if ($request->filled('end_date')) {
-                    $subQuery->whereDate('pass_slips.date', '<=', $request->end_date);
-                }
-                if ($request->filled('employee_type')) {
-                    $subQuery->where('pass_slips.employee_type', $request->employee_type);
-                }
-            })
-            ->latest()
-            ->paginate() // Paginate results
-            ->appends($request->all()); // Append filters to pagination links
-
-        // Fetch all pass slips for viewing older entries in modal
-        $allPassSlips = $query->get();
-
-        return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips', 'request', 'user'));
+    if ($request->filled('start_date')) {
+        $query->whereDate('date', '>=', $request->start_date);
     }
+
+    if ($request->filled('end_date')) {
+        $query->whereDate('date', '<=', $request->end_date);
+    }
+
+    if ($request->filled('employee_type')) {
+        $query->where('employee_type', $request->employee_type);
+    }
+
+    if ($request->filled('violation_filter')) {
+        if ($request->violation_filter == '1') {
+            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+        } elseif ($request->violation_filter == '0') {
+            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+        }
+    }
+
+    $latestPassSlips = PassSlip::select('pass_slips.*')
+        ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
+        ->where(function ($subQuery) use ($request) {
+            if ($request->filled('start_date')) {
+                $subQuery->whereDate('pass_slips.date', '>=', $request->start_date);
+            }
+            if ($request->filled('end_date')) {
+                $subQuery->whereDate('pass_slips.date', '<=', $request->end_date);
+            }
+            if ($request->filled('employee_type')) {
+                $subQuery->where('pass_slips.employee_type', $request->employee_type);
+            }
+            if ($request->filled('violation_filter')) {
+                if ($request->violation_filter == '1') {
+                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+                } elseif ($request->violation_filter == '0') {
+                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+                }
+            }
+        })
+        ->latest()
+        ->paginate()
+        ->appends($request->all());
+
+    $allPassSlips = $query->get();
+
+    return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips', 'request', 'user'));
+}
+
     public function generateNextPassSub()
 {
     $passNumber = $this->generatePassNoSub();
@@ -100,14 +113,22 @@ private function generatePassNoSub()
             'last_name' => 'required|string|max:255',
             'department' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
-            'destination' => 'required|string|max:255',
+            'destination' => 'required|string|max:100',
             'employee_type' => 'required|string|max:255',
             'purpose' => 'required|string|max:255',
             'time_out' => 'required|date_format:H:i',
-            'check_business' => 'nullable|string',
-            'driver_name' => 'nullable|string',
-        ]);
+            'check_business' => 'required|string',
+            'driver_name' => 'nullable|alpha|max:100',
+        ],
+        [
+            'destination.max' => 'Destination must be less than 100 characters.',
+            'check_business.required' => 'Check Business is required.',
+            'check_business.string' => 'Check Business must be a string.',
+            'purpose.max' => 'Purpose must be less than 255 characters.',
+            'driver_name.alpha' => 'Must no number or special characters.',
+            'driver_name.max' => 'Driver Name must be less than 100 characters.',
 
+        ]);
         PassSlip::create([
             'user_id' => Auth::id(),
             'p_no' => $request->p_no,
@@ -133,25 +154,61 @@ private function generatePassNoSub()
     }
 
     public function updatePassSlip(Request $request, string $id)
-{
-    $passSlips = PassSlip::findOrFail($id);
+    {
+        $passSlip = PassSlip::findOrFail($id);
 
-    $passSlips->update($request->all());
 
-    return redirect()->route('sub-admin.pass_slip.pass_slip')->with('success', 'Pass Slip updated successfully');
-}
+
+        $passSlip->time_in = $request->input('time_in') ?? now()->format('H:i:s');
+        $passSlip->time_in_by = Auth::user()->id;
+
+        $timeIn = \Carbon\Carbon::parse($passSlip->time_in);
+        $timeOut = \Carbon\Carbon::parse($passSlip->time_out);
+
+        $timeDifference = $timeOut->diffInHours($timeIn);
+
+        $passSlip->is_exceeded = $timeDifference >= 3;
+
+        $passSlip->p_no = $request->input('p_no');
+        $passSlip->first_name = $request->input('first_name');
+        $passSlip->middle_name = $request->input('middle_name');
+        $passSlip->last_name = $request->input('last_name');
+        $passSlip->department = $request->input('department');
+        $passSlip->designation = $request->input('designation');
+        $passSlip->destination = $request->input('destination');
+        $passSlip->employee_type = $request->input('employee_type');
+        $passSlip->purpose = $request->input('purpose');
+        $passSlip->time_out = $request->input('time_out');
+        $passSlip->check_business = $request->input('check_business');
+        $passSlip->driver_name = $request->input('driver_name');
+
+        $passSlip->save();
+
+        return redirect()->route('sub-admin.pass_slip.pass_slip')
+            ->with('success', 'Pass Slip updated successfully');
+    }
 
 
 public function checkoutPassSlip($id)
 {
     $pass_slip = PassSlip::findOrFail($id);
-    $pass_slip->time_in = now()->format('H:i:s');
+
+    $currentTime = now();
+    $pass_slip->time_in = $currentTime->format('H:i:s');
     $pass_slip->time_in_by = Auth::user()->id;
+
+    $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
+    $timeDifference = $timeOut->diffInHours($currentTime);
+
+    if ($timeDifference >= 3) {
+        $pass_slip->is_exceeded = true;
+    }
+
+    // Save the pass slip record
     $pass_slip->save();
 
     return redirect()->route('sub-admin.pass_slip.pass_slip')->with('success', 'Time In recorded successfully.');
 }
-
 
 public function pass_slip_admin(Request $request)
 {
@@ -161,35 +218,57 @@ public function pass_slip_admin(Request $request)
 public function filterPassSlipAdmin(Request $request)
 {
     $query = PassSlip::query();
+    $user = Auth::user();
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+
+    if ($request->filled('start_date')) {
+        $query->whereDate('date', '>=', $request->start_date);
+    }
+
+    if ($request->filled('end_date')) {
+        $query->whereDate('date', '<=', $request->end_date);
     }
 
     if ($request->filled('employee_type')) {
         $query->where('employee_type', $request->employee_type);
     }
 
-    // Fetch the latest pass slips per user for the specified date range
+    if ($request->filled('violation_filter')) {
+        if ($request->violation_filter == '1') {
+            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+        } elseif ($request->violation_filter == '0') {
+            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+        }
+    }
+
     $latestPassSlips = PassSlip::select('pass_slips.*')
         ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
         ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('pass_slips.created_at', '>=', $request->start_date)
-                         ->whereDate('pass_slips.created_at', '<=', $request->end_date);
+            if ($request->filled('start_date')) {
+                $subQuery->whereDate('pass_slips.date', '>=', $request->start_date);
+            }
+            if ($request->filled('end_date')) {
+                $subQuery->whereDate('pass_slips.date', '<=', $request->end_date);
             }
             if ($request->filled('employee_type')) {
                 $subQuery->where('pass_slips.employee_type', $request->employee_type);
             }
+            if ($request->filled('violation_filter')) {
+                if ($request->violation_filter == '1') {
+                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+                } elseif ($request->violation_filter == '0') {
+                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+                }
+            }
         })
         ->latest()
-        ->paginate();
+        ->paginate()
+        ->appends($request->all());
 
     // Fetch all pass slips for viewing older entries in modal
     $allPassSlips = $query->get();
 
-    return view('admin.pass_slip.pass_slip_admin', compact('latestPassSlips', 'allPassSlips'));
+    return view('admin.pass_slip.pass_slip_admin', compact('latestPassSlips', 'allPassSlips', 'user', 'request'));
 }
 
 public function generateNextPassNumber()
@@ -232,12 +311,21 @@ private function generatePassNumber()
             'last_name' => 'required|string|max:255',
             'department' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
-            'destination' => 'required|string|max:255',
+            'destination' => 'required|string|max:100',
             'employee_type' => 'required|string|max:255',
             'purpose' => 'required|string|max:255',
             'time_out' => 'required|date_format:H:i',
-            'check_business' => 'nullable|string',
-            'driver_name' => 'nullable|string',
+            'check_business' => 'required|string',
+            'driver_name' => 'nullable|alpha|max:100',
+        ],
+        [
+            'destination.max' => 'Destination must be less than 100 characters.',
+            'check_business.required' => 'Check Business is required.',
+            'check_business.string' => 'Check Business must be a string.',
+            'purpose.max' => 'Purpose must be less than 255 characters.',
+            'driver_name.alpha' => 'Must no number or special characters.',
+            'driver_name.max' => 'Driver Name must be less than 100 characters.',
+
         ]);
 
         PassSlip::create([
@@ -266,8 +354,16 @@ private function generatePassNumber()
     public function checkoutAdmin($id)
     {
         $pass_slip = PassSlip::findOrFail($id);
-        $pass_slip->time_in = now()->format('H:i:s');
+        $currentTime = now();
+        $pass_slip->time_in = $currentTime->format('H:i:s');
         $pass_slip->time_in_by = Auth::user()->id;
+
+        $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
+        $timeDifference = $timeOut->diffInHours($currentTime);
+
+        if ($timeDifference >= 3) {
+            $pass_slip->is_exceeded = true;
+        }
         $pass_slip->save();
 
         return redirect()->route('admin.pass_slip.pass_slip_admin')->with('success', 'Time In recorded successfully.');

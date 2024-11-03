@@ -1,12 +1,12 @@
 
 {{-- edit lost and found details --}}
-<div id="lostFoundUpdate">
+<div id="lostFoundUpdateAd">
 @foreach($lost_found as $item)
-<div class="modal fade" id="updateLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="updateLostFoundModalLabel-{{ $item->id }}" aria-hidden="true">
+<div class="modal fade" id="updateLostFoundAdmin-{{ $item->id }}" tabindex="-1" aria-labelledby="updateLostFoundAdminModalLabel-{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateLostFoundModalLabel-{{ $item->id }}">Edit Lost Item</h5>
+                <h5 class="modal-title" id="updateLostFoundAdminModalLabel-{{ $item->id }}">Edit Lost Item</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

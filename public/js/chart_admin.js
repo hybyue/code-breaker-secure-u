@@ -89,21 +89,6 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Initial load with monthly data
-fetchData('monthly');
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const ctxPie = document.getElementById('visitorPieChart').getContext('2d');
@@ -169,5 +154,9 @@ function updatePieChart(visitors, pass_slips, lost_found, violations) {
     });
 }
 
-// Load total data for the pie chart on page load
-fetchTotalData();
+
+document.addEventListener('DOMContentLoaded', function () {
+    fetchData('monthly');
+    fetchTotalData();
+});
+

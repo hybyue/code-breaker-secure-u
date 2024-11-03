@@ -36,7 +36,7 @@
         </div>
     </form>
 </div>
-        <div class="container p-2 bg-body-secondary rounded">
+        <div class="container p-2 bg-body-secondary rounded" style="overflow-x:auto;">
         <div class="row p-4">
             <div class="col-12 p-1">
                 <table id="visitorTable" class="table table-light p-3 table-bordered table-responsive table-rounded table-striped same-height-table">

@@ -13,7 +13,13 @@
         $(document).ready(function () {
             new DataTable('#employeeTable', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ]
         });
 
     $('#addEmployeeForm').on('submit', function(e){

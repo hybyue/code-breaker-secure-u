@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LostFoundController extends Controller
 {
@@ -24,7 +25,6 @@ class LostFoundController extends Controller
             'course' => 'required|string|max:255',
             'object_img' => 'nullable|image|max:3048',
             'location' => 'required|string|max:255',
-            'is_claimed' => 'required|boolean',
             'description' => 'nullable|string',
         ]);
 
@@ -36,9 +36,10 @@ class LostFoundController extends Controller
             'last_name' => $request->last_name,
             'course' => $request->course,
             'location' => $request->location,
-            'security_staff' => Auth::user()->name,
-            'is_claimed' => $request->is_claimed,
+            'security_staff' => Auth::user()->id,
             'description' => $request->description,
+            'is_claimed' => 0,
+            'is_transferred' => 0,
         ];
 
         if ($request->hasFile('object_img')) {
@@ -49,9 +50,12 @@ class LostFoundController extends Controller
 
         Lost::create($data);
 
-        return response()->json([
-            'status' => 'success'
-        ]);
+        // return response()->json([
+        //     'status' => 'success'
+        // ]);
+        return redirect()->route('sub-admin.lost.lost_found')->with('success', 'Lost and Found added successfully');
+
+
     }
 
     public function updateClaimedSub(Request $request, $id)
@@ -88,11 +92,17 @@ class LostFoundController extends Controller
         $lost_found->middle_name = $request->input('middle_name');
         $lost_found->last_name = $request->input('last_name');
         $lost_found->course = $request->input('course');
+        $lost_found->location = $request->input('location');
+        $lost_found->security_staff = $request->input('security_staff');
+        $lost_found->is_claimed = $request->input('is_claimed');
+        $lost_found->description = $request->input('description');
+
 
         $lost_found->save();
 
         return redirect()->route('sub-admin.lost.lost_found')->with('success', 'Lost and Found updated successfully');
     }
+
 
     public function filterLostFounds(Request $request)
     {
@@ -140,7 +150,6 @@ class LostFoundController extends Controller
             'course' => 'required|string|max:255',
             'object_img' => 'nullable|image|max:3048',
             'location' => 'required|string|max:255',
-            'is_claimed' => 'required|boolean',
             'description' => 'nullable|string',
         ]);
 
@@ -152,9 +161,10 @@ class LostFoundController extends Controller
             'last_name' => $request->last_name,
             'course' => $request->course,
             'location' => $request->location,
-            'security_staff' => Auth::name()->name,
-            'is_claimed' => $request->is_claimed,
+            'security_staff' => Auth::user()->id,
             'description' => $request->description,
+            'is_claimed' => 0,
+            'is_transferred' => 0,
         ];
         if ($request->hasFile('object_img')) {
             $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
@@ -221,6 +231,6 @@ class LostFoundController extends Controller
 
         $lost_found = $query->orderBy('created_at', 'desc')->get();
 
-        return view('admin.lost_found_admin', compact('lost_found'));
+        return view('admin.lost.lost_found_admin', compact('lost_found'));
     }
 }

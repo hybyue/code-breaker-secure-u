@@ -1,14 +1,13 @@
 @extends('layouts.sidebar')
 
 @section('title', 'Dashboard')
-<link rel="stylesheet" href="{{ asset('tailwindcharts/css/flowbite.min.css')}}">
 
 @section('content')
 
 <div class="container">
     <div class="row mb-4">
         <div class="col-12">
-            <h4>Dashboard</h4>
+            <h4 class="font-weight-bold">Dashboard</h4>
         </div>
     </div>
 
@@ -61,20 +60,22 @@
     </div>
 
 <div class="row p-3">
-    <div class="col-md-6">
-        <div class="container">
-            <div id="timeLabel" class="text-lg font-bold mb-4"><h4>Select Time Period</h4></div>
-                <div class="flex space-x-2 mb-4">
-                    <button onclick="fetchData('monthly')" id="monthlyBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Monthly</button>
-                    <button onclick="fetchData('yearly')" id="yearlyBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Yearly</button>
+    <div class="row p-3">
+        <div class="col-md-6">
+            <div class="container">
+                <div id="timeLabel" class="h4 font-weight-bold mb-4">Select Time Period</div>
+                <div class="d-flex mb-4">
+                    <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2">Monthly</button>
+                    <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary">Yearly</button>
                 </div>
-                <canvas id="visitorChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
+                <canvas id="visitorChart" class="bg-white shadow rounded p-4"></canvas>
+            </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="container">
-            <div id="pieLabel" class="text-lg font-bold mb-4"><h4>Pie Chart</h4></div>
-            <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
+        <div class="col-md-6">
+            <div class="container">
+                <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
+                <canvas id="visitorPieChart" class="bg-white shadow rounded p-4"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -83,7 +84,6 @@
 
 <script src="{{ asset('js/chart.js') }}"></script>
 <script src="{{ asset('tailwindcharts/js/apexcharts.js') }}"></script>
-<script src="{{ asset('tailwindcharts/js/flowbite.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 

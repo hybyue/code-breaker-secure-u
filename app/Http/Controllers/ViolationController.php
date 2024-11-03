@@ -18,16 +18,16 @@ class ViolationController extends Controller
     $user = Auth::user();
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+        $query->whereDate('date', '>=', $request->start_date)
+              ->whereDate('date', '<=', $request->end_date);
     }
 
     $violations = Violation::select('violations.*')
         ->join(DB::raw('(SELECT MAX(id) as id FROM violations GROUP BY student_no) as latest'), 'violations.id', '=', 'latest.id')
         ->where(function ($subQuery) use ($request) {
             if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('violations.created_at', '>=', $request->start_date)
-                         ->whereDate('violations.created_at', '<=', $request->end_date);
+                $subQuery->whereDate('violations.date', '>=', $request->start_date)
+                         ->whereDate('violations.date', '<=', $request->end_date);
             }
         })
         ->orderBy('violations.created_at', 'desc')->get();

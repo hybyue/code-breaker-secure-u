@@ -2,6 +2,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
 <script>
     $.ajaxSetup({
         headers: {
@@ -15,10 +16,18 @@
 $(document).ready(function () {
 
 
-$('#addNewLostModal').initializeModal();
+    // new DataTable('#lostTable', {
+    //         responsive: true,
+    //         ordering: false,
+    //         language: {
+    //             lengthMenu: '_MENU_ entries'
+    //         },
+    //         columnDefs: [
+    //     { targets: "_all", defaultContent: "" }
+    // ]
+    //     });
 
-
-    $('#addLostForm').on('submit', function(e){
+    $('#addLostFoundForm').on('submit', function(e){
         e.preventDefault();
         let formData = new FormData(this);
         $.ajax({
@@ -29,9 +38,9 @@ $('#addNewLostModal').initializeModal();
             contentType: false,
             success: function(resp) {
                 if(resp.status == 'success') {
-                    $('#addLostForm')[0].reset();
+                    $('#addLostFoundForm')[0].reset();
                     $('#lostTable').load(location.href + ' #lostTable');
-                    $('#updateLostFounds').load(location.href + '#updateLostFounds');
+                    $('#updateLostFoundsDynamic').load(location.href + '#updateLostFoundsDynamic');
                     $('#viewModalLostFound').load(location.href + '#viewModalLostFound');
 
                     Swal.fire({

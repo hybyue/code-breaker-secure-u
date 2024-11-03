@@ -14,7 +14,13 @@
     $(document).ready(function () {
         new DataTable('#studentTable', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ]
         });
 
         $('#studentFormAdmin').on('submit', function(e){

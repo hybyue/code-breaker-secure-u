@@ -14,9 +14,15 @@
 
 $(document).ready(function () {
 
-    new DataTable('#tableLost', {
+    new DataTable('#tableLostAdmin', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ]
         });
 
 
@@ -26,7 +32,7 @@ $(document).ready(function () {
         let formData = new FormData(this);
 
         $.ajax({
-            url: "{{ route('admin.store') }}",
+            url: "{{ route('admin.store_lost') }}",
             method: 'POST',
             data: formData,
             processData: false,
@@ -35,8 +41,8 @@ $(document).ready(function () {
                 if(resp.status == 'success') {
                     $('#addLostForm')[0].reset();
 
-                    $('#tableLost').load(location.href + ' #tableLost');
-                    $('#lostFoundUpdate').load(location.href + ' #lostFoundUpdate');
+                    $('#tableLostAdmin').load(location.href + ' #tableLostAdmin');
+                    $('#lostFoundUpdateAd').load(location.href + ' #lostFoundUpdateAd');
                     $('#viewLostFoundAd').load(location.href + ' #viewLostFoundAd');
 
 

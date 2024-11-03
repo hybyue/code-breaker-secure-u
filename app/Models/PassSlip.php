@@ -33,6 +33,7 @@ class PassSlip extends Model
         'driver_name',
         'time_out_by',
         'time_in_by',
+        'is_exceeded'
     ];
 
     protected $casts = [
@@ -59,6 +60,7 @@ class PassSlip extends Model
         'driver_name',
         'time_out_by',
         'time_in_by',
+        'is_exceeded'
         ])->logOnlyDirty();
     }
 

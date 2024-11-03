@@ -11,145 +11,35 @@
     });
 </script>
 
-{{--
-<script>
-    $(document).ready(function () {
-
-
-
-    new DataTable('#visitorTable', {
-        responsive: true,
-        ordering: false,
-        dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
-        buttons: [
-            'copy', 'excel', 'print'
-        ]
-
-        });
-
-
-    $("#addVisitorForm").validate({
-        rules: {
-            last_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 50,
-            },
-            first_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 50,
-            },
-            person_to_visit: {
-                required: true,
-                minlength: 3,
-                maxlength: 50,
-            },
-            purpose: {
-                required: true,
-                minlength: 3,
-                maxlength: 255,
-            },
-            id_type: {
-                required:true,
-            },
-        },
-        messages: {
-            last_name: {
-                required: "Last name is required ",
-                minlength: "Last name must be atleast 3 chars.",
-                maxlength: "Last name must be maximum of 50 letters",
-            },
-            first_name: {
-                required: "First name is required ",
-                minlength: "First name must be atleast 3 chars.",
-                maxlength: "First name must be maximum of 50 letters",
-            },
-            person_to_visit: {
-                required: "Please fill this up",
-                minlength: "Must be greater than 3 letters",
-                maxlength: "Must be maximum of 50 letters",
-            },
-            purpose: {
-                required: "Purpose is required",
-                minlength: "Purpose must be greater than 3 letters",
-                maxlength: "Purpose must be maximum of 50 letters",
-            },
-            id_type: {
-                required: "ID type is required",
-            },
-        },
-        submitHandler: function (form, function(e)) {
-            e.preventDefault();
-            const formData = $(form).serializeArray();
-
-
-            $.ajax({
-                url: "{{route('visitor.store')}}",
-                method: 'POST',
-                data: formData,
-                beforeSend: function () {
-                    console.log("Loading...");
-                },
-                success: function (response) {
-                    if (response.status === "success") {
-
-                    $("#addVisitorForm")[0].reset();
-                    $("#addVisitorModal").modal("toggle");
-                    $('.modal-backdrop').hide();
-
-                    $('#visitorTable').load(location.href + ' #visitorTable');
-
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success!",
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-
-
-                    } else if (response.status === "failed") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Failed!",
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                    }
-                },
-                error: function (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Failed!",
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                },
-            });
-        },
-    });
-
-});
-</script> --}}
-
 
 <script>
    $(document).ready(function () {
     new DataTable('#visitorTable', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ],
         });
 
         $('#addVisitorForm').on('submit', function(e){
         e.preventDefault();
-    
+
+        $('.error-message').empty();
+        // Show loading spinner and disable submit button
+        const submitButton = $(this).find('button[type="submit"]');
+        const loadingSpinner = $('#loadingSpinner');
+
+        submitButton.prop('disabled', true);
+        loadingSpinner.show();
+
         $('.errorMessage').html('');
-    
+
         let formData = $(this).serialize();
-    
+
         $.ajax({
             url: "{{ route('visitor.store') }}",
             method: 'POST',
@@ -160,6 +50,7 @@
                     $('#visitorTable').load(location.href + ' #visitorTable');
                     $('#dynamicModals').load(location.href + ' #dynamicModals');
                     $('#updateDynamicModals').load(location.href + ' #updateDynamicModals');
+                    $('.text-danger').html('');
                     const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-right',
@@ -173,25 +64,91 @@
                     });
                     Toast.fire({
                         icon: 'success',
-                        title: 'Visitor added successdssully',
+                        title: 'Visitor added successfully',
                     });
-                   
+
                 }
                 else {
                     console.log("Failed to create");
                 }
             },
             error: function(err){
-                $('.errorMessage').html('');
-                let error = err.responseJSON;
-                $.each(error.errors, function(index, value){
-                    $('.errorMessage').append('<span class="text-danger">' + value + '</span><br>');
-                });
+                $('.error-message').html('');
+
+                if (err.responseJSON && err.responseJSON.errors) {
+                    let errors = err.responseJSON.errors;
+
+                    Object.keys(errors).forEach(function(field) {
+                        let errorMessage = errors[field][0];
+                        $(`#${field}_error`).text(errorMessage);
+                    });
+                }
+            },
+            complete: function () {
+                // Hide loading spinner and enable submit button
+                loadingSpinner.hide();
+                submitButton.prop('disabled', false);
             }
+
         });
     });
+
+
+    $('#updateVisitorForm').on('submit', function(e) {
+    e.preventDefault();
+
+    $('.error-message').text('');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        localStorage.setItem('showToast', 'true');
+                        location.reload();
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $('.error-message').remove();
+
+                        $.each(errors, function(field, messages) {
+                            let input = $('[name="' + field + '"]');
+                            input.addClass('is-invalid');
+                            input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
+                        });
+                    }
+                }
+            });
+        });
+
+        $('.modal').on('hidden.bs.modal', function() {
+            $('.is-invalid').removeClass('is-invalid');
+            $('.error-message').text('');
+        });
 });
 
+$(document).ready(function() {
+    if (localStorage.getItem('showToast') === 'true') {
+        Swal.fire({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: 'Visitor updated successfully',
+        });
+
+        localStorage.removeItem('showToast');
+    }
+});
 
    </script>
 

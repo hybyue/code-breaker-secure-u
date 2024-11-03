@@ -35,3 +35,26 @@ const hamburger = document.querySelector("#toggle-btn");
                 loading.parentNode.removeChild(loading);
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const startDate = document.getElementById('start_date');
+            const endDate = document.getElementById('end_date');
+
+            startDate.addEventListener('change', function () {
+                endDate.min = this.value;
+                if (!endDate.value) {
+                    endDate.value = this.value;
+                }
+            });
+
+            endDate.addEventListener('change', function () {
+                startDate.max = this.value;
+            });
+
+            if (startDate.value && !endDate.value) {
+                endDate.value = startDate.value;
+            }
+            if (endDate.value && !startDate.value) {
+                startDate.value = endDate.value;
+            }
+        });

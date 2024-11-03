@@ -8,6 +8,7 @@
 
     <title>@yield('title', 'Document')</title>
 
+    <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<link rel="shortcut icon" href="http://example.com/favicon.ico" />
 	<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
@@ -27,8 +28,6 @@
             background-color: #1e1e1e;
             border-left: 2px solid #3b7ddd;
         }
-
-
     </style>
 </head>
 <body>

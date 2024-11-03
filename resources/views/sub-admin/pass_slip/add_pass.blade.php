@@ -23,12 +23,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="status" name="employee_type" required readonly>
-                                <option value="" selected disabled>Select Employee Type</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <input class="form-control" id="status" name="employee_type" required readonly>
                         </div>
                         <input hidden type="text" class="form-control" id="employee_id" name="employee_id">
                         <div class="col-md-4 mb-2">
@@ -75,19 +70,24 @@
                                 <input class="form-check-input" type="radio" id="personal_business" name="check_business" value="Personal business">
                                 <label class="form-check-label" for="personal_business">Personal business</label>
                             </div>
+                            <span class="text-danger error-message" id="check_business_error"></span>
                         </div>
 
                         <div class="col-md-6">
                             <label for="driver_name" class="form-label">Driver Name:</label>
                             <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="Optional">
+                            <span class="text-danger error-message" id="driver_name_error"></span>
+
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
                             <input class="form-control" id="destination" name="destination" required></input>
+                            <span class="text-danger error-message" id="destination_error"></span>
                         </div>
                         <div class="col-md-6">
                             <label for="purpose" class="form-label">Purpose:</label>
                             <textarea class="form-control" id="purpose" name="purpose" rows="1" required></textarea>
+                            <span class="text-danger error-message" id="purpose_error"></span>
                         </div>
                         {{-- <div class="col-md-6 mb-2">
                             <label for="date" class="form-label">Date</label>
@@ -96,10 +96,13 @@
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
                             <input type="time" class="form-control" id="time_out" name="time_out" required>
+                            <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
+                                Save
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -108,124 +111,3 @@
     </div>
 </div>
 
-
-
-
-{{--
-<!-- TODO::Modal PDF Preview -->
-<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel">Pass Slip Report</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- PDF Preview will be embedded here -->
-                <div id="loadingBar" style="display:none; text-align: center;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-
-                <div id="pdfPreviewContent">
-                    <div class="container-header">
-                        <div class="header">
-                            <img src="{{ asset('images/UCU-logo.png') }}" alt="UCU Logo">
-                            <p class="university">Urdaneta City University</p>
-                            <p class="report-title">Reports list of Pass Slip @if(!empty($request->employee_type))
-                              ({{ $request->employee_type }})
-                            @endif</p>
-                            <p class="department">Security Management Office Report</p>
-                        </div>
-                    </div>
-                    <div>
-
-
-                        <!-- Show date range if provided -->
-                        @if(!empty($request->start_date) && !empty($request->end_date))
-                            <p class="text-start">Date Range: {{ $request->start_date }} - {{ $request->end_date }}</p>
-                        @else
-                            <p class="text-start">Date: {{ \Carbon\Carbon::now()->format('F d, Y') }}</p>
-                        @endif
-                    </div>
-                    <div class="container">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Name</th>
-                                    <th>Department</th>
-                                    <th>Designation</th>
-                                    <th>Destination</th>
-                                    <th>Date</th>
-                                    <th>Time Out</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($allPassSlips as $passSlip)
-                                    <tr>
-                                        <td>{{ $passSlip->p_no }}</td>
-                                        <td>{{ $passSlip->first_name }} {{ $passSlip->middle_name }}. {{ $passSlip->last_name }}</td>
-                                        <td>{{ $passSlip->department }}</td>
-                                        <td>{{ $passSlip->designation }}</td>
-                                        <td>{{ $passSlip->destination }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A') }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center">No Data available in table</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-start mt-4">
-                        <!-- Displaying authenticated user's name -->
-                        <p>Generated by: {{ $user->name }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
-                    <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<style>
-    .container-header{
-        margin-top: 10px;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-    }
-    .header {
-        text-align: center;
-        margin: 0;
-        padding: 0;
-    }
-    .header img {
-        display: block;
-        margin: 0 auto;
-        width: 100px;
-    }
-    .university {
-        font-size: 20px;
-        font-weight: bolder;
-    }
-    .report-title {
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    .department{
-        font-size: 14px;
-        font-weight: bold;
-    }
-</style> --}}

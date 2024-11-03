@@ -90,8 +90,7 @@ function editBtn(id) {
     <div class="container p-2 bg-body-secondary rounded">
         <div class="row">
             <div class="col-12" style="overflow-x:auto;">
-                <table id="visitorTable"
-                    class="table table-bordered table-rounded table-striped text-center same-height-table ">
+                <table id="visitorTable" class="table table-bordered table-rounded table-striped text-center same-height-table ">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -103,54 +102,53 @@ function editBtn(id) {
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($latestVisitors as $visit)
-                            <tr>
-                                <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
-                                <td>{{ $visit->last_name }}, {{ $visit->first_name }}
-                                    @if ($visit->middle_name)
-                                        {{ $visit->middle_name }}.
-                                    @endif
-                                </td>
+                        @if ($latestVisitors->isEmpty())
+    <tr>
+        <td colspan="8" class="text-center">No Data available in table</td>
+    </tr>
+@else
+    @foreach($latestVisitors as $visit)
+        <tr>
+            <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
+            <td>{{ $visit->last_name }}, {{ $visit->first_name }}
+                @if ($visit->middle_name)
+                    {{ $visit->middle_name }}.
+                @endif
+            </td>
+            <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }}</td>
+            <td id="time-out-{{ $visit->id }}" class="text-center">
+                @if (is_null($visit->time_out))
+                    <div>
+                        <span id="time-out-display-{{ $visit->id }}"></span>
+                        <form action="{{ route('visitor.checkout', $visit->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-sm text-white"
+                                style="background-color: #069206">Check</button>
+                        </form>
+                    </div>
+                @else
+                    {{ \Carbon\Carbon::parse($visit->time_out)->format('g:i A') }}
+                @endif
+            </td>
+            <td class="text-center">{{ $visit->entry_count }}</td>
+            <td>
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="mx-1">
+                        <a href="#" class="btn btn-sm text-white"
+                            style="background-color: #1e1f1e" data-bs-toggle="modal"
+                            data-bs-target="#viewEntries-{{ $visit->id }}"><i class="bi bi-eye"></i></a>
+                    </div>
+                    <div class="mx-1">
+                        <a href="#" class="btn btn-sm text-white"
+                            style="background-color: #063292" data-bs-toggle="modal"
+                            data-bs-target="#updateVisitorSub-{{ $visit->id }}"><i class="bi bi-pencil-square"></i></a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+@endif
 
-                                <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }}</td>
-                                <td id="time-out-{{ $visit->id }}" class="text-center">
-                                    @if (is_null($visit->time_out))
-                                        <div>
-                                            <span id="time-out-display-{{ $visit->id }}"></span>
-                                            <form action="{{ route('visitor.checkout', $visit->id) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm text-white"
-                                                    style="background-color: #069206">Check</button>
-                                            </form>
-                                        </div>
-                                    @else
-                                        {{ \Carbon\Carbon::parse($visit->time_out)->format('g:i A') }}
-                                    @endif
-                                </td>
-                                <td class="text-center">{{ $visit->entry_count }}</td>
-                                <td>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div class="mx-1">
-                                            <a href="#" class="btn btn-sm text-white"
-                                                style="background-color: #1e1f1e" data-bs-toggle="modal"
-                                                data-bs-target="#viewEntries-{{ $visit->id }}"><i
-                                                    class="bi bi-eye"></i></a>
-                                        </div>
-                                        <div class="mx-1">
-                                            <a href="#" class="btn btn-sm text-white"
-                                                style="background-color: #063292" data-bs-toggle="modal"
-                                                data-bs-target="#updateVisitorSub-{{ $visit->id }}"><i
-                                                    class="bi bi-pencil-square"></i></a>
-                                        </div>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center">No Data available in table</td>
-                            </tr>
-                        @endforelse
                     </tbody>
                 </table>
             </div>

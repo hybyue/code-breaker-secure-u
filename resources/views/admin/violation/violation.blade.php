@@ -18,7 +18,31 @@
         </div>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded">
+    <div class="container mt-4">
+        <form action="/admin/violation" method="GET">
+            <div class="row pb-3">
+                <div class="col-md-3">
+                    <label for="start_date"> Start Date: </label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date"> End Date: </label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" required>
+                </div>
+                <div class="col-md-1 mt-4 pt-2">
+                    <button type="submit"class="btn btn-dark">Filter</button>
+                </div>
+                @if(request('start_date') || request('end_date'))
+                <div class="col-md-0 mt-4 pt-2">
+                    <a href="/admin/violation" class="btn btn-secondary">Clear Filter</a>
+                </div>
+                @endif
+            </div>
+        </form>
+    </div>
+
+
+    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
     <table id="violationTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
@@ -31,11 +55,6 @@
                 <th></th>
             </tr>
 
-            <script>
-                function testFunction() {
-                  console.log("clicked button");
-                }
-            </script>
         </thead>
         <tbody>
 

@@ -12,13 +12,19 @@
 <script>
     $(document).ready(function () {
 
-        let table = new DataTable('#violationTable', {
+        new DataTable('#violationTable', {
             responsive: true,
             ordering: false,
             dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
         buttons: [
             'copy', 'csv', 'excel', 'print'
-        ]
+        ],
+        language: {
+                lengthMenu: '_MENU_ entries'
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+    ]
         });
 
 
@@ -96,7 +102,7 @@ async function searchStudent() {
                         .text(`Name: ${student.first_name} ${student.last_name}, Course: ${student.course}`)
                         .on('click', () => populateForm(student));
                     resultsDiv.append(studentInfo);
-                    
+
                 });
             } else {
                 resultsDiv.text('No results found.');

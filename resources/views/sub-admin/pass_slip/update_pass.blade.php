@@ -20,7 +20,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
                             <select class="form-select" id="employee_type" name="employee_type" required>
-                                <option value="{{$passSlip->employee_type}}" selected disabled>{{$passSlip->employee_type}}</option>
+                                <option value="{{$passSlip->employee_type}}">{{$passSlip->employee_type}}</option>
                                 <option value="Teaching">Teaching</option>
                                 <option value="Non-Teaching">Non-Teaching</option>
                                 <option value="Other">Other</option>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{$passSlip->middle_name}}" required>
+                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{$passSlip->middle_name}}" >
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="department" class="form-label">Department:</label>

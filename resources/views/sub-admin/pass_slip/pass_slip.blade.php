@@ -22,15 +22,15 @@
                     <div class="container mt-4">
                         <form action="/sub-admin/pass_slip" method="GET">
                             <div class="row pb-3">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="start_date">Start Date:</label>
                                     <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="end_date">End Date:</label>
                                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="employee_type">Employee Type:</label>
                                     <select class="form-select" id="employee_type" name="employee_type">
                                         <option value="">All</option>
@@ -38,11 +38,20 @@
                                         <option value="Non-Teaching" {{ request('employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                                     </select>
                                 </div>
+                                <div class="col-md-2">
+                                    <label for="violation_filter">Violation Filter:</label>
+                                    <select class="form-select" id="violation_filter" name="violation_filter">
+                                        <option value="">All</option>
+                                        <option value="1" {{ request('violation_filter') == '1' ? 'selected' : '' }}>Exceeded 3 Hours</option>
+                                        <option value="0" {{ request('violation_filter') == '0' ? 'selected' : '' }}>Not Exceeded</option>
+                                    </select>
+                                </div>
+
                                 <div class="col-md-1 mt-4 pt-2">
                                     <button type="submit" class="btn btn-dark">Filter</button>
                                 </div>
 
-                                @if(request('start_date') || request('end_date') || request('employee_type'))
+                                @if(request('start_date') || request('end_date') || request('employee_type') || request('violation_filter'))
                                 <div class="col-md-0 mt-4 pt-2">
                                     <a href="/sub-admin/pass_slip" class="btn btn-secondary">Clear Filter</a>
                                 </div>
@@ -77,7 +86,10 @@
                     <td>{{ $passSlip->department}}</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
-                    <td id="time-in-{{ $passSlip->id }}" class="text-center">
+                    <td id="time-in-{{ $passSlip->id }}" class="text-center"
+                        @if($passSlip->is_exceeded)
+                            style="background-color: red; color: white;"
+                        @endif>
                         @if(is_null($passSlip->time_in))
                         <div>
                             <span id="time-in-display-{{ $passSlip->id }}"></span>
@@ -200,30 +212,6 @@
             }
         }
     }
-
-   document.addEventListener('DOMContentLoaded', function () {
-    const startDatePass = document.getElementById('start_date');
-    const endDatePass = document.getElementById('end_date');
-
-    startDatePass.addEventListener('change', function () {
-        endDatePass.min = this.value;
-        if (!endDatePass.value) {
-            endDatePass.value = this.value;
-        }
-    });
-
-    endDatePass.addEventListener('change', function () {
-        startDatePass.max = this.value;
-    });
-
-    if (startDatePass.value && !endDatePass.value) {
-        endDatePass.value = startDatePass.value;
-    }
-    if (endDatePass.value && !startDatePass.value) {
-        startDatePass.value = endDatePass.value;
-    }
-});
-
 
 </script>
 

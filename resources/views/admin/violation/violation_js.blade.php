@@ -16,6 +16,12 @@
         new DataTable('#violationTable', {
         responsive: true,
         ordering: false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ]
         });
 
         $('#violationFormAdmin').on('submit', function(e){

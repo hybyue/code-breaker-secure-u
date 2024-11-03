@@ -18,11 +18,35 @@
         </div>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded">
+    <div class="container mt-4">
+        <form action="/admin/lost_found" method="GET">
+            <div class="row pb-3">
+                <div class="col-md-3">
+                    <label for="start_date"> Start Date: </label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date"> End Date: </label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" required>
+                </div>
+                <div class="col-md-1 mt-4 pt-2">
+                    <button type="submit"class="btn btn-dark">Filter</button>
+                </div>
+                @if(request('start_date') || request('end_date'))
+                <div class="col-md-0 mt-4 pt-2">
+                    <a href="/admin/lost_found" class="btn btn-secondary">Clear Filter</a>
+                </div>
+                @endif
+            </div>
+        </form>
+    </div>
 
-    <table id="tableLost" class="table table-bordered same-height-table">
+    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
+
+    <table id="tableLostAdmin" class="table table-bordered same-height-table">
         <thead>
             <tr>
+                <th>Date</th>
                 <th>Types of Object</th>
                 <th>Finder's Name</th>
                 <th>Role</th>
@@ -34,7 +58,7 @@
                 @forelse($lost_found as $item)
 
                 <tr id="tr_{{$item->id}}" class="text-center">
-
+                    <td>{{\Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
                     <td>{{ $item->object_type }}</td>
                     <td>{{ $item->last_name }}, {{ $item->first_name }}  @if($item->middle_name) {{ $item->middle_name }}. @endif
                      </td>
@@ -42,6 +66,8 @@
                     <td>
                         @if($item->is_claimed == 0)
                             <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                        @elseif($item->is_transferred == 1)
+                        <p class="text-danger">Transfer</p>
                         @else
                             <p class="text-success">Claimed</p>
                         @endif
@@ -52,7 +78,7 @@
                                 <a href="#" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewLostFoundAdmin-{{ $item->id }}"><i class="bi bi-eye"></i></a>
                                 </div>
                             <div class="mx-1">
-                                <a href="javascript:void(0)" class="btn btn-sm text-white" data-id="{{$item->id}}" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateLostFound-{{ $item->id }}">
+                                <a href="javascript:void(0)" class="btn btn-sm text-white" data-id="{{$item->id}}" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateLostFoundAdmin-{{ $item->id }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
@@ -66,7 +92,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center">No Data available in table</td>
+                    <td colspan="6" class="text-center">No Data available in table</td>
                 </tr>
             @endforelse
         </tbody>
@@ -90,6 +116,23 @@
                     @if($item->middle_name) {{ $item->middle_name }}. @endif
                 </p>
                 <p><strong>Role:</strong> {{ $item->course }}</p>
+                <p><strong>Status:</strong>
+                    @if($item->is_claimed == 1)
+                        <span class="text-success">Claimed</span>
+                    @else
+                        <span class="text-danger">Not Claimed</span>
+                    @endif
+                </p>
+                <p><strong>Assist by:</strong>
+                    @if ($item->user_id)
+                    @php
+                        $user = App\Models\User::find($item->user_id);
+                    @endphp
+                    {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                    @else
+                    N/A
+                @endif
+            </p>
 
                 <!-- Display Image in Modal -->
                 <div class="d-flew justify-content-center align-items-center mb-3">
@@ -118,7 +161,7 @@
 <script>
     function markAsClaimed(id) {
     $.ajax({
-        url: `/admin/update_claimed/${id}`, // Make sure this route exists
+        url: `/admin/update_claimed/${id}`,
         type: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'),
@@ -131,7 +174,13 @@
                 text: 'The item has been marked as claimed!',
                 confirmButtonColor: '#0B9B19'
             }).then(() => {
-
+                const row = document.querySelector(`button[onclick='markAsClaimed(${id})']`).closest('tr');
+                if (row) {
+                    const statusCell = row.querySelector('td:nth-child(5)');
+                    if (statusCell) {
+                        statusCell.innerHTML = '<p class="text-success">Claimed</p>';
+                    }
+                }
             });
         },
         error: function(xhr) {
@@ -145,28 +194,6 @@
         }
     });
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const startDateLost = document.getElementById('start_date');
-    const endDateLost = document.getElementById('end_date');
-
-    startDateLost.addEventListener('change', function () {
-        endDateLost.min = this.value;
-        if (!endDateLost.value) {
-            endDateLost.value = this.value;
-        }
-    });
-
-    endDateLost.addEventListener('change', function () {
-        startDateLost.max = this.value;
-    });
-
-    // Automatically set end date to start date if end date is empty
-    if (startDateLost.value && !endDateLost.value) {
-        endDateLost.value = startDateLost.value;
-    }
-});
-
 </script>
 <style>
     .same-height-table td {

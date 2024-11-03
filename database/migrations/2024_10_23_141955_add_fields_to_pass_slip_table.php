@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pass_slips', function (Blueprint $table) {
-            $table->unsignedBigInteger('time_out_by')->nullable();
-            $table->unsignedBigInteger('time_in_by')->nullable();
+            $table->boolean('is_exceeded')->default(false);
         });
     }
 

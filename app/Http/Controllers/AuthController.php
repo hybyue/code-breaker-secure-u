@@ -89,11 +89,11 @@ class AuthController extends Controller
                 'regex:/[a-z]/',
                 'regex:/[A-Z]/',
                 'regex:/[0-9]/',
-                'regex:/[_!@#$%^&*()<>?]/',
+                'regex:/[;-|_!@#$%^&*()<>?]/',
                 'confirmed'
             ],
         ], [
-            'password.regex' => 'Password is weak. Try including numbers, uppercase and lowercase letters, and symbols (_!@#$%^&*()<>?).',
+            'password.regex' => 'Password is weak. Try including numbers, uppercase and lowercase letters, and symbols (;-|_!@#$%^&*()<>?).',
             'email.unique' => 'The email address is already registered.'
         ]);
 
@@ -160,6 +160,11 @@ class AuthController extends Controller
 
     // Regenerate session on successful login
     $request->session()->regenerate();
+
+    activity()
+        ->causedBy(Auth::user())
+        ->withProperties(['ip' => $request->ip()])
+        ->log('logged in');
 
     // Check if the user is admin or sub-admin
     if (Auth::user()->type == 'admin') {

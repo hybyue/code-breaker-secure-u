@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pass_slips', function (Blueprint $table) {
-            $table->unsignedBigInteger('time_out_by')->nullable();
-            $table->unsignedBigInteger('time_in_by')->nullable();
+        Schema::table('lost_found', function (Blueprint $table) {
+            $table->boolean('is_transferred')->default(false);
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pass_slips', function (Blueprint $table) {
-            $table->boolean('is_exceeded')->default(false);
+        Schema::table('lost_found', function (Blueprint $table) {
+            $table->boolean('is_transferred')->default(false);
         });
     }
 };

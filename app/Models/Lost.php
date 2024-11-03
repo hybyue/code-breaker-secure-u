@@ -25,14 +25,26 @@ class Lost extends Model
         'location',
         'is_claimed',
         'security_staff',
-        'description'
+        'description',
+        'is_transferred'
     ];
 
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['user_id', 'object_type', 'first_name', 'middle_name', 'last_name', 'course', 'object_img'])
+        ->logOnly([
+        'user_id',
+        'object_type',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'course',
+        'object_img',
+        'is_claimed',
+        'security_staff',
+        'description',
+        'is_transferred'])
         ->logOnlyDirty();
     }
 

@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+
 
 class VisitorController extends Controller
 {
@@ -50,12 +52,25 @@ public function filterVisitorAdmin(Request $request)
 public function store(Request $request)
 {
     $request->validate([
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'person_to_visit' => 'required|string|max:255',
+        'first_name' => 'required|alpha|max:50',
+        'middle_name' => 'nullable|alpha|max:1',
+        'last_name' => 'required|alpha|max:50',
+        'person_to_visit' => 'required|string|max:100',
         'purpose' => 'required|string|max:255',
-        'id_type' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+    ],
+    [
+        'first_name.alpha' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.alpha' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
     ]);
 
     $visitor = new Visitor();
@@ -79,6 +94,22 @@ public function store(Request $request)
     ->latest('visitors.created_at')
     ->first();
 
+    $departmentEmails = [
+        'Department 1' => 'gabriellodavid47@gmail.com',
+        'Department 2' => 'department2@example.com',
+        'Department 3' => 'department3@example.com',
+        'Department 4' => 'department4@example.com',
+        'Department 5' => 'department5@example.com',
+    ];
+
+    if (isset($departmentEmails[$visitor->person_to_visit])) {
+        $departmentEmail = $departmentEmails[$visitor->person_to_visit];
+
+        Mail::to($departmentEmail)->send(new DepartmentNotification($visitor, $departmentEmail));
+
+
+    }
+
     // if($visitor){
     return response()->json(['status' => 'success', 'message' => 'Visitor added successfully', 'visitor' => $visitor, 'latestVisitor' => $latestVisitor]);
         // }else{
@@ -100,33 +131,43 @@ public function edit(string $id)
 /**
  * Update the specified resource in storage.
  */
-public function update(Request $request)
+public function update(Request $request, String $id)
 {
-    $request->validate([
-        'entries.*.id' => 'required|exists:visitors,id',
-        'entries.*.first_name' => 'required|string|max:255',
-        'entries.*.middle_name' => 'nullable|string|max:255',
-        'entries.*.last_name' => 'required|string|max:255',
-        'entries.*.person_to_visit' => 'required|string|max:255',
-        'entries.*.purpose' => 'required|string|max:255',
-        'entries.*.id_type' => 'required|string|max:255',
-        'entries.*.entry_count' => 'required|integer',
+    $validatedData = Validator::make($request->all(), [
+        'first_name' => 'required|alpha|max:50',
+        'middle_name' => 'nullable|alpha|max:1',
+        'last_name' => 'required|alpha|max:50',
+        'person_to_visit' => 'required|string|max:100',
+        'purpose' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+        'entry_count' => 'required|integer|min:1',
+    ],
+    [
+        'first_name.alpha' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.alpha' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
     ]);
 
-    foreach ($request->entries as $entry) {
-        $visitor = Visitor::findOrFail($entry['id']);
-        $visitor->update([
-            'first_name' => $entry['first_name'],
-            'middle_name' => $entry['middle_name'],
-            'last_name' => $entry['last_name'],
-            'person_to_visit' => $entry['person_to_visit'],
-            'purpose' => $entry['purpose'],
-            'id_type' => $entry['id_type'],
-            'entry_count' => $entry['entry_count'],
-        ]);
+    if ($validatedData->fails()) {
+        return response()->json(['errors' => $validatedData->errors()], 422);
     }
 
-    return redirect()->back()->with('success', 'Visitor entries updated successfully.');
+    $visitor = Visitor::findOrFail($id);
+    $visitor->update($request->all());
+
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Visitor updated successfully.'
+    ]);
 }
 
 
@@ -204,13 +245,27 @@ public function filterVisitor(Request $request)
 public function store_visit(Request $request)
 {
         $request->validate([
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'person_to_visit' => 'required|string|max:255',
+        'first_name' => 'required|alpha|max:50',
+        'middle_name' => 'nullable|alpha|max:1',
+        'last_name' => 'required|alpha|max:50',
+        'person_to_visit' => 'required|string|max:100',
         'purpose' => 'required|string|max:255',
-        'id_type' => 'required|string|max:255',
-    ]);
+        'id_type' => 'required|string|max:30',
+    ],
+    [
+        'first_name.alpha' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.alpha' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
+    ]
+);
 
     $visitor = new Visitor();
     $visitor->first_name = $request->first_name;
@@ -237,13 +292,38 @@ public function store_visit(Request $request)
         $departmentEmail = $departmentEmails[$visitor->person_to_visit];
 
         Mail::to($departmentEmail)->send(new DepartmentNotification($visitor, $departmentEmail));
-    }
 
+
+    }
 
     return response()->json([
         'status' => 'success'
     ]);
+
 }
+public function validateField(Request $request)
+{
+    $field = $request->input('field');
+    $value = $request->input('value');
+
+    $rules = [
+        'first_name' => 'required|string|max:50',
+        'middle_name' => 'nullable|string|max:1',
+        'last_name' => 'required|string|max:50',
+        'person_to_visit' => 'required|string|max:100',
+        'purpose' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+    ];
+
+    $validator = Validator::make([$field => $value], [$field => $rules[$field]]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    return response()->json(['status' => 'valid']);
+}
+
 
 public function checkout($id)
 {
@@ -267,12 +347,40 @@ public function searchVisitor(Request $request)
 public function updateVisitorSub(Request $request, string $id)
 {
 
-    $visitors = Visitor::findOrFail($id);
+    $validatedData = Validator::make($request->all(), [
+        'first_name' => 'required|alpha|max:50',
+        'middle_name' => 'nullable|alpha|max:1',
+        'last_name' => 'required|alpha|max:50',
+        'person_to_visit' => 'required|string|max:100',
+        'purpose' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+    ],
+    [
+        'first_name.alpha' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.alpha' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
+    ]);
 
-    $visitors->update($request->all());
+    if ($validatedData->fails()) {
+        return response()->json(['errors' => $validatedData->errors()], 422);
+    }
+
+    $visitor = Visitor::findOrFail($id);
+    $visitor->update($request->all());
 
 
-    return redirect()->back()->with('success', 'Visitor updated successfully');
+    return response()->json([
+        'success' => true,
+        'message' => 'Visitor updated successfully.'
+    ]);
 }
 
 public function getVisitorStats($timeframe)

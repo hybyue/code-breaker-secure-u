@@ -24,7 +24,6 @@
                             <option value="{{$passSlip->employee_type}}" selected disabled>{{$passSlip->employee_type}}</option>
                             <option value="Teaching">Teaching</option>
                             <option value="Non-Teaching">Non-Teaching</option>
-                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-2">

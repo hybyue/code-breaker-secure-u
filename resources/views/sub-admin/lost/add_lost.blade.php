@@ -1,13 +1,13 @@
 {{-- add new lost and found --}}
-<div class="modal fade" id="addNewLostModal" tabindex="-1" aria-labelledby="addNewLostModalLabel" aria-hidden="true">
+<div class="modal fade" id="addNewLostModalSub" tabindex="-1" aria-labelledby="addNewLostModalSubLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addNewLostModalLabel">Add New Lost</h5>
+                <h5 class="modal-title" id="addNewLostModalSubLabel">Add New Lost</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addLostForm" action="" method="POST" enctype="multipart/form-data">
+                <form id="addLostFoundForm" action="{{route('sub-admin.store_losts')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -53,13 +53,6 @@
                         <div class="col-md-6 mb-3">
                             <label for="description" class="form-label">Description:</label>
                             <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="isClaimed" class="form-label">Is Claimed:</label>
-                            <select class="form-select" id="isClaimed" name="is_claimed">
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
                         </div>
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn btn-success">Save</button>

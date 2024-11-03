@@ -12,8 +12,10 @@
 <script>
 
 
-        $(document).ready(function () {
+ $(document).ready(function () {
 
+
+            $('.error-message').addClass('text-danger');
 
     $('#addPassSlipModal').on('show.bs.modal', function() {
     // Fetch the next pass number from the server when the modal opens
@@ -36,13 +38,26 @@
 
             new DataTable('#passTable', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ]
         });
 
     $('#addPassForm').on('submit', function(e){
         e.preventDefault();
 
-        $('.errorMessage').html('');
+        // Clear all previous error messages
+        $('.error-message').empty();
+
+        // Show loading spinner and disable submit button
+        let submitButton = $('.add_pass_slip');
+        submitButton.prop('disabled', true);
+        $('#loadingSpinner').show();
+
         let formData = $(this).serialize();
 
         $.ajax({
@@ -52,26 +67,27 @@
             success: function(resp) {
                 if(resp.status == 'success') {
                     $.ajax({
-                    url: "{{ route('pass_slip.next_number') }}",
-                    method: 'GET',
-                    success: function(resp) {
-                        $('#p_no').val(resp.passNumber);
-                    },
-                    error: function() {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to generate the next pass number',
-                        });
-                    }
-                });
-                    $('.modal-backdrop').remove();
-                    $('#addPassSlipModal').modal('hide');
+                        url: "{{ route('pass_slip.next_number') }}",
+                        method: 'GET',
+                        success: function(resp) {
+                            $('#p_no').val(resp.passNumber);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to generate the next pass number',
+                            });
+                        }
+                    });
                     $('#addPassForm')[0].reset();
+                    $('.error-message').empty();
+
                     $('#passTable').load(location.href + ' #passTable');
                     $('#latestPassSlips').load(location.href + ' #latestPassSlips');
                     $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
-                    Swal.fire({
+
+                    const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-right',
                         iconColor: 'white',
@@ -80,18 +96,32 @@
                         },
                         showConfirmButton: false,
                         timer: 2500,
-                        timerProgressBar: true,
+                        timerProgressBar: true
+                    });
+                    Toast.fire({
                         icon: 'success',
-                        title: 'Pass Slip added successfully',
+                        title: 'Pass Slip added successfully'
                     });
                 }
             },
             error: function(err) {
-                $('.errorMessage').html('');
-                let errors = err.responseJSON.errors;
-                $.each(errors, function(index, value) {
-                    $('.errorMessage').append('<span class="text-danger">'+value+'</span>'+'<br>');
-                });
+                // Clear all error messages first
+                $('.error-message').html('');
+
+                if (err.responseJSON && err.responseJSON.errors) {
+                    let errors = err.responseJSON.errors;
+
+                    // Loop through each error and display it
+                    Object.keys(errors).forEach(function(field) {
+                        let errorMessage = errors[field][0]; // Get first error message
+                        $(`#${field}_error`).text(errorMessage); // Set the error message text
+                    });
+                }
+            },
+            complete: function() {
+                // Hide loading spinner and enable submit button
+                $('#loadingSpinner').hide();
+                submitButton.prop('disabled', false);
             }
         });
     });

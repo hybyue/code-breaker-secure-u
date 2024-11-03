@@ -6,6 +6,7 @@
 <script>
     $(document).ready(function() {
 
+        $('.error-message').addClass('text-danger');
         $('#addPassSlipModal').on('show.bs.modal', function() {
     // Fetch the next pass number from the server when the modal opens
     $.ajax({
@@ -25,14 +26,29 @@
     });
 });
 
-        let table = new DataTable('#passTable', {
+         new DataTable('#passTable', {
             responsive: true,
             "ordering": false,
+            // bFilter: false,
+            // bInfo: false,
+            // paging: false,
+            language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+    ]
         });
 
         $('#addPassForm').on('submit', function(e) {
             e.preventDefault();
 
+            $('.error-message').empty();
+
+            // Show loading spinner and disable submit button
+            let submitButton = $('.add_pass_slip');
+            submitButton.prop('disabled', true);
+            $('#loadingSpinner').show();
             let formData = $(this).serialize();
 
             $.ajax({
@@ -57,6 +73,7 @@
                             }
                         });
                         $('#addPassForm')[0].reset();
+                        $('.error-message').empty();
                         $('#passTable').load(location.href + ' #passTable');
                         $('#latestPassSlips').load(location.href + ' #latestPassSlips');
                         $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
@@ -76,13 +93,24 @@
                     }
                 },
                 error: function(err) {
-                    $('.errorMessage').html('');
+                // Clear all error messages first
+                $('.error-message').html('');
+
+                if (err.responseJSON && err.responseJSON.errors) {
                     let errors = err.responseJSON.errors;
-                    $.each(errors, function(index, value) {
-                        $('.errorMessage').append('<span class="text-danger">' +
-                            value + '</span>' + '<br>');
+
+                    // Loop through each error and display it
+                    Object.keys(errors).forEach(function(field) {
+                        let errorMessage = errors[field][0]; // Get first error message
+                        $(`#${field}_error`).text(errorMessage); // Set the error message text
                     });
                 }
+            },
+            complete: function() {
+                // Hide loading spinner and enable submit button
+                $('#loadingSpinner').hide();
+                submitButton.prop('disabled', false);
+            }
             });
         });
 

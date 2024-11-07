@@ -4,17 +4,16 @@ let visitorChart;
 function fetchData(timePeriod) {
     // Update the time label
     const timeLabel = document.getElementById('timeLabel');
-    timeLabel.textContent = `${capitalizeFirstLetter(timePeriod)} Statistics`;
+        timeLabel.textContent = `${capitalizeFirstLetter(timePeriod)} Statistics`;
 
-    // Update button colors
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => {
-        button.classList.remove('bg-blue-700', 'bg-blue-500');
-        button.classList.add('bg-blue-500');
-    });
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.classList.remove('btn-dark');
+            button.classList.add('btn-secondary');
+        });
 
-    document.getElementById(`${timePeriod}Btn`).classList.remove('bg-blue-500');
-    document.getElementById(`${timePeriod}Btn`).classList.add('bg-blue-700');
+        document.getElementById(`${timePeriod}Btn`).classList.remove('btn-secondary');
+        document.getElementById(`${timePeriod}Btn`).classList.add('btn-dark');
 
     // Fetch data based on the time period (weekly, monthly, yearly)
     fetch(`/admin/visitor-data?timePeriod=${timePeriod}`)

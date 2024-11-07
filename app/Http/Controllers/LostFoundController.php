@@ -7,6 +7,7 @@ use App\Models\Lost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class LostFoundController extends Controller
 {
@@ -17,16 +18,39 @@ class LostFoundController extends Controller
 
        public function store_lost(Request $request)
     {
-        $request->validate([
-            'object_type' => 'required|string|max:255',
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'course' => 'required|string|max:255',
-            'object_img' => 'nullable|image|max:3048',
-            'location' => 'required|string|max:255',
-            'description' => 'nullable|string',
+        $validatedData = Validator::make($request->all(),[
+            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'object_type' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
+            'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+            'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+            'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+            'course' => 'nullable|regex:/^[A-Za-z\s]+$/|max:50',
+            'location' => 'required|string|max:100',
+            'description' => 'nullable|string|max:1000',
+        ],
+        [
+            'object_img.image' => 'The object image must be an image file.',
+            'object_img.mimes' => 'Allowed image types: jpeg, png, jpg, gif, svg.',
+            'object_img.max' => 'Image size cannot exceed 2MB.',
+            'object_type.required' => 'Object type is required.',
+            'object_type.regex' => 'Object type should contain only letters and spaces.',
+            'object_type.max' => 'Object type cannot exceed 255 characters.',
+            'first_name.required' => 'First name is required.',
+            'first_name.regex' => 'First name should contain only letters and spaces.',
+            'first_name.max' => 'First name cannot exceed 50 characters.',
+            'middle_name.regex' => 'Middle initial should contain only one letter.',
+            'middle_name.max' => 'Middle initial should be one letter.',
+            'last_name.required' => 'Last name is required.',
+            'last_name.regex' => 'Last name should contain only letters and spaces.',
+            'last_name.max' => 'Last name cannot exceed 50 characters.',
+            'course.regex' => 'Course should contain only letters and spaces.',
+            'course.max' => 'Course cannot exceed 50 characters.',
+            'location.required' => 'Location is required.',
+            'description.max' => 'Description cannot exceed 1000 characters.',
         ]);
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()], 422);
+        }
 
         $data = [
             'user_id' => Auth::id(),
@@ -41,41 +65,60 @@ class LostFoundController extends Controller
             'is_claimed' => 0,
             'is_transferred' => 0,
         ];
-
         if ($request->hasFile('object_img')) {
             $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
             $path = $request->file('object_img')->storeAs('lost_images', $fileName, 'public');
             $data['object_img'] = '/storage/' . $path;
         }
 
-        Lost::create($data);
+        $lost = Lost::create($data);
 
-        // return response()->json([
-        //     'status' => 'success'
-        // ]);
-        return redirect()->route('sub-admin.lost.lost_found')->with('success', 'Lost and Found added successfully');
+        return response()->json([
+            'status' => 'success',
+            'data' => $lost
+        ]);
 
 
     }
-
-    public function updateClaimedSub(Request $request, $id)
-    {
-        $lostItem = Lost::find($id);
-
-        if ($lostItem) {
-            $lostItem->is_claimed = $request->is_claimed;
-            $lostItem->save();
-
-            return response()->json(['success' => true]);
-        } else {
-            return response()->json(['success' => false], 404);
-        }
-    }
-
 
     public function updateLostFound(Request $request, string $id)
     {
         $lost_found = Lost::findOrFail($id);
+
+        $validatedData = Validator::make($request->all(),[
+            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'object_type' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
+            'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+            'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+            'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+            'course' => 'nullable|regex:/^[A-Za-z\s]+$/|max:50',
+            'location' => 'required|string|max:100',
+            'description' => 'nullable|string|max:1000',
+        ],
+        [
+            'object_img.image' => 'The object image must be an image file.',
+            'object_img.mimes' => 'Allowed image types: jpeg, png, jpg, gif, svg.',
+            'object_img.max' => 'Image size cannot exceed 2MB.',
+            'object_type.required' => 'Object type is required.',
+            'object_type.regex' => 'Object type should contain only letters and spaces.',
+            'object_type.max' => 'Object type cannot exceed 255 characters.',
+            'first_name.required' => 'First name is required.',
+            'first_name.regex' => 'First name should contain only letters and spaces.',
+            'first_name.max' => 'First name cannot exceed 50 characters.',
+            'middle_name.regex' => 'Middle initial should contain only one letter.',
+            'middle_name.max' => 'Middle initial should be one letter.',
+            'last_name.required' => 'Last name is required.',
+            'last_name.regex' => 'Last name should contain only letters and spaces.',
+            'last_name.max' => 'Last name cannot exceed 50 characters.',
+            'course.regex' => 'Course should contain only letters and spaces.',
+            'course.max' => 'Course cannot exceed 50 characters.',
+            'location.required' => 'Location is required.',
+            'description.max' => 'Description cannot exceed 1000 characters.',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()], 422);
+        }
 
         if ($request->hasFile('object_img')) {
             if ($lost_found->object_img && file_exists(public_path($lost_found->object_img))) {
@@ -87,36 +130,51 @@ class LostFoundController extends Controller
             $lost_found->object_img = '/storage/' . $path;
         }
 
-        $lost_found->object_type = $request->input('object_type');
-        $lost_found->first_name = $request->input('first_name');
-        $lost_found->middle_name = $request->input('middle_name');
-        $lost_found->last_name = $request->input('last_name');
-        $lost_found->course = $request->input('course');
-        $lost_found->location = $request->input('location');
-        $lost_found->security_staff = $request->input('security_staff');
-        $lost_found->is_claimed = $request->input('is_claimed');
-        $lost_found->description = $request->input('description');
+        $lost_found->update($request->all());
 
 
-        $lost_found->save();
-
-        return redirect()->route('sub-admin.lost.lost_found')->with('success', 'Lost and Found updated successfully');
+        return response()->json([
+            'success' => true,
+            'lost_found' => $lost_found,
+        ]);
     }
 
 
     public function filterLostFounds(Request $request)
     {
+        if ($request->filled('start_date') || $request->filled('end_date')) {
+            session(['lost_found_filter' => [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]]);
+        }
+
         $query = Lost::query();
         $user = Auth::user();
 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date)
-                  ->whereDate('created_at', '<=', $request->end_date);
+        $filterData = session('lost_found_filter', [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]);
+
+        if (!empty($filterData['start_date'])) {
+            $query->whereDate('created_at', '>=', $filterData['start_date']);
         }
+
+        if (!empty($filterData['end_date'])) {
+            $query->whereDate('created_at', '<=', $filterData['end_date']);
+        }
+
 
         $lost_found = $query->orderBy('created_at', 'desc')->get();
 
         return view('sub-admin.lost.lost_found', compact('lost_found', 'request', 'user'));
+    }
+
+    public function clearFilter()
+    {
+        session()->forget('lost_found_filter');
+        return redirect()->route('sub-admin.lost.lost_found');
     }
 
     public function updateClaimed(Request $request, $id)
@@ -133,25 +191,61 @@ class LostFoundController extends Controller
     }
 }
 
+public function updateTransfer(Request $request, $id)
+{
+    $lostItem = Lost::find($id);
 
-        public function lost_found_admin()
+    if ($lostItem) {
+        $lostItem->is_transferred = $request->is_transferred;
+        $lostItem->save();
+
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false], 404);
+    }
+}
+
+
+public function lost_found_admin(Request $request)
         {
-            $lost_found = Lost::latest()->get();
-            return view('admin.lost.lost_found_admin', compact('lost_found'));
+            return $this->filterLostFoundAdmin($request);
         }
 
        public function store_lost_admin(Request $request)
     {
-        $request->validate([
-            'object_type' => 'required|string|max:255',
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'course' => 'required|string|max:255',
-            'object_img' => 'nullable|image|max:3048',
-            'location' => 'required|string|max:255',
-            'description' => 'nullable|string',
+        $validatedData = Validator::make($request->all(),[
+            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'object_type' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
+            'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+            'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+            'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+            'course' => 'nullable|regex:/^[A-Za-z\s]+$/|max:50',
+            'location' => 'required|string|max:100',
+            'description' => 'nullable|string|max:1000',
+        ],
+        [
+            'object_img.image' => 'The object image must be an image file.',
+            'object_img.mimes' => 'Allowed image types: jpeg, png, jpg, gif, svg.',
+            'object_img.max' => 'Image size cannot exceed 2MB.',
+            'object_type.required' => 'Object type is required.',
+            'object_type.regex' => 'Object type should contain only letters and spaces.',
+            'object_type.max' => 'Object type cannot exceed 255 characters.',
+            'first_name.required' => 'First name is required.',
+            'first_name.regex' => 'First name should contain only letters and spaces.',
+            'first_name.max' => 'First name cannot exceed 50 characters.',
+            'middle_name.regex' => 'Middle initial should contain only one letter.',
+            'middle_name.max' => 'Middle initial should be one letter.',
+            'last_name.required' => 'Last name is required.',
+            'last_name.regex' => 'Last name should contain only letters and spaces.',
+            'last_name.max' => 'Last name cannot exceed 50 characters.',
+            'course.regex' => 'Course should contain only letters and spaces.',
+            'course.max' => 'Course cannot exceed 50 characters.',
+            'location.required' => 'Location is required.',
+            'description.max' => 'Description cannot exceed 1000 characters.',
         ]);
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()], 422);
+        }
 
         $data = [
             'user_id' => Auth::id(),
@@ -222,15 +316,37 @@ class LostFoundController extends Controller
 
         public function filterLostFoundAdmin(Request $request)
     {
-        $query = Lost::query();
+        if ($request->filled('start_date') || $request->filled('end_date')) {
+            session(['lost_found_admin_filter' => [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]]);
+        }
 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date)
-                  ->whereDate('created_at', '<=', $request->end_date);
+        $query = Lost::query();
+        $user = Auth::user();
+
+        $filterData = session('lost_found_admin_filter', [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]);
+
+        if (!empty($filterData['start_date'])) {
+            $query->whereDate('created_at', '>=', $filterData['start_date']);
+        }
+
+        if (!empty($filterData['end_date'])) {
+            $query->whereDate('created_at', '<=', $filterData['end_date']);
         }
 
         $lost_found = $query->orderBy('created_at', 'desc')->get();
 
-        return view('admin.lost.lost_found_admin', compact('lost_found'));
+        return view('admin.lost.lost_found_admin', compact('lost_found', 'request', 'user'));
+    }
+
+    public function clearFilterAdmin()
+    {
+        session()->forget('lost_found_admin_filter');
+        return redirect()->route('admin.lost.lost_found_admin');
     }
 }

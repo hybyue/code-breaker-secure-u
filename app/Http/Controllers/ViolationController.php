@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 
 class ViolationController extends Controller
 {
@@ -18,26 +19,50 @@ class ViolationController extends Controller
     $user = Auth::user();
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('date', '>=', $request->start_date)
-              ->whereDate('date', '<=', $request->end_date);
+        // Store filter values in session
+        session(['violation_admin_filter' => [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
+        ]]);
+
+    }
+
+    $filterData = session('violation_admin_filter', [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]);
+
+    if (!empty($filterData['start_date'])) {
+        $query->whereDate('date', '>=', $filterData['start_date']);
+    }
+
+    if (!empty($filterData['end_date'])) {
+        $query->whereDate('date', '<=', $filterData['end_date']);
     }
 
     $violations = Violation::select('violations.*')
         ->join(DB::raw('(SELECT MAX(id) as id FROM violations GROUP BY student_no) as latest'), 'violations.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('violations.date', '>=', $request->start_date)
-                         ->whereDate('violations.date', '<=', $request->end_date);
+        ->where(function ($subQuery) use ($filterData) {
+            if (!empty($filterData['start_date'])) {
+                $subQuery->whereDate('violations.date', '>=', $filterData['start_date']);
+            }
+            if (!empty($filterData['end_date'])) {
+                $subQuery->whereDate('violations.date', '<=', $filterData['end_date']);
             }
         })
         ->orderBy('violations.created_at', 'desc')->get();
 
     $allViolations = $query->get()->groupBy('student_no');
 
+
     return view('admin.violation.violation', compact('violations', 'allViolations', 'request', 'user'));
 }
 
-
+public function clearViolationFilterAdmin()
+{
+    session()->forget('violation_admin_filter');
+    return redirect()->route('admin.violation.violation');
+}
 
 public function store_violation(Request $request)
 {
@@ -47,8 +72,7 @@ public function store_violation(Request $request)
         'middle_initial' => 'nullable|string|max:255',
         'last_name' => 'required|string|max:255',
         'course' => 'required|string|max:255',
-        'violation_type' => 'required|string|max:255',
-        'date' => 'required|date',
+        'violation_type' => 'required|string|max:100',
     ]);
 
     $data = [
@@ -59,7 +83,7 @@ public function store_violation(Request $request)
         'last_name' => $request->last_name,
         'course' => $request->course,
         'violation_type' => $request->violation_type,
-        'date' => $request->date,
+        'date' => now(),
     ];
 
 
@@ -85,10 +109,23 @@ public function update_violationAdmin(Request $request, string $id)
 
     $violations = Violation::findOrFail($id);
 
+    $validatedData = Validator::make($request->all(),[
+        'violation_type' => 'required|string|max:100',
+        'date' => 'required|date',
+    ],
+    [
+        ''
+    ]);
+
+    if ($validatedData->fails()) {
+        return response()->json(['errors' => $validatedData->errors()], 422);
+    }
+
     $violations->update($request->all());
 
-
-    return redirect()->back()->with('success', 'Violation updated successfully');
+    return response()->json([
+        'success' => true,
+    ]);
 }
 
 
@@ -103,18 +140,36 @@ public function filterViolation(Request $request)
     $user = Auth::user();
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+        // Store filter values in session
+        session(['violation_filter' => [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
+        ]]);
+
+    }
+
+    $filterData = session('violation_filter', [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]);
+
+    if (!empty($filterData['start_date'])) {
+        $query->whereDate('date', '>=', $filterData['start_date']);
+    }
+
+    if (!empty($filterData['end_date'])) {
+        $query->whereDate('date', '<=', $filterData['end_date']);
     }
 
 
-    // Select latest violation per student
     $violations = Violation::select('violations.*')
         ->join(DB::raw('(SELECT MAX(id) as id FROM violations GROUP BY student_no) as latest'), 'violations.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('violations.created_at', '>=', $request->start_date)
-                         ->whereDate('violations.created_at', '<=', $request->end_date);
+        ->where(function ($subQuery) use ($filterData) {
+            if (!empty($filterData['start_date'])) {
+                $subQuery->whereDate('violations.date', '>=', $filterData['start_date']);
+            }
+            if (!empty($filterData['end_date'])) {
+                $subQuery->whereDate('violations.date', '<=', $filterData['end_date']);
             }
         })
         ->latest()
@@ -125,6 +180,11 @@ public function filterViolation(Request $request)
     return view('sub-admin.violation.violation', compact('violations', 'allViolations', 'user', 'request'));
 }
 
+public function clearViolationFilter()
+{
+    session()->forget('violation_filter');
+    return redirect()->route('sub-admin.violation.violation');
+}
 
 public function store_violate(Request $request)
 {
@@ -134,8 +194,7 @@ public function store_violate(Request $request)
         'middle_initial' => 'nullable|string|max:255',
         'last_name' => 'required|string|max:255',
         'course' => 'required|string|max:255',
-        'violation_type' => 'required|string|max:255',
-        'date' => 'required|date',
+        'violation_type' => 'required|string|max:100',
     ]);
 
     $data = [
@@ -146,8 +205,9 @@ public function store_violate(Request $request)
         'last_name' => $request->last_name,
         'course' => $request->course,
         'violation_type' => $request->violation_type,
-        'date' => $request->date,
+        'date' => now(),
     ];
+
 
 
 
@@ -172,6 +232,31 @@ public function update_violation(Request $request, string $id)
 }
 
 public function searchStudent(Request $request)
+    {
+        try {
+            $query = AllStudent::query();
+
+            // Check if search term is ID or name
+            if ($request->filled('student_no')) {
+                $searchTerm = $request->student_no;
+                $query->where('student_no', $searchTerm)
+                      ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+            }
+
+            $students = $query->limit(5)->get();
+
+            if ($students->count() > 0) {
+                return response()->json(['success' => true, 'data' => $students]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function searchStudentSub(Request $request)
     {
         try {
             $query = AllStudent::query();

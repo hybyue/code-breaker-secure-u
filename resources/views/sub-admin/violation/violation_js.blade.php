@@ -12,13 +12,33 @@
 <script>
     $(document).ready(function () {
 
+        // let lastOpenedViewModalId = null;
+//TODO: awit gagawin ko na to next time
+// $('.edit-button').on('click', function() {
+//     var id = $(this).data('id');
+//     lastOpenedViewModalId = id; // Store the current view modal's ID
+//     $('#viewEntries-' + id).addClass('view-modal');
+//     $('#updateViolationModal-' + id).addClass('edit-modal');
+// });
+
+// $('.edit-modal').on('hidden.bs.modal', function () {
+//     if (lastOpenedViewModalId) {
+//         $('#viewEntries-' + lastOpenedViewModalId).modal('show');
+//     }
+//     $('.view-modal').removeClass('view-modal');
+// });
+
+// // Remove backdrop on both modals close
+// $('.modal').on('hidden.bs.modal', function () {
+//     if (!$('.modal.show').length) {
+//         $('body').removeClass('modal-open');
+//         $('.modal-backdrop').remove();
+//     }
+// });
+
         new DataTable('#violationTable', {
             responsive: true,
             ordering: false,
-            dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
-        buttons: [
-            'copy', 'csv', 'excel', 'print'
-        ],
         language: {
                 lengthMenu: '_MENU_ entries'
             },
@@ -32,6 +52,10 @@
         e.preventDefault();
 
         $('.errorMessage').html('');
+        let submitButton = $('.add_violation');
+            submitButton.prop('disabled', true);
+            $('#loadingSpinner').show();
+
         let formData = $(this).serialize();
 
         $.ajax({
@@ -43,6 +67,9 @@
                     $('#violationModal').modal('hide');
                     $('#violationForms')[0].reset();
                     $('#violationTable').load(location.href + ' #violationTable');
+                    $('#updateViolationDynamic').load(location.href + ' #updateViolationDynamic');
+                    $('#showViolationDynamic').load(location.href + ' #showViolationDynamic');
+
                     Swal.fire({
                         toast: true,
                         position: 'top-right',
@@ -66,20 +93,22 @@
                 $.each(errors, function(index, value) {
                     $('.errorMessage').append('<span class="text-danger">'+value+'</span>'+'<br>');
                 });
-            }
+            },
+            complete: function () {
+                    $('#loadingSpinner').hide();
+                    submitButton.prop('disabled', false);
+                }
         })
     });
-});
 
-
-async function searchStudent() {
+    async function searchStudent() {
         const studentNo = $('#student_no').val();
         const formData = new FormData();
         formData.append('student_no', studentNo);
 
         try {
             const response = await $.ajax({
-                url: '{{ route('sub-admin.search_student')}}',
+                url: '{{ route('sub-admin.search_student') }}',
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -98,11 +127,10 @@ async function searchStudent() {
                 students.forEach(student => {
                     const studentInfo = $('<a></a>')
                         .attr('href', '#')
-                        .addClass('btn btn-primary')
+                        .addClass('btn btn-primary w-100 text-start')
                         .text(`Name: ${student.first_name} ${student.last_name}, Course: ${student.course}`)
                         .on('click', () => populateForm(student));
                     resultsDiv.append(studentInfo);
-
                 });
             } else {
                 resultsDiv.text('No results found.');
@@ -119,8 +147,8 @@ async function searchStudent() {
         $('#middle_initial').val(student.middle_initial || '');
         $('#course').val(student.course);
 
-        // Clear the search results
-        $('#student_results').empty();
+         // Clear the search results
+         $('#student_results').empty();
     }
 
     // Debounce the searchStudent function
@@ -136,7 +164,8 @@ async function searchStudent() {
 
     // Attach the debounced function to the input event
     $('#student_no').on('input', debouncedSearchStudent);
+});
+
+
 
    </script>
-
-

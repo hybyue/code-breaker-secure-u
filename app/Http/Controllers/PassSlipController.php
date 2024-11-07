@@ -8,10 +8,14 @@ use App\Models\Lost;
 use App\Models\PassSlip;
 use App\Models\Violation;
 use App\Models\Visitor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+
 class PassSlipController extends Controller
 {
     public function pass_slip(Request $request)
@@ -21,56 +25,83 @@ class PassSlipController extends Controller
 
     public function filterPassSlip(Request $request)
 {
-    $query = PassSlip::query();
-    $user = Auth::user();
+    if ($request->filled('start_date') || $request->filled('end_date') ||
+    $request->filled('employee_type') || $request->filled('violation_filter')) {
+    session(['pass_slip_filter' => [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        'employee_type' => $request->employee_type,
+        'violation_filter' => $request->violation_filter
+    ]]);
+}
 
-    if ($request->filled('start_date')) {
-        $query->whereDate('date', '>=', $request->start_date);
+$query = PassSlip::query();
+$user = Auth::user();
+
+// Get filter data from session or request
+$filterData = session('pass_slip_filter', [
+    'start_date' => $request->start_date,
+    'end_date' => $request->end_date,
+    'employee_type' => $request->employee_type,
+    'violation_filter' => $request->violation_filter
+]);
+
+// Apply filters
+if (!empty($filterData['start_date'])) {
+    $query->whereDate('date', '>=', $filterData['start_date']);
+}
+
+if (!empty($filterData['end_date'])) {
+    $query->whereDate('date', '<=', $filterData['end_date']);
+}
+
+if (!empty($filterData['employee_type'])) {
+    $query->where('employee_type', $filterData['employee_type']);
+}
+
+if (!empty($filterData['violation_filter'])) {
+    if ($filterData['violation_filter'] == '1') {
+        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+    } elseif ($filterData['violation_filter'] == '0') {
+        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
     }
+}
 
-    if ($request->filled('end_date')) {
-        $query->whereDate('date', '<=', $request->end_date);
-    }
-
-    if ($request->filled('employee_type')) {
-        $query->where('employee_type', $request->employee_type);
-    }
-
-    if ($request->filled('violation_filter')) {
-        if ($request->violation_filter == '1') {
-            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-        } elseif ($request->violation_filter == '0') {
-            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+// Update to use $filterData instead of $request
+$latestPassSlips = PassSlip::select('pass_slips.*')
+    ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date, department, designation) as latest'),
+        'pass_slips.id', '=', 'latest.id')
+    ->where(function ($subQuery) use ($filterData) {
+        if (!empty($filterData['start_date'])) {
+            $subQuery->whereDate('pass_slips.date', '>=', $filterData['start_date']);
         }
-    }
+        if (!empty($filterData['end_date'])) {
+            $subQuery->whereDate('pass_slips.date', '<=', $filterData['end_date']);
+        }
+        if (!empty($filterData['employee_type'])) {
+            $subQuery->where('pass_slips.employee_type', $filterData['employee_type']);
+        }
+        if (!empty($filterData['violation_filter'])) {
+            if ($filterData['violation_filter'] == '1') {
+                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+            } elseif ($filterData['violation_filter'] == '0') {
+                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+            }
+        }
+    })
+    ->latest()
+    ->get();
 
-    $latestPassSlips = PassSlip::select('pass_slips.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date')) {
-                $subQuery->whereDate('pass_slips.date', '>=', $request->start_date);
-            }
-            if ($request->filled('end_date')) {
-                $subQuery->whereDate('pass_slips.date', '<=', $request->end_date);
-            }
-            if ($request->filled('employee_type')) {
-                $subQuery->where('pass_slips.employee_type', $request->employee_type);
-            }
-            if ($request->filled('violation_filter')) {
-                if ($request->violation_filter == '1') {
-                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-                } elseif ($request->violation_filter == '0') {
-                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-                }
-            }
-        })
-        ->latest()
-        ->paginate()
-        ->appends($request->all());
+$allPassSlips = $query->get();
 
-    $allPassSlips = $query->get();
+return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips', 'request', 'user', 'filterData'));
+}
 
-    return view('sub-admin.pass_slip.pass_slip', compact('latestPassSlips', 'allPassSlips', 'request', 'user'));
+
+public function clearPassSlipFilter()
+{
+    session()->forget('pass_slip_filter');
+    return redirect()->route('sub-admin.pass_slip.pass_slip');
 }
 
     public function generateNextPassSub()
@@ -155,60 +186,95 @@ private function generatePassNoSub()
 
     public function updatePassSlip(Request $request, string $id)
     {
-        $passSlip = PassSlip::findOrFail($id);
+        $validatedData = Validator::make($request->all(), [
+            'destination' => 'required|string|max:100',
+            'employee_type' => 'required|string|max:255',
+            'purpose' => 'required|string|max:255',
+            'time_out' => 'required',
+            'time_in' => 'required',
+            'check_business' => 'required|string',
+            'driver_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+        ], [
+            'destination.max' => 'Destination must be less than 100 characters.',
+            'check_business.required' => 'Check Business is required.',
+            'check_business.string' => 'Check Business must be a string.',
+            'purpose.max' => 'Purpose must be less than 255 characters.',
+            'driver_name.regex' => 'Driver Name must contain letters and spaces only, with no numbers or special characters.',
+            'driver_name.max' => 'Driver Name must be less than 100 characters.',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()], 422);
+        }
+
+        $passSlips = PassSlip::findOrFail($id);
+
+        // Format time_in and time_out to 12-hour format with AM/PM
+        $timeIn = Carbon::parse($request->input('time_in'))->format('H:i:s');
+        $timeOut = Carbon::parse($request->input('time_out'))->format('H:i:s');
+
+        $passSlips->time_in = $timeIn;
+        $passSlips->time_out = $timeOut;
+
+        // Calculate late duration using the calculateLateMinutes function
+        $lateDuration = $this->calculateLateMinutes($timeOut, $timeIn);
+        $passSlips->late_minutes = $lateDuration['total_minutes'];
+        $passSlips->is_exceeded = $lateDuration['total_minutes'] > 0;
+
+        // Calculate if exceeded 3 hours
+        $timeDifference = Carbon::parse($timeOut)->diffInHours(Carbon::parse($timeIn));
+        $isExceeded = $timeDifference >= 3;
+
+        // Update all fields including both late_minutes and exceeded status
+        $passSlips->update(array_merge(
+            $request->all(),
+            [
+                'time_in' => $timeIn,
+                'time_out' => $timeOut,
+                'late_minutes' => $lateDuration['total_minutes'],
+                'is_exceeded' => $isExceeded || $lateDuration['total_minutes'] > 0 // Exceeded if either condition is true
+            ]
+        ));
+
+        $message = 'Pass slip updated successfully';
+        if ($isExceeded) {
+            $message .= ". Exceeded 3 hours";
+            if ($lateDuration['total_minutes'] > 0) {
+                $message .= " and was " . $lateDuration['formatted'] . " late";
+            }
+        } elseif ($lateDuration['total_minutes'] > 0) {
+            $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+        }
+        $message .= ".";
 
 
-
-        $passSlip->time_in = $request->input('time_in') ?? now()->format('H:i:s');
-        $passSlip->time_in_by = Auth::user()->id;
-
-        $timeIn = \Carbon\Carbon::parse($passSlip->time_in);
-        $timeOut = \Carbon\Carbon::parse($passSlip->time_out);
-
-        $timeDifference = $timeOut->diffInHours($timeIn);
-
-        $passSlip->is_exceeded = $timeDifference >= 3;
-
-        $passSlip->p_no = $request->input('p_no');
-        $passSlip->first_name = $request->input('first_name');
-        $passSlip->middle_name = $request->input('middle_name');
-        $passSlip->last_name = $request->input('last_name');
-        $passSlip->department = $request->input('department');
-        $passSlip->designation = $request->input('designation');
-        $passSlip->destination = $request->input('destination');
-        $passSlip->employee_type = $request->input('employee_type');
-        $passSlip->purpose = $request->input('purpose');
-        $passSlip->time_out = $request->input('time_out');
-        $passSlip->check_business = $request->input('check_business');
-        $passSlip->driver_name = $request->input('driver_name');
-
-        $passSlip->save();
-
-        return redirect()->route('sub-admin.pass_slip.pass_slip')
-            ->with('success', 'Pass Slip updated successfully');
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
 
-public function checkoutPassSlip($id)
-{
-    $pass_slip = PassSlip::findOrFail($id);
 
-    $currentTime = now();
-    $pass_slip->time_in = $currentTime->format('H:i:s');
-    $pass_slip->time_in_by = Auth::user()->id;
+// public function checkoutPassSlip($id)
+// {
+//     $pass_slip = PassSlip::findOrFail($id);
 
-    $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
-    $timeDifference = $timeOut->diffInHours($currentTime);
+//     $currentTime = now();
+//     $pass_slip->time_in = $currentTime->format('H:i:s');
+//     $pass_slip->time_in_by = Auth::user()->id;
 
-    if ($timeDifference >= 3) {
-        $pass_slip->is_exceeded = true;
-    }
+//     $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
+//     $timeDifference = $timeOut->diffInHours($currentTime);
 
-    // Save the pass slip record
-    $pass_slip->save();
+//     if ($timeDifference >= 3) {
+//         $pass_slip->is_exceeded = true;
+//     }
 
-    return redirect()->route('sub-admin.pass_slip.pass_slip')->with('success', 'Time In recorded successfully.');
-}
+//     // Save the pass slip record
+//     $pass_slip->save();
+
+//     return redirect()->route('sub-admin.pass_slip.pass_slip')->with('success', 'Time In recorded successfully.');
+// }
 
 public function pass_slip_admin(Request $request)
 {
@@ -217,58 +283,83 @@ public function pass_slip_admin(Request $request)
 
 public function filterPassSlipAdmin(Request $request)
 {
-    $query = PassSlip::query();
-    $user = Auth::user();
+    if ($request->filled('start_date') || $request->filled('end_date') ||
+    $request->filled('employee_type') || $request->filled('violation_filter')) {
+    session(['pass_slip_filter' => [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        'employee_type' => $request->employee_type,
+        'violation_filter' => $request->violation_filter
+    ]]);
+}
 
+$query = PassSlip::query();
+$user = Auth::user();
 
-    if ($request->filled('start_date')) {
-        $query->whereDate('date', '>=', $request->start_date);
+// Get filter data from session or request
+$filterData = session('pass_slip_filter', [
+    'start_date' => $request->start_date,
+    'end_date' => $request->end_date,
+    'employee_type' => $request->employee_type,
+    'violation_filter' => $request->violation_filter
+]);
+
+// Apply filters
+if (!empty($filterData['start_date'])) {
+    $query->whereDate('date', '>=', $filterData['start_date']);
+}
+
+if (!empty($filterData['end_date'])) {
+    $query->whereDate('date', '<=', $filterData['end_date']);
+}
+
+if (!empty($filterData['employee_type'])) {
+    $query->where('employee_type', $filterData['employee_type']);
+}
+
+if (!empty($filterData['violation_filter'])) {
+    if ($filterData['violation_filter'] == '1') {
+        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+    } elseif ($filterData['violation_filter'] == '0') {
+        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
     }
+}
 
-    if ($request->filled('end_date')) {
-        $query->whereDate('date', '<=', $request->end_date);
-    }
-
-    if ($request->filled('employee_type')) {
-        $query->where('employee_type', $request->employee_type);
-    }
-
-    if ($request->filled('violation_filter')) {
-        if ($request->violation_filter == '1') {
-            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-        } elseif ($request->violation_filter == '0') {
-            $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+// Update to use $filterData instead of $request
+$latestPassSlips = PassSlip::select('pass_slips.*')
+    ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date, department, designation) as latest'),
+        'pass_slips.id', '=', 'latest.id')
+    ->where(function ($subQuery) use ($filterData) {
+        if (!empty($filterData['start_date'])) {
+            $subQuery->whereDate('pass_slips.date', '>=', $filterData['start_date']);
         }
-    }
+        if (!empty($filterData['end_date'])) {
+            $subQuery->whereDate('pass_slips.date', '<=', $filterData['end_date']);
+        }
+        if (!empty($filterData['employee_type'])) {
+            $subQuery->where('pass_slips.employee_type', $filterData['employee_type']);
+        }
+        if (!empty($filterData['violation_filter'])) {
+            if ($filterData['violation_filter'] == '1') {
+                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+            } elseif ($filterData['violation_filter'] == '0') {
+                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+            }
+        }
+    })
+    ->latest()
+    ->get();
 
-    $latestPassSlips = PassSlip::select('pass_slips.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date) as latest'), 'pass_slips.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date')) {
-                $subQuery->whereDate('pass_slips.date', '>=', $request->start_date);
-            }
-            if ($request->filled('end_date')) {
-                $subQuery->whereDate('pass_slips.date', '<=', $request->end_date);
-            }
-            if ($request->filled('employee_type')) {
-                $subQuery->where('pass_slips.employee_type', $request->employee_type);
-            }
-            if ($request->filled('violation_filter')) {
-                if ($request->violation_filter == '1') {
-                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-                } elseif ($request->violation_filter == '0') {
-                    $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-                }
-            }
-        })
-        ->latest()
-        ->paginate()
-        ->appends($request->all());
+$allPassSlips = $query->get();
 
-    // Fetch all pass slips for viewing older entries in modal
-    $allPassSlips = $query->get();
+    return view('admin.pass_slip.pass_slip_admin', compact('latestPassSlips', 'allPassSlips', 'user', 'filterData'));
+}
 
-    return view('admin.pass_slip.pass_slip_admin', compact('latestPassSlips', 'allPassSlips', 'user', 'request'));
+// Add a method to clear filters
+public function clearPassSlipFilterAd()
+{
+    session()->forget('pass_slip_filter');
+    return redirect()->route('admin.pass_slip.pass_slip_admin');
 }
 
 public function generateNextPassNumber()
@@ -351,31 +442,91 @@ private function generatePassNumber()
         ]);
     }
 
-    public function checkoutAdmin($id)
-    {
-        $pass_slip = PassSlip::findOrFail($id);
-        $currentTime = now();
-        $pass_slip->time_in = $currentTime->format('H:i:s');
-        $pass_slip->time_in_by = Auth::user()->id;
+    // public function checkoutAdmin($id)
+    // {
+    //     $pass_slip = PassSlip::findOrFail($id);
+    //     $currentTime = now();
+    //     $pass_slip->time_in = $currentTime->format('H:i:s');
+    //     $pass_slip->time_in_by = Auth::user()->id;
 
-        $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
-        $timeDifference = $timeOut->diffInHours($currentTime);
+    //     $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
+    //     $timeDifference = $timeOut->diffInHours($currentTime);
 
-        if ($timeDifference >= 3) {
-            $pass_slip->is_exceeded = true;
-        }
-        $pass_slip->save();
+    //     if ($timeDifference >= 3) {
+    //         $pass_slip->is_exceeded = true;
+    //     }
+    //     $pass_slip->save();
 
-        return redirect()->route('admin.pass_slip.pass_slip_admin')->with('success', 'Time In recorded successfully.');
-    }
+    //     return redirect()->route('admin.pass_slip.pass_slip_admin')->with('success', 'Time In recorded successfully.');
+    // }
 
     public function updatePassSlipAdmin(Request $request, string $id)
     {
-        $passSlips = PassSlip::findOrFail($id);
+        try {
+            $validatedData = Validator::make($request->all(), [
+                'destination' => 'required|string|max:100',
+                'employee_type' => 'required|string|max:255',
+                'purpose' => 'required|string|max:255',
+                'time_out' => 'required',
+                'time_in' => 'required',
+                'check_business' => 'required|string',
+                'driver_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+            ]);
 
-        $passSlips->update($request->all());
+            if ($validatedData->fails()) {
+                return response()->json(['errors' => $validatedData->errors()], 422);
+            }
 
-        return redirect()->route('admin.pass_slip.pass_slip_admin')->with('success', 'Pass Slip updated successfully');
+            $passSlips = PassSlip::findOrFail($id);
+
+            // Convert 12-hour format to 24-hour format with seconds
+            $timeIn = Carbon::parse($request->input('time_in'))
+                ->format('H:i:s'); // This will convert to 24-hour format with seconds
+            $timeOut = Carbon::parse($request->input('time_out'))
+                ->format('H:i:s');
+
+            // Calculate late duration using the calculateLateMinutes function
+            $lateDuration = $this->calculateLateMinutes($timeOut, $timeIn);
+            $passSlips->late_minutes = $lateDuration['total_minutes'];
+
+            // Calculate if exceeded 3 hours
+            $timeDifference = Carbon::parse($timeOut)->diffInHours(Carbon::parse($timeIn));
+            $isExceeded = $timeDifference >= 3;
+
+            // Update all fields including both late_minutes and exceeded status
+            $passSlips->update(array_merge(
+                $request->except(['time_in', 'time_out']), // Exclude times from request data
+                [
+                    'time_in' => $timeIn,
+                    'time_out' => $timeOut,
+                    'late_minutes' => $lateDuration['total_minutes'],
+                    'is_exceeded' => $isExceeded || $lateDuration['total_minutes'] > 0 // Exceeded if either condition is true
+                ]
+            ));
+
+            $message = 'Pass slip updated successfully';
+            if ($isExceeded) {
+                $message .= ". Exceeded 3 hours";
+                if ($lateDuration['total_minutes'] > 0) {
+                    $message .= " and was " . $lateDuration['formatted'] . " late";
+                }
+            } elseif ($lateDuration['total_minutes'] > 0) {
+                $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+            }
+            $message .= ".";
+
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Update Pass Slip Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the pass slip: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -521,5 +672,118 @@ private function generatePassNumber()
         'lost' => $lostFoundCount,
         'violation' => $violationCount
     ]);
+}
+
+public function calculateLateMinutes($timeOut, $timeIn)
+{
+    // Convert strings to Carbon instances if they aren't already
+    $timeOut = Carbon::parse($timeOut);
+    $timeIn = Carbon::parse($timeIn);
+
+    // Calculate the time difference in minutes
+    $diffInMinutes = $timeOut->diffInMinutes($timeIn);
+
+    // If the difference is more than 3 hours (180 minutes), calculate how many minutes over
+    if ($diffInMinutes > 180) {
+        $lateMinutes = $diffInMinutes - 180;
+
+        // Convert to hours and minutes if more than 60 minutes
+        if ($lateMinutes >= 60) {
+            $hours = floor($lateMinutes / 60);
+            $minutes = $lateMinutes % 60;
+            return [
+                'total_minutes' => $lateMinutes,
+                'formatted' => $hours . ' hr ' . ($minutes > 0 ? $minutes . ' min' : '')
+            ];
+        }
+
+        return [
+            'total_minutes' => $lateMinutes,
+            'formatted' => $lateMinutes . ' min'
+        ];
+    }
+
+    // If not over 3 hours, return 0
+    return [
+        'total_minutes' => 0,
+        'formatted' => '0'
+    ];
+}
+
+// Update the checkout methods to use the new format
+public function checkoutAdmin($id)
+{
+    $pass_slip = PassSlip::findOrFail($id);
+    $currentTime = now();
+
+    $pass_slip->time_in = $currentTime->format('H:i:s');
+    $pass_slip->time_in_by = Auth::user()->id;
+
+    // Calculate late duration using the calculateLateMinutes function
+    $lateDuration = $this->calculateLateMinutes($pass_slip->time_out, $currentTime);
+    $pass_slip->late_minutes = $lateDuration['total_minutes'];
+    $pass_slip->is_exceeded = $lateDuration['total_minutes'] > 0;
+
+    // Calculate if exceeded 3 hours
+    $timeDifference = Carbon::parse($pass_slip->time_out)->diffInHours($currentTime);
+    $isExceeded = $timeDifference >= 3;
+
+    // Set is_exceeded if either condition is true
+    $pass_slip->is_exceeded = $isExceeded || $lateDuration['total_minutes'] > 0;
+
+    // Save the pass slip record
+    $pass_slip->save();
+
+    $message = 'Time In recorded successfully';
+    if ($isExceeded) {
+        $message .= ". Exceeded 3 hours";
+        if ($lateDuration['total_minutes'] > 0) {
+            $message .= " and was " . $lateDuration['formatted'] . " late";
+        }
+    } elseif ($lateDuration['total_minutes'] > 0) {
+        $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+    }
+    $message .= ".";
+
+    return redirect()->route('admin.pass_slip.pass_slip_admin')
+        ->with('success', $message);
+}
+
+public function checkoutPassSlip($id)
+{
+    $pass_slip = PassSlip::findOrFail($id);
+    $currentTime = now();
+
+    $pass_slip->time_in = $currentTime->format('H:i:s');
+    $pass_slip->time_in_by = Auth::user()->id;
+
+    // Calculate late duration using the calculateLateMinutes function
+    $lateDuration = $this->calculateLateMinutes($pass_slip->time_out, $currentTime);
+    $pass_slip->late_minutes = $lateDuration['total_minutes'];
+    $pass_slip->is_exceeded = $lateDuration['total_minutes'] > 0;
+
+    // Calculate if exceeded 3 hours
+    $timeDifference = Carbon::parse($pass_slip->time_out)->diffInHours($currentTime);
+    $isExceeded = $timeDifference >= 3;
+
+    // Set is_exceeded if either condition is true
+    $pass_slip->is_exceeded = $isExceeded || $lateDuration['total_minutes'] > 0;
+
+    // Save the pass slip record
+    $pass_slip->save();
+
+    $message = 'Time In recorded successfully';
+    if ($isExceeded) {
+        $message .= ". Exceeded 3 hours";
+        if ($lateDuration['total_minutes'] > 0) {
+            $message .= " and was " . $lateDuration['formatted'] . " late";
+        }
+    } elseif ($lateDuration['total_minutes'] > 0) {
+        $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+    }
+    $message .= ".";
+
+    return redirect()->route('sub-admin.pass_slip.pass_slip')
+        ->with('success', $message);
 }
 }

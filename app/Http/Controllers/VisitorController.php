@@ -24,29 +24,51 @@ class VisitorController extends Controller
 
 public function filterVisitorAdmin(Request $request)
 {
-    $query = Visitor::select('visitors.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id')
-        ->latest();
+    if ($request->filled('start_date') || $request->filled('end_date')) {
+        session(['visitor_filter_admin' => [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]]);
+    }
+        $query = Visitor::query();
+        $user = Auth::user();
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('visitors.created_at', '>=', $request->start_date)
-              ->whereDate('visitors.created_at', '<=', $request->end_date);
+    $filterData = session('visitor_filter_admin', [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]);
+
+    if (!empty($filterData['start_date'])) {
+        $query->whereDate('date', '>=', $filterData['start_date']);
     }
 
-    $latestVisitors = $query->get();
-
-    $allVisitors = Visitor::query();
-
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $allVisitors->whereDate('created_at', '>=', $request->start_date)
-                    ->whereDate('created_at', '<=', $request->end_date);
+    if (!empty($filterData['end_date'])) {
+        $query->whereDate('date', '<=', $filterData['end_date']);
     }
 
-    $allVisitors = $allVisitors->get();
+        $latestVisitors = Visitor::select('visitors.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, id_type) as latest'), 'visitors.id', '=', 'latest.id')
+            ->where(function ($subQuery) use ($filterData) {
+                if (!empty($filterData['start_date'])) {
+                    $subQuery->whereDate('visitors.date', '>=', $filterData['start_date']);
+                }
+                if (!empty($filterData['end_date'])) {
+                    $subQuery->whereDate('visitors.date', '<=', $filterData['end_date']);
+                }
+            })
+            ->latest()
+            ->get();
 
-    return view('admin.visitors.visitor_admin', compact('latestVisitors', 'allVisitors'));
+        $allVisitors = $query->get();
+
+    return view('admin.visitors.visitor_admin', compact('latestVisitors', 'allVisitors', 'filterData'));
 }
 
+public function clearVisitorFilterAdmin()
+{
+    session()->forget('visitor_filter_admin');
+    return redirect()->route('admin.visitors.visitor_admin');
+}
 
 
 public function store(Request $request)
@@ -95,19 +117,55 @@ public function store(Request $request)
     ->first();
 
     $departmentEmails = [
-        'Department 1' => 'gabriellodavid47@gmail.com',
-        'Department 2' => 'department2@example.com',
-        'Department 3' => 'department3@example.com',
-        'Department 4' => 'department4@example.com',
-        'Department 5' => 'department5@example.com',
+        // Colleges
+        'Institute of Graduate and Advanced Studies' => 'gabriellodavid47@gmail.com',
+        'College of Law' => 'gabriellodavid47@gmail.com',
+        'College of Pharmacy' => 'gabriellodavid47@gmail.com',
+        'College of Human Sciences' => 'gabriellodavid47@gmail.com',
+        'College of Teacher Education' => 'gabriellodavid47@gmail.com',
+        'College of Business Management and Accountancy' => 'gabriellodavid47@gmail.com',
+        'College of Health Sciences' => 'gabriellodavid47@gmail.com',
+        'College of Hospitality and Tourism Management' => 'gabriellodavid47@gmail.com',
+        'College of Engineering and Architecture' => 'gabriellodavid47@gmail.com',
+        'College of Criminal Justice Education' => 'gabriellodavid47@gmail.com',
+        'College of Arts and Sciences' => 'gabriellodavid47@gmail.com',
+        'College of Information and Technology Education' => 'gabriellodavid47@gmail.com',
+
+        // Departments
+        'Center for Student Leadership and Development' => 'gabriellodavid47@gmail.com',
+        'Center for Research and Development' => 'gabriellodavid47@gmail.com',
+        'Office of the External Affairs and Linkages' => 'gabriellodavid47@gmail.com',
+        'Psychological Assessment and Counseling Center' => 'gabriellodavid47@gmail.com',
+        'Institutional Planning and Development' => 'gabriellodavid47@gmail.com',
+        'Disaster Risk Reduction and Management Office' => 'gabriellodavid47@gmail.com',
+        'Center for Community Development and Extension Services' => 'gabriellodavid47@gmail.com',
+        'School of Midwifery (CHS)' => 'gabriellodavid47@gmail.com',
+        'Center for Training and Professional Development' => 'gabriellodavid47@gmail.com',
+        'Research Ethics Committee' => 'gabriellodavid47@gmail.com',
+        'University Registrar' => 'gabriellodavid47@gmail.com',
+        'Accounting Office' => 'gabriellodavid47@gmail.com',
+        'Human Capital Management Office' => 'gabriellodavid47@gmail.com',
+        'University Library' => 'gabriellodavid47@gmail.com',
+        'Technical Vocational Institute' => 'gabriellodavid47@gmail.com',
+        'Security Management Office' => 'gabriellodavid47@gmail.com',
+        'Events Management Office' => 'gabriellodavid47@gmail.com',
+        'Records Management System' => 'gabriellodavid47@gmail.com',
+        'NSTP Department' => 'gabriellodavid47@gmail.com',
+        'Management Information Systems' => 'gabriellodavid47@gmail.com',
+        'Maintenance and General Services' => 'gabriellodavid47@gmail.com',
+        'University Cashier' => 'gabriellodavid47@gmail.com',
+        'Gender and Development' => 'gabriellodavid47@gmail.com',
+        'Audit Office' => 'gabriellodavid47@gmail.com',
+        'Engineering Management & Auxiliary Services' => 'gabriellodavid47@gmail.com',
+        'Committee for Publication and Communication Affairs' => 'gabriellodavid47@gmail.com',
+        'University Chaplain' => 'gabriellodavid47@gmail.com',
+        'University Clinic' => 'gabriellodavid47@gmail.com',
+        'University Nurse' => 'gabriellodavid47@gmail.com',
     ];
 
     if (isset($departmentEmails[$visitor->person_to_visit])) {
         $departmentEmail = $departmentEmails[$visitor->person_to_visit];
-
-        Mail::to($departmentEmail)->send(new DepartmentNotification($visitor, $departmentEmail));
-
-
+        Mail::to($departmentEmail)->queue(new DepartmentNotification($visitor, $departmentEmail));
     }
 
     // if($visitor){
@@ -211,25 +269,36 @@ public function new_visitor(Request $request)
 
 public function filterVisitor(Request $request)
 {
+    if ($request->filled('start_date') || $request->filled('end_date')) {
+    session(['visitor_filter' => [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]]);
+}
     $query = Visitor::query();
     $user = Auth::user();
 
-    if ($request->filled('start_date')) {
-        $query->whereDate('date', '>=', $request->start_date);
-    }
+$filterData = session('visitor_filter', [
+    'start_date' => $request->start_date,
+    'end_date' => $request->end_date,
+]);
 
-    if ($request->filled('end_date')) {
-        $query->whereDate('date', '<=', $request->end_date);
-    }
+if (!empty($filterData['start_date'])) {
+    $query->whereDate('date', '>=', $filterData['start_date']);
+}
+
+if (!empty($filterData['end_date'])) {
+    $query->whereDate('date', '<=', $filterData['end_date']);
+}
 
     $latestVisitors = Visitor::select('visitors.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date')) {
-                $subQuery->whereDate('visitors.date', '>=', $request->start_date);
+        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, id_type) as latest'), 'visitors.id', '=', 'latest.id')
+        ->where(function ($subQuery) use ($filterData) {
+            if (!empty($filterData['start_date'])) {
+                $subQuery->whereDate('visitors.date', '>=', $filterData['start_date']);
             }
-            if ($request->filled('end_date')) {
-                $subQuery->whereDate('visitors.date', '<=', $request->end_date);
+            if (!empty($filterData['end_date'])) {
+                $subQuery->whereDate('visitors.date', '<=', $filterData['end_date']);
             }
         })
         ->latest()
@@ -237,26 +306,30 @@ public function filterVisitor(Request $request)
 
     $allVisitors = $query->get();
 
-    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors'));
+    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors', 'filterData'));
 }
 
-
+public function clearVisitorFilter()
+{
+    session()->forget('visitor_filter');
+    return redirect()->route('sub-admin.visitors.visitor');
+}
 
 public function store_visit(Request $request)
 {
         $request->validate([
-        'first_name' => 'required|alpha|max:50',
-        'middle_name' => 'nullable|alpha|max:1',
-        'last_name' => 'required|alpha|max:50',
+        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
         'person_to_visit' => 'required|string|max:100',
         'purpose' => 'required|string|max:255',
         'id_type' => 'required|string|max:30',
     ],
     [
-        'first_name.alpha' => 'Must no number or syntax.',
+        'first_name.regex' => 'Must no number or syntax.',
         'first_name.max' => 'Reached maximum 50 letters.',
         'middle_name.max' => 'Only 1 letter needed.',
-        'last_name.alpha' => 'Must no number or syntax.',
+        'last_name.regex' => 'Must no number or syntax.',
         'last_name.max' => 'Reached maximum 50 letters.',
         'person_to_visit.string' => 'Must no number or syntax.',
         'person_to_visit.max' => 'Must below 100 letters',
@@ -281,17 +354,56 @@ public function store_visit(Request $request)
     $visitor->save();
 
     $departmentEmails = [
-        'Department 1' => 'gabriellodavid47@gmail.com',
-        'Department 2' => 'department2@example.com',
-        'Department 3' => 'department3@example.com',
-        'Department 4' => 'department4@example.com',
-        'Department 5' => 'department5@example.com',
+        // Colleges
+        'Institute of Graduate and Advanced Studies' => 'gabriellodavid47@gmail.com',
+        'College of Law' => 'gabriellodavid47@gmail.com',
+        'College of Pharmacy' => 'gabriellodavid47@gmail.com',
+        'College of Human Sciences' => 'gabriellodavid47@gmail.com',
+        'College of Teacher Education' => 'gabriellodavid47@gmail.com',
+        'College of Business Management and Accountancy' => 'gabriellodavid47@gmail.com',
+        'College of Health Sciences' => 'gabriellodavid47@gmail.com',
+        'College of Hospitality and Tourism Management' => 'gabriellodavid47@gmail.com',
+        'College of Engineering and Architecture' => 'gabriellodavid47@gmail.com',
+        'College of Criminal Justice Education' => 'gabriellodavid47@gmail.com',
+        'College of Arts and Sciences' => 'gabriellodavid47@gmail.com',
+        'College of Information and Technology Education' => 'gabriellodavid47@gmail.com',
+
+        // Departments
+        'Center for Student Leadership and Development' => 'gabriellodavid47@gmail.com',
+        'Center for Research and Development' => 'gabriellodavid47@gmail.com',
+        'Office of the External Affairs and Linkages' => 'gabriellodavid47@gmail.com',
+        'Psychological Assessment and Counseling Center' => 'gabriellodavid47@gmail.com',
+        'Institutional Planning and Development' => 'gabriellodavid47@gmail.com',
+        'Disaster Risk Reduction and Management Office' => 'gabriellodavid47@gmail.com',
+        'Center for Community Development and Extension Services' => 'gabriellodavid47@gmail.com',
+        'School of Midwifery (CHS)' => 'gabriellodavid47@gmail.com',
+        'Center for Training and Professional Development' => 'gabriellodavid47@gmail.com',
+        'Research Ethics Committee' => 'gabriellodavid47@gmail.com',
+        'University Registrar' => 'gabriellodavid47@gmail.com',
+        'Accounting Office' => 'gabriellodavid47@gmail.com',
+        'Human Capital Management Office' => 'gabriellodavid47@gmail.com',
+        'University Library' => 'gabriellodavid47@gmail.com',
+        'Technical Vocational Institute' => 'gabriellodavid47@gmail.com',
+        'Security Management Office' => 'gabriellodavid47@gmail.com',
+        'Events Management Office' => 'gabriellodavid47@gmail.com',
+        'Records Management System' => 'gabriellodavid47@gmail.com',
+        'NSTP Department' => 'gabriellodavid47@gmail.com',
+        'Management Information Systems' => 'gabriellodavid47@gmail.com',
+        'Maintenance and General Services' => 'gabriellodavid47@gmail.com',
+        'University Cashier' => 'gabriellodavid47@gmail.com',
+        'Gender and Development' => 'gabriellodavid47@gmail.com',
+        'Audit Office' => 'gabriellodavid47@gmail.com',
+        'Engineering Management & Auxiliary Services' => 'gabriellodavid47@gmail.com',
+        'Committee for Publication and Communication Affairs' => 'gabriellodavid47@gmail.com',
+        'University Chaplain' => 'gabriellodavid47@gmail.com',
+        'University Clinic' => 'gabriellodavid47@gmail.com',
+        'University Nurse' => 'gabriellodavid47@gmail.com',
     ];
 
     if (isset($departmentEmails[$visitor->person_to_visit])) {
         $departmentEmail = $departmentEmails[$visitor->person_to_visit];
 
-        Mail::to($departmentEmail)->send(new DepartmentNotification($visitor, $departmentEmail));
+        Mail::to($departmentEmail)->queue(new DepartmentNotification($visitor, $departmentEmail));
 
 
     }
@@ -328,7 +440,7 @@ public function validateField(Request $request)
 public function checkout($id)
 {
     $visitor = Visitor::findOrFail($id);
-    $visitor->time_out = now()->format('H:i:s');
+    $visitor->time_out = now()->format('g:i A');
     $visitor->save();
 
     return redirect()->route('visitors.subadmin');

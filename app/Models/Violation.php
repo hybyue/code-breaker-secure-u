@@ -38,15 +38,21 @@ class Violation extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['user_id',
-                    'student_no',
-                    'first_name',
-                    'middle_initial',
-                    'last_name',
-                    'course',
-                    'violation_type',
-                    'date',])
-            ->logOnlyDirty();
+            ->logOnly([
+                'user_id',
+                'student_no',
+                'first_name',
+                'middle_initial',
+                'last_name',
+                'course',
+                'violation_type',
+                'date'
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->logUnguarded()
+            ->setDescriptionForEvent(fn(string $eventName) => "This violation record has been {$eventName}")
+            ->useLogName('violation');
     }
 
     protected static $logName = 'violation';

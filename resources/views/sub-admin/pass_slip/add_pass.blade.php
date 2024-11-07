@@ -95,11 +95,11 @@
                         </div> --}}
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
-                            <input type="time" class="form-control" id="time_out" name="time_out" required>
+                            <input type="time" class="form-control" id="time_out" name="time_out" >
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-50">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Save
                             </button>

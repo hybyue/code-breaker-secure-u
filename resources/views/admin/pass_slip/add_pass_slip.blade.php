@@ -53,8 +53,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="designation" class="form-label">Designation:</label>
-                            <input class="form-control bg-body-secondary" id="designation " name="designation" rows="3"
-                                required readonly>
+                            <input class="form-control bg-body-secondary" id="designation" name="designation" required readonly>
                             <span class="text-danger error-message" id="designation_error"></span>
                         </div>
                         <div class="row mb-2 ms-3">

@@ -94,35 +94,49 @@
     });
 
 
-    $('#updateVisitorForm').on('submit', function(e) {
+    $('.updateVisitorForm').on('submit', function(e) {
     e.preventDefault();
 
-    $('.error-message').text('');
+    let form = $(this);
+    let formData = new FormData(this);
+    let submitButton = form.find('.update_visitor');
+    let modalId = form.attr('id').split('-')[1];
+    let modal = $('#updateVisitor-' + modalId);
 
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    if (response.success) {
-                        localStorage.setItem('showToast', 'true');
-                        location.reload();
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        $('.error-message').remove();
+    submitButton.prop('disabled', true);
+    form.find('#loadingSpinnerer').show();
 
-                        $.each(errors, function(field, messages) {
-                            let input = $('[name="' + field + '"]');
-                            input.addClass('is-invalid');
-                            input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
-                        });
-                    }
-                }
-            });
-        });
+    $.ajax({
+        url: form.attr('action'),
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                modal.modal('hide');
+                localStorage.setItem('showToast', 'true');
+                location.reload();
+            }
+        },
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                form.find('.error-message').remove();
+
+                $.each(errors, function(field, messages) {
+                    let input = form.find('[name="' + field + '"]');
+                    input.addClass('is-invalid');
+                    input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
+                });
+            }
+        },
+        complete: function() {
+            form.find('#loadingSpinnerer').hide();
+            submitButton.prop('disabled', false);
+        }
+    });
+});
 
         $('.modal').on('hidden.bs.modal', function() {
             $('.is-invalid').removeClass('is-invalid');

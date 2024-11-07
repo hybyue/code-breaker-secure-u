@@ -41,11 +41,16 @@ class Lost extends Model
         'last_name',
         'course',
         'object_img',
+        'location',
         'is_claimed',
         'security_staff',
         'description',
         'is_transferred'])
-        ->logOnlyDirty();
+        ->logOnlyDirty()
+        ->dontSubmitEmptyLogs()
+        ->logUnguarded()
+        ->setDescriptionForEvent(fn(string $eventName) => "This lost item record has been {$eventName}")
+        ->useLogName('lost_found');
     }
 
     protected static $logName = 'lost_found';

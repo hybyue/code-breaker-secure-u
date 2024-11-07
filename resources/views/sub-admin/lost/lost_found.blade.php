@@ -23,19 +23,21 @@
         <form action="/sub-admin/lost_found" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
-                    <label for="start_date"> Start Date: </label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control"  value="{{ session('lost_found_filter.start_date', request('start_date')) }}">
                 </div>
                 <div class="col-md-3">
-                    <label for="end_date"> End Date: </label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" required>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ session('lost_found_filter.end_date', request('end_date')) }}">
                 </div>
+
                 <div class="col-md-1 mt-4 pt-2">
-                    <button type="submit"class="btn btn-dark">Filter</button>
+                    <button type="submit" class="btn btn-dark">Filter</button>
                 </div>
-                @if(request('start_date') || request('end_date'))
+
+                @if(session()->has('lost_found_filter'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="/sub-admin/lost_found" class="btn btn-secondary">Clear Filter</a>
+                    <a href="{{ url('/sub-admin/lost_found/clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -63,12 +65,14 @@
                         @if($item->middle_name) {{ $item->middle_name }}. @endif </td>
                     <td>{{ $item->course }}</td>
                     <td>
-                        @if($item->is_claimed == 0)
-                            <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
-                        @elseif($item->is_transferred == 1)
-                        <p class="text-danger">Transfer</p>
-                        @else
+                        @if($item->is_claimed == 1)
                             <p class="text-success">Claimed</p>
+                        @elseif($item->is_transferred == 1)
+                        <p class="text-danger">Transferred</p>
+                        @else
+                        <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                        <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #1be225" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
+
                         @endif
                     </td>
                     <td>
@@ -91,7 +95,6 @@
         </table>
     </div>
 </div>
-
 
 @include('sub-admin.lost.update_lostSub')
 
@@ -124,7 +127,7 @@
                     @php
                         $user = App\Models\User::find($item->user_id);
                     @endphp
-                    {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                    {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name. ' ' : '' }}{{ $user->last_name }}
                     @else
                     N/A
                 @endif
@@ -147,99 +150,9 @@
 @endforeach
 </div>
 
-
-
-<script>
-    function markAsClaimed(id) {
-    $.ajax({
-        url: `/sub-admin/update_claimed/${id}`,
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            is_claimed: 1
-        },
-        success: function(response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'The item has been marked as claimed!',
-                confirmButtonColor: '#0B9B19'
-            }).then(() => {
-
-                const row = document.querySelector(`button[onclick='markAsClaimed(${id})']`).closest('tr');
-                if (row) {
-                    const statusCell = row.querySelector('td:nth-child(5)');
-                    if (statusCell) {
-                        statusCell.innerHTML = '<p class="text-success">Claimed</p>';
-                    }
-                }
-            });
-        },
-        error: function(xhr) {
-            console.error(xhr);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'There was a problem updating the claim status. Please try again.',
-                confirmButtonColor: '#920606'
-            });
-        }
-    });
-}
-
-function showPdfModalLost() {
-        document.getElementById('loadingBar').style.display = 'block';
-    document.getElementById('pdfLostFrame').style.display = 'none';
-
-    const url = '/generate-pdf/lost_found?' + $.param({
-        start_date: $('#start_date').val(),
-        end_date: $('#end_date').val()
-    });
-
-    document.getElementById('pdfLostFrame').src = url;
-
-    $('#pdfModalLost').modal({
-        backdrop:'static',
-        keyboard: false,
-        focus: false,
-        show: false,
-        scrollY: false,
-        scrollX: true,
-        width: '100%',
-        height: 'auto',
-        aspectRatio: 1.5,
-        responsive: true,
-        zoom: {
-            enabled: true,
-            scroll: true,
-            wheel: false,
-            pinch: false
-        }
-    });
-
-    $('#pdfModalLost').modal('show');
-
-    setTimeout(function() {
-        document.getElementById('loadingBar').style.display = 'none';
-        document.getElementById('pdfLostFrame').style.display = 'block';
-    }, 2000);
-    }
-
-    function previewImage(event, id) {
-    var reader = new FileReader();
-    reader.onload = function() {
-        var output = document.getElementById('newImagePreview-' + id);
-        output.src = reader.result;
-        output.style.display = 'block';
-    };
-    reader.readAsDataURL(event.target.files[0]);
-}
-
-</script>
-
 @include('sub-admin.lost.add_lost')
-{{-- @include('sub-admin.lost.lost_js') --}}
 
+@include('sub-admin.lost.lost_js')
 
 <style>
     .same-height-table td {

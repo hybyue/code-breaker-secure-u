@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\RateLimiter as FacadesRateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 class AuthController extends Controller
 {
 
@@ -113,10 +115,19 @@ class AuthController extends Controller
             'type' => "0"
         ]);
 
-        // Send password email
-        Mail::to($user->email)->send(new SendPasswordMail($user->name, $user->email, $request->password));
+        try {
+            Mail::to($user->email)
+                ->queue(new SendPasswordMail($user->name, $user->email, $request->password));
 
-        return redirect()->route('admin.register')->with('success', 'Account created successfully.');
+            return redirect()->route('admin.register')
+                ->with('success', 'Account created successfully and email will be sent.');
+
+        } catch (\Exception $e) {
+            Log::error('Email Error: ' . $e->getMessage());
+            return redirect()->route('admin.register')
+                ->with('success', 'Account created successfully.')
+                ->with('warning', 'Email will be sent automatically when connection is restored.');
+        }
     }
 
     public function login()

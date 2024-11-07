@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn text-white add_visitor" style="background-color: #0B9B19">
+                            <button type="submit" class="btn w-50 text-white add_visitor" style="background-color: #0B9B19">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Submit
                             </button>

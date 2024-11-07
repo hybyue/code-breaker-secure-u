@@ -84,12 +84,9 @@
             <div class="d-flex justify-content-center align-items-center">
                 @if (Route::has('login'))
                 @auth
-                <button class="btn btn-dark notification-button ">
-                    <i class="bi bi-bell-fill"></i>
-                </button>
                 <div class="dropdown">
                     <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiyWg33WlX7U9e3dvdcAO0VQ3VM9RUlXJBcA&s" alt="User" width="40" height="40">
+                        <i class="bi bi-person-circle"  style="font-size: 30px; color: white; vertical-align: middle;"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                         <li><a class="dropdown-item" href="{{ url('/home')}}">Home</a></li>
@@ -124,31 +121,28 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('visitors.subadmin') }}" class="sidebar-link {{ Route::is('visitors.subadmin') ? 'active' : '' }}">
+                    <a href="{{ url('/sub-admin/visitor') }}" class="sidebar-link {{ Route::is('sub-admin.visitors.visitor') ? 'active' : '' }}">
                         <i class="bi bi-people-fill"></i>
                         <span>Visitors</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.pass_slip.pass_slip') }}" class="sidebar-link {{ Route::is('sub-admin.pass_slip.pass_slip') ? 'active' : '' }}">
+                    <a href="{{ route('sub-admin.pass_slip.pass_slip') }}"
+                       class="sidebar-link {{ Route::is('sub-admin.pass_slip.pass_slip') ? 'active' : '' }}">
                         <i class="bi bi-pass"></i>
                         <span>Pass Slip</span>
                     </a>
                 </li>
-                {{-- <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.sticker.vehicle_sticker_list') }}" class="sidebar-link {{ Route::is('sub-admin.sticker.vehicle_sticker_list') ? 'active' : '' }}">
-                        <i class="bi bi-car-front-fill"></i>
-                        <span>Vehicle Stickers</span>
-                    </a>
-                </li> --}}
                 <li class="sidebar-item">
-                    <a href="{{route('sub-admin.lost.lost_found')}}" class="sidebar-link {{ Route::is('sub-admin.lost.lost_found') ? 'active' : '' }}">
+                    <a href="{{route('sub-admin.lost.lost_found')}}"
+                       class="sidebar-link {{ Route::is('sub-admin.lost.lost_found') ? 'active' : '' }}">
                         <i class="bi bi-box-seam-fill"></i>
                         <span>Lost and Found</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.violation.violation')}}" class="sidebar-link {{ Route::is('sub-admin.violation.violation') ? 'active' : '' }}">
+                    <a href="{{ route('sub-admin.violation.violation')}}"
+                       class="sidebar-link {{ Route::is('sub-admin.violation.violation') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-person"></i>
                         <span>Violation</span>
                     </a>

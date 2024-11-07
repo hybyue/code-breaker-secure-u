@@ -16,6 +16,7 @@
                 <i class="bi bi-file-earmark-pdf-fill"></i> PDF
             </a> --}}
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModal()">Generate Report</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Looping Report</a>
 
                     </div>
 
@@ -24,26 +25,26 @@
                             <div class="row pb-3">
                                 <div class="col-md-2">
                                     <label for="start_date">Start Date:</label>
-                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                                    <input type="date" name="start_date" id="start_date" class="form-control"  value="{{ session('pass_slip_filter.start_date', request('start_date')) }}">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="end_date">End Date:</label>
-                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ session('pass_slip_filter.end_date', request('end_date')) }}">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="employee_type">Employee Type:</label>
                                     <select class="form-select" id="employee_type" name="employee_type">
                                         <option value="">All</option>
-                                        <option value="Teaching" {{ request('employee_type') == 'Teaching' ? 'selected' : '' }}>Teaching</option>
-                                        <option value="Non-Teaching" {{ request('employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
+                                        <option value="Teaching" {{ session('pass_slip_filter.employee_type') == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                        <option value="Non-Teaching" {{ session('pass_slip_filter.employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <label for="violation_filter">Violation Filter:</label>
                                     <select class="form-select" id="violation_filter" name="violation_filter">
                                         <option value="">All</option>
-                                        <option value="1" {{ request('violation_filter') == '1' ? 'selected' : '' }}>Exceeded 3 Hours</option>
-                                        <option value="0" {{ request('violation_filter') == '0' ? 'selected' : '' }}>Not Exceeded</option>
+                                        <option value="1" {{ session('pass_slip_filter.violation_filter') == '1' ? 'selected' : '' }}>Exceeded 3 Hours</option>
+                                        <option value="0" {{ session('pass_slip_filter.violation_filter') == '0' ? 'selected' : '' }}>Not Exceeded</option>
                                     </select>
                                 </div>
 
@@ -51,9 +52,9 @@
                                     <button type="submit" class="btn btn-dark">Filter</button>
                                 </div>
 
-                                @if(request('start_date') || request('end_date') || request('employee_type') || request('violation_filter'))
+                                @if(session()->has('pass_slip_filter'))
                                 <div class="col-md-0 mt-4 pt-2">
-                                    <a href="/sub-admin/pass_slip" class="btn btn-secondary">Clear Filter</a>
+                                    <a href="{{ route('pass_slip.clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
                                 </div>
                                 @endif
                             </div>
@@ -89,17 +90,34 @@
                     <td id="time-in-{{ $passSlip->id }}" class="text-center"
                         @if($passSlip->is_exceeded)
                             style="background-color: red; color: white;"
+                            title="{{ $passSlip->late_minutes >= 60
+                                ? floor($passSlip->late_minutes / 60) . ' hr ' . ($passSlip->late_minutes % 60) . ' min late'
+                                : $passSlip->late_minutes . ' min late' }}"
                         @endif>
                         @if(is_null($passSlip->time_in))
                         <div>
                             <span id="time-in-display-{{ $passSlip->id }}"></span>
-                            <form action="{{ route('passSlip.checkout', $passSlip->id) }}" method="POST">
+                            <form action="{{ route('passSlip.checkout_admin', $passSlip->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
                             </form>
                         </div>
                         @else
-                        {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                            {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                            @if($passSlip->late_minutes > 0)
+                                <br>
+                                <small>(
+                                    @if($passSlip->late_minutes >= 60)
+                                        {{ floor($passSlip->late_minutes / 60) }} hr
+                                        @if($passSlip->late_minutes % 60 > 0)
+                                            {{ $passSlip->late_minutes % 60 }} min
+                                        @endif
+                                    @else
+                                        {{ $passSlip->late_minutes }} min
+                                    @endif
+                                    late)
+                                </small>
+                            @endif
                         @endif
                     </td>
                     <td class="text-center">{{ $passSlip->exit_count }}</td>
@@ -162,24 +180,22 @@
                             @php
                                 $user = App\Models\User::find($entry->time_out_by);
                             @endphp
-                            {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
-                        @else
-                            N/A
+                            {{ $user->first_name }} @if($user->middle_name){{ $user->middle_name}}.@endif {{ $user->last_name }}
                         @endif
                         </p>
 
 
-                        <p><strong>Time In:</strong> {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</p>
-                        <p><strong>Time in by:</strong>
-                            @if ($entry->time_in_by)
-                            @php
-                                $user = App\Models\User::find($entry->time_in_by);
-                            @endphp
-                            {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
-                        @else
-                            N/A
-                        @endif
-                    </p>
+                    @if($entry->time_in || $entry->time_in_by)
+                    <p><strong>Time In:</strong> {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</p>
+                    <p><strong>Time in by:</strong>
+                        @if ($entry->time_in_by)
+                        @php
+                            $user = App\Models\User::find($entry->time_in_by);
+                        @endphp
+                        {{ $user->first_name }} @if($user->middle_name){{ $user->middle_name}}.@endif {{ $user->last_name }}
+                    @endif
+                </p>
+                @endif
                     </div>
                 </div>
                 @endforeach
@@ -237,6 +253,29 @@
     </div>
 </div>
 
+<!-- Modal Structure -->
+<div class="modal fade" id="pdfModalLooping" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview Looping</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="loadingBarLoop" style="display:none; text-align: center;">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+
+                    </div>
+                </div>
+
+                <!-- PDF display iframe -->
+                <iframe id="pdfIframeLoop" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     function showPdfModal() {
@@ -277,6 +316,59 @@
     setTimeout(function() {
         document.getElementById('loadingBar').style.display = 'none';
         document.getElementById('pdfIframe').style.display = 'block';
+    }, 2000);
+}
+
+function showPdfModalLooping() {
+    const employeeType = $('#employee_type').val();
+    const violationFilter = $('#violation_filter').val();
+
+    if (!employeeType || !violationFilter) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Required Filters',
+            text: 'Please select both Employee Type and Violation Filter before generating the Looping Report.',
+            confirmButtonColor: '#0B9B19'
+        });
+        return;
+    }
+
+    document.getElementById('loadingBarLoop').style.display = 'block';
+    document.getElementById('pdfIframeLoop').style.display = 'none';
+
+    const url = '/sub-admin/generate-pdf/looping?' + $.param({
+        start_date: $('#start_date').val(),
+        end_date: $('#end_date').val(),
+        employee_type: employeeType,
+        violation_filter: violationFilter
+    });
+
+    document.getElementById('pdfIframeLoop').src = url;
+
+    $('#pdfModalLooping').modal({
+        backdrop:'static',
+        keyboard: false,
+        focus: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+        width: '100%',
+        height: 'auto',
+        aspectRatio: 1.5,
+        responsive: true,
+        zoom: {
+            enabled: true,
+            scroll: true,
+            wheel: false,
+            pinch: false,
+        }
+    });
+
+    $('#pdfModalLooping').modal('show');
+
+    setTimeout(function() {
+        document.getElementById('loadingBarLoop').style.display = 'none';
+        document.getElementById('pdfIframeLoop').style.display = 'block';
     }, 2000);
 }
     </script>

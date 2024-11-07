@@ -58,7 +58,7 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($allEmployees as $allEmployee)
+            @foreach ($allEmployees as $allEmployee)
             <tr id="tr_{{$allEmployee->id}}">
             <td>{{$allEmployee->employee_id}}</td>
             <td>{{$allEmployee->last_name}}, {{$allEmployee->first_name}} @if ($allEmployee->middle_name)
@@ -85,12 +85,8 @@
                     </div> --}}
                 </td>
             </tr>
-            @empty
 
-        <tr>
-            <td colspan="6" class="text-center">No Data available in table</td>
-        </tr>
-            @endforelse
+            @endforeach
 
 
 

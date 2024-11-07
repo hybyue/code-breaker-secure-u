@@ -39,7 +39,7 @@ window.addEventListener("load", () => {
 });
 
 // Handle select elements for "Person to Visit & Company" and "ID Type"
-document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
     const personToVisitSelect = document.getElementById('person_to_visit');
     const idTypeSelect = document.getElementById('id_type');
 
@@ -77,6 +77,7 @@ function handleOtherOption(selectElement, inputId) {
     }
 }
 
+
 // Handle date selection
 document.addEventListener('DOMContentLoaded', function () {
     const startDate = document.getElementById('start_date');
@@ -100,3 +101,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+

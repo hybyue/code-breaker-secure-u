@@ -14,7 +14,7 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addViolationModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-lost', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalViolation()">Generate Report</a>
         </div>
     </div>
 
@@ -22,19 +22,22 @@
         <form action="/admin/violation" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
-                    <label for="start_date"> Start Date: </label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control"
+                        value="{{ session('violation_admin_filter.start_date', request('start_date')) }}">
                 </div>
                 <div class="col-md-3">
-                    <label for="end_date"> End Date: </label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" required>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control"
+                        value="{{ session('violation_admin_filter.end_date', request('end_date')) }}">
                 </div>
                 <div class="col-md-1 mt-4 pt-2">
-                    <button type="submit"class="btn btn-dark">Filter</button>
+                    <button type="submit" class="btn btn-dark">Filter</button>
                 </div>
-                @if(request('start_date') || request('end_date'))
+
+                @if(session()->has('violation_admin_filter'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="/admin/violation" class="btn btn-secondary">Clear Filter</a>
+                    <a href="{{ route('admin.violation.clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -51,14 +54,14 @@
                 <th>Course</th>
                 <th>Violation</th>
                 <th class="text-start">Date</th>
-                <th>Status</th>
+                <th>Violation Count</th>
                 <th></th>
             </tr>
 
         </thead>
         <tbody>
 
-            @forelse ($violations as $violate)
+            @foreach ($violations as $violate)
             <tr  id="tr_{{$violate->id}}">
                 <td class="text-center">{{$violate->student_no}}</td>
                 <td>{{$violate->last_name}}, {{$violate->first_name}}
@@ -68,14 +71,16 @@
                 </td>
                 <td>{{$violate->course}}</td>
                 <td>{{$violate->violation_type}}</td>
-                <td class="text-center">{{$violate->date}}</td>
+                <td class="text-center">{{\Carbon\Carbon::parse($violate->date)->format('F d, Y')}}</td>
                 <td>
-                    @if ($violate->violation_count > 1)
-                    {{$violate->violation_count}} violations
-                    @else
+                    @if ($violate->violation_count == 1)
                     {{$violate->violation_count}} violation
+                    @elseif($violate->violation_count >=3 )
+                    <span class="text-danger">{{$violate->violation_count}} violations</span>
+                    @elseif($violate->violation_count == 2)
+                    {{$violate->violation_count}} violations
                     @endif
-                    </td>
+                </td>
                 <td>
                     <div class="d-flex justify-content-center align-items-center">
                         <div class="mx-1">
@@ -93,20 +98,15 @@
                     {{-- <div><button onclick="testFunction()">test</button></div> --}}
                 </td>
             </tr>
-            @empty
-            <tr>
-                <td colspan="8" class="text-center">No Data available in table</td>
-            </tr>
-            @endforelse
+            @endforeach
         </tbody>
     </table>
 </div>
 
 </div>
 
-@include('admin.violation.add_violation')
-@include('admin.violation.update_violation')
-@include('admin.violation.violation_js')
+
+
 
 <div id="latestViolations">
 {{-- Modal for showing all entries of a student --}}
@@ -143,7 +143,9 @@
 </div>
 @endforeach
 </div>
+@include('admin.violation.update_violation')
 
+@include('admin.violation.add_violation')
 <style>
     .same-height-table td {
         vertical-align: middle;
@@ -152,7 +154,7 @@
 
 </style>
 
-
+@include('admin.violation.violation_js')
 
 
 @endsection

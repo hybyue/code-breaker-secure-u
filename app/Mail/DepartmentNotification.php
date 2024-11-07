@@ -44,7 +44,9 @@ class DepartmentNotification extends Mailable
             with: [
                 'visitorName' => $this->visitor->first_name . ' ' . $this->visitor->last_name,
                 'purpose' => $this->visitor->purpose,
-                'department' => $this->visitor->person_to_visit
+                'department' => $this->visitor->person_to_visit,
+                'date' => $this->visitor->created_at->format('F j, Y'),
+                'time' => $this->visitor->created_at->format('g:i A')
             ]
         );
     }

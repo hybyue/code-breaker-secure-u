@@ -117,3 +117,29 @@
             </div>
         </div>
     </div>
+
+
+
+    <div class="modal fade" id="pdfModalVisitorAd" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalLabel">Visitor Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- PDF Preview will be embedded here -->
+                    <div id="loadingBar" style="display:none; text-align: center;">
+                        <div class="spinner-border" role="status">
+                        </div>
+                    </div>
+
+                    <iframe id="pdfVisitorFrame" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+

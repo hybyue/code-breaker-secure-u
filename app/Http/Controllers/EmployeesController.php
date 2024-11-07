@@ -140,7 +140,7 @@ class EmployeesController extends Controller
             'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
-            'middle_name.regex' => 'The middle name must contain only letters and spaces.',
+            'middle_name.regex' => 'The middle initial must contain only letters and spaces.',
             'middle_name.max' => 'Must only have 1 letter.',
             'last_name.regex' => 'The last name must contain only letters and spaces.',
             'contact_no.regex' => 'The contact number format is invalid.',

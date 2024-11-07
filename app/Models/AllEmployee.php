@@ -24,14 +24,19 @@ class AllEmployee extends Model
         {
             return LogOptions::defaults()
                 ->logOnly([
-                'employee_id',
-                'first_name',
-                'last_name',
-                'middle_name',
-                'designation',
-                'department',
-                'status'])
-                ->logOnlyDirty();
+                    'employee_id',
+                    'first_name',
+                    'last_name',
+                    'middle_name',
+                    'designation',
+                    'department',
+                    'status'
+                ])
+                ->logOnlyDirty()
+                ->dontSubmitEmptyLogs()
+                ->logUnguarded()
+                ->setDescriptionForEvent(fn(string $eventName) => "This employee record has been {$eventName}")
+                ->useLogName('all employee');
         }
 
         protected static $logName = 'all employee';

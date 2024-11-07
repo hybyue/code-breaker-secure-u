@@ -1,7 +1,6 @@
 @extends('admin.layouts.sidebar_admin')
 
 @section('title', 'Visitors')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
 <div class="row mt-4 p-2">
     <div class="col-md-6">
@@ -11,26 +10,28 @@
         <a href="javascript:void(0)" id="add-visitor-btn" class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
             <i class="bi bi-plus-circle-fill"></i> Add New
         </a>
-        <a href="{{ route('pdf.generate-visitor', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-visitors.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+        <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalVisitor()">Generate Report</a>
     </div>
 </div>
 <div class="container mt-2">
-    <form action="/filter_visitor_admin" method="GET">
+    <form action="/admin/visitor" method="GET">
         <div class="row pb-3">
             <div class="col-md-3">
-                <label for="start_date"> Start Date: </label>
-                <input type="date" name="start_date" id="start_date" class="form-control" required>
+                <label for="start_date">Start Date:</label>
+                <input type="date" name="start_date" id="start_date" class="form-control"  value="{{ session('visitor_filter_admin.start_date', request('start_date')) }}">
             </div>
             <div class="col-md-3">
-                <label for="end_date"> End Date: </label>
-                <input type="date" name="end_date" id="end_date" class="form-control" required>
+                <label for="end_date">End Date:</label>
+                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ session('visitor_filter_admin.end_date', request('end_date')) }}">
             </div>
-            <div class="col-md-1 mt-4">
+
+            <div class="col-md-1 mt-4 pt-2">
                 <button type="submit" class="btn btn-dark">Filter</button>
             </div>
-            @if(request('start_date') || request('end_date'))
+
+            @if(session()->has('visitor_filter_admin'))
             <div class="col-md-0 mt-4 pt-2">
-                <a href="/filter_visitor_admin" class="btn btn-secondary">Clear Filter</a>
+                <a href="{{ route('visitors.clear-filter-admin') }}" class="btn btn-secondary">Clear Filter</a>
             </div>
             @endif
         </div>
@@ -51,7 +52,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($latestVisitors as $visit)
+                        @foreach($latestVisitors as $visit)
                         <tr id="tr_{{$visit->id}}">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                             <td>{{ $visit->last_name }},  {{$visit->first_name }} @if($visit->middle_name){{ $visit->middle_name }}.@endif </td>
@@ -87,11 +88,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="8" class="text-center">No Data available in table</td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -149,7 +146,36 @@
 
 
 <script src="{{ asset('js/visitor_admin.js') }}"></script>
+<script>
+    function showPdfModalVisitor() {
+        document.getElementById('loadingBar').style.display = 'block';
+        document.getElementById('pdfVisitorFrame').style.display = 'none';
 
+        const url = '/admin/generate-pdf/visitor?'  + $.param({
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val(),
+        });;
+
+     document.getElementById('pdfVisitorFrame').src = url;
+
+     $('#pdfModalVisitorAd').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+    });
+
+     $('#pdfModalVisitorAd').modal('show');
+
+        setTimeout(function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            document.getElementById('pdfVisitorFrame').style.display = 'block';
+        }, 1000);
+    }
+
+
+    </script>
 <style>
     .same-height-table td {
         vertical-align: middle;

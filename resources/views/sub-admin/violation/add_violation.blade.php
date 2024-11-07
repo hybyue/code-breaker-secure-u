@@ -37,33 +37,32 @@
                         <div class="form-group">
                             <label for="violation_type">Violation Type:</label>
                             <select class="form-select" id="violation_type" name="violation_type" required>
-                                <option value="" selected disabled>Select ID Type</option>
-                                <option value="No ID">No ID</option>
-                                <option value="No Shoes">No Shoes</option>
-                                <option value="Inapropriate Cloths">Inapropriate Cloths</option>
+                                <option value="" selected disabled>Select Violation Type</option>
+                                <option value="Hanging/CropTop">Hanging/CropTop</option>
+                                <option value="Polo Top">Polo Top</option>
+                                <option value="Tattere Pants">Tattere Pants</option>
                                 <option value="Earings">Earings</option>
-                                <option value="No Uniform">No Uniform</option>
+                                <option value="Ball Cup">Ball Cup</option>
+                                <option value="Slipper/Sandals">Slipper/Sandals</option>
+                                <option value="Croca">Croca</option>
+                                <option value="Short/Skirt">Short/Skirt</option>
+                                <option value="Sleeveless/Shoulder">Sleeveless/Shoulder</option>
                                 <option value="Other">Other</option>
                             </select>
-                       </div>
-
-                    <div class="form-group">
-                        <label for="date">Date:</label>
-                        <input type="date" class="form-control" id="date" name="date" >
-                    </div>
+                        </div>
 
                     </div>
-
 
                     <div class="form-group text-center mt-3">
-                        <button type="submit" class="btn text-white" style="background-color: #0B9B19">Submit</button>
+                        <button type="submit" class="btn text-white w-50 add_violation" style="background-color: #0B9B19">
+                            <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
+                            Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 
 
 
@@ -79,7 +78,6 @@
                 <!-- PDF Preview will be embedded here -->
                 <div id="loadingBar" style="display:none; text-align: center;">
                     <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
                 <iframe id="pdfViolationFrame" src="" style="width: 100%; height: 500px; border: none;"></iframe>

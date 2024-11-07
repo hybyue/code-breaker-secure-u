@@ -8,107 +8,122 @@
         body {
             font-family: DejaVu Sans, sans-serif;
         }
-        .container {
-            margin-top: 10px;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: auto;
+            margin-top: 10px;
         }
-        .table th, .table td {
+        th, td {
             border: 1px solid black;
-            text-align: left;
-            word-wrap: break-word;
-            min-width: 90px;
+            padding: 5px;
+            font-size: 12px;
         }
-        .table th {
-            background-color: #f2f2f2;
-        }
-        .header {
+        th {
             text-align: center;
-            margin: 0;
-            padding: 0;
+            font-size: 12px;
         }
-        .header img {
-            display: block;
-            margin: 0 auto;
-            width: 100px;
-        }
+
         p {
             margin: 0;
             padding: 0;
         }
-        .university {
-            font-size: 20px;
-            font-weight: bolder;
+        .date {
+            margin-top: 5rem;
         }
-        .report-title {
-            font-size: 14px;
+        .guard-text {
+            margin-top: 3rem;
+            font-size: 11px;
+        }
+        .bold-text {
             font-weight: bold;
         }
-
-        .department{
-            font-size: 14px;
-            font-weight: bold;
+        .signature-section {
+            margin-top: 20px;
+            width: 100%;
+            position: relative;
+        }
+        .signature {
+            text-align: left;
+            display: inline-block;
+            width: 30%;
+        }
+        .signature:first-child {
+            float: left;
+        }
+        .signature:last-child {
+            float: right;
+        }
+        .signature .line {
+            margin-top: -14.8px;
+            display: inline-block;
+            border-bottom: 2px solid black;
+            width: 145px;
+        }
+        .signature p {
+            margin: 0;
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
+
+        <p class="date bold-text text-start">{{ $date }}</p>
+        @if(!empty($employee_type))<p> ({{ $employee_type }} Employee's)</p>@endif
+        @if(!empty($start_date) && !empty($end_date))
+            <p class="text-start">Date Range: {{ $start_date }} - {{ $end_date }}</p>
+        @endif
+    </div>
     <div class="container">
-        <div class="header">
-            <img src="{{ public_path('images/UCU-logo.png') }}" alt="UCU Logo">
-            <p class="university">Urdaneta City University&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="report-title">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Reports list of Pass Slip&nbsp;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>            <p class="department">Security Management Office Report&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Out</th>
+                    <th>In</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($passSlips as $passSlip)
+                    <tr>
+                        <td>{{ $passSlip->first_name }} {{ $passSlip->middle_name }}. {{ $passSlip->last_name }}</td>
+                        <td>{{$passSlip->department}}</td>
+                        <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center">No Data available in table</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="guard-text text-start">
+        <p>Guard on duty:</p>
+    </div>
+
+    <div class="signature-section">
+        <div class="signature">
+            <p>Prepared by:</p>
+            <br>
+            <p>@if(!empty($user))
+                <strong>{{ strtoupper($user->first_name) }} @if($user->middle_name){{ strtoupper($user->middle_name) }}.@endif {{ strtoupper($user->last_name) }}</strong>
+                @endif</p>
+            <p>Secretary, Security Management</p>
+            <span class="line"></span>
         </div>
-    </div>
-    <div>
-        <p class="text-start">Title: {{ $title }}</p>
-        <p class="text-start">Date: {{ $date }}</p>
-
-       @if(!empty($employee_type))<p> ({{ $employee_type }} Employee's)</p>@endif
-
-    @if(!empty($start_date) && !empty($end_date))
-        <p class="text-start">Date Range: {{ $start_date }} - {{ $end_date }}</p>
-    @endif
-    </div>
-    <div class="container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Designation</th>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Time Out</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($passSlips as $passSlip)
-                <tr>
-                    <td>{{ $passSlip->p_no }}</td>
-                    <td>{{ $passSlip->first_name }} {{ $passSlip->middle_name }}. {{ $passSlip->last_name }}</td>
-                    <td>{{ $passSlip->department }}</td>
-                    <td>{{ $passSlip->designation }}</td>
-                    <td>{{ $passSlip->destination }}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A') }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="text-center">No Data available in table</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-    <div class="text-start mt-4">
-        <p>Generated by:  {{ $user->first_name }} @if( $user->middle_name){{ $user->first_name }}.@endif {{ $user->last_name }}</p>
+        <div class="signature">
+            <p>Noted:</p>
+            <br>
+            <p class="bold-text">MANNY R. CALICA</p>
+            <p>Head, Security Management</p>
+            <span class="line"></span>
+        </div>
     </div>
 </body>
 </html>

@@ -26,13 +26,20 @@ class HomeController extends Controller
     public function backButton()
     {
         if (Auth::user()->type == 'admin') {
-                return redirect()->route('admin.dashboard'); 
+                return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('sub-admin.dashboard');
         }
     }
 
-
+    public function view_lang()
+    {
+      return view('pdf.pdf-non-teaching');
+    }
+    public function view_langs()
+    {
+      return view('pdf.pdf-teaching');
+    }
 
 }
 

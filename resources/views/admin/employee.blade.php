@@ -10,8 +10,6 @@
                     </div>
 
                     <div class="container p-3 bg-body-secondary rounded">
-
-                        <!-- Table -->
                         <div class="row">
                             <div class="col-12" style="overflow-x:auto;">
                                 <table id="securityTable" class="table table-striped table-bordered table-responsive table-center">

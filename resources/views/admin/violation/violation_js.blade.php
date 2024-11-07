@@ -28,6 +28,10 @@
             e.preventDefault();
 
             $('.errorMessage').html('');
+            let submitButton = $('.add_violation');
+            submitButton.prop('disabled', true);
+            $('#loadingSpinner').show();
+
             let formData = $(this).serialize();
 
             $.ajax({
@@ -62,6 +66,10 @@
                     $.each(errors, function(index, value) {
                         $('.errorMessage').append('<span class="text-danger">'+value+'</span>'+'<br>');
                     });
+                },
+                complete: function () {
+                    $('#loadingSpinner').hide();
+                    submitButton.prop('disabled', false);
                 }
             });
         });
@@ -94,7 +102,7 @@
                 students.forEach(student => {
                     const studentInfo = $('<a></a>')
                         .attr('href', '#')
-                        .addClass('btn btn-primary')
+                        .addClass('btn btn-primary w-100 text-start')
                         .text(`Name: ${student.first_name} ${student.last_name}, Course: ${student.course}`)
                         .on('click', () => populateForm(student));
                     resultsDiv.append(studentInfo);
@@ -173,6 +181,40 @@
 		}
 
 	}
+
+
+</script>
+
+
+
+<script>
+    function showPdfModalViolation() {
+        document.getElementById('loadingBar').style.display = 'block';
+        document.getElementById('pdfViolationFrame').style.display = 'none';
+
+        const url = '/admin/generate-pdf/violation?'  + $.param({
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val(),
+        });;
+
+     document.getElementById('pdfViolationFrame').src = url;
+
+     $('#pdfModalViolationAd').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+    });
+
+     $('#pdfModalViolationAd').modal('show');
+
+        setTimeout(function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            document.getElementById('pdfViolationFrame').style.display = 'block';
+        }, 1000);
+    }
+
 
 
 </script>

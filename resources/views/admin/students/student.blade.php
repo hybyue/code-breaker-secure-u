@@ -61,7 +61,7 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($students as $student)
+            @foreach ($students as $student)
             <tr id="tr_{{$student->id}}">
             <td>{{$student->student_no}}</td>
             <td>{{$student->last_name}}, {{$student->first_name}} @if ($student->middle_name)
@@ -88,12 +88,8 @@
                     </div>
                 </td>
             </tr>
-            @empty
 
-        <tr>
-            <td colspan="4" class="text-center">No Data available in table</td>
-        </tr>
-            @endforelse
+            @endforeach
 
 
 

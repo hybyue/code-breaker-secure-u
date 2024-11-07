@@ -10,6 +10,15 @@
             <div class="modal-body">
                 <form id="addLostForm" action="" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                     <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="lostType" class="form-label">Object type:</label>
@@ -56,7 +65,10 @@
                         <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-success" id="lostSubmmit">Save</button>
+                        <button type="submit" class="btn btn-success add_lost_admin" id="lostSubmmit">
+                            <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
+                            Save
+                        </button>
                     </div>
                 </div>
                 </form>

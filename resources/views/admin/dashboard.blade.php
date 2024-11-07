@@ -1,8 +1,6 @@
 @extends('admin.layouts.sidebar_admin')
 
 @section('title', 'Dashboard')
-<link rel="stylesheet" href="{{ asset('tailwindcharts/css/flowbite.min.css')}}">
-
 
 @section('content')
 <div class="container">
@@ -19,61 +17,14 @@
                 timer: 5000,
                 timerProgressBar: true,
                 icon: 'success',
-                title: "{{ session('success') }}", // Wrap session value in quotes
+                title: "{{ session('success') }}",
             });
         </script>
     @endif
     </div>
-
 <div class="container mt-3">
     <h5 class="text-black mb-0 p-2">DASHBOARD</h5>
 </div>
-{{--
-<!-- Dashboard Cards -->
-<div class="row mb-3 m-3">
-    <!-- Employee Card -->
-    <div class="col-md-4 col-sm-6 mb-4">
-        <div class="card bg-light text-black card-onclick" onclick="location.href='{{ route('admin.employee') }}'">
-            <div class="card-body d-flex align-items-center">
-                <img src="images/person.png" alt="Person Image" class="card-img">
-                <div class="ml-3">
-                    <h5 class="card-title">EMPLOYEE</h5>
-                    <p>Regular: <small>{{ $totalRegular }}</small></p>
-                    <p>Trainee: <small>{{ $totalTrainee }}</small></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Events Card -->
-    <div class="col-md-4 col-sm-6 mb-4">
-        <div class="card bg-light text-black card-onclick" onclick="location.href='{{ route('admin.events.event_admin') }}'">
-            <div class="card-body d-flex align-items-center">
-                <img src="images/clock.png" alt="Clock Image" class="card-img">
-                <div class="ml-3">
-                    <h5 class="card-title">Events</h5>
-                    <p>Today: <small>{{ $todaysEvents > 0 ? $todaysEvents : 0 }}</small></p>
-                    <p>Upcoming: <small>2</small></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pass Slip Card -->
-    <div class="col-md-4 col-sm-6 mb-4">
-        <div class="card bg-light text-black card-onclick" onclick="location.href='{{ route('admin.pass_slip.pass_slip_admin') }}'">
-            <div class="card-body d-flex align-items-center">
-                <img src="images/person.png" alt="Person Image" class="card-img">
-                <div class="ml-3">
-                    <h5 class="card-title">Pass Slip</h5>
-                    <p>Teaching: <small>{{ $totalTeaching }}</small></p>
-                    <p>Non-Teaching: <small>{{ $totalNon }}</small></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
 
 <div class="row container mb-4 align-items-center">
     <div class="col-md-4 col-sm-6 mb-4">
@@ -168,17 +119,17 @@
 <div class="row p-3">
     <div class="col-md-6">
         <div class="container">
-            <div id="timeLabel" class="text-lg font-bold mb-4"><h4>Select Time Period</h4></div>
+            <div id="timeLabel" class="h4 font-weight-bold mb-4"><h4>Select Time Period</h4></div>
                 <div class="flex space-x-2 mb-4">
-                    <button onclick="fetchData('monthly')" id="monthlyBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Monthly</button>
-                    <button onclick="fetchData('yearly')" id="yearlyBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Yearly</button>
+                    <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2 rounded">Monthly</button>
+                    <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary rounded">Yearly</button>
                 </div>
                 <canvas id="visitorChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
         </div>
     </div>
     <div class="col-md-6">
         <div class="container">
-            <div id="pieLabel" class="text-lg font-bold mb-4"><h4>Pie Chart</h4></div>
+            <div id="pieLabel" class="h4 font-weight-bold mb-4"><h4>Pie Chart</h4></div>
             <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
         </div>
     </div>
@@ -186,7 +137,6 @@
 <script src="{{ asset('js/chart_admin.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('tailwindcharts/js/apexcharts.js') }}"></script>
-<script src="{{ asset('tailwindcharts/js/flowbite.min.js') }}"></script>
 <style>
     .event-box {
         border: 1px solid #303030;

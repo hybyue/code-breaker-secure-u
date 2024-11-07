@@ -10,6 +10,8 @@
 
     <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
 	<link rel="shortcut icon" href="http://example.com/favicon.ico" />
 	<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
     <link href="{{  asset('css/sidebar_admin.css')}}" rel="stylesheet" >
@@ -28,12 +30,67 @@
             background-color: #1e1e1e;
             border-left: 2px solid #3b7ddd;
         }
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .drop-me {
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
     <div class="loading"></div>
 
-    <nav>@include('admin.layouts.admin')</nav>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #A10D0D">
+        <div class="container-fluid">
+            <div class="navbar-left">
+                <img src="{{ URL('images/UCU-logo.png') }}" alt="Logo" class="navbar-logo">
+                <span class="navbar-title text-white">Urdaneta City University</span>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                @if (Route::has('login'))
+                    @auth
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="bi bi-person-circle"  style="font-size: 30px; color: white; vertical-align: middle;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Home</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('admin.layouts.profile_admin') }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('auth.change-password') }}">Change
+                                        password</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
+                            </ul>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="btn btn-outline-light ms-2">Register</a>
+                        @endif
+                    @endauth
+                @endif
+            </div>
+        </div>
+    </nav>
 
     <div class="wrapper">
         <aside id="sidebar">
@@ -118,6 +175,10 @@
 
     @yield('header')
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <script src="{{ asset('js/sidebar_admin.js') }}"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>

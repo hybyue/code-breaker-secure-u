@@ -58,3 +58,43 @@ const hamburger = document.querySelector("#toggle-btn");
                 startDate.value = endDate.value;
             }
         });
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const personToVisitSelect = document.getElementById('person_to_visit');
+            const idTypeSelect = document.getElementById('id_type');
+
+            if (personToVisitSelect) {
+                personToVisitSelect.addEventListener('change', function () {
+                    handleOtherOption(this, 'personToVisitOtherInput');
+                });
+            }
+
+            if (idTypeSelect) {
+                idTypeSelect.addEventListener('change', function () {
+                    handleOtherOption(this, 'idTypeOtherInput');
+                });
+            }
+        });
+
+        function handleOtherOption(selectElement, inputId) {
+            const otherInputId = `${inputId}`;
+            let otherInput = document.getElementById(otherInputId);
+
+            if (selectElement.value === 'Other') {
+                if (!otherInput) {
+                    const inputField = document.createElement('input');
+                    inputField.type = 'text';
+                    inputField.id = otherInputId;
+                    inputField.name = selectElement.name;
+                    inputField.className = 'form-control mt-2';
+                    inputField.placeholder = 'Other Please specify';
+                    selectElement.parentNode.appendChild(inputField);
+                }
+            } else {
+                if (otherInput) {
+                    otherInput.remove();
+                }
+            }
+        }

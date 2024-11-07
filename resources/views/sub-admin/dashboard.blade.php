@@ -13,7 +13,7 @@
 
     <div class="row mb-4">
         <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card-onclick card text-white" style="background-color:#2c3539;" onclick="location.href='{{ route('visitors.subadmin') }}'">
+            <div class="card-onclick card text-white" style="background-color:#2c3539;" onclick="location.href='{{ url('/sub-admin/visitor') }}'">
                 <div class="card-body d-flex justify-content-between">
                     <div class="icon-container text-center d-flex justify-content-center align-items-center" >
                         <i class="bi bi-person-fill" style="font-size: 50px; color: white; vertical-align: middle;"></i>
@@ -68,13 +68,13 @@
                     <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2">Monthly</button>
                     <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary">Yearly</button>
                 </div>
-                <canvas id="visitorChart" class="bg-white shadow rounded p-4"></canvas>
+                <canvas id="visitorChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
             </div>
         </div>
         <div class="col-md-6">
             <div class="container">
                 <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
-                <canvas id="visitorPieChart" class="bg-white shadow rounded p-4"></canvas>
+                <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
             </div>
         </div>
     </div>
@@ -129,11 +129,11 @@
     .icon-container i{
         vertical-align: middle;
     }
-    #visitorPieChart {
+    /* #visitorPieChart {
         width: 100%;
         max-width: 400px;
         height: 140px;
-    }
+    } */
 </style>
 
 @endsection

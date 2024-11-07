@@ -10,9 +10,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('update.lost_found', $item->id)}}" method="POST"  enctype="multipart/form-data">
+                    <form class="updateLostFoundForm" id="updateLostFoundForm-{{ $item->id }}" action="{{route('update.lost_found', $item->id)}}" method="POST"  enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="lostType-{{ $item->id }}" class="form-label">Object type:</label>
@@ -57,18 +66,13 @@
                                 <input type="text" class="form-control" id="location-{{ $item->id }}" name="location" value="{{ $item->location }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="isClaimed-{{ $item->id }}" class="form-label">Is Claimed:</label>
-                                <select class="form-control" id="isClaimed-{{ $item->id }}" name="is_claimed">
-                                    <option value="1" {{ $item->is_claimed ? 'selected' : '' }}>Yes</option>
-                                    <option value="0" {{ !$item->is_claimed ? 'selected' : '' }}>No</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
                                 <label for="description-{{ $item->id }}" class="form-label">Description:</label>
                                 <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">update</button>
+                                <button type="submit" class="btn btn-primary update_lost w-50">
+                                    <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
+                                    update</button>
                             </div>
                         </div>
                     </form>

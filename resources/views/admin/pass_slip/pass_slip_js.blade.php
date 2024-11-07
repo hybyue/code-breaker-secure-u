@@ -119,13 +119,82 @@
                 }
             },
             complete: function() {
-                // Hide loading spinner and enable submit button
                 $('#loadingSpinner').hide();
                 submitButton.prop('disabled', false);
             }
         });
     });
+
+    $('.updatePassSlipFormAd').on('submit', function(e) {
+    e.preventDefault();
+
+    let form = $(this);
+    let formData = new FormData(this);
+    let submitButton = form.find('.update_pass');
+    let modalId = form.attr('id').split('-')[1];
+    let modal = $('#updatePassSlipAd-' + modalId);
+
+    submitButton.prop('disabled', true);
+    form.find('#loadingSpinnerer').show();
+
+    $.ajax({
+        url: form.attr('action'),
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                modal.modal('hide');
+                localStorage.setItem('showToast', 'true');
+                location.reload();
+            }
+        },
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                form.find('.error-message').remove();
+
+                $.each(errors, function(field, messages) {
+                    let input = form.find('[name="' + field + '"]');
+                    input.addClass('is-invalid');
+                    input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
+                });
+            }
+        },
+        complete: function() {
+            form.find('#loadingSpinnerer').hide();
+            submitButton.prop('disabled', false);
+        }
+    });
 });
+        $('.modal').on('hidden.bs.modal', function() {
+            $('.is-invalid').removeClass('is-invalid');
+            $('.error-message').text('');
+        });
+});
+
+$(document).ready(function() {
+    if (localStorage.getItem('showToast') === 'true') {
+        Swal.fire({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: 'Pass Slip updated successfully',
+        });
+
+        localStorage.removeItem('showToast');
+    }
+});
+
+
 
    </script>
 
@@ -204,14 +273,14 @@ function searchEmployee() {
         .then(data => {
             if (data.success && data.employees.length > 0) {
                 let resultsContainer = document.getElementById('employee_results');
-                resultsContainer.innerHTML = ''; // Clear previous results
-
-                // Display the employee suggestions
+                resultsContainer.innerHTML = '';
                 data.employees.forEach(employee => {
                     let resultItem = document.createElement('div');
                     resultItem.classList.add('result-item');
                     resultItem.innerHTML = `
-                        <a href="#" class="btn btn-primary">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
+                    <div class="w-100 bg-primary">
+                        <a href="#" class="btn w-100 btn-primary text-start">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
+                    </div>
                     `;
 
                     resultItem.onclick = function() {
@@ -236,10 +305,11 @@ function searchEmployee() {
             }
         })
         .catch(error => console.error('Error:', error));
-    } else {
-        clearEmployeeFields();
-        document.getElementById('employee_results').innerHTML = '';
-    }
+     }
+    //   else {
+    //     clearEmployeeFields();
+    //     document.getElementById('employee_results').innerHTML = '';
+    // }
 }
 
     </script>

@@ -14,7 +14,7 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addNewLostModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-lost', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLost()">Generate Report</a>
         </div>
     </div>
 
@@ -22,19 +22,21 @@
         <form action="/admin/lost_found" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
-                    <label for="start_date"> Start Date: </label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control"
+                        value="{{ session('lost_found_admin_filter.start_date', request('start_date')) }}">
                 </div>
                 <div class="col-md-3">
-                    <label for="end_date"> End Date: </label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" required>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control"
+                        value="{{ session('lost_found_admin_filter.end_date', request('end_date')) }}">
                 </div>
                 <div class="col-md-1 mt-4 pt-2">
-                    <button type="submit"class="btn btn-dark">Filter</button>
+                    <button type="submit" class="btn btn-dark">Filter</button>
                 </div>
-                @if(request('start_date') || request('end_date'))
+                @if(session()->has('lost_found_admin_filter'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="/admin/lost_found" class="btn btn-secondary">Clear Filter</a>
+                    <a href="{{ route('admin.lost.clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -55,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-                @forelse($lost_found as $item)
+                @foreach($lost_found as $item)
 
                 <tr id="tr_{{$item->id}}" class="text-center">
                     <td>{{\Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
@@ -64,12 +66,14 @@
                      </td>
                     <td>{{ $item->course }}</td>
                     <td>
-                        @if($item->is_claimed == 0)
-                            <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
-                        @elseif($item->is_transferred == 1)
-                        <p class="text-danger">Transfer</p>
-                        @else
+                        @if($item->is_claimed == 1)
                             <p class="text-success">Claimed</p>
+                        @elseif($item->is_transferred == 1)
+                        <p class="text-danger">Transferred</p>
+                        @else
+                        <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                        <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #1be225" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
+
                         @endif
                     </td>
                     <td>
@@ -90,11 +94,7 @@
                         </div>
                     </td>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="text-center">No Data available in table</td>
-                </tr>
-            @endforelse
+            @endforeach
         </tbody>
     </table>
 </div>
@@ -158,43 +158,30 @@
 
 
 
-<script>
-    function markAsClaimed(id) {
-    $.ajax({
-        url: `/admin/update_claimed/${id}`,
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            is_claimed: 1
-        },
-        success: function(response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'The item has been marked as claimed!',
-                confirmButtonColor: '#0B9B19'
-            }).then(() => {
-                const row = document.querySelector(`button[onclick='markAsClaimed(${id})']`).closest('tr');
-                if (row) {
-                    const statusCell = row.querySelector('td:nth-child(5)');
-                    if (statusCell) {
-                        statusCell.innerHTML = '<p class="text-success">Claimed</p>';
-                    }
-                }
-            });
-        },
-        error: function(xhr) {
-            console.error(xhr);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'There was a problem updating the claim status. Please try again.',
-                confirmButtonColor: '#920606'
-            });
-        }
-    });
-}
-</script>
+<!-- TODO::Modal PDF Preview -->
+<div class="modal fade" id="pdfModalLostAd" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Lost and Found Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- PDF Preview will be embedded here -->
+                <div id="loadingBar" style="display:none; text-align: center;">
+                    <div class="spinner-border" role="status">
+                    </div>
+                </div>
+
+                <iframe id="pdfLostFrame" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <style>
     .same-height-table td {
         vertical-align: middle;

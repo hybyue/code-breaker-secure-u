@@ -10,7 +10,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="updateVisitorForm" action="{{ route('visitor.update', $visit->id) }}" method="POST">
+                    <form class="updateVisitorForm" id="updateVisitorForm-{{ $visit->id }}" action="{{ route('visitor.update', $visit->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         @if ($errors->any())
@@ -41,55 +41,52 @@
                                     <option value="{{ $visit->person_to_visit }}" selected>{{ $visit->person_to_visit }}</option>
                                         <!-- Colleges -->
                                         <optgroup label="Colleges">
-                                            <option value="IGAS">Institute of Graduate and Advanced Studies</option>
-                                            <option value="COL">College of Law</option>
-                                            <option value="COP">College of Pharmacy</option>
-                                            <option value="CHUMS">College of Human Sciences</option>
-                                            <option value="CTE">College of Teacher Education</option>
-                                            <option value="CBMA">College of Business Management and Accountancy</option>
-                                            <option value="CHS">College of Health Sciences</option>
-                                            <option value="CHTM">College of Hospitality and Tourism Management</option>
-                                            <option value="CEA">College of Engineering and Architecture</option>
-                                            <option value="CCJE">College of Criminal Justice Education</option>
-                                            <option value="CAS">College of Arts and Sciences</option>
-                                            <option value="CITE">College of Information and Technology Education</option>
-
+                                            <option value="Institute of Graduate and Advanced Studies">Institute of Graduate and Advanced Studies</option>
+                                            <option value="College of Law">College of Law</option>
+                                            <option value="College of Pharmacy">College of Pharmacy</option>
+                                            <option value="College of Human Sciences">College of Human Sciences</option>
+                                            <option value="College of Teacher Education">College of Teacher Education</option>
+                                            <option value="College of Business Management and Accountancy">College of Business Management and Accountancy</option>
+                                            <option value="College of Health Sciences">College of Health Sciences</option>
+                                            <option value="College of Hospitality and Tourism Management">College of Hospitality and Tourism Management</option>
+                                            <option value="College of Engineering and Architecture">College of Engineering and Architecture</option>
+                                            <option value="College of Criminal Justice Education">College of Criminal Justice Education</option>
+                                            <option value="College of Arts and Sciences">College of Arts and Sciences</option>
+                                            <option value="College of Information and Technology Education">College of Information and Technology Education</option>
                                         </optgroup>
 
                                         <!-- Departments -->
                                         <optgroup label="Departments">
-                                            <option value="CSLD">Center for Student Leadership and Development</option>
-                                            <option value="CRD">Center for Research and Development</option>
-                                            <option value="LINKAGES">Office of the External Affairs and Linkages</option>
-                                            <option value="PACC">Psychological Assessment and Counseling Center</option>
-                                            <option value="IPD">Institutional Planning and Development</option>
-                                            <option value="DRRMO">Disaster Risk Reduction and Management Office</option>
-                                            <option value="CCRDES">Center for Community Development and Extension Services</option>
-                                            <option value="MIDWIFE">School of Midwifery (CHS)</option>
-                                            <option value="CTPD">Center for Training and Professional Development</option>
-                                            <option value="ETHICS">Research Ethics Committee</option>
-                                            <option value="REGISTRAR">University Registrar</option>
-                                            <option value="ACCOUNTING">Accounting Office</option>
-                                            <option value="HCMO">Human Capital Management Office</option>
-                                            <option value="LIBRARY">University Library</option>
-                                            <option value="TECHVOC">Technical Vocational Institute</option>
-                                            <option value="SGO">Security Management Office</option>
-                                            <option value="EMO">Events Management Office</option>
-                                            <option value="RECORDS">Records Management System</option>
-                                            <option value="NSTP">NSTP Department</option>
-                                            <option value="MIS">Management Information Systems</option>
-                                            <option value="GSO">Maintenance and General Services</option>
-                                            <option value="CASHIER">University Cashier</option>
-                                            <option value="GAD">Gender and Development</option>
-                                            <option value="AUDIT">Audit Office</option>
-                                            <option value="EMAS">Engineering Management & Auxiliary Services</option>
-                                            <option value="CPCA">Committee for Publication and Communication Affairs</option>
-                                            <option value="CHAPLAIN">University Chaplain</option>
-                                            <option value="CLINIC">University Clinic</option>
-                                            <option value="NURSE">University Nurse</option>
+                                            <option value="Center for Student Leadership and Development">Center for Student Leadership and Development</option>
+                                            <option value="Center for Research and Development">Center for Research and Development</option>
+                                            <option value="Office of the External Affairs and Linkages">Office of the External Affairs and Linkages</option>
+                                            <option value="Psychological Assessment and Counseling Center">Psychological Assessment and Counseling Center</option>
+                                            <option value="Institutional Planning and Development">Institutional Planning and Development</option>
+                                            <option value="Disaster Risk Reduction and Management Office">Disaster Risk Reduction and Management Office</option>
+                                            <option value="Center for Community Development and Extension Services">Center for Community Development and Extension Services</option>
+                                            <option value="School of Midwifery (CHS)">School of Midwifery (CHS)</option>
+                                            <option value="Center for Training and Professional Development">Center for Training and Professional Development</option>
+                                            <option value="Research Ethics Committee">Research Ethics Committee</option>
+                                            <option value="University Registrar">University Registrar</option>
+                                            <option value="Accounting Office">Accounting Office</option>
+                                            <option value="Human Capital Management Office">Human Capital Management Office</option>
+                                            <option value="University Library">University Library</option>
+                                            <option value="Technical Vocational Institute">Technical Vocational Institute</option>
+                                            <option value="Security Management Office">Security Management Office</option>
+                                            <option value="Events Management Office">Events Management Office</option>
+                                            <option value="Records Management System">Records Management System</option>
+                                            <option value="NSTP Department">NSTP Department</option>
+                                            <option value="Management Information Systems">Management Information Systems</option>
+                                            <option value="Maintenance and General Services">Maintenance and General Services</option>
+                                            <option value="University Cashier">University Cashier</option>
+                                            <option value="Gender and Development">Gender and Development</option>
+                                            <option value="Audit Office">Audit Office</option>
+                                            <option value="Engineering Management & Auxiliary Services">Engineering Management & Auxiliary Services</option>
+                                            <option value="Committee for Publication and Communication Affairs">Committee for Publication and Communication Affairs</option>
+                                            <option value="University Chaplain">University Chaplain</option>
+                                            <option value="University Clinic">University Clinic</option>
+                                            <option value="University Nurse">University Nurse</option>
                                         </optgroup>
-
-
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
@@ -120,7 +117,9 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn w-50 btn-primary update_visitor">
+                                <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
+                                Update</button>
                         </div>
                     </form>
                 </div>

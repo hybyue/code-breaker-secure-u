@@ -69,20 +69,22 @@ function editBtn(id) {
         <form action="/sub-admin/visitor" method="GET">
             <div class="row pb-3">
                 <div class="col-md-3">
-                    <label for="start_date"> Start Date: </label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" required>
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control"  value="{{ session('visitor_filter.start_date', request('start_date')) }}">
                 </div>
                 <div class="col-md-3">
-                    <label for="end_date"> End Date: </label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ session('visitor_filter.end_date', request('end_date')) }}">
                 </div>
+
                 <div class="col-md-1 mt-4 pt-2">
                     <button type="submit" class="btn btn-dark">Filter</button>
                 </div>
-                @if (request('start_date') || request('end_date'))
-                    <div class="col-md-0 mt-4 pt-2">
-                        <a href="/sub-admin/visitor" class="btn btn-secondary">Clear Filter</a>
-                    </div>
+
+                @if(session()->has('visitor_filter'))
+                <div class="col-md-0 mt-4 pt-2">
+                    <a href="{{ url('/sub-admin/visitor/clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
+                </div>
                 @endif
             </div>
         </form>
@@ -102,13 +104,8 @@ function editBtn(id) {
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($latestVisitors->isEmpty())
-    <tr>
-        <td colspan="8" class="text-center">No Data available in table</td>
-    </tr>
-@else
-    @foreach($latestVisitors as $visit)
-        <tr>
+                    @foreach($latestVisitors as $visit)
+                 <tr>
             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
             <td>{{ $visit->last_name }}, {{ $visit->first_name }}
                 @if ($visit->middle_name)
@@ -147,7 +144,6 @@ function editBtn(id) {
             </td>
         </tr>
     @endforeach
-@endif
 
                     </tbody>
                 </table>

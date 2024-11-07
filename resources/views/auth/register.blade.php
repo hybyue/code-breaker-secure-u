@@ -20,6 +20,12 @@
             </div>
         @endif
 
+        @if(session('warning'))
+            <div class="alert alert-warning">
+                {{ session('warning') }}
+            </div>
+        @endif
+
         <form method="post" action="{{ route('register.save') }}" class="login-form">
             @csrf
             <div class="form-group text-start">
@@ -178,6 +184,14 @@ $('.show-password').on('click', function() {
     border-left: none !important;
     border-radius: 0 0.25rem 0.25rem 0 !important;
     border: 1px solid #ced4da;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+    color: #df1010;
+    margin-top: 20px;
+    width: 100%;
 }
 </style>
 @endpush

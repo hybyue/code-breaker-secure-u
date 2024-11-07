@@ -60,7 +60,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                     @if (Route::has('login'))
                         @auth
-                            <div class="dropdown">
+                            {{-- <div class="dropdown">
                                 <button class="btn btn-dark notification-button position-relative" id="notificationDropdown"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-bell-fill"></i>
@@ -89,13 +89,11 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="dropdown2">
+                            </div> --}}
+                            <div class="dropdown">
                                 <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <img class="rounded-circle"
-                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiyWg33WlX7U9e3dvdcAO0VQ3VM9RUlXJBcA&s"
-                                        alt="User" width="40" height="40">
+                                    <i class="bi bi-person-circle"  style="font-size: 30px; color: white; vertical-align: middle;"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                                     <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Home</a></li>

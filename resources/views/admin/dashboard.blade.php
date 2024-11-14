@@ -62,7 +62,7 @@
                 <div class="container">
                     <h5 class="card-title">Violations</h5>
                     <div class="row d-flex justify-content-between align-items-between">
-                        <div class="col-md-4"><small class="text-end">Today</small></div>
+                        <div class="col-md-4"><small class="text-end"></small></div>
                         <div class="col-md-4"><h4 class="text-end">{{ $totalViolation }}</h4></div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                 <div class="container">
                     <h5 class="card-title">Lost and Found</h5>
                     <div class="row d-flex justify-content-between align-items-between">
-                        <div class="col-md-4"><small class="text-end">Today</small></div>
+                        <div class="col-md-4"><small class="text-end"></small></div>
                         <div class="col-md-4"><h4 class="text-end">{{ $totalLostFound }}</h4></div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <div class="container">
                     <h5 class="card-title">Employees</h5>
                     <div class="row d-flex justify-content-between align-items-between">
-                        <div class="col-md-4"><small class="text-end">Today</small></div>
+                        <div class="col-md-4"><small class="text-end"></small></div>
                         <div class="col-md-4"><h4 class="text-end">{{ $totalEmployees }}</h4></div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                     <i class="bi bi-person-lines-fill" style="font-size: 50px; color: white; vertical-align: middle;"></i>
                 </div>
                 <div class="container">
-                    <h5 class="card-title">Total Students</h5>
+                    <h5 class="card-title">Students</h5>
                     <h4 class="text-end">{{ $totalStudent }}</h4>
                 </div>
             </div>
@@ -138,65 +138,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('tailwindcharts/js/apexcharts.js') }}"></script>
 <style>
-    .event-box {
-        border: 1px solid #303030;
-        border-radius: 5px;
-        background-color: #fce6e6;
-    }
-
-    .card-onclick {
-        transition: transform 0.3s;
-        cursor: pointer;
-    }
-
-    .card-onclick:hover {
-        transform: scale(1.03);
-    }
-
-    .fc-event-container {
-        background-color: #f0f0f0;
-        border-radius: 5px;
-    }
-
-    .fc-event {
-        background-color: #292b2e;
-        color: #ffffff;
-        border: none;
-        padding: 5px;
-        transition: transform 0.3s;
-    }
-
-    .fc-event:hover {
-        transform: scale(1.05);
-    }
-
-    .event-title {
-        font-weight: bold;
-    }
-
-    /* Responsive Card Image */
-    .card-img {
-        width: 80px;
-        height: 80px;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 758px) {
-        .card-body {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .ml-3 {
-            margin-left: 0;
-        }
-
-        .card-img {
-            width: 60px;
-            height: 60px;
-        }
-    }
-
     .icon-container{
         background-color:#cf1818;
         width: 100px;

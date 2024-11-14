@@ -1,9 +1,6 @@
 @extends('admin.layouts.sidebar_admin')
 
 @section('title', 'Lost and Found')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('content')
 <div class="container mt-3 pass-slip">
@@ -71,8 +68,8 @@
                         @elseif($item->is_transferred == 1)
                         <p class="text-danger">Transferred</p>
                         @else
-                        <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
-                        <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #1be225" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
+                        <button class="btn btn-sm btn-warning" title="Mark as Claimed" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                        <a href="javascript:void(0)" class="btn btn-sm bg-dark text-white" title="Transfer to CSLD" style="background-color: #1be225" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
 
                         @endif
                     </td>
@@ -101,56 +98,67 @@
 
 </div>
 <div id="viewLostFoundAd">
-@foreach($lost_found as $item)
-<!-- View Modal -->
-<div class="modal fade" id="viewLostFoundAdmin-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewLostFoundLabel-{{ $item->id }}">View Lost Item</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Object Type:</strong> {{ $item->object_type }}</p>
-                <p><strong>Finder's Name:</strong> {{ $item->last_name }}, {{ $item->first_name }}
-                    @if($item->middle_name) {{ $item->middle_name }}. @endif
-                </p>
-                <p><strong>Role:</strong> {{ $item->course }}</p>
-                <p><strong>Status:</strong>
-                    @if($item->is_claimed == 1)
-                        <span class="text-success">Claimed</span>
-                    @else
-                        <span class="text-danger">Not Claimed</span>
-                    @endif
-                </p>
-                <p><strong>Assist by:</strong>
-                    @if ($item->user_id)
-                    @php
-                        $user = App\Models\User::find($item->user_id);
-                    @endphp
-                    {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
-                    @else
-                    N/A
-                @endif
-            </p>
+    @foreach($lost_found as $item)
+    <!-- View Modal -->
+    <div class="modal fade" id="viewLostFoundAdmin-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
 
-                <!-- Display Image in Modal -->
-                <div class="d-flew justify-content-center align-items-center mb-3">
+
+                <div class="modal-header border-0" style="background-color: #f8f9fa;">
+                    <h5 class="modal-title" id="viewLostFoundLabel-{{ $item->id }}" style="color: #333;">View Lost Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4" style="color: #555;">
+                    <div class="row mb-3">
+                          <!-- Image at the top with rounded corners -->
+                <div class="modal-image" style="border-top-left-radius: 15px; border-top-right-radius: 15px; overflow: hidden;">
                     @if($item->object_img)
-                        <img src="{{ asset($item->object_img) }}" alt="Object Image" class="img-fluid" style="max-width: 100%;">
+                        <img src="{{ asset($item->object_img) }}" alt="Object Image" class="img-fluid" style="width: 100%; border-radius: 15px 15px 0 0;">
                     @else
-                        <span class="text-muted">No Image Available</span>
+                        <div class="text-muted text-center p-5" style="background-color: #f8f9fa; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                            No Image Available
+                        </div>
                     @endif
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <div class="col-12">
+                            <p><strong>Object Type:</strong> {{ $item->object_type }}</p>
+                            <p><strong>Finder's Name:</strong> {{ $item->last_name }}, {{ $item->first_name }} @if($item->middle_name) {{ $item->middle_name }}. @endif</p>
+                            <p><strong>Role:</strong> {{ $item->course }}</p>
+                            <p><strong>Location:</strong> {{ $item->location }}</p>
+                            <p><strong>Description:</strong> {{ $item->description ?: 'No description provided' }}</p>
+                            <p><strong>Status:</strong>
+                                @if($item->is_claimed == 1)
+                                    <span class="badge bg-success">Claimed</span>
+                                @elseif($item->is_transferred == 1)
+                                    <span class="badge bg-danger">Transferred</span>
+                                @else
+                                    <span class="badge bg-danger">Not Claimed</span>
+                                @endif
+                            </p>
+                            <p><strong>Assist by:</strong>
+                                @if ($item->user_id)
+                                    @php
+                                        $user = App\Models\User::find($item->user_id);
+                                    @endphp
+                                    {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
+                                @else
+                                    N/A
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0" style="background-color: #f8f9fa; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 20px;">Close</button>
+                </div>
             </div>
         </div>
     </div>
+    @endforeach
 </div>
-@endforeach
-</div>
+
 
 @include('admin.lost.add_lost')
 @include('admin.lost.update_lost')
@@ -179,13 +187,36 @@
     </div>
 </div>
 
-
-
-
 <style>
-    .same-height-table td {
-        vertical-align: middle;
-    }
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.modal-body p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.modal-image img {
+    width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+}
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.75em;
+}
+
+.btn-close {
+    color: #333;
+    opacity: 0.7;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
 
 </style>
 

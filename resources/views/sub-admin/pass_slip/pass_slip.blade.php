@@ -1,6 +1,7 @@
 @extends('layouts.sidebar')
 
 @section('title', 'Pass slip')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 @section('content')
 <div class="container pass-slip">
@@ -70,23 +71,23 @@
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
-                    <th>Department</th>
+                    <th>Office/Dept</th>
                     <th>Date</th>
                     <th>Time Out</th>
                     <th>Time In</th>
-                    <th>Departure Count</th>
+                    <th class="text-center">Exit Count</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
 
-                @forelse ($latestPassSlips as $passSlip)
+                @foreach ($latestPassSlips as $passSlip)
                     <tr>
                     <td>{{ $passSlip->p_no }}</td>
                     <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
                     <td>{{ $passSlip->department}}</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A')}}</td>
+                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
                     <td id="time-in-{{ $passSlip->id }}" class="text-center"
                         @if($passSlip->is_exceeded)
                             style="background-color: red; color: white;"
@@ -103,7 +104,7 @@
                             </form>
                         </div>
                         @else
-                            {{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}
+                            {{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i') }}
                             @if($passSlip->late_minutes > 0)
                                 <br>
                                 <small>(
@@ -133,11 +134,7 @@
                         </td>
                         <p hidden>{{ $passSlip->employee_type }}</p>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="10" class="text-center">No Data available in table</td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
 
@@ -151,54 +148,104 @@
 <div id="latestPassSlips">
 @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="viewPassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="viewPassSlipLabel-{{ $passSlip->id }}" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewPassSlipLabel-{{ $passSlip->id }}">Pass Slip Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row d-flex align-items-between">
-                <div class="col">
-                    <h6 class="text-start"><strong>Departure count:</strong>  {{ $passSlip->exit_count }}</h6>
-                </div>
-                <div class="col">
-                    <h6 class="text-end"> <strong>{{ $passSlip->employee_type }}</strong></h6>
-                </div>
-            </div>
-                @foreach($allPassSlips->where('last_name', $passSlip->last_name)->where('first_name', $passSlip->first_name)->where('middle_name', $passSlip->middle_name)->where('date', $passSlip->date) as $entry)
-                <div class="card mt-2 p-2">
-                    <div class="card-body p-3">
-                        <p><strong>Name:</strong> {{ $entry->last_name }}, {{ $entry->first_name }} {{ $entry->middle_name }}.</p>
-                        <p><strong>College/Department:</strong> {{ $entry->department }}</p>
-                        <p><strong>Designation:</strong> {{ $entry->designation }}</p>
-                        <p><strong>Destination:</strong> {{ $entry->destination }}</p>
-                        <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</p>
-                        <p><strong>Time Out:</strong> {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}</p>
-                        <p><strong>Time out by:</strong>
-                            @if ($entry->time_out_by)
-                            @php
-                                $user = App\Models\User::find($entry->time_out_by);
-                            @endphp
-                            {{ $user->first_name }} @if($user->middle_name){{ $user->middle_name}}.@endif {{ $user->last_name }}
-                        @endif
-                        </p>
-
-
-                    @if($entry->time_in || $entry->time_in_by)
-                    <p><strong>Time In:</strong> {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</p>
-                    <p><strong>Time in by:</strong>
-                        @if ($entry->time_in_by)
-                        @php
-                            $user = App\Models\User::find($entry->time_in_by);
-                        @endphp
-                        {{ $user->first_name }} @if($user->middle_name){{ $user->middle_name}}.@endif {{ $user->last_name }}
-                    @endif
-                </p>
-                @endif
+                <div class="container mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h5 class="mb-1 text-primary">
+                                        {{$passSlip->last_name}}, {{$passSlip->first_name}}
+                                        @if($passSlip->middle_name)
+                                            <span class="text-primary">{{$passSlip->middle_name}}.</span>
+                                        @endif
+                                    </h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="badge bg-light text-dark p-2">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            {{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}
+                                        </div>
+                                        <div class="badge bg-light text-dark p-2">
+                                            <i class="bi bi-building me-1"></i>
+                                            {{$passSlip->department}}
+                                        </div>
+                                        <div class="badge bg-success text-white p-2">
+                                            <i class="bi bi-clock-history me-1"></i>
+                                            {{$passSlip->exit_count}} Exit Count
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                @endforeach
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Pass Slip No.</th>
+                            <th>Designation</th>
+                            <th>Absence Type</th>
+                            <th>Driver Name</th>
+                            <th>Destination</th>
+                            <th>Purpose</th>
+                            <th>Time Out</th>
+                            <th>Time In</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($allPassSlips->where('last_name', $passSlip->last_name)
+                                ->where('first_name', $passSlip->first_name)
+                                ->where('middle_name', $passSlip->middle_name)
+                                ->where('date', $passSlip->date) as $entry)
+                        <tr>
+                            <td>{{ $entry->p_no }}</td>
+                            <td>{{ $entry->designation }}</td>
+                            <td>{{ $entry->check_business }}</td>
+                            <td>{{ $entry->driver_name ?? 'N/A' }}</td>
+                            <td>{{ $entry->destination }}</td>
+                            <td>{{ $entry->purpose }}</td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}
+                                <br>
+                                <small class="text-muted">by:
+                                    @if ($entry->time_out_by)
+                                        @php
+                                            $user = App\Models\User::find($entry->time_out_by);
+                                        @endphp
+                                        {{ $user->first_name }}
+                                        @if($user->middle_name){{ $user->middle_name}}.@endif
+                                        {{ $user->last_name }}
+                                    @endif
+                                </small>
+                            </td>
+                            <td>
+                                @if($entry->time_in)
+                                    {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}
+                                    <br>
+                                    <small class="text-muted">by:
+                                        @if ($entry->time_in_by)
+                                            @php
+                                                $user = App\Models\User::find($entry->time_in_by);
+                                            @endphp
+                                            {{ $user->first_name }}
+                                            @if($user->middle_name){{ $user->middle_name}}.@endif
+                                            {{ $user->last_name }}
+                                        @endif
+                                    </small>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -230,6 +277,9 @@
     }
 
 </script>
+
+
+
 
 <!-- Modal Structure -->
 <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
@@ -372,7 +422,6 @@ function showPdfModalLooping() {
     }, 2000);
 }
     </script>
-
 <style>
     .same-height-table td {
         vertical-align: middle;

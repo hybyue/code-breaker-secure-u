@@ -297,6 +297,8 @@ public function lost_found_admin(Request $request)
         $lost_found->location = $request->input('location');
         $lost_found->security_staff = $request->input('security_staff');
         $lost_found->is_claimed = $request->input('is_claimed');
+        $lost_found->is_transferred = $request->input('is_transferred');
+
         $lost_found->description = $request->input('description');
 
           // Save the updated model

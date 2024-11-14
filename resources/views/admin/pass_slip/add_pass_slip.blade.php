@@ -47,12 +47,12 @@
                             <span class="text-danger error-message" id="middle_name_error"></span>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="department" class="form-label">Department:</label>
+                            <label for="department" class="form-label">Office/Dept:</label>
                             <input type="text" class="form-control bg-body-secondary" id="department" name="department" required readonly>
                             <span class="text-danger error-message" id="department_error"></span>
                         </div>
                         <div class="col-md-6">
-                            <label for="designation" class="form-label">Designation:</label>
+                            <label for="designation" class="form-label">Position/Designation:</label>
                             <input class="form-control bg-body-secondary" id="designation" name="designation" required readonly>
                             <span class="text-danger error-message" id="designation_error"></span>
                         </div>
@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
-                            <input type="time" class="form-control" id="time_out" name="time_out" required>
+                            <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00" required>
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">

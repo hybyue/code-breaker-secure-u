@@ -24,29 +24,35 @@
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
                             <input class="form-control" id="status" name="employee_type" required readonly>
+                            <span class="text-danger error-message" id="employee_type_error"></span>
                         </div>
                         <input hidden type="text" class="form-control" id="employee_id" name="employee_id">
                         <div class="col-md-4 mb-2">
                             <label for="last_name" class="form-label">Last Name:</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" required readonly>
+                            <span class="text-danger error-message" id="last_name_error"></span>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="first_name" class="form-label">First Name:</label>
                             <input type="text" class="form-control" id="first_name" name="first_name" required readonly>
-                        </div>
+                            <span class="text-danger error-message" id="first_name_error"></span>
+                            </div>
                         <div class="col-md-4  mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
                             <input type="text" class="form-control" id="middle_name" name="middle_name" readonly
                                 placeholder="Optional">
+                            <span class="text-danger error-message" id="middle_name_error"></span>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="department" class="form-label">Department:</label>
+                            <label for="department" class="form-label">Office/Dept:</label>
                             <input type="text" class="form-control" id="department" name="department" required readonly>
+                            <span class="text-danger error-message" id="department_error"></span>
                         </div>
                         <div class="col-md-6">
-                            <label for="designation" class="form-label">Designation:</label>
+                            <label for="designation" class="form-label">Position/Designation:</label>
                             <input class="form-control" id="designation" name="designation" rows="3"
                                 required readonly></input>
+                            <span class="text-danger error-message" id="designation_error"></span>
                         </div>
                         <div class="row mb-2 ms-3">
                             <label class="form-label">Check Business:</label>
@@ -95,11 +101,11 @@
                         </div> --}}
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
-                            <input type="time" class="form-control" id="time_out" name="time_out" >
+                            <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00">
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
-                        <div class="mt-2 d-flew justify-content-end align-items-end text-end">
-                            <button type="submit" class="btn btn-primary w-50">
+                        <div class="mt-2 text-center">
+                            <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Save
                             </button>
@@ -110,4 +116,3 @@
         </div>
     </div>
 </div>
-

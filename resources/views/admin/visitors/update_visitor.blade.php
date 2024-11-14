@@ -6,7 +6,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateVisitorModalLabel-{{ $visit->id }}">Edit Visitor Entries</h5>
+                    <h5 class="modal-title" id="updateVisitorModalLabel-{{ $visit->id }}">Edit Visitor</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -90,16 +90,11 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="purpose_{{ $visit->id }}">Purpose:</label>
                                 <textarea class="form-control" id="purpose_{{ $visit->id }}" name="purpose" required>{{ $visit->purpose }}</textarea>
                             </div>
-
-                            <div class="form-group">
-                                <label for="entry_count_{{ $visit->id }}">Entry Count:</label>
-                                <input type="number" class="form-control" id="entry_count_{{ $visit->id }}" name="entry_count" value="{{ $visit->entry_count }}" required>
-                            </div>
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="id_type">ID Type:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="{{$visit->id_type}}" selected>{{$visit->id_type}}</option>
@@ -114,6 +109,23 @@
                         </div>
                         <input type="hidden" name="time_in" id="time_in_{{ $visit->id }}" value="{{ $visit->time_in }}">
                         <input type="hidden" name="time_out" id="time_out_{{ $visit->id }}" value="{{ $visit->time_out }}">
+
+                        <div class="form-group">
+                            <label for="id_number_{{ $visit->id }}">ID Number:</label>
+                            <input type="text" class="form-control" id="id_number_{{ $visit->id }}" name="id_number" value="{{ $visit->id_number }}" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="visited_person_name_{{ $visit->id }}">Person Visited Name:</label>
+                            <input type="text" class="form-control" id="visited_person_name_{{ $visit->id }}"
+                                name="visited_person_name" value="{{ $visit->visited_person_name }}">
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="visited_person_position_{{ $visit->id }}">Person Visited Position:</label>
+                            <input type="text" class="form-control" id="visited_person_position_{{ $visit->id }}"
+                                name="visited_person_position" value="{{ $visit->visited_person_position }}">
+                        </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

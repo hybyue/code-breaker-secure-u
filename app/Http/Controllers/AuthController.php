@@ -196,12 +196,11 @@ class AuthController extends Controller
     {
         if (FacadesRateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
             $seconds = FacadesRateLimiter::availableIn($this->throttleKey($request));
-            $minutes = ceil($seconds / 60); // Convert seconds to minutes, rounding up
 
-            throw ValidationException::withMessages([
-                'email' => "Too many login attempts. Please try again in $minutes minute(s).",
-                'seconds' => $seconds // Return the remaining lockout time in seconds
-            ])->status(429);
+            return response()->json([
+                'message' => 'Too many attempts',
+                'seconds' => $seconds
+            ], 429);
         }
     }
 
@@ -256,6 +255,11 @@ public function logout(Request $request)
     Auth::guard('web')->logout();
 
     $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    if ($request->ajax()) {
+        return response()->json(['redirect' => route('login')]);
+    }
 
     return redirect('/login');
 }

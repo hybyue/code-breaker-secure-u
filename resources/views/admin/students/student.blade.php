@@ -140,13 +140,6 @@ Modal for showing all entries of a student
 @endforeach --}}
 
 
-<style>
-    .same-height-table td {
-        vertical-align: middle;
-    }
-</style>
-
-
 
 
 @endsection

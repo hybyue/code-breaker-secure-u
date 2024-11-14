@@ -53,6 +53,7 @@
         .drop-me {
             z-index: 1000;
         }
+
     </style>
 </head>
 <body>
@@ -70,8 +71,14 @@
                         <div class="dropdown">
                             <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <i class="bi bi-person-circle"  style="font-size: 30px; color: white; vertical-align: middle;"></i>
-                            </a>
+                                @if(auth()->user()->profile_picture)
+                                <img src="{{ asset(auth()->user()->profile_picture) }}"
+                                     alt="Profile Picture"
+                                     style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; vertical-align: middle; border: 3px solid #b9b9b9;">
+                            @else
+                                <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
+                            @endif
+                         </a>
                             <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                                 <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li><a class="dropdown-item"
@@ -173,26 +180,19 @@
 
 
 
-    @yield('header')
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 
     <script src="{{ asset('js/sidebar_admin.js') }}"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> --}}
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+
 
 
 

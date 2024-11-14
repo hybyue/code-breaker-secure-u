@@ -74,7 +74,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewDataInformationLabel">Employee's Information</h5>
+                <h5 class="modal-title" id="viewDataInformationLabel">Security Staff Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -134,7 +134,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateEmployeeModalLabel-{{ $employee->id }}">Edit Employee</h5>
+                <h5 class="modal-title" id="updateEmployeeModalLabel-{{ $employee->id }}">Edit Staff Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -197,6 +197,34 @@
                         <div class="col-md-6 mb-2">
                             <label for="date_birth" class="form-label">Date of Birth:</label>
                             <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ \Carbon\Carbon::parse($employee->date_birth)->format('Y-m-d') }}" >
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="emergency_contact_name" class="form-label">Emergency Contact Name:</label>
+                            <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $user->emergency_contact_name }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
+                            <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $user->emergency_contact_number }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="date_hired" class="form-label">Date Hired:</label>
+                            <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="badge_number" class="form-label">Badge Number:</label>
+                            <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="address" class="form-label">Address:</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="schedule" class="form-label">Schedule:</label>
+                            <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $user->schedule }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="position" class="form-label">Position:</label>
+                            <input type="text" class="form-control" id="position" name="position" value="{{ $user->position }}" required>
                         </div>
                         <div class="mt-3 d-flex justify-content-center text-center">
                             <button type="submit" class="btn btn-primary">Update Employee</button>

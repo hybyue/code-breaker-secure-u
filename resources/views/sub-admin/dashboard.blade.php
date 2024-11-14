@@ -59,35 +59,46 @@
         </div>
     </div>
 
-<div class="row p-3">
-    <div class="row p-3">
+    <div class="row">
+        <!-- Bar Chart Column -->
         <div class="col-md-6">
-            <div class="container">
-                <div id="timeLabel" class="h4 font-weight-bold mb-4">Select Time Period</div>
-                <div class="d-flex mb-4">
-                    <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2">Monthly</button>
-                    <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary">Yearly</button>
+            <div id="timeLabel" class="h4 font-weight-bold mb-3">Select Time Period</div>
+            <div class="d-flex mb-3">
+                <button onclick="fetchData('weekly')" id="weeklyBtn" class="btn btn-primary me-2">Weekly</button>
+                <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2">Monthly</button>
+                <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary">Yearly</button>
+            </div>
+            <div class="chart-container position-relative">
+                <div id="barChartLoader" class="chart-loader d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
                 <canvas id="visitorChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
             </div>
         </div>
+
+        <!-- Pie Chart Column -->
         <div class="col-md-6">
-            <div class="container">
-                <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
+            <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
+            <div class="chart-container position-relative">
+                <div id="pieChartLoader" class="chart-loader d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
             </div>
         </div>
     </div>
 </div>
 
-
-
 <script src="{{ asset('js/chart.js') }}"></script>
 <script src="{{ asset('tailwindcharts/js/apexcharts.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
-    </script>
+    // Add your chart JS code here
+</script>
 
 <style>
     .card-onclick {
@@ -97,12 +108,10 @@
     .card-onclick:hover {
         transform: scale(1.03);
     }
-
     .fc-event-container {
         background-color: #f0f0f0;
         border-radius: 5px;
     }
-
     .fc-event {
         background-color: #292b2e;
         color: #000000;
@@ -110,15 +119,10 @@
         padding: 5px;
         transition: transform 0.3s;
     }
-
     .fc-event:hover {
         transform: scale(1.05);
         color: #000000;
         background-color: #747474;
-    }
-
-    .event-title {
-        font-weight: bold;
     }
     .icon-container{
         background-color:#cf1818;
@@ -126,14 +130,25 @@
         height: 80px;
         border-radius: 5px;
     }
-    .icon-container i{
-        vertical-align: middle;
+    #visitorPieChart, #visitorChart {
+        max-height: 500px !important;
     }
-    /* #visitorPieChart {
-        width: 100%;
-        max-width: 400px;
-        height: 140px;
-    } */
+    .chart-container {
+        position: relative;
+        min-height: 300px;
+    }
+    .chart-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
 </style>
 
 @endsection

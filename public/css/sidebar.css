@@ -228,3 +228,16 @@ a.sidebar-link {
         transform: rotate(360deg);
     }
 }
+
+.custom-tooltip {
+    --bs-tooltip-bg: #333;
+    --bs-tooltip-color: #fff;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    position: absolute;
+}
+
+
+.same-height-table td {
+    vertical-align: middle;
+}

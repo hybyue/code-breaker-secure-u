@@ -42,23 +42,7 @@
         .drop-me {
             z-index: 5000;
         }
-        .notification-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            font-size: 0.9rem;
-        }
-        .notification-button {
-    background-color: #151618 !important; /* Dark color override */
-    border: none;
-}
 
-.notification-button i {
-    color: #fff !important; /* Ensuring icon color is white */
-}
         a.sidebar-link:hover {
             background-color: #2c2c2c;
         }
@@ -86,7 +70,13 @@
                 @auth
                 <div class="dropdown">
                     <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"  style="font-size: 30px; color: white; vertical-align: middle;"></i>
+                        @if(auth()->user()->profile_picture)
+                            <img src="{{ asset(auth()->user()->profile_picture) }}"
+                                 alt="Profile Picture"
+                                 style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; vertical-align: middle; border: 1px solid #ffffff;">
+                        @else
+                            <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
+                        @endif
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                         <li><a class="dropdown-item" href="{{ url('/home')}}">Home</a></li>
@@ -151,7 +141,7 @@
         </aside>
 
 
-        <div class="main p-3" style="background-color: #f5f3f3;">
+        <div class="main p-3" style="background-color: #f5f4f4;">
             @yield('content')
         </div>
     </div>
@@ -170,9 +160,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

@@ -76,6 +76,7 @@ Route::controller(VisitorController::class)->group(function () {
     Route::get('/visitor-total-data',  'getVisitorTotalData');
     Route::get('/validateField',  'validateField')->name('sub-admin.validate');
     Route::get('/sub-admin/visitor/clear-filter', 'clearVisitorFilter');
+    Route::post('/sub-admin/visitor/{id}/duplicate', 'duplicateEntrySubAdmin')->name('visitor.duplicate.sub-admin');
 
 });
 
@@ -112,6 +113,7 @@ Route::controller(EmployeesController::class)->group(function () {
     Route::put('sub-admin/profile/{id}',  'addInformation')->name('profile.store');
     Route::put('sub-admin/profile/update/{id}',  'editInformation')->name('profile.update');
     Route::get('/sub-admin/change-password',  'changePassword')->name('auth.change-password');
+    Route::put('/profile/{id}/update-picture',  'updatePicture')->name('profile.updatePicture');
 });
 
 Route::controller(ViolationController::class)->group(function () {
@@ -230,6 +232,7 @@ Route::controller(VisitorController::class)->group(function () {
     Route::get('admin/search_visitor', 'searchVisitors')->name('visitor.search');
     Route::delete('/admin/delete_visitor/{id}', 'destroy');
     Route::get('/admin/visitor/clear-filter', 'clearVisitorFilterAdmin')->name('visitors.clear-filter-admin');
+    Route::post('/admin/visitor/{id}/duplicate', 'duplicateEntry')->name('visitor.duplicate');
 
 });
 
@@ -265,6 +268,8 @@ Route::controller(EmployeesController::class)->group(function (){
     Route::put('admin/profile/{id}', 'addInformationAdmin')->name('profile.stores');
     Route::put('admin/profile/update/{id}', 'editInformationAdmin')->name('profile.updates');
     Route::get('admin/change-password', 'changePasswordAdmin')->name('auth.change-password');
+    Route::put('admin/profile/{id}/update-picture',  'updatePictureAdmin')->name('profile.updatePicture.admin');
+
 });
 
 

@@ -10,7 +10,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="visitorFormSub" id="visitorFormSub-{{ $visitor->id }}" action="{{ route('update.visitorSub', $visitor->id) }}" method="POST">
+                    <form class="visitorFormSub" id="visitorFormSub-{{ $visitor->id }}"
+                        action="{{ route('update.visitorSub', $visitor->id) }}"
+                        method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         @if ($errors->any())
@@ -90,16 +93,11 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="purpose_{{ $visitor->id }}">Purpose:</label>
                                 <textarea class="form-control" id="purpose_{{ $visitor->id }}" name="purpose" required>{{ $visitor->purpose }}</textarea>
                             </div>
-
-                            <div class="form-group">
-                                <label for="entry_count_{{ $visitor->id }}">Entry Count:</label>
-                                <input type="number" class="form-control" id="entry_count_{{ $visitor->id }}" name="entry_count" value="{{ $visitor->entry_count }}" required>
-                            </div>
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="id_type">ID Type:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="{{$visitor->id_type}}" selected>{{$visitor->id_type}}</option>
@@ -111,10 +109,29 @@
                                     <option value="Other">Other</option>
                                 </select>
                               </div>
-                        </div>
+
                         <input type="hidden" name="time_in" id="time_in_{{ $visitor->id }}" value="{{ $visitor->time_in }}">
                         <input type="hidden" name="time_out" id="time_out_{{ $visitor->id }}" value="{{ $visitor->time_out }}">
 
+                        <div class="form-group">
+                            <label for="id_number_{{ $visitor->id }}">ID Number:</label>
+                            <input type="text" class="form-control" id="id_number_{{ $visitor->id }}" name="id_number" value="{{ $visitor->id_number }}" required>
+                        </div>
+                        @if($visitor->visited_person_name)
+                        <div class="col-md-6 form-group">
+                            <label for="visited_person_name_{{ $visitor->id }}">Person Visited Name:</label>
+                            <input type="text" class="form-control" id="visited_person_name_{{ $visitor->id }}"
+                                name="visited_person_name" value="{{ $visitor->visited_person_name }}">
+                        </div>
+                        @endif
+                        @if($visitor->visited_person_position)
+                        <div class="col-md-6 form-group">
+                            <label for="visited_person_position_{{ $visitor->id }}">Person Visited Position:</label>
+                            <input type="text" class="form-control" id="visited_person_position_{{ $visitor->id }}"
+                                name="visited_person_position" value="{{ $visitor->visited_person_position }}">
+                        </div>
+                        @endif
+                    </div>
                         <div class="form-group text-center mt-3">
                             <button type="submit" class="btn w-50 btn-primary text-white visitor_update" data-bs-dismiss="updateVisitorSub-{{ $visitor->id }}">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>

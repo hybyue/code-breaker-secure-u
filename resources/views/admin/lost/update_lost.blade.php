@@ -67,6 +67,13 @@
                                 <option value="0" {{ !$item->is_claimed ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="isTransferred-{{ $item->id }}" class="form-label">Is Transferred:</label>
+                            <select class="form-control" id="isTransferred-{{ $item->id }}" name="is_transferred">
+                                <option value="1" {{ $item->is_transferred ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ !$item->is_transferred ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label for="description-{{ $item->id }}" class="form-label">Description:</label>
                             <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>

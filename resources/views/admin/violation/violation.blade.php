@@ -89,11 +89,11 @@
                         <div class="mx-1">
                         <a href="#" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $violate->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $violate->id }}"><i class="bi bi-pencil-square"></i></a>
                         </div>
-                        <div class="mx-1">
+                        {{-- <div class="mx-1">
                             <a href="javascript:void(0)" onclick="deleteViolation({{$violate->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- <div><button onclick="testFunction()">test</button></div> --}}
                 </td>
@@ -146,13 +146,7 @@
 @include('admin.violation.update_violation')
 
 @include('admin.violation.add_violation')
-<style>
-    .same-height-table td {
-        vertical-align: middle;
-    }
 
-
-</style>
 
 @include('admin.violation.violation_js')
 

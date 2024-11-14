@@ -37,6 +37,15 @@ class User extends Authenticatable implements CanResetPassword
         'date_birth',
         'employment_type',
         'last_seen',
+        'profile_picture',
+        'emergency_contact_name',
+        'emergency_contact_number',
+        'date_hired',
+        'badge_number',
+        'address',
+        'schedule',
+        'position',
+
     ];
 
     /**

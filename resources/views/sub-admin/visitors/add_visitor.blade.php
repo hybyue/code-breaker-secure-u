@@ -1,32 +1,32 @@
     {{-- Add Visitor --}}
     <div class="modal fade" id="addVisitorModal" tabindex="-1" aria-labelledby="addVisitorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addVisitorModalLabel">Add Visitor</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="visitorForm" action="" method="POST">
+                    <form id="visitorForm" action="" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="last_name">Last Name:</label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
                                 <span class="text-danger" id="last_name_error"></span>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="first_name">First Name:</label>
                                 <input type="text" class="form-control" id="first_name" name="first_name" required>
                                 <span class="text-danger" id="first_name_error"></span>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="middle_name">Middle Initial:</label>
                                 <input type="text" class="form-control" id="middle_name" placeholder="Optional"
                                     name="middle_name">
                                     <span class="text-danger" id="middle_name_error"></span>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="form-group">
                                 <label for="person_to_visit">Person to Visit & Company:</label>
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="" selected disabled>Select Department or Office</option>
@@ -85,12 +85,12 @@
                                 </select>
                                 <span class="text-danger" id="person_to_visit_error"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="purpose">Purpose:</label>
                                 <textarea class="form-control" id="purpose" name="purpose" required></textarea>
                                 <span class="text-danger" id="purpose_error"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <label for="id_type">ID Type:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="" selected disabled>Select ID Type</option>
@@ -103,13 +103,22 @@
                                 </select>
                                 <span class="text-danger" id="id_type_error"></span>
                             </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_number">ID Number:</label>
+                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                                <span class="text-danger" id="id_number_error"></span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="id_image">Image ID:</label>
+                                <input type="file" class="form-control" id="cameraInput" name="id_image" accept="image/*" capture="environment">
+                                <span class="text-danger" id="id_image_error"></span>
+                            </div>
                         </div>
-                        <div class="form-group text-center mt-3">
+                        <div class="modal-footer d-flex justify-content-center mt-3">
                             <button type="submit" class="btn w-50 text-white add_visitor" style="background-color: #0B9B19">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Submit
                             </button>
-
                         </div>
                     </form>
                 </div>

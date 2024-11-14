@@ -45,11 +45,11 @@
                         <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{$passSlip->middle_name}}" readonly>
                     </div>
                     <div class="col-md-6 mb-2">
-                        <label for="department" class="form-label">Department:</label>
+                        <label for="department" class="form-label">Office/Dept:</label>
                         <input type="text" class="form-control" id="department" name="department" value="{{$passSlip->department}}" required readonly>
                     </div>
                     <div class="col-md-6">
-                        <label for="designation" class="form-label">Designation:</label>
+                        <label for="designation" class="form-label">Position/Designation:</label>
                         <input class="form-control" id="designation" name="designation" value="{{$passSlip->designation}}" required readonly>
                     </div>
                     <div class="row mb-2 ms-3">
@@ -101,11 +101,11 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="time_out" class="form-label">Time Out:</label>
-                        <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" value="{{ $passSlip->time_out }}" required>
+                        <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" min="06:00" max="15:00" value="{{ $passSlip->time_out }}" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="time_in" class="form-label">Time In:</label>
-                        <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{ $passSlip->time_in }}" required>
+                        <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" min="06:00" max="15:00" value="{{ $passSlip->time_in }}" required>
                     </div>
                     <div class="mt-2 text-center">
                         <button type="submit" class="btn btn-primary w-50 update_pass">

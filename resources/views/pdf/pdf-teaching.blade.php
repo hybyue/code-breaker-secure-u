@@ -114,8 +114,8 @@
                 <td>{{ $passSlip->first_name }} @if($passSlip->middle_name){{ $passSlip->middle_name }}.@endif {{ $passSlip->last_name }}</td>
                 <td>{{ $passSlip->department }}</td>
                 <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('g:i A') }}</td>
-                <td class="text-danger">{{ \Carbon\Carbon::parse($passSlip->time_in)->format('g:i A') }}</td>
+                <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i') }}</td>
+                <td class="text-danger">{{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i') }}</td>
                 <td></td>
             </tr>
             @endforeach

@@ -22,6 +22,9 @@ class Violation extends Model
         'course',
         'violation_type',
         'date',
+        'date_occured',
+        'date_time_detected',
+        'incident_location'
     ];
 
     protected static $logAttributes = [

@@ -105,8 +105,18 @@
                             </select>
                             <span class="text-danger" id="id_type_error"></span>
                         </div>
+                        <div class="col-md-6 form-group">
+                            <label for="id_number">ID Number:</label>
+                            <input type="text" class="form-control" id="id_number" name="id_number" required>
+                            <span class="text-danger" id="id_number_error"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="id_image">Image ID:</label>
+                            <input type="file" class="form-control" id="cameraInput" name="id_image" accept="image/*" capture="environment">
+                            <span class="text-danger" id="id_image_error"></span>
+                        </div>
                         <div class="form-group text-center mt-3">
-                            <button type="submit" class="btn text-white" style="background-color: #0B9B19;">
+                            <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19;">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Save
                             </button>

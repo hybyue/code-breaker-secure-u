@@ -1,6 +1,16 @@
 const ctx = document.getElementById('visitorChart').getContext('2d');
     let visitorChart;
 
+    function showLoader(chartType) {
+        const loader = document.getElementById(chartType === 'bar' ? 'barChartLoader' : 'pieChartLoader');
+        loader.classList.remove('d-none');
+    }
+
+    function hideLoader(chartType) {
+        const loader = document.getElementById(chartType === 'bar' ? 'barChartLoader' : 'pieChartLoader');
+        loader.classList.add('d-none');
+    }
+
     function fetchData(timePeriod) {
         const timeLabel = document.getElementById('timeLabel');
         timeLabel.textContent = `${capitalizeFirstLetter(timePeriod)} Statistics`;
@@ -14,19 +24,21 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
         document.getElementById(`${timePeriod}Btn`).classList.remove('btn-secondary');
         document.getElementById(`${timePeriod}Btn`).classList.add('btn-dark');
 
+        showLoader('bar');
         fetch(`/visitor-data?timePeriod=${timePeriod}`)
             .then(response => response.json())
             .then(data => {
                 updateChart(timePeriod, data.labels, data.visitor, data.passSlip, data.lost, data.violation);
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch(error => console.error('Error fetching data:', error))
+            .finally(() => hideLoader('bar'));
     }
 
     function updateChart(timePeriod, labels, visitors, pass_slips, lost_found, violations) {
         if (timePeriod === 'monthly') {
-            labels = labels.map(monthNum => {
-                return new Date(0, monthNum - 1).toLocaleString('en-US', { month: 'long' });
-            });
+            labels = labels;
+        } else if (timePeriod === 'weekly') {
+            labels = labels;
         }
 
         if (visitorChart) {
@@ -74,7 +86,7 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
                     legend: {
                         labels: {
                             font: {
-                                size: 14 // Increased font size for chart legend
+                                size: 14
                             }
                         }
                     },
@@ -92,14 +104,14 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
                         beginAtZero: true,
                         ticks: {
                             font: {
-                                size: 14 // Increased font size for Y-axis labels
+                                size: 14
                             }
                         }
                     },
                     x: {
                         ticks: {
                             font: {
-                                size: 14 // Increased font size for X-axis labels
+                                size: 14
                             }
                         }
                     }
@@ -116,12 +128,14 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
     let visitorPieChart;
 
     function fetchTotalData() {
+        showLoader('pie');
         fetch('/visitor-total-data')
             .then(response => response.json())
             .then(data => {
                 updatePieChart(data.visitor, data.passSlip, data.lost, data.violation);
             })
-            .catch(error => console.error('Error fetching total data:', error));
+            .catch(error => console.error('Error fetching total data:', error))
+            .finally(() => hideLoader('pie'));
     }
 
     function updatePieChart(visitors, pass_slips, lost_found, violations) {

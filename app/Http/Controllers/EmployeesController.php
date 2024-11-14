@@ -7,6 +7,8 @@ use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeesController extends Controller
@@ -16,6 +18,7 @@ class EmployeesController extends Controller
      */
     public function index()
     {
+
         $subAdmins = User::where('type', 0)
                          ->latest()
                          ->get();
@@ -138,6 +141,18 @@ class EmployeesController extends Controller
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
             'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
+            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'emergency_contact_number' => [
+                'required',
+                'string',
+                'max:11',
+                'regex:/^([0-9\s\-\+\(\)]*)$/'
+            ],
+            'date_hired' => 'required|date',
+            'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
+            'address' => 'required|string|max:255',
+            'schedule' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
             'middle_name.regex' => 'The middle initial must contain only letters and spaces.',
@@ -146,6 +161,9 @@ class EmployeesController extends Controller
             'contact_no.regex' => 'The contact number format is invalid.',
             'date_birth.before' => 'You must be at least 18 years old.',
             'id_number.unique' => 'This ID number is already taken.',
+            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
+            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
+            'badge_number.unique' => 'This badge number is already taken.',
         ]);
 
         if ($validator->fails()) {
@@ -153,6 +171,8 @@ class EmployeesController extends Controller
         }
 
         $user = User::findOrFail($id);
+
+
         $user->update($request->all());
 
         return response()->json([
@@ -183,6 +203,18 @@ class EmployeesController extends Controller
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
             'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
+            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'emergency_contact_number' => [
+                'required',
+                'string',
+                'max:11',
+                'regex:/^([0-9\s\-\+\(\)]*)$/'
+            ],
+            'date_hired' => 'required|date',
+            'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
+            'address' => 'required|string|max:255',
+            'schedule' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
             'middle_name.regex' => 'Must contain only letters.',
@@ -191,10 +223,9 @@ class EmployeesController extends Controller
             'contact_no.regex' => 'The contact number format is invalid.',
             'date_birth.before' => 'You must be at least 18 years old.',
             'id_number.unique' => 'This ID number is already taken.',
-            'last_name.regex' => 'The last name must contain only letters and spaces.',
-            'contact_no.regex' => 'The contact number format is invalid.',
-            'date_birth.before' => 'You must be at least 18 years old.',
-            'id_number.unique' => 'This ID number is already taken.',
+            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
+            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
+            'badge_number.unique' => 'This badge number is already taken.',
         ]);
 
         if ($validator->fails()) {
@@ -202,13 +233,55 @@ class EmployeesController extends Controller
         }
 
         $user = User::findOrFail($id);
-        $user->update($request->all());
 
-        return response()->json([
-            'success' => true,
-            'user' => $user,
-            'message' => 'Staff updated successfully'
-        ]);
+        try {
+
+
+            $user->update($request->all());
+
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'message' => 'Staff updated successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Profile update error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating profile: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updatePicture(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($request->hasFile('profile_picture')) {
+            $fileName = time() . '_' . $request->file('profile_picture')->getClientOriginalName();
+            $path = $request->file('profile_picture')->storeAs('profile_pictures', $fileName, 'public');
+            $user->profile_picture = '/storage/' . $path;
+        }
+
+        $user->save();
+
+        return redirect()->route('profile')->with('success', 'Profile picture updated successfully');
+    }
+
+    public function updatePictureAdmin(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($request->hasFile('profile_picture')) {
+            $fileName = time() . '_' . $request->file('profile_picture')->getClientOriginalName();
+            $path = $request->file('profile_picture')->storeAs('profile_pictures', $fileName, 'public');
+            $user->profile_picture = '/storage/' . $path;
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.layouts.profile_admin')->with('success', 'Profile picture updated successfully');
     }
 
     public function showProfileAdmin()
@@ -240,6 +313,18 @@ class EmployeesController extends Controller
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
             'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
+            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'emergency_contact_number' => [
+                'required',
+                'string',
+                'max:11',
+                'regex:/^([0-9\s\-\+\(\)]*)$/'
+            ],
+            'date_hired' => 'required|date',
+            'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
+            'address' => 'required|string|max:255',
+            'schedule' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
             'middle_name.regex' => 'Must contain only letters and spaces.',
@@ -248,6 +333,9 @@ class EmployeesController extends Controller
             'contact_no.regex' => 'The contact number format is invalid.',
             'date_birth.before' => 'You must be at least 18 years old.',
             'id_number.unique' => 'This ID number is already taken.',
+            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
+            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
+            'badge_number.unique' => 'This badge number is already taken.',
         ]);
 
         if ($validator->fails()) {
@@ -255,6 +343,7 @@ class EmployeesController extends Controller
         }
 
         $user = User::findOrFail($id);
+
         $user->update($request->all());
 
         return response()->json([
@@ -285,6 +374,18 @@ class EmployeesController extends Controller
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
             'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
+            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'emergency_contact_number' => [
+                'required',
+                'string',
+                'max:11',
+                'regex:/^([0-9\s\-\+\(\)]*)$/'
+            ],
+            'date_hired' => 'required|date',
+            'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
+            'address' => 'required|string|max:255',
+            'schedule' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
             'middle_name.regex' => 'Must contain only letters and spaces.',
@@ -293,10 +394,9 @@ class EmployeesController extends Controller
             'contact_no.regex' => 'The contact number format is invalid.',
             'date_birth.before' => 'You must be at least 18 years old.',
             'id_number.unique' => 'This ID number is already taken.',
-            'last_name.regex' => 'The last name must contain only letters and spaces.',
-            'contact_no.regex' => 'The contact number format is invalid.',
-            'date_birth.before' => 'You must be at least 18 years old.',
-            'id_number.unique' => 'This ID number is already taken.',
+            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
+            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
+            'badge_number.unique' => 'This badge number is already taken.',
         ]);
 
         if ($validator->fails()) {
@@ -304,6 +404,7 @@ class EmployeesController extends Controller
         }
 
         $user = User::findOrFail($id);
+
         $user->update($request->all());
 
         return response()->json([

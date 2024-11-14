@@ -58,12 +58,13 @@
                 <div class="d-flex justify-content-center align-items-center">
                     @if (Route::has('login'))
                     @auth
-                    <button class="btn btn-dark notification-button ">
-                        <i class="bi bi-bell-fill"></i>
-                    </button>
                     <div class="dropdown">
                         <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiyWg33WlX7U9e3dvdcAO0VQ3VM9RUlXJBcA&s" alt="User" width="40" height="40">
+                            @if($user->profile_picture)
+                            <img src="{{ asset($user->profile_picture) }}" alt="User" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid #ffffff;">
+                            @else
+                            <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
+                            @endif
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                             <li><a class="dropdown-item" href="{{ url('/home')}}">Home</a></li>

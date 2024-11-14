@@ -1,6 +1,6 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+<script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+
 
 
 <script>
@@ -140,7 +140,6 @@ $(document).ready(function () {
 
 $(document).ready(function() {
 
-
     if (localStorage.getItem('showToast') === 'true') {
         Swal.fire({
             toast: true,
@@ -163,79 +162,80 @@ $(document).ready(function() {
 </script>
 
 <script>
-    function markAsClaimed(id) {
-    $.ajax({
-        url: `/sub-admin/update_claimed/${id}`,
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            is_claimed: 1
-        },
-        success: function(response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'The item has been marked as claimed!',
-                confirmButtonColor: '#0B9B19'
-            }).then(() => {
-
-                const row = document.querySelector(`button[onclick='markAsClaimed(${id})']`).closest('tr');
-                if (row) {
-                    const statusCell = row.querySelector('td:nth-child(5)');
-                    if (statusCell) {
-                        statusCell.innerHTML = '<p class="text-success">Claimed</p>';
-                    }
+  function markAsClaimed(id) {
+    Swal.fire({
+        icon: 'question',
+        title: 'Are you sure?',
+        text: 'Do you want to mark this item as claimed?',
+        showCancelButton: true,
+        confirmButtonColor: '#0B9B19',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, mark as claimed',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/sub-admin/update_claimed/${id}`,
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    is_claimed: 1
+                },
+                success: function(response) {
+                    localStorage.setItem('successMessage', 'Item has been marked as claimed');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'There was a problem updating the claim status. Please try again.',
+                        confirmButtonColor: '#0B9B19'
+                    });
                 }
-            });
-        },
-        error: function(xhr) {
-            console.error(xhr);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'There was a problem updating the claim status. Please try again.',
-                confirmButtonColor: '#920606'
             });
         }
     });
 }
 
 function markAsTransfer(id) {
-    $.ajax({
-        url: `/sub-admin/update_transfer/${id}`,
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            is_transferred: 1
-        },
-        success: function(response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'The item has been marked as Transferred on CSLD!',
-                confirmButtonColor: '#0B9B19'
-            }).then(() => {
-
-                const row = document.querySelector(`a[onclick='markAsTransfer(${id})']`).closest('tr');
-                if (row) {
-                    const statusCell = row.querySelector('td:nth-child(5)');
-                    if (statusCell) {
-                        statusCell.innerHTML = '<p class="text-danger">Transferred</p>';
-                    }
+    Swal.fire({
+        icon: 'question',
+        title: 'Are you sure?',
+        text: 'Do you want to mark this item as transferred (CSLD)?',
+        showCancelButton: true,
+        confirmButtonColor: '#0B9B19',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, mark as transferred',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/sub-admin/update_transfer/${id}`,
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    is_transferred: 1
+                },
+                success: function(response) {
+                    localStorage.setItem('successMessage', 'Item has been marked as transferred (CSLD)');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'There was a problem updating the transfer status. Please try again.',
+                        confirmButtonColor: '#0B9B19'
+                    });
                 }
-            });
-        },
-        error: function(xhr) {
-            console.error(xhr);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'There was a problem updating the claim status. Please try again.',
-                confirmButtonColor: '#920606'
             });
         }
     });
 }
+
 
 function showPdfModalLost() {
         document.getElementById('loadingBar').style.display = 'block';
@@ -285,6 +285,18 @@ function showPdfModalLost() {
 //     reader.readAsDataURL(event.target.files[0]);
 // }
 
+$(document).ready(function() {
+    const successMessage = localStorage.getItem('successMessage');
+    if (successMessage) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: successMessage,
+            confirmButtonColor: '#0B9B19'
+        });
+        localStorage.removeItem('successMessage');
+    }
+});
 </script>
 
 

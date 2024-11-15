@@ -79,6 +79,17 @@
             </div>
             <div class="modal-body">
                     <div class="row">
+                        <div class="col-12 position-relative d-flex justify-content-center">
+                            @if($employee->profile_picture)
+                                <img src="{{ asset($employee->profile_picture) }}" alt="Profile Picture" class="profile-picture" id="main-profile-image">
+                            @else
+                                <div class="profile-picture-placeholder">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                            @endif
+                        </div>
+
+
                     <div class="col-md-6 mb-3">
                         <label for="id_number" class="form-label">ID Number:</label>
                         <input type="text" class="form-control" id="id_number" name="id_number" value="{{ $employee->id_number }}" readonly>
@@ -119,6 +130,34 @@
                     <div class="col-md-6 mb-2">
                         <label for="date_birth" class="form-label">Date of Birth:</label>
                         <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $employee->date_birth }}" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="emergency_contact_name" class="form-label">Emergency Contact Name:</label>
+                        <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $employee->emergency_contact_name }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
+                        <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $employee->emergency_contact_number }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="date_hired" class="form-label">Date Hired:</label>
+                        <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $employee->date_hired ? \Carbon\Carbon::parse($employee->date_hired)->format('Y-m-d') : '' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="badge_number" class="form-label">Badge Number:</label>
+                        <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $employee->badge_number }}" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="address" class="form-label">Address:</label>
+                        <input type="text" class="form-control" id="address" name="address" value="{{ $employee->address }}" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="schedule" class="form-label">Schedule:</label>
+                        <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $employee->schedule }}" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="position" class="form-label">Position:</label>
+                        <input type="text" class="form-control" id="position" name="position" value="{{ $employee->position }}" readonly>
                     </div>
             </div>
             </div>
@@ -200,31 +239,31 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="emergency_contact_name" class="form-label">Emergency Contact Name:</label>
-                            <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $user->emergency_contact_name }}" required>
+                            <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $employee->emergency_contact_name }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
-                            <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $user->emergency_contact_number }}" required>
+                            <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $employee->emergency_contact_number }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="date_hired" class="form-label">Date Hired:</label>
-                            <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
+                            <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $employee->date_hired ? \Carbon\Carbon::parse($employee->date_hired)->format('Y-m-d') : '' }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="badge_number" class="form-label">Badge Number:</label>
-                            <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
+                            <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $employee->badge_number }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="address" class="form-label">Address:</label>
-                            <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}" required>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ $employee->address }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="schedule" class="form-label">Schedule:</label>
-                            <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $user->schedule }}" required>
+                            <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $employee->schedule }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="position" class="form-label">Position:</label>
-                            <input type="text" class="form-control" id="position" name="position" value="{{ $user->position }}" required>
+                            <input type="text" class="form-control" id="position" name="position" value="{{ $employee->position }}" required>
                         </div>
                         <div class="mt-3 d-flex justify-content-center text-center">
                             <button type="submit" class="btn btn-primary">Update Employee</button>
@@ -255,4 +294,39 @@
     });
 </script>
 
+<style>
+   .profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Optional: Add a background color */
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-placeholder i {
+    font-size: 80px; /* Adjust if necessary to match the visual size */
+    color: #333; /* Customize color if needed */
+}
+
+.position-relative.d-flex.justify-content-center {
+       display: flex;
+       justify-content: center;
+       margin-top: 20px;
+   }
+
+
+</style>
 @endsection

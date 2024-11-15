@@ -56,7 +56,7 @@
                         <tr id="tr_{{$visit->id}}">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                             <td>{{ $visit->last_name }},  {{$visit->first_name }} @if($visit->middle_name){{ $visit->middle_name }}.@endif </td>
-                            <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }}</td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($visit->time_in)->format('Hi') }}H</td>
                             <td id="time-out-{{ $visit->id }}" class="text-center">
                                 @if (is_null($visit->time_out))
                                     <div>
@@ -69,7 +69,7 @@
                                         </button>
                                     </div>
                                 @else
-                                    {{ \Carbon\Carbon::parse($visit->time_out)->format('H:i') }}
+                                    {{ \Carbon\Carbon::parse($visit->time_out)->format('Hi') }}H
                                 @endif
                             </td>
                             <td>
@@ -83,7 +83,7 @@
                                     <div class="col-4 text-end">
                                         @if (!is_null($visit->time_out) && \Carbon\Carbon::parse($visit->date)->isToday())
                                             <a href="javascript:void(0)"
-                                               onclick="duplicateEntrySubAdmin({{$visit->id}})"
+                                               onclick="duplicateEntry({{$visit->id}})"
                                                class="btn btn-sm text-white"
                                                style="background-color: #0B9B19"
                                                title="Add Entry">

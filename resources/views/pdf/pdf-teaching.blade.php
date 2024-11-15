@@ -91,7 +91,7 @@
 
     <div class="date bold-text">{{ $date }}</div>
     <div class="recipient">
-        <p><span class="bold-text">DR. JOSEPHINE S. LAMBINICIO</span> <br>OIC, VP for Administrative Affairs</p>
+        <p><span class="bold-text">DR. JOSEPHINE S. LAMBINICIO</span> <br>VP for Academic Affairs</p>
         <p>Madam:</p>
         <p>We would like to submit our report through your good office the names of @if(!empty($employee_type))<strong>{{ $employee_type }} Personnel </strong>@endif  who went <strong>OUT</strong>  and <strong>IN</strong>  of this University without Pass Slip @if(!empty($start_date) && !empty($end_date)) as of
             <strong>{{ \Carbon\Carbon::parse($start_date)->format('F d, Y') }} to {{ \Carbon\Carbon::parse($end_date)->format('F d, Y') }}</strong>

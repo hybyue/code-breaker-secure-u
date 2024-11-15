@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="middle_initial">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_initial" value="{{$student->middle_initial}}" name="middle_initial">
+                            <input type="text" class="form-control" id="middle_name" value="{{$student->middle_name}}" name="middle_name">
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>

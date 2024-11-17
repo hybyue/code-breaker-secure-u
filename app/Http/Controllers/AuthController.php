@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\RateLimiter as FacadesRateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 class AuthController extends Controller
 {
 
@@ -78,6 +80,9 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_ name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => [
                 'required',
@@ -86,11 +91,11 @@ class AuthController extends Controller
                 'regex:/[a-z]/',
                 'regex:/[A-Z]/',
                 'regex:/[0-9]/',
-                'regex:/[_!@#$%^&*()<>?]/',
+                'regex:/[;-|_!@#$%^&*()<>?]/',
                 'confirmed'
             ],
         ], [
-            'password.regex' => 'Password is weak. Try including numbers, uppercase and lowercase letters, and symbols (_!@#$%^&*()<>?).',
+            'password.regex' => 'Password is weak. Try including numbers, uppercase and lowercase letters, and symbols (;-|_!@#$%^&*()<>?).',
             'email.unique' => 'The email address is already registered.'
         ]);
 
@@ -102,15 +107,27 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'last_name' => $request->last_name,
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'type' => "0"
         ]);
 
-        // Send password email
-        Mail::to($user->email)->send(new SendPasswordMail($user->name, $request->password));
+        try {
+            Mail::to($user->email)
+                ->queue(new SendPasswordMail($user->name, $user->email, $request->password));
 
-        return redirect()->route('admin.register')->with('success', 'Account created successfully.');
+            return redirect()->route('admin.register')
+                ->with('success', 'Account created successfully and email will be sent.');
+
+        } catch (\Exception $e) {
+            Log::error('Email Error: ' . $e->getMessage());
+            return redirect()->route('admin.register')
+                ->with('success', 'Account created successfully.')
+                ->with('warning', 'Email will be sent automatically when connection is restored.');
+        }
     }
 
     public function login()
@@ -155,6 +172,11 @@ class AuthController extends Controller
     // Regenerate session on successful login
     $request->session()->regenerate();
 
+    activity()
+        ->causedBy(Auth::user())
+        ->withProperties(['ip' => $request->ip()])
+        ->log('logged in');
+
     // Check if the user is admin or sub-admin
     if (Auth::user()->type == 'admin') {
         return response()->json([
@@ -174,12 +196,11 @@ class AuthController extends Controller
     {
         if (FacadesRateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
             $seconds = FacadesRateLimiter::availableIn($this->throttleKey($request));
-            $minutes = ceil($seconds / 60); // Convert seconds to minutes, rounding up
 
-            throw ValidationException::withMessages([
-                'email' => "Too many login attempts. Please try again in $minutes minute(s).",
-                'seconds' => $seconds // Return the remaining lockout time in seconds
-            ])->status(429);
+            return response()->json([
+                'message' => 'Too many attempts',
+                'seconds' => $seconds
+            ], 429);
         }
     }
 
@@ -234,6 +255,11 @@ public function logout(Request $request)
     Auth::guard('web')->logout();
 
     $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    if ($request->ajax()) {
+        return response()->json(['redirect' => route('login')]);
+    }
 
     return redirect('/login');
 }

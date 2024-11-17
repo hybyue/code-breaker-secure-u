@@ -36,14 +36,22 @@
                         <div class="form-group">
                             <label for="violation_type">Violation Type:</label>
                             <select class="form-select" id="violation_type" name="violation_type" required>
-                                <option value="{{$violate->student_no}}"  selected disabled>{{$violate->student_no}}</option>
-                                <option value="No ID">No ID</option>
-                                <option value="No Shoes">No Shoes</option>
-                                <option value="Inapropriate Cloths">Inapropriate Cloths</option>
+                                <option value="{{$violate->violation_type}}"  selected>{{$violate->violation_type}}</option>
+                                <option value="Hanging/CropTop">Hanging/CropTop</option>
+                                <option value="Polo Top">Polo Top</option>
+                                <option value="Tattere Pants">Tattere Pants</option>
                                 <option value="Earings">Earings</option>
-                                <option value="No Uniform">No Uniform</option>
+                                <option value="Ball Cup">Ball Cup</option>
+                                <option value="Slipper/Sandals">Slipper/Sandals</option>
+                                <option value="Croca">Croca</option>
+                                <option value="Short/Skirt">Short/Skirt</option>
+                                <option value="Sleeveless/Shoulder">Sleeveless/Shoulder</option>
                                 <option value="Other">Other</option>
                             </select>
+                            <div class="form-group mt-2" id="otherViolationDiv" style="display: none;">
+                                <label for="other_violation">Specify Other Violation:</label>
+                                <input type="text" class="form-control" id="other_violation" name="other_violation">
+                            </div>
                        </div>
 
                     <div class="form-group">
@@ -64,3 +72,20 @@
 </div>
 @endforeach
 </div>
+
+
+<script>
+    document.getElementById('violation_type').addEventListener('change', function() {
+        const otherDiv = document.getElementById('otherViolationDiv');
+        const otherInput = document.getElementById('other_violation');
+
+        if (this.value === 'Other') {
+            otherDiv.style.display = 'block';
+            otherInput.required = true;
+        } else {
+            otherDiv.style.display = 'none';
+            otherInput.required = false;
+            otherInput.value = '';
+        }
+    });
+</script>

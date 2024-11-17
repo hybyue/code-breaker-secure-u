@@ -8,8 +8,9 @@
     <meta name="description" content="Urdaneta City University Login Page">
     <meta name="author" content="UCU">
     <title>Login</title>
+    <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="{{ asset('tailwindcharts/css/tailwind.min.css')}}" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
     <style>
         body {
@@ -139,8 +140,7 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <label for="remember" class="flex items-center">
-                        <input type="checkbox" id="remember" class="form-checkbox h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-sm text-blue-900">Remember me</span>
+
                     </label>
                     <a href="{{URL('/forgot-password')}}" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
                 </div>
@@ -151,10 +151,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+    <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
 
-    //TODO:copy paste mo ito pag natapos na website
     <script>
         $(document).ready(function() {
             $('form').on('submit', function(e) {
@@ -170,7 +169,7 @@
                     beforeSend: function() {
 
                         $submitButton.prop('disabled', true);
-                        $submitButton.html('<span class="spinner-border spinner-border-sm"></span>&nbsp;  Signing in...'); // Loading spinner with text
+                        $submitButton.html('Signing in...');
                     },
                     success: function(response) {
                         if (response.status === 'success') {

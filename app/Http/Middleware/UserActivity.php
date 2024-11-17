@@ -21,7 +21,7 @@ class UserActivity
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            $expiresAt = Carbon::now()->addMinutes(5);
+            $expiresAt = Carbon::now()->addMinutes(1);
             $user = Auth::user();
 
             if ($user instanceof User) {

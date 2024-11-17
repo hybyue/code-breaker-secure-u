@@ -29,6 +29,11 @@ class PassSlip extends Model
         'time_out',
         'employee_type',
         'purpose',
+        'check_business',
+        'driver_name',
+        'time_out_by',
+        'time_in_by',
+        'is_exceeded'
     ];
 
     protected $casts = [
@@ -37,21 +42,32 @@ class PassSlip extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnly([
-        'user_id',
-        'p_no',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'department',
-        'designation',
-        'destination',
-        'date',
-        'time_in',
-        'time_out',
-        'empployee_type',
-        'purpose',
-        ])->logOnlyDirty();
+        return LogOptions::defaults()
+            ->logOnly([
+                'user_id',
+                'p_no',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'department',
+                'designation',
+                'destination',
+                'date',
+                'time_in',
+                'time_out',
+                'employee_type',
+                'purpose',
+                'check_business',
+                'driver_name',
+                'time_out_by',
+                'time_in_by',
+                'is_exceeded'
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->logUnguarded()
+            ->setDescriptionForEvent(fn(string $eventName) => "This pass slip has been {$eventName}")
+            ->useLogName('passSlip');
     }
 
     protected static $logName = 'passSlip';
@@ -75,6 +91,9 @@ class PassSlip extends Model
         $today = Carbon::today();
         $existingEntriesToday = PassSlip::where('first_name', $model->first_name)
             ->where('last_name', $model->last_name)
+            ->where('department', $model->department)
+            ->where('designation', $model->designation)
+            ->where('employee_type', $model->employee_type)
             ->whereDate('created_at', $today)
             ->count();
 

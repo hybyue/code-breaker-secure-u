@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <style>
+          body {
+            overflow-x: hidden;
+            width: 100%;
+        }
         .navbar-left {
             display: flex;
             align-items: center;
@@ -32,6 +36,7 @@
         .drop-me {
             z-index: 1000;
         }
+
         .notification-button {
             display: flex;
             align-items: center;
@@ -56,41 +61,13 @@
                     @if (Route::has('login'))
                         @auth
                             <div class="dropdown">
-                                <button class="btn btn-dark notification-button position-relative" id="notificationDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-bell-fill"></i>
-                                    <span
-                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ $students->count() }}
-                                        <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </button>
-                                <div class="dropdown-menu notification-lists position-absolute"
-                                    aria-labelledby="notificationDropdown"
-                                    style="max-height: 400px; overflow-y: auto; left: -11rem;">
-                                    <div class="card" style="width: 18rem;">
-                                        <div class="card-header">
-                                            Notifications
-                                        </div>
-                                        <ul class="list-unstyled">
-                                           @foreach ($students as $s)
-                                           <li>
-                                            <a class="dropdown-item" href="{{ route('admin.violation.violation') }}">
-                                             {{ $s->student_no }} - 3rd violation
-                                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                            </a>
-                                        </li>
-                                           @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown2">
                                 <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <img class="rounded-circle"
-                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiyWg33WlX7U9e3dvdcAO0VQ3VM9RUlXJBcA&s"
-                                        alt="User" width="40" height="40">
+                                    @if($user->profile_picture)
+                                    <img src="{{ asset($user->profile_picture) }}" alt="User" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid #ffffff;">
+                                    @else
+                                    <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
+                                    @endif
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
                                     <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Home</a></li>
@@ -113,8 +90,11 @@
         </nav>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
+ <!-- Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 

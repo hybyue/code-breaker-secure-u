@@ -10,6 +10,9 @@ use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+
 
 class VisitorController extends Controller
 {
@@ -20,70 +23,105 @@ class VisitorController extends Controller
 
 public function filterVisitorAdmin(Request $request)
 {
-    $query = Visitor::select('visitors.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id')
-        ->latest();
+    if ($request->filled('start_date') || $request->filled('end_date')) {
+        session(['visitor_filter_admin' => [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]]);
+    }
+        $query = Visitor::query();
+        $user = Auth::user();
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('visitors.created_at', '>=', $request->start_date)
-              ->whereDate('visitors.created_at', '<=', $request->end_date);
+    $filterData = session('visitor_filter_admin', [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]);
+
+    if (!empty($filterData['start_date'])) {
+        $query->whereDate('date', '>=', $filterData['start_date']);
     }
 
-    $latestVisitors = $query->get();
-
-    $allVisitors = Visitor::query();
-
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $allVisitors->whereDate('created_at', '>=', $request->start_date)
-                    ->whereDate('created_at', '<=', $request->end_date);
+    if (!empty($filterData['end_date'])) {
+        $query->whereDate('date', '<=', $filterData['end_date']);
     }
 
-    $allVisitors = $allVisitors->get();
+        $latestVisitors = Visitor::select('visitors.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, id_type) as latest'), 'visitors.id', '=', 'latest.id')
+            ->where(function ($subQuery) use ($filterData) {
+                if (!empty($filterData['start_date'])) {
+                    $subQuery->whereDate('visitors.date', '>=', $filterData['start_date']);
+                }
+                if (!empty($filterData['end_date'])) {
+                    $subQuery->whereDate('visitors.date', '<=', $filterData['end_date']);
+                }
+            })
+            ->latest()
+            ->get();
 
-    return view('admin.visitors.visitor_admin', compact('latestVisitors', 'allVisitors'));
+        $allVisitors = $query->get();
+
+    return view('admin.visitors.visitor_admin', compact('latestVisitors', 'allVisitors', 'filterData'));
 }
 
+public function clearVisitorFilterAdmin()
+{
+    session()->forget('visitor_filter_admin');
+    return redirect()->route('admin.visitors.visitor_admin');
+}
 
 
 public function store(Request $request)
 {
     $request->validate([
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'person_to_visit' => 'required|string|max:255',
+        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'person_to_visit' => 'required|string|max:100',
         'purpose' => 'required|string|max:255',
-        'id_type' => 'required|string|max:255',
-    ]);
+        'id_type' => 'required|string|max:30',
+        'id_number' => 'required|string|max:50',
+        'id_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ],
+    [
+        'first_name.regex' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.regex' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
+        'id_number.required' => 'ID Number is required.',
+        'id_number.max' => 'ID Number must be below 50 characters.',
+    ]
+);
 
     $visitor = new Visitor();
-    $visitor->fill([
-        'first_name' => $request->get('first_name'),
-        'middle_name' => $request->get('middle_name'),
-        'last_name' => $request->get('last_name'),
-        'person_to_visit' => $request->get('person_to_visit'),
-        'purpose' => $request->get('purpose'),
-        'id_type' => $request->get('id_type'),
-        'date' => now()->format('Y-m-d H:i:s'),
-        'time_in' => now()->format('H:i:s'),
-        'user_id' => Auth::id(),
-    ]);
+    $visitor->first_name = $request->first_name;
+    $visitor->middle_name = $request->middle_name;
+    $visitor->last_name = $request->last_name;
+    $visitor->person_to_visit = $request->person_to_visit;
+    $visitor->purpose = $request->purpose;
+    $visitor->id_type = $request->id_type;
+    $visitor->id_number = $request->id_number;
+    $visitor->fill($request->except('id_image'));
+    $visitor->date = now()->format('Y-m-d H:i:s');
+    $visitor->time_in = now()->format('H:i:s');
+    $visitor->user_id = Auth::id();
+
+    // Handle ID image upload
+    if ($request->hasFile('id_image')) {
+        $fileName = time() . '_' . $request->file('id_image')->getClientOriginalName();
+        $path = $request->file('id_image')->storeAs('id_images', $fileName, 'public');
+        $visitor['id_image'] = '/storage/' . $path;
+    }
 
     $visitor->save();
 
-    //Fetch the latest visitors
-    $latestVisitor = Visitor::select('visitors.*')
-    ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, entry_count) as latest'), 'visitors.id', '=', 'latest.id')
-    ->latest('visitors.created_at')
-    ->first();
-
-    // if($visitor){
-    return response()->json(['status' => 'success', 'message' => 'Visitor added successfully', 'visitor' => $visitor, 'latestVisitor' => $latestVisitor]);
-        // }else{
-    //     return response()->json([
-    //        'status' => 'error', 'message' => 'Failed to add Visitor '
-    //     ]);
-    // }
+    return response()->json(['status' => 'success', 'message' => 'Visitor added successfully', 'visitor' => $visitor]);
 
 }
 
@@ -98,33 +136,55 @@ public function edit(string $id)
 /**
  * Update the specified resource in storage.
  */
-public function update(Request $request)
+public function update(Request $request, String $id)
 {
-    $request->validate([
-        'entries.*.id' => 'required|exists:visitors,id',
-        'entries.*.first_name' => 'required|string|max:255',
-        'entries.*.middle_name' => 'nullable|string|max:255',
-        'entries.*.last_name' => 'required|string|max:255',
-        'entries.*.person_to_visit' => 'required|string|max:255',
-        'entries.*.purpose' => 'required|string|max:255',
-        'entries.*.id_type' => 'required|string|max:255',
-        'entries.*.entry_count' => 'required|integer',
+    $visitor = Visitor::findOrFail($id);
+
+    $validatedData = Validator::make($request->all(), [
+        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'person_to_visit' => 'required|string|max:100',
+        'purpose' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+        'id_number' => 'required|string|max:50',
+        'visited_person_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_position' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+        'id_number' => 'required|string|max:50',
+    ],
+    [
+        'first_name.regex' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.regex' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
+        'visited_person_name.max' => 'Must below 100 letters',
+        'visited_person_position.max' => 'Must below 100 letters',
+        'id_number.required' => 'ID Number is required.',
+        'id_number.max' => 'ID Number must be below 50 characters.',
     ]);
 
-    foreach ($request->entries as $entry) {
-        $visitor = Visitor::findOrFail($entry['id']);
-        $visitor->update([
-            'first_name' => $entry['first_name'],
-            'middle_name' => $entry['middle_name'],
-            'last_name' => $entry['last_name'],
-            'person_to_visit' => $entry['person_to_visit'],
-            'purpose' => $entry['purpose'],
-            'id_type' => $entry['id_type'],
-            'entry_count' => $entry['entry_count'],
-        ]);
+    if ($validatedData->fails()) {
+        return response()->json(['errors' => $validatedData->errors()], 422);
     }
 
-    return redirect()->back()->with('success', 'Visitor entries updated successfully.');
+    $visitor->visited_person_name = $request->input('visited_person_name');
+    $visitor->visited_person_position = $request->input('visited_person_position');
+    $visitor->id_number = $request->input('id_number');
+
+    $visitor->update($request->all());
+
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Visitor updated successfully.'
+    ]);
 }
 
 
@@ -143,7 +203,19 @@ public function destroy(string $id)
 public function checkoutAdmin($id)
 {
     $visitor = Visitor::findOrFail($id);
-    $visitor->time_out = now()->format('H:i:s');
+    request()->validate([
+        'visited_person_name' => 'required|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_position' => 'required|string|max:100',
+    ],
+    [
+        'visited_person_name.regex' => 'Must no number or syntax.',
+        'visited_person_name.max' => 'Must below 100 letters',
+        'visited_person_position.max' => 'Must below 100 letters',
+    ]);
+
+    $visitor->visited_person_name = request('visited_person_name');
+    $visitor->visited_person_position = request('visited_person_position');
+    $visitor->time_out = now();
     $visitor->save();
 
     return redirect()->route('admin.visitors.visitor_admin')->with('success', 'Time out recorded successfully.');
@@ -168,19 +240,36 @@ public function new_visitor(Request $request)
 
 public function filterVisitor(Request $request)
 {
+    if ($request->filled('start_date') || $request->filled('end_date')) {
+    session(['visitor_filter' => [
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+    ]]);
+}
     $query = Visitor::query();
+    $user = Auth::user();
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
-    }
+$filterData = session('visitor_filter', [
+    'start_date' => $request->start_date,
+    'end_date' => $request->end_date,
+]);
+
+if (!empty($filterData['start_date'])) {
+    $query->whereDate('date', '>=', $filterData['start_date']);
+}
+
+if (!empty($filterData['end_date'])) {
+    $query->whereDate('date', '<=', $filterData['end_date']);
+}
 
     $latestVisitors = Visitor::select('visitors.*')
-        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date) as latest'), 'visitors.id', '=', 'latest.id')
-        ->where(function ($subQuery) use ($request) {
-            if ($request->filled('start_date') && $request->filled('end_date')) {
-                $subQuery->whereDate('visitors.created_at', '>=', $request->start_date)
-                         ->whereDate('visitors.created_at', '<=', $request->end_date);
+        ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, id_type, id_number) as latest'), 'visitors.id', '=', 'latest.id')
+        ->where(function ($subQuery) use ($filterData) {
+            if (!empty($filterData['start_date'])) {
+                $subQuery->whereDate('visitors.date', '>=', $filterData['start_date']);
+            }
+            if (!empty($filterData['end_date'])) {
+                $subQuery->whereDate('visitors.date', '<=', $filterData['end_date']);
             }
         })
         ->latest()
@@ -188,21 +277,43 @@ public function filterVisitor(Request $request)
 
     $allVisitors = $query->get();
 
-    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors'));
+    return view('sub-admin.visitors.visitor', compact('latestVisitors', 'allVisitors', 'filterData'));
 }
 
-
+public function clearVisitorFilter()
+{
+    session()->forget('visitor_filter');
+    return redirect()->route('sub-admin.visitors.visitor');
+}
 
 public function store_visit(Request $request)
 {
-        $request->validate([
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'person_to_visit' => 'required|string|max:255',
+    $request->validate([
+        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'person_to_visit' => 'required|string|max:100',
         'purpose' => 'required|string|max:255',
-        'id_type' => 'required|string|max:255',
-    ]);
+        'id_type' => 'required|string|max:30',
+        'id_number' => 'required|string|max:50',
+        'id_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ],
+    [
+        'first_name.regex' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.regex' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
+        'id_number.required' => 'ID Number is required.',
+        'id_number.max' => 'ID Number must be below 50 characters.',
+    ]
+);
 
     $visitor = new Visitor();
     $visitor->first_name = $request->first_name;
@@ -211,24 +322,70 @@ public function store_visit(Request $request)
     $visitor->person_to_visit = $request->person_to_visit;
     $visitor->purpose = $request->purpose;
     $visitor->id_type = $request->id_type;
+    $visitor->id_number = $request->id_number;
     $visitor->date = now()->format('Y-m-d H:i:s');
     $visitor->time_in = now()->format('H:i:s');
     $visitor->user_id = Auth::id();
 
+    if ($request->hasFile('id_image')) {
+        $fileName = time() . '_' . $request->file('id_image')->getClientOriginalName();
+        $path = $request->file('id_image')->storeAs('id_images', $fileName, 'public');
+        $visitor['id_image'] = '/storage/' . $path;
+    }
+
     $visitor->save();
+
 
     return response()->json([
         'status' => 'success'
     ]);
 }
 
+public function validateField(Request $request)
+{
+    $field = $request->input('field');
+    $value = $request->input('value');
+
+    $rules = [
+        'first_name' => 'required|string|max:50',
+        'middle_name' => 'nullable|string|max:1',
+        'last_name' => 'required|string|max:50',
+        'person_to_visit' => 'required|string|max:100',
+        'purpose' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+    ];
+
+    $validator = Validator::make([$field => $value], [$field => $rules[$field]]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    return response()->json(['status' => 'valid']);
+}
+
+
 public function checkout($id)
 {
     $visitor = Visitor::findOrFail($id);
-    $visitor->time_out = now()->format('H:i:s');
+
+    // Add validation for the new fields
+    request()->validate([
+        'visited_person_name' => 'required|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_position' => 'required|string|max:100',
+    ],
+    [
+        'visited_person_name.regex' => 'Must no number or syntax.',
+        'visited_person_name.max' => 'Must below 100 letters',
+        'visited_person_position.max' => 'Must below 100 letters',
+    ]);
+
+    $visitor->visited_person_name = request('visited_person_name');
+    $visitor->visited_person_position = request('visited_person_position');
+    $visitor->time_out = now();
     $visitor->save();
 
-    return redirect()->route('visitors.subadmin');
+    return redirect()->route('sub-admin.visitors.visitor')->with('success', 'Visitor timed out successfully.');
 }
 
 public function searchVisitor(Request $request)
@@ -243,19 +400,57 @@ public function searchVisitor(Request $request)
 
 public function updateVisitorSub(Request $request, string $id)
 {
+    $validatedData = Validator::make($request->all(), [
+        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'person_to_visit' => 'required|string|max:100',
+        'purpose' => 'required|string|max:255',
+        'id_type' => 'required|string|max:30',
+        'id_number' => 'required|string|max:50',
+        'visited_person_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_position' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+    ],
+    [
+        'first_name.regex' => 'Must no number or syntax.',
+        'first_name.max' => 'Reached maximum 50 letters.',
+        'middle_name.max' => 'Only 1 letter needed.',
+        'last_name.regex' => 'Must no number or syntax.',
+        'last_name.max' => 'Reached maximum 50 letters.',
+        'person_to_visit.string' => 'Must no number or syntax.',
+        'person_to_visit.max' => 'Must below 100 letters',
+        'purpose.string' => 'Must no number or syntax.',
+        'purpose.max' => 'Must below 255 letters.',
+        'id_type.string' => 'Must no number or syntax.',
+        'id_type.max' => 'Must be below 30 letters.',
+        'visited_person_name.max' => 'Must below 100 letters',
+        'visited_person_position.max' => 'Must below 100 letters',
+        'id_number.required' => 'ID Number is required.',
+        'id_number.max' => 'ID Number must be below 50 characters.',
+    ]);
 
-    $visitors = Visitor::findOrFail($id);
+    if ($validatedData->fails()) {
+        return response()->json(['errors' => $validatedData->errors()], 422);
+    }
 
-    $visitors->update($request->all());
+    $visitor = Visitor::findOrFail($id);
 
+    $visitor->visited_person_name = $request->input('visited_person_name');
+    $visitor->visited_person_position = $request->input('visited_person_position');
+    $visitor->id_number = $request->input('id_number');
+    $visitor->update($request->all());
 
-    return redirect()->back()->with('success', 'Visitor updated successfully');
+    return response()->json([
+        'success' => true,
+        'message' => 'Visitor updated successfully.',
+        'redirect_url' => route('sub-admin.visitors.visitor')
+    ]);
 }
 
 public function getVisitorStats($timeframe)
     {
         switch ($timeframe) {
-            case 'weekly':
+        case 'weekly':
                 $data = Visitor::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
                     ->where('created_at', '>=', now()->subDays(7))
                     ->groupBy('date')
@@ -283,78 +478,52 @@ public function getVisitorStats($timeframe)
     {
         $timePeriod = $request->query('timePeriod');
         $labels = [];
-
         $visitor_count = [];
         $pass_slip_count = [];
         $lost_found_count = [];
         $violation_count = [];
 
+        $currentYear = date('Y');
+
         switch ($timePeriod) {
-            case 'monthly':
-                $visitors = Visitor::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
+            case 'weekly':
+                $startDate = now()->startOfWeek();
+                $endDate = now()->endOfWeek();
 
-                $labels = $visitors->pluck('month')->toArray();
-                $visitor_count = $visitors->pluck('count')->toArray();
-
-                $pass_slips = PassSlip::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
-
-                $labels = $pass_slips->pluck('month')->toArray();
-                $pass_slip_count = $pass_slips->pluck('count')->toArray();
-
-                $lost_found = Lost::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
-
-                $labels = $lost_found->pluck('month')->toArray();
-                $lost_found_count = $lost_found->pluck('count')->toArray();
-
-                $violations = Violation::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
-
-                $labels = $violations->pluck('month')->toArray();
-                $violation_count = $violations->pluck('count')->toArray();
+                for ($date = $startDate; $date <= $endDate; $date->addDay()) {
+                    if ($date->dayOfWeek >= 1 && $date->dayOfWeek <= 5) {
+                        $labels[] = $date->format('D');
+                        $visitor_count[] = Visitor::whereDate('created_at', $date)->count();
+                        $pass_slip_count[] = PassSlip::whereDate('created_at', $date)->count();
+                        $lost_found_count[] = Lost::whereDate('created_at', $date)->count();
+                        $violation_count[] = Violation::whereDate('created_at', $date)->count();
+                    }
+                }
                 break;
+
+            case 'monthly':
+                for ($month = 1; $month <= 12; $month++) {
+                    $labels[] = date('M', mktime(0, 0, 0, $month, 1));
+                    $visitor_count[] = Visitor::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                    $pass_slip_count[] = PassSlip::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                    $lost_found_count[] = Lost::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                    $violation_count[] = Violation::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                }
+                break;
+
             case 'yearly':
-                $visitors = Visitor::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $visitors->pluck('year')->toArray();
-                $visitor_count = $visitors->pluck('total')->toArray();
-
-                $pass_slips = PassSlip::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $pass_slips->pluck('year')->toArray();
-                $pass_slip_count = $pass_slips->pluck('total')->toArray();
-
-                $lost_found = Lost::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $lost_found->pluck('year')->toArray();
-                $lost_found_count = $lost_found->pluck('total')->toArray();
-
-                $violations = Violation::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $violations->pluck('year')->toArray();
-                $violation_count = $violations->pluck('total')->toArray();
+                $startYear = Visitor::min(DB::raw('YEAR(created_at)')) ?: $currentYear;
+                for ($year = $startYear; $year <= $currentYear; $year++) {
+                    $labels[] = $year;
+                    $visitor_count[] = Visitor::whereYear('created_at', $year)->count();
+                    $pass_slip_count[] = PassSlip::whereYear('created_at', $year)->count();
+                    $lost_found_count[] = Lost::whereYear('created_at', $year)->count();
+                    $violation_count[] = Violation::whereYear('created_at', $year)->count();
+                }
                 break;
         }
 
@@ -364,7 +533,71 @@ public function getVisitorStats($timeframe)
             'passSlip' => $pass_slip_count,
             'lost' => $lost_found_count,
             'violation' => $violation_count
-            ]);
+        ]);
     }
 
+    public function getVisitorTotalData()
+    {
+        $visitorCount = Visitor::count();
+        $passSlipCount = PassSlip::count();
+        $lostFoundCount = Lost::count();
+        $violationCount = Violation::count();
+
+        return response()->json([
+            'visitor' => $visitorCount,
+            'passSlip' => $passSlipCount,
+            'lost' => $lostFoundCount,
+            'violation' => $violationCount
+        ]);
+    }
+
+    public function duplicateEntry($id)
+    {
+        try {
+            $visitor = Visitor::findOrFail($id);
+
+            // Create a new visitor entry with the same details
+            $newVisitor = $visitor->replicate();
+            $newVisitor->time_in = now();
+            $newVisitor->time_out = null;
+            $newVisitor->date = now()->format('Y-m-d H:i:s');
+            $newVisitor->save();
+
+            // Update the latestVisitors query to group by name and fields
+            $latestVisitors = Visitor::select('visitors.*')
+                ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, id_type) as latest'),
+                    'visitors.id', '=', 'latest.id')
+                ->latest()
+                ->get();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function duplicateEntrySubAdmin($id)
+    {
+        try {
+            $visitor = Visitor::findOrFail($id);
+
+            // Create a new visitor entry with the same details
+            $newVisitor = $visitor->replicate();
+            $newVisitor->time_in = now();
+            $newVisitor->time_out = null;
+            $newVisitor->date = now()->format('Y-m-d H:i:s');
+            $newVisitor->save();
+
+            // Update the latestVisitors query to group by name and fields
+            $latestVisitors = Visitor::select('visitors.*')
+                ->join(DB::raw('(SELECT MAX(id) as id FROM visitors GROUP BY last_name, first_name, middle_name, date, id_type) as latest'),
+                    'visitors.id', '=', 'latest.id')
+                ->latest()
+                ->get();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
 }

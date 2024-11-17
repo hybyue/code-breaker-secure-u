@@ -33,7 +33,11 @@ class AllStudent extends Model
                 'course',
                 'user_id'
             ])
-            ->logOnlyDirty();
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->logUnguarded()
+            ->setDescriptionForEvent(fn(string $eventName) => "This student record has been {$eventName}")
+            ->useLogName('all student');
     }
 
     protected static $logName = 'all student';

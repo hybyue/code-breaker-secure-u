@@ -22,14 +22,35 @@ class Lost extends Model
         'last_name',
         'course',
         'object_img',
+        'location',
+        'is_claimed',
+        'security_staff',
+        'description',
+        'is_transferred'
     ];
 
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['user_id', 'object_type', 'first_name', 'middle_name', 'last_name', 'course', 'object_img'])
-        ->logOnlyDirty();
+        ->logOnly([
+        'user_id',
+        'object_type',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'course',
+        'object_img',
+        'location',
+        'is_claimed',
+        'security_staff',
+        'description',
+        'is_transferred'])
+        ->logOnlyDirty()
+        ->dontSubmitEmptyLogs()
+        ->logUnguarded()
+        ->setDescriptionForEvent(fn(string $eventName) => "This lost item record has been {$eventName}")
+        ->useLogName('lost_found');
     }
 
     protected static $logName = 'lost_found';

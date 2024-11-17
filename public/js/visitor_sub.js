@@ -1,24 +1,3 @@
-function searchTable() {
-    var input, filter, table, tr, td, i, j, txtValue;
-    input = document.getElementById("search");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("visitorTable");
-    tr = table.getElementsByTagName("tr");
-
-    for (i = 1; i < tr.length; i++) {
-        tr[i].style.display = "none";
-        td = tr[i].getElementsByTagName("td");
-        for (j = 0; j < td.length; j++) {
-            if (td[j]) {
-                txtValue = td[j].textContent || td[j].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                    break;
-                }
-            }
-        }
-    }
-}
 
 function searchVisitor() {
     let query = document.getElementById("search_visitor").value;
@@ -51,3 +30,8 @@ function fillVisitorForm(visitor) {
     document.getElementById("purpose").value = visitor.purpose;
     document.getElementById("visitorSuggestions").innerHTML = "";
 }
+
+
+
+
+

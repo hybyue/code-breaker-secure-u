@@ -1,5 +1,6 @@
 
 {{-- Add Violation --}}
+<div id="updateViolationDynamic">
 @foreach ($violations as $violate)
 <div class="modal fade" id="updateViolationModal-{{$violate->id}}" tabindex="-1" aria-labelledby="updateViolationModalLabel-{{$violate->id}}" aria-hidden="true">
     <div class="modal-dialog">
@@ -9,9 +10,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="violationForm" action="{{route('store_violation', $violate->id)}}" method="POST">
+                <form class="violationForm" id="violationForm-{{$violate->id}}" action="{{route('store_violation', $violate->id)}}" method="POST">
                     @csrf
                     @method('PUT')
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                     <div class="row">
                         <div class="form-group">
                             <label for="student_no">Student Number:</label>
@@ -36,14 +46,22 @@
                         <div class="form-group">
                             <label for="violation_type">Violation Type:</label>
                             <select class="form-select" id="violation_type" name="violation_type" required>
-                                <option value="{{$violate->student_no}}"  selected disabled>{{$violate->student_no}}</option>
-                                <option value="No ID">No ID</option>
-                                <option value="No Shoes">No Shoes</option>
-                                <option value="Inapropriate Cloths">Inapropriate Cloths</option>
+                                <option value="{{$violate->student_no}}"  selected>{{$violate->student_no}}</option>
+                                <option value="Hanging/CropTop">Hanging/CropTop</option>
+                                <option value="Polo Top">Polo Top</option>
+                                <option value="Tattere Pants">Tattere Pants</option>
                                 <option value="Earings">Earings</option>
-                                <option value="No Uniform">No Uniform</option>
+                                <option value="Ball Cup">Ball Cup</option>
+                                <option value="Slipper/Sandals">Slipper/Sandals</option>
+                                <option value="Croca">Croca</option>
+                                <option value="Short/Skirt">Short/Skirt</option>
+                                <option value="Sleeveless/Shoulder">Sleeveless/Shoulder</option>
                                 <option value="Other">Other</option>
                             </select>
+                            <div class="form-group mt-2" id="otherViolationDiv" style="display: none;">
+                                <label for="other_violation">Specify Other Violation:</label>
+                                <input type="text" class="form-control" id="other_violation" name="other_violation">
+                            </div>
                        </div>
 
                     <div class="form-group">
@@ -52,10 +70,10 @@
                     </div>
 
                     </div>
-
-
                     <div class="form-group text-center mt-3">
-                        <button type="submit" class="btn btn-primary text-white">Update</button>
+                        <button type="submit" class="btn btn-primary text-white update_violation w-50">
+                            <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
+                            Update</button>
                     </div>
                 </form>
             </div>
@@ -63,3 +81,21 @@
     </div>
 </div>
 @endforeach
+</div>
+
+
+<script>
+    document.getElementById('violation_type').addEventListener('change', function() {
+        const otherDiv = document.getElementById('otherViolationDiv');
+        const otherInput = document.getElementById('other_violation');
+
+        if (this.value === 'Other') {
+            otherDiv.style.display = 'block';
+            otherInput.required = true;
+        } else {
+            otherDiv.style.display = 'none';
+            otherInput.required = false;
+            otherInput.value = '';
+        }
+    });
+</script>

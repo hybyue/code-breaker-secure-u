@@ -14,34 +14,56 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addViolationModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="{{ route('pdf.generate-lost', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalViolation()">Generate Report</a>
         </div>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded">
+    <div class="container mt-4">
+        <form action="/admin/violation" method="GET">
+            <div class="row pb-3">
+                <div class="col-md-3">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control"
+                        value="{{ session('violation_admin_filter.start_date', request('start_date')) }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control"
+                        value="{{ session('violation_admin_filter.end_date', request('end_date')) }}">
+                </div>
+                <div class="col-md-1 mt-4 pt-2">
+                    <button type="submit" class="btn btn-dark">Filter</button>
+                </div>
+
+                @if(session()->has('violation_admin_filter'))
+                <div class="col-md-0 mt-4 pt-2">
+                    <a href="{{ route('admin.violation.clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
+                </div>
+                @endif
+            </div>
+        </form>
+    </div>
+
+
+    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
     <table id="violationTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
-                <th>Student Number</th>
+                <th class="text-start">Student Number</th>
                 <th>Name</th>
                 <th>Course</th>
                 <th>Violation</th>
-                <th>Date</th>
-                <th>Status</th>
+                <th class="text-start">Date</th>
+                <th>Violation Count</th>
                 <th></th>
             </tr>
 
-            <script>
-                function testFunction() {
-                  console.log("clicked button");
-                }
-            </script>
         </thead>
         <tbody>
 
-            @forelse ($violations as $violate)
+            @foreach ($violations as $violate)
             <tr  id="tr_{{$violate->id}}">
-                <td>{{$violate->student_no}}</td>
+                <td class="text-center">{{$violate->student_no}}</td>
                 <td>{{$violate->last_name}}, {{$violate->first_name}}
                     @if($violate->middle_initial)
                      {{$violate->middle_initial}}.
@@ -49,14 +71,16 @@
                 </td>
                 <td>{{$violate->course}}</td>
                 <td>{{$violate->violation_type}}</td>
-                <td>{{$violate->date}}</td>
+                <td class="text-center">{{\Carbon\Carbon::parse($violate->date)->format('F d, Y')}}</td>
                 <td>
-                    @if ($violate->violation_count > 1)
-                    {{$violate->violation_count}} violations
-                    @else
+                    @if ($violate->violation_count == 1)
                     {{$violate->violation_count}} violation
+                    @elseif($violate->violation_count >=3 )
+                    <span class="text-danger">{{$violate->violation_count}} violations</span>
+                    @elseif($violate->violation_count == 2)
+                    {{$violate->violation_count}} violations
                     @endif
-                    </td>
+                </td>
                 <td>
                     <div class="d-flex justify-content-center align-items-center">
                         <div class="mx-1">
@@ -65,30 +89,24 @@
                         <div class="mx-1">
                         <a href="#" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $violate->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $violate->id }}"><i class="bi bi-pencil-square"></i></a>
                         </div>
-                        <div class="mx-1">
+                        {{-- <div class="mx-1">
                             <a href="javascript:void(0)" onclick="deleteViolation({{$violate->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- <div><button onclick="testFunction()">test</button></div> --}}
                 </td>
             </tr>
-            @empty
-            <tr>
-                <td colspan="8" class="text-center">No Data available in table</td>
-            </tr>
-            @endforelse
+            @endforeach
         </tbody>
     </table>
-
 </div>
 
 </div>
 
-@include('admin.violation.add_violation')
-@include('admin.violation.update_violation')
-@include('admin.violation.violation_js')
+
+
 
 <div id="latestViolations">
 {{-- Modal for showing all entries of a student --}}
@@ -125,16 +143,12 @@
 </div>
 @endforeach
 </div>
+@include('admin.violation.update_violation')
 
-<style>
-    .same-height-table td {
-        vertical-align: middle;
-    }
+@include('admin.violation.add_violation')
 
 
-</style>
-
-
+@include('admin.violation.violation_js')
 
 
 @endsection

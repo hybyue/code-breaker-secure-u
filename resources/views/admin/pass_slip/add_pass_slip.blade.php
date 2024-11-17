@@ -1,4 +1,3 @@
-
 <!-- Add New Pass Slip Modal -->
 <div class="modal fade" id="addPassSlipModal" tabindex="-1" aria-labelledby="addPassSlipModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -6,79 +5,107 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="addPassSlipModalLabel">Add Pass Slip</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
             </div>
             <div class="modal-body">
                 <form id="addPassForm" action="" method="POST">
                     @csrf
-
                     <div class="row">
                         <div class="mb-2 position-relative">
                             <input type="text" class="form-control" id="search_employee"
                                 placeholder="Type ID or Name" oninput="searchEmployee()">
+                            <span class="text-danger error-message" id="search_employee_error"></span>
                             <div id="employee_results" class="col-md-12 results-container"></div>
                             <!-- This will show suggestions -->
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="p_no" class="form-label">Pass Number:</label>
-                            <input type="text" class="form-control" name="p_no" id="p_no"
-                                value="{{ 'P-' . now()->format('Ymd') . '-' }}">
+                            <input type="text" class="form-control bg-body-secondary" name="p_no" id="p_no"
+                            value="{{ $passNumber ?? '' }}" readonly>
+                            <span class="text-danger error-message" id="p_no_error"></span>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="status" name="employee_type" required>
-                                <option value="" selected disabled>Select Employee Type</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <input class="form-control bg-body-secondary" id="status" name="employee_type" required readonly>
+                            <span class="text-danger error-message" id="employee_type_error"></span>
                         </div>
-                        <input hidden type="text" class="form-control" id="employee_id" name="employee_id">
+                        <input hidden type="text" class="form-control " id="employee_id" name="employee_id">
+                        <span class="text-danger error-message" id="employee_id_error"></span>
                         <div class="col-md-4 mb-2">
                             <label for="last_name" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <input type="text" class="form-control bg-body-secondary" id="last_name" name="last_name" required readonly>
+                            <span class="text-danger error-message" id="last_name_error"></span>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="first_name" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            <input type="text" class="form-control bg-body-secondary" id="first_name" name="first_name" required readonly>
+                            <span class="text-danger error-message" id="first_name_error"></span>
                         </div>
                         <div class="col-md-4  mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name"
+                            <input type="text" class="form-control bg-body-secondary" id="middle_name" name="middle_name" readonly
                                 placeholder="Optional">
+                            <span class="text-danger error-message" id="middle_name_error"></span>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="department" class="form-label">Department:</label>
-                            <input type="text" class="form-control" id="department" name="department" required>
+                            <label for="department" class="form-label">Office/Dept:</label>
+                            <input type="text" class="form-control bg-body-secondary" id="department" name="department" required readonly>
+                            <span class="text-danger error-message" id="department_error"></span>
                         </div>
                         <div class="col-md-6">
-                            <label for="designation" class="form-label">Designation:</label>
-                            <input class="form-control" id="designation" name="designation" rows="3"
-                                required></input>
+                            <label for="designation" class="form-label">Position/Designation:</label>
+                            <input class="form-control bg-body-secondary" id="designation" name="designation" required readonly>
+                            <span class="text-danger error-message" id="designation_error"></span>
+                        </div>
+                        <div class="row mb-2 ms-3">
+                            <label class="form-label">Check Business:</label>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="commute" name="check_business" value="Commute">
+                                <label class="form-check-label" for="commute">Commute</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="own_vehicle" name="check_business" value="Use own vehicle">
+                                <label class="form-check-label" for="own_vehicle">Use own vehicle</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="university_vehicle" name="check_business" value="With the use of university vehicle">
+                                <label class="form-check-label" for="university_vehicle">With the use of university vehicle</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="official_business" name="check_business" value="Official business">
+                                <label class="form-check-label" for="official_business">Official business</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="personal_business" name="check_business" value="Personal business">
+                                <label class="form-check-label" for="personal_business">Personal business</label>
+                            </div>
+                            <span class="text-danger error-message" id="check_business_error"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="driver_name" class="form-label">Driver Name:</label>
+                            <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="Optional">
+                            <span class="text-danger error-message" id="driver_name_error"></span>
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
-                            <input class="form-control" id="destination" name="destination" required></input>
+                            <input class="form-control" id="destination" name="destination" required>
+                            <span class="text-danger error-message" id="destination_error"></span>
                         </div>
                         <div class="col-md-6">
                             <label for="purpose" class="form-label">Purpose:</label>
                             <textarea class="form-control" id="purpose" name="purpose" rows="1" required></textarea>
+                            <span class="text-danger error-message" id="purpose_error"></span>
                         </div>
-                        {{-- <div class="col-md-6 mb-2">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
-                        </div> --}}
-                        <div class=" mb-2">
+                        <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
-                            <input type="time" class="form-control" id="time_out" name="time_out" required>
+                            <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00" required>
+                            <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
-                        {{-- <div class="col-md-6 mb-2">
-                            <label for="time_in" class="form-label">Time In</label>
-                            <input type="time" class="form-control" id="time_in" name="time_in" >
-                        </div> --}}
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit"  data-bs-dismiss="#addPassSlipModal" class="btn btn-primary" wire:click="mount">Save</button>
+                            <button type="submit" class="btn btn-success add_pass_slip">
+                                <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
+                                Save
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -87,42 +114,14 @@
     </div>
 </div>
 
-
+<!-- Add this in the head section or in your CSS file -->
 <style>
-    /* Styling the search bar */
-    #search_employee {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 25px;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.3s ease;
+    .error-message {
+        display: block;
+        color: #dc3545;
+        font-size: 80%;
+        margin-top: 0.25rem;
     }
-
-    #search_employee:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-    }
-
-    /* Styling the search button */
-    .btn-search {
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        border-radius: 25px;
-        color: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-search:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-search:active {
-        transform: scale(0.98);
-    }
-
 </style>
+
+

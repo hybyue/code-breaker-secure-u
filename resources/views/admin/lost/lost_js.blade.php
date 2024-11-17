@@ -1,6 +1,5 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+<script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
 
 <script>
     $.ajaxSetup({
@@ -13,25 +12,28 @@
 <script>
 
 $(document).ready(function () {
-
-    new DataTable('#tableLost', {
+    new DataTable('#tableLostAdmin', {
         responsive: true,
-        ordering: false,
-        });
-
+        "ordering": false,
+        language: {
+            lengthMenu: "_MENU_ entries",
+        },
+        columnDefs: [
+            { targets: "_all", defaultContent: "" }
+        ]
+    });
 
     $('#addLostForm').on('submit', function(e){
         e.preventDefault();
 
         let formData = new FormData(this);
+        let submitButton = $('#addLostForm').find('.add_lost_admin');
 
-        // Remove this click handler since the button click is not needed here
-        // $("#lostSubmmit").click(function () {
-        //     $("#addNewLostModal").modal("toggle");
-        // });
+        submitButton.prop('disabled', true);
+        $('#addLostForm').find('#loadingSpinnerer').show();
 
         $.ajax({
-            url: "{{ route('admin.store') }}",
+            url: "{{ route('admin.store_lost') }}",
             method: 'POST',
             data: formData,
             processData: false,
@@ -39,38 +41,13 @@ $(document).ready(function () {
             success: function(resp) {
                 if(resp.status == 'success') {
                     $('#addLostForm')[0].reset();
-                    $('body').removeClass('modal-open');
 
-                    // Append the new entry to the table
-                    $('#tableLost').append(
-                        `<tr class="text-center" id="tr_${resp.data.id}">
-                            <td>${resp.data.object_type}</td>
-                            <td>${resp.data.first_name} ${resp.data.middle_name}. ${resp.data.last_name}</td>
-                            <td>${resp.data.course}</td>
-                            <td>
-                                ${resp.data.object_img ? `<img src="${resp.data.object_img}" alt="Object Image" width="100">` : 'No Image'}
-                            </td>
-                            <td>
-                            <div class="d-flex justify-content-center">
-                                <div class="mx-1">
-                                    <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateLostFound-${resp.data.id}">
-                                    <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </div>
-                                <div class="mx-1">
-                                    <a href="javascript:void(0)" onclick="deleteLostFound(${resp.data.id})" class="btn btn-sm text-white" style="background-color: #920606">
-                                    <i class="bi bi-trash3-fill"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            </td>
-                        </tr>`
-                    );
-                    $('.modal').modal({
-                                backdrop: 'static',
-                                keyboard: true
-                            });
+                    $('#addLostForm').find('.is-invalid').removeClass('is-invalid');
+                    $('#addLostForm').find('.error-message').remove();
 
+                    $('#tableLostAdmin').load(location.href + ' #tableLostAdmin');
+                    $('#lostFoundUpdateAd').load(location.href + ' #lostFoundUpdateAd');
+                    $('#viewLostFoundAd').load(location.href + ' #viewLostFoundAd');
 
                     Swal.fire({
                         toast: true,
@@ -87,15 +64,50 @@ $(document).ready(function () {
                     });
                 }
             },
-            error: function(err) {
-                $('.errorMessage').html('');
-                let errors = err.responseJSON.errors;
-                $.each(errors, function(index, value) {
-                    $('.errorMessage').append('<span class="text-danger">'+value+'</span>'+'<br>');
-                });
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    $('#addLostForm').find('.error-message').remove();
+
+                    $.each(errors, function(field, messages) {
+                        let input = $('#addLostForm').find('[name="' + field + '"]');
+                        input.addClass('is-invalid');
+                        input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
+                    });
+                }
+            },
+            complete: function() {
+                $('#addLostForm').find('#loadingSpinnerer').hide()
+                submitButton.prop('disabled', false);
             }
         });
     });
+
+    $('.modal').on('hidden.bs.modal', function() {
+        $('.is-invalid').removeClass('is-invalid');
+        $('.error-message').text('');
+    });
+});
+
+
+$(document).ready(function() {
+    if (localStorage.getItem('showToast') === 'true') {
+        Swal.fire({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: 'Visitor updated successfully',
+        });
+
+        localStorage.removeItem('showToast');
+    }
 });
 
 </script>
@@ -142,4 +154,134 @@ $(document).ready(function () {
 	}
 
 
+</script>
+
+
+
+<script>
+    function markAsClaimed(id) {
+        Swal.fire({
+        icon: 'question',
+        title: 'Are you sure?',
+        text: 'Do you want to mark this item as claimed?',
+        showCancelButton: true,
+        confirmButtonColor: '#0B9B19',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, mark as claimed',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/update_claimed/${id}`,
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    is_claimed: 1
+                },
+                success: function(response) {
+                    localStorage.setItem('successMessage', 'Item has been mark as Claimed');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'There was a problem updating the claim status. Please try again.',
+                        confirmButtonColor: '#920606'
+                    });
+                }
+            });
+        }
+    });
+}
+
+function markAsTransfer(id) {
+    Swal.fire({
+        icon: 'question',
+        title: 'Are you sure?',
+        text: 'Do you want to mark this item as transferred (CSLD)?',
+        showCancelButton: true,
+        confirmButtonColor: '#0B9B19',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, mark as transferred',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+                url: `/admin/update_transfer/${id}`,
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    is_transferred: 1
+                },
+                success: function(response) {
+                    localStorage.setItem('successMessage', 'Item has been mark as transferred(CSLD)');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'There was a problem updating the claim status. Please try again.',
+                        confirmButtonColor: '#920606'
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showPdfModalLost() {
+        document.getElementById('loadingBar').style.display = 'block';
+    document.getElementById('pdfLostFrame').style.display = 'none';
+
+    const url = '/admin/generate-pdf/lost_found?' + $.param({
+        start_date: $('#start_date').val(),
+        end_date: $('#end_date').val()
+    });
+
+    document.getElementById('pdfLostFrame').src = url;
+
+    $('#pdfModalLostAd').modal({
+        backdrop:'static',
+        keyboard: false,
+        focus: false,
+        show: false,
+        scrollY: false,
+        scrollX: true,
+        width: '100%',
+        height: 'auto',
+        aspectRatio: 1.5,
+        responsive: true,
+        zoom: {
+            enabled: true,
+            scroll: true,
+            wheel: false,
+            pinch: false
+        }
+    });
+
+    $('#pdfModalLostAd').modal('show');
+
+    setTimeout(function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        document.getElementById('pdfLostFrame').style.display = 'block';
+    }, 2000);
+    }
+
+
+    $(document).ready(function() {
+    const successMessage = localStorage.getItem('successMessage');
+    if (successMessage) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: successMessage,
+            confirmButtonColor: '#0B9B19'
+        });
+        localStorage.removeItem('successMessage');
+    }
+});
 </script>

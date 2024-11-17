@@ -1,7 +1,6 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" integrity="sha384-4M7GcTbZBdHj1XOpjLci8tUZzJOTiFS7pkXeGguH4d9hZhg7Z7IHu/hgRo6eo35c" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+<script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+
 
 <script>
     $.ajaxSetup({
@@ -11,155 +10,49 @@
     });
 </script>
 
-{{--
-<script>
-    $(document).ready(function () {
-
-
-
-    new DataTable('#visitorTable', {
-        responsive: true,
-        ordering: false,
-        dom: '<"d-flex justify-content-between"lBf>rt<"d-flex justify-content-between"ip>',
-        buttons: [
-            'copy', 'excel', 'print'
-        ]
-
-        });
-
-
-    $("#addVisitorForm").validate({
-        rules: {
-            last_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 50,
-            },
-            first_name: {
-                required: true,
-                minlength: 3,
-                maxlength: 50,
-            },
-            person_to_visit: {
-                required: true,
-                minlength: 3,
-                maxlength: 50,
-            },
-            purpose: {
-                required: true,
-                minlength: 3,
-                maxlength: 255,
-            },
-            id_type: {
-                required:true,
-            },
-        },
-        messages: {
-            last_name: {
-                required: "Last name is required ",
-                minlength: "Last name must be atleast 3 chars.",
-                maxlength: "Last name must be maximum of 50 letters",
-            },
-            first_name: {
-                required: "First name is required ",
-                minlength: "First name must be atleast 3 chars.",
-                maxlength: "First name must be maximum of 50 letters",
-            },
-            person_to_visit: {
-                required: "Please fill this up",
-                minlength: "Must be greater than 3 letters",
-                maxlength: "Must be maximum of 50 letters",
-            },
-            purpose: {
-                required: "Purpose is required",
-                minlength: "Purpose must be greater than 3 letters",
-                maxlength: "Purpose must be maximum of 50 letters",
-            },
-            id_type: {
-                required: "ID type is required",
-            },
-        },
-        submitHandler: function (form, function(e)) {
-            e.preventDefault();
-            const formData = $(form).serializeArray();
-
-
-            $.ajax({
-                url: "{{route('visitor.store')}}",
-                method: 'POST',
-                data: formData,
-                beforeSend: function () {
-                    console.log("Loading...");
-                },
-                success: function (response) {
-                    if (response.status === "success") {
-
-                    $("#addVisitorForm")[0].reset();
-                    $("#addVisitorModal").modal("toggle");
-                    $('.modal-backdrop').hide();
-
-                    $('#visitorTable').load(location.href + ' #visitorTable');
-
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success!",
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-
-
-                    } else if (response.status === "failed") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Failed!",
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                    }
-                },
-                error: function (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Failed!",
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                },
-            });
-        },
-    });
-
-});
-</script> --}}
-
 
 <script>
    $(document).ready(function () {
     new DataTable('#visitorTable', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ],
         });
 
         $('#addVisitorForm').on('submit', function(e){
         e.preventDefault();
-    
-        $('.errorMessage').html('');
-    
-        let formData = $(this).serialize();
-    
+
+        $('.error-message').empty();
+        // Show loading spinner and disable submit button
+        const submitButton = $(this).find('button[type="submit"]');
+        const loadingSpinner = $('#loadingSpinner');
+
+        submitButton.prop('disabled', true);
+        loadingSpinner.show();
+
+
+        let formData = new FormData(this);
+
         $.ajax({
             url: "{{ route('visitor.store') }}",
             method: 'POST',
             data: formData,
+            processData: false,
+            contentType: false,
             success:function(resp){
                 if(resp.status == 'success'){
                     $('#addVisitorForm')[0].reset();
                     $('#visitorTable').load(location.href + ' #visitorTable');
                     $('#dynamicModals').load(location.href + ' #dynamicModals');
                     $('#updateDynamicModals').load(location.href + ' #updateDynamicModals');
+                    $('#timeOut_visitor').load(location.href + ' #timeOut_visitor');
+
+                    $('.text-danger').html('');
                     const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-right',
@@ -175,23 +68,103 @@
                         icon: 'success',
                         title: 'Visitor added successfully',
                     });
-                   
+
                 }
                 else {
                     console.log("Failed to create");
                 }
             },
             error: function(err){
-                $('.errorMessage').html('');
-                let error = err.responseJSON;
-                $.each(error.errors, function(index, value){
-                    $('.errorMessage').append('<span class="text-danger">' + value + '</span><br>');
+                $('.error-message').html('');
+
+                if (err.responseJSON && err.responseJSON.errors) {
+                    let errors = err.responseJSON.errors;
+
+                    Object.keys(errors).forEach(function(field) {
+                        let errorMessage = errors[field][0];
+                        $(`#${field}_error`).text(errorMessage);
+                    });
+                }
+            },
+            complete: function () {
+                // Hide loading spinner and enable submit button
+                loadingSpinner.hide();
+                submitButton.prop('disabled', false);
+            }
+
+        });
+    });
+
+
+    $('.updateVisitorForm').on('submit', function(e) {
+    e.preventDefault();
+
+    let form = $(this);
+    let formData = new FormData(this);
+    let submitButton = form.find('.update_visitor');
+    let modalId = form.attr('id').split('-')[1];
+    let modal = $('#updateVisitor-' + modalId);
+
+    submitButton.prop('disabled', true);
+    form.find('#loadingSpinnerer').show();
+
+    $.ajax({
+        url: form.attr('action'),
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                modal.modal('hide');
+                localStorage.setItem('showToast', 'true');
+                location.reload();
+            }
+        },
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                form.find('.error-message').remove();
+
+                $.each(errors, function(field, messages) {
+                    let input = form.find('[name="' + field + '"]');
+                    input.addClass('is-invalid');
+                    input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
                 });
             }
-        });
+        },
+        complete: function() {
+            form.find('#loadingSpinnerer').hide();
+            submitButton.prop('disabled', false);
+        }
     });
 });
 
+        $('.modal').on('hidden.bs.modal', function() {
+            $('.is-invalid').removeClass('is-invalid');
+            $('.error-message').text('');
+        });
+});
+
+$(document).ready(function() {
+    if (localStorage.getItem('showToast') === 'true') {
+        Swal.fire({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: 'Visitor updated successfully',
+        });
+
+        localStorage.removeItem('showToast');
+    }
+});
 
    </script>
 

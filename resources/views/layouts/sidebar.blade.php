@@ -7,11 +7,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Document')</title>
+    <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="shortcut icon" href="http://example.com/favicon.ico" />
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
     <link href="{{ asset('css/sidebar.css')}}" rel="stylesheet" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
@@ -21,6 +23,26 @@
     @stack('scripts')
 
     <style>
+         .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .drop-me {
+            z-index: 5000;
+        }
+
         a.sidebar-link:hover {
             background-color: #2c2c2c;
         }
@@ -37,8 +59,42 @@
 <body>
     <div class="loading-bar"></div>
 
-    <nav>@include('user')</nav>
-
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #A10D0D">
+        <div class="container-fluid">
+            <div class="navbar-left">
+                <img src="{{ URL('images/UCU-logo.png') }}" alt="Logo" class="navbar-logo">
+                <span class="navbar-title text-white">Urdaneta City University</span>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                @if (Route::has('login'))
+                @auth
+                <div class="dropdown">
+                    <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if(auth()->user()->profile_picture)
+                            <img src="{{ asset(auth()->user()->profile_picture) }}"
+                                 alt="Profile Picture"
+                                 style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; vertical-align: middle; border: 1px solid #ffffff;">
+                        @else
+                            <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
+                        <li><a class="dropdown-item" href="{{ url('/home')}}">Home</a></li>
+                        <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/sub-admin/change-password')}}">Change password</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+                @else
+                <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
+                @if (Route::has('register'))
+                <a href="{{ route('register') }}" class="btn btn-outline-light ms-2">Register</a>
+                @endif
+                @endauth
+                @endif
+            </div>
+        </div>
+    </nav>
     <div class="wrapper">
         <aside id="sidebar">
             <div class="container">
@@ -55,31 +111,28 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('visitors.subadmin') }}" class="sidebar-link {{ Route::is('visitors.subadmin') ? 'active' : '' }}">
+                    <a href="{{ url('/sub-admin/visitor') }}" class="sidebar-link {{ Route::is('sub-admin.visitors.visitor') ? 'active' : '' }}">
                         <i class="bi bi-people-fill"></i>
                         <span>Visitors</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.pass_slip.pass_slip') }}" class="sidebar-link {{ Route::is('sub-admin.pass_slip.pass_slip') ? 'active' : '' }}">
+                    <a href="{{ route('sub-admin.pass_slip.pass_slip') }}"
+                       class="sidebar-link {{ Route::is('sub-admin.pass_slip.pass_slip') ? 'active' : '' }}">
                         <i class="bi bi-pass"></i>
                         <span>Pass Slip</span>
                     </a>
                 </li>
-                {{-- <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.sticker.vehicle_sticker_list') }}" class="sidebar-link {{ Route::is('sub-admin.sticker.vehicle_sticker_list') ? 'active' : '' }}">
-                        <i class="bi bi-car-front-fill"></i>
-                        <span>Vehicle Stickers</span>
-                    </a>
-                </li> --}}
                 <li class="sidebar-item">
-                    <a href="{{route('sub-admin.lost.lost_found')}}" class="sidebar-link {{ Route::is('sub-admin.lost.lost_found') ? 'active' : '' }}">
+                    <a href="{{route('sub-admin.lost.lost_found')}}"
+                       class="sidebar-link {{ Route::is('sub-admin.lost.lost_found') ? 'active' : '' }}">
                         <i class="bi bi-box-seam-fill"></i>
                         <span>Lost and Found</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.violation.violation')}}" class="sidebar-link {{ Route::is('sub-admin.violation.violation') ? 'active' : '' }}">
+                    <a href="{{ route('sub-admin.violation.violation')}}"
+                       class="sidebar-link {{ Route::is('sub-admin.violation.violation') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-person"></i>
                         <span>Violation</span>
                     </a>
@@ -88,7 +141,7 @@
         </aside>
 
 
-        <div class="main p-3" style="background-color: #f5f3f3;">
+        <div class="main p-3" style="background-color: #f5f4f4;">
             @yield('content')
         </div>
     </div>
@@ -107,6 +160,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -19,58 +19,96 @@
                         <div class="col-md-6 mb-2">
                             <label for="p_no" class="form-label">Pass Number:</label>
                             <input type="text" class="form-control" name="p_no" id="p_no"
-                                value="{{ 'P-' . now()->format('Ymd') . '-' }}">
+                            value="{{ $passNumber ?? '' }}" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="employee_type" name="employee_type" required>
-                                <option value="" selected disabled>Select Employee Type</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <input class="form-control" id="status" name="employee_type" required readonly>
+                            <span class="text-danger error-message" id="employee_type_error"></span>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <input hidden type="text" class="form-control" id="employee_id" name="employee_id">
+                        <div class="col-md-4 mb-2">
                             <label for="last_name" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required readonly>
+                            <span class="text-danger error-message" id="last_name_error"></span>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="first_name" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
-                        </div>
-                        <div class="col-md-6 mb-2">
+                            <input type="text" class="form-control" id="first_name" name="first_name" required readonly>
+                            <span class="text-danger error-message" id="first_name_error"></span>
+                            </div>
+                        <div class="col-md-4  mb-2">
                             <label for="middle_name" class="form-label">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name"
+                            <input type="text" class="form-control" id="middle_name" name="middle_name" readonly
                                 placeholder="Optional">
+                            <span class="text-danger error-message" id="middle_name_error"></span>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="department" class="form-label">Department:</label>
-                            <input type="text" class="form-control" id="department" name="department" required>
+                            <label for="department" class="form-label">Office/Dept:</label>
+                            <input type="text" class="form-control" id="department" name="department" required readonly>
+                            <span class="text-danger error-message" id="department_error"></span>
                         </div>
                         <div class="col-md-6">
-                            <label for="designation" class="form-label">Designation:</label>
+                            <label for="designation" class="form-label">Position/Designation:</label>
                             <input class="form-control" id="designation" name="designation" rows="3"
-                                required></input>
+                                required readonly></input>
+                            <span class="text-danger error-message" id="designation_error"></span>
+                        </div>
+                        <div class="row mb-2 ms-3">
+                            <label class="form-label">Check Business:</label>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="commute" name="check_business" value="Commute">
+                                <label class="form-check-label" for="commute">Commute</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="own_vehicle" name="check_business" value="Use own vehicle">
+                                <label class="form-check-label" for="own_vehicle">Use own vehicle</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="university_vehicle" name="check_business" value="With the use of university vehicle">
+                                <label class="form-check-label" for="university_vehicle">With the use of university vehicle</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="official_business" name="check_business" value="Official business">
+                                <label class="form-check-label" for="official_business">Official business</label>
+                            </div>
+                            <div class="col-md-6 form-check">
+                                <input class="form-check-input" type="radio" id="personal_business" name="check_business" value="Personal business">
+                                <label class="form-check-label" for="personal_business">Personal business</label>
+                            </div>
+                            <span class="text-danger error-message" id="check_business_error"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="driver_name" class="form-label">Driver Name:</label>
+                            <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="Optional">
+                            <span class="text-danger error-message" id="driver_name_error"></span>
+
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
                             <input class="form-control" id="destination" name="destination" required></input>
+                            <span class="text-danger error-message" id="destination_error"></span>
                         </div>
-                        <div class="">
+                        <div class="col-md-6">
                             <label for="purpose" class="form-label">Purpose:</label>
                             <textarea class="form-control" id="purpose" name="purpose" rows="1" required></textarea>
+                            <span class="text-danger error-message" id="purpose_error"></span>
                         </div>
+                        {{-- <div class="col-md-6 mb-2">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div> --}}
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
-                            <input type="time" class="form-control" id="time_out" name="time_out" required>
+                            <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00">
+                            <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="time_in" class="form-label">Time In</label>
-                            <input type="time" class="form-control" id="time_in" name="time_in">
-                        </div>
-                        <div class="mt-2 d-flew justify-content-end align-items-end text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="mt-2 text-center">
+                            <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19">
+                                <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
+                                Save
+                            </button>
                         </div>
                     </div>
                 </form>

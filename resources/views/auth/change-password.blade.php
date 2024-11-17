@@ -6,10 +6,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Change Password</title>
+    <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
+
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <style>
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            background-color: #f5f4f4
+        }
         .navbar-left {
             display: flex;
             align-items: center;
@@ -30,6 +37,7 @@
             margin: 20px auto;
             padding: 20px;
             border-radius: 10px;
+            border: 4px solid #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .profile-picture {
@@ -37,6 +45,7 @@
             height: 150px;
             border-radius: 50%;
             object-fit: cover;
+            border: 4px solid #ffffff;
             margin-bottom: 20px;
         }
         @media (max-width: 768px) {
@@ -104,12 +113,18 @@
         <div class="col-md-4">
             <div class="profile-card card text-center text-white" style="background-color: #2C3539;">
                 <div class="card-body">
-                    <img src="{{ asset('images/zoro.png') }}" alt="Profile Picture" class="profile-picture">
-                    <h3 class="card-title">{{ $user->name }}</h3>
-                    <p class="card-text">{{ $user->email }}</p>
-                    @if ($employees)
-                        <p class="card-text">ID No.: {{ $employees->id_number }}</p>
-                    @endif
+                    <div class="position-relative">
+                        @if($user->profile_picture)
+                            <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture" id="main-profile-image">
+                        @else
+                            <i class="bi bi-person-circle profile-picture-placeholder" id="main-profile-icon"></i>
+                        @endif
+                    </div>
+                    @if ($user)
+                    <h3 class="card-title mb-3">{{ $user->first_name }} @if($user->middle_name){{ $user->middle_name }}. @endif {{ $user->last_name }}</h3>
+                    <p class="card-text text-start mb-2"><i class="bi bi-envelope"></i> {{ $user->email }}</p>
+                    @if($user->id_number)<p class="card-text text-start"><i class="bi bi-person-badge"></i> ID No. {{ $user->id_number }}</p>@endif
+                @endif
                 </div>
             </div>
         </div>

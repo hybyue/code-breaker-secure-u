@@ -18,8 +18,8 @@ class PdfController extends Controller
     $query = PassSlip::query();
 
     if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('created_at', '>=', $request->start_date)
-              ->whereDate('created_at', '<=', $request->end_date);
+        $query->whereDate('date', '>=', $request->start_date)
+              ->whereDate('date', '<=', $request->end_date);
     }
 
     if ($request->filled('employee_type')) {
@@ -42,7 +42,7 @@ class PdfController extends Controller
 
     $pdf = Pdf::loadView('pdf.generate-pass', $data);
 
-    return $pdf->stream('report-pass-slip.pdf');
+    return $pdf->stream();
 }
 
 
@@ -61,12 +61,14 @@ class PdfController extends Controller
             'title' => 'Reports for Visitors',
             'date' => now()->format('F d, Y'),
             'visitors' => $visitors,
-            'user' => $user
+            'user' => $user,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
         ];
 
         $pdf = Pdf::loadView('pdf.generate-visitor', $data);
 
-        return $pdf->stream('report-visitors.pdf');
+        return $pdf->stream();
 
     }
 
@@ -114,8 +116,96 @@ class PdfController extends Controller
 
         $pdf = Pdf::loadView('pdf.generate-violation', $data);
 
-        return $pdf->stream('report-violation.pdf');
+        return $pdf->stream();
 
     }
+
+
+    public function generateLoopingEmployee(Request $request)
+    {
+        $query = PassSlip::query();
+
+        // Apply date filter
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('date', '>=', $request->start_date)
+                  ->whereDate('date', '<=', $request->end_date);
+        }
+
+        if ($request->filled('employee_type')) {
+            $query->where('employee_type', $request->employee_type);
+        }
+
+        if ($request->filled('violation_filter')) {
+            if ($request->violation_filter == '1') {
+                $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
+            } elseif ($request->violation_filter == '0') {
+                $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
+            }
+        }
+
+        $passSlips = $query->get();
+        $user = Auth::user();
+
+        // Prepare data for PDF
+        $data = [
+            'passSlips' => $passSlips,
+            'title' => 'Filtered Pass Slip Report',
+            'date' => now()->format('F d, Y'),
+            'user' => $user,
+            'employee_type' => $request->employee_type ?? 'All',
+            'violation_filter' => $request->violation_filter ?? 'All',
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ];
+
+        // Select the correct view based on employee type and violation filter
+        if ($request->employee_type === 'Teaching') {
+            $view = ($request->violation_filter == 1) ? 'pdf.pdf-teaching' : 'pdf.pdf-teaching';
+        } else {
+            $view = ($request->violation_filter == 1) ? 'pdf.pdf-non-teaching' : 'pdf.pdf-non-teaching';
+        }
+
+        // Generate PDF
+        $pdf = Pdf::loadView($view, $data);
+
+        return $pdf->stream();
+    }
+
+
+//     public function previewPassSlip(Request $request)
+// {
+//     $query = PassSlip::query();
+
+//     // Apply filters
+//     if ($request->filled('start_date')) {
+//         $query->whereDate('created_at', '>=', $request->start_date);
+//     }
+
+//     if ($request->filled('end_date')) {
+//         $query->whereDate('created_at', '<=', $request->end_date);
+//     }
+
+//     if ($request->filled('employee_type')) {
+//         $query->where('employee_type', $request->employee_type);
+//     }
+
+//     $passSlips = $query->get();
+//     $user = Auth::user();
+
+//     $data = [
+//         'title' => 'Reports for Pass Slip',
+//         'date' => now()->format('F d, Y'),
+//         'passSlips' => $passSlips,
+//         'user' => $user,
+//         'employeeType' => $request->employee_type ?? 'All',
+//         'startDate' => $request->start_date,
+//         'endDate' => $request->end_date,
+//     ];
+
+//     $pdf = Pdf::loadView('pdf.generate-pass', $data);
+
+//     return $pdf->stream();
+// }
+
 }
 

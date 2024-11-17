@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\UsersExport;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeesController;
@@ -11,15 +12,20 @@ use App\Http\Controllers\PassSlipController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\ImportExcelController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 //Login And Register
 Route::get('/', function () {
     return view('auth.login');
 })->name('home');
 
+Route::get('/export', function () {
+    return Excel::download(new UsersExport, 'users.xlsx');
+});
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('register', 'register')->name('register');
@@ -42,13 +48,15 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::get('/back', [HomeController::class, 'backButton'])->name('back');
+Route::get('/view_lang', [HomeController::class, 'view_lang']);
+Route::get('/view_langs', [HomeController::class, 'view_langs']);
 
 
 //for sub-admin
 Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('sub-admin.dashboard');
 
-    Route::get('sub-admin/profile', function () {
+    Route::get('/sub-admin/profile', function () {
         return view('profile');
     })->name('profile');
 
@@ -57,56 +65,75 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 Route::get('/home', [EventController::class, 'showEvent'])->name('sub-admin.dashboard');
 
 Route::controller(VisitorController::class)->group(function () {
-    Route::get('/sub-admin/visitor',  'new_visitor')->name('visitors.subadmin');
+    Route::get('/sub-admin/visitor',  'new_visitor')->name('sub-admin.visitors.visitor');
     Route::post('/add-visitor', 'store_visit')->name('sub-admin.store');
     Route::put('/sub-admin/visitor/update/{id}',  'updateVisitorSub')->name('update.visitorSub');
-    Route::get('/filter_visitor',  'filterVisitor');
+    Route::get('/sub-admin/visitor',  'filterVisitor')->name('sub-admin.visitors.visitor');
     Route::post('sub-admin/visitor/{id}/checkout',  'checkout')->name('visitor.checkout');
     Route::get('sub-admin/search_visitor',  'searchVisitor')->name('visitor.search');
     Route::get('/visitor-stats/{timeframe}', 'getVisitorStats');
     Route::get('/visitor-data', 'getVisitorData');
+    Route::get('/visitor-total-data',  'getVisitorTotalData');
+    Route::get('/validateField',  'validateField')->name('sub-admin.validate');
+    Route::get('/sub-admin/visitor/clear-filter', 'clearVisitorFilter');
+    Route::post('/sub-admin/visitor/{id}/duplicate', 'duplicateEntrySubAdmin')->name('visitor.duplicate.sub-admin');
 
 });
 
-Route::get('sub-admin/generate-pdf/visitor',[PdfController::class, 'generate_visitor'])->name('pdf.generate-visitors');
 
 Route::controller(PassSlipController::class)->group(function () {
-    Route::get('sub-admin/pass_slip',  'pass_slip')->name('sub-admin.pass_slip.pass_slip');
+    Route::get('/sub-admin/pass_slip',  'pass_slip')->name('sub-admin.pass_slip.pass_slip');
     Route::post('sub-admin/pass_slip',  'store_slip')->name('pass_slips.store');
     Route::put('sub-admin/pass_slip/update/{id}',  'updatePassSlip')->name('update.pass_slips');
-    Route::get('/sub-admin/pass_slip/filter_pass_slip',  'filterPassSlip');
+    Route::get('/sub-admin/pass_slip',  'filterPassSlip')->name('sub-admin.pass_slip.pass_slip');
     route::post('sub-admin/search-employee', action: 'searchEmployee')->name('subadmin.search_employee');
     route::post('sub-admin/search-test', 'searchTest')->name('search_test');
+    Route::post('/sub-admin/pass_slip/{id}', 'checkoutPassSlip')->name('passSlip.checkout');
+    Route::get('/sub-admin/generate_no/',  'generateNextPassSub')->name('pass_slip.next_number_sub');
+    Route::get('/sub-admin/pass-slip/clear-filter', 'clearPassSlipFilter')->name('pass_slip.clear-filter');
 });
-Route::get('generate-pdf/pass_slip',[PdfController::class, 'generate_passSlip'])->name('pdf.generate-passes');
 
 
 
 Route::controller(LostFoundController::class)->group(function () {
 
-    Route::get('sub-admin/lost_found',  'lost_found')->name('sub-admin.lost.lost_found');
+    Route::get('/sub-admin/lost_found',  'lost_found')->name('sub-admin.lost.lost_found');
     Route::post('sub-admin/store_lost',  'store_lost')->name('sub-admin.store_losts');
-    Route::put('sub-admin/lost_found/update/{id}',  'updateLostFound')->name('update.lost_found');
-    Route::get('/filter_lost_founds',  'filterLostFounds');
+    Route::put('/sub-admin/lost_found/update/{id}',  'updateLostFound')->name('update.lost_found');
+    Route::post('/sub-admin/update_claimed/{id}', 'updateClaimed');
+    Route::post('/sub-admin/update_transfer/{id}', 'updateTransfer');
+    Route::get('/sub-admin/lost_found',  'filterLostFounds')->name('sub-admin.lost.lost_found');
+    Route::post('/sub-admin/batch_transfered/', 'batchTransferUnclaimed');
+    Route::get('/sub-admin/lost_found/clear-filter', 'clearFilter')->name('sub-admin.lost.clear-filter');
 
 });
-Route::get('generate-pdf/lost_found',[PdfController::class, 'generate_lost'])->name('pdf.generate-losts');
 
 Route::controller(EmployeesController::class)->group(function () {
     Route::get('sub-admin/profile',  'showProfile')->name('profile');
-    Route::post('sub-admin/profile',  'addInformation')->name('profile.store');
+    Route::put('sub-admin/profile/{id}',  'addInformation')->name('profile.store');
     Route::put('sub-admin/profile/update/{id}',  'editInformation')->name('profile.update');
     Route::get('/sub-admin/change-password',  'changePassword')->name('auth.change-password');
+    Route::put('/profile/{id}/update-picture',  'updatePicture')->name('profile.updatePicture');
 });
 
 Route::controller(ViolationController::class)->group(function () {
-    Route::get('sub-admin/violation',  'violation')->name('sub-admin.violation.violation');
+    Route::get('/sub-admin/violation',  'violation')->name('sub-admin.violation.violation');
     Route::post('sub-admin/violation',  'store_violate')->name('sub-admin.store_violate');
     Route::put('/violation/update/{id}',  'update_violation')->name('store_violation');
-    Route::get('/filter_violation',  'filterViolation');
-    Route::post('sub-admin/search-student',  'searchStudent')->name('sub-admin.search_student');
+    Route::get('/sub-admin/violation',  'filterViolation')->name('sub-admin.violation.violation');
+    Route::post('/sub-admin/search-student',  'searchStudentSub')->name('sub-admin.search_student');
+    Route::get('/sub-admin/violation/clear-filter', 'clearViolationFilter')->name('sub-admin.violation.clear-filter');
+
 });
-Route::get('generate-pdf/violation',[PdfController::class, 'generate_violation'])->name('pdf.generate-violation');
+
+Route::controller(PdfController::class)->group(function () {
+    Route::get('/generate-pdf/violation', 'generate_violation')->name('pdf.generate-violation');
+    Route::get('/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-losts');
+    Route::get('/generate-passSlip', 'generate_passSlip')->name('pdf.generate-passes');
+    Route::get('/sub-admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitors');
+    Route::get('/sub-admin/generate-pdf/looping', 'generateLoopingEmployee');
+
+});
 
 });
 
@@ -162,12 +189,18 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 // Route::get('/filter_vehicle_admin', [TeacherController::class, 'filterVehicleAdmin']);
 
 Route::controller(PassSlipController::class)->group(function (){
-    Route::get('admin/pass_slip',  'pass_slip_admin')->name('admin.pass_slip.pass_slip_admin');
+    Route::get('/admin/pass_slip',  'pass_slip_admin')->name('admin.pass_slip.pass_slip_admin');
     Route::post('admin/pass_slip',  'store_slip_admin')->name('pass_slip.store');
     Route::put('/pass_slip/update/{id}',  'updatePassSlipAdmin')->name('update.pass_slip_admin');
     Route::delete('/pass_slip/archive/{id}',  'destroy_passSlip')->name('archive.pass_slip');
-    Route::get('/admin/filter_pass_slip_admin',  'filterPassSlipAdmin');
+    Route::get('/admin/pass_slip',  'filterPassSlipAdmin')->name('admin.pass_slip.pass_slip_admin');
     route::post('/search-employee', 'searchEmployee')->name('search_employee');
+    route::post('/search-employee', 'searchEmployee')->name('search_employee');
+    Route::post('/admin/passS_slip/{id}', 'checkoutAdmin')->name('passSlip.checkout_admin');
+    Route::get('/admin/visitor-data', 'getVisitorData');
+    Route::get('/admin/visitor-total-data',  'getVisitorTotalData');
+    Route::get('/admin/generate_number/',  'generateNextPassNumber')->name('pass_slip.next_number');
+    Route::get('/admin/pass-slip/clear-filter', 'clearPassSlipFilterAd')->name('pass_slip.clear-filter-admin');
 });
 
 Route::controller(EventController::class)->group(function () {
@@ -190,17 +223,16 @@ Route::controller(EventController::class)->group(function () {
 
 
 
-Route::resource('/admin/visitor', VisitorController::class)->names([
-    'index' => 'admin.visitors.visitor_admin',
-]);
-
 Route::controller(VisitorController::class)->group(function () {
-    Route::get('/filter_visitor_admin', 'filterVisitorAdmin');
+    Route::get('/admin/visitor', 'index')->name('admin.visitors.visitor_admin');
+    Route::get('/admin/visitor', 'filterVisitorAdmin')->name('admin.visitors.visitor_admin');
     Route::post('/admin/visitor',  'store')->name('visitor.store');
     Route::post('/admin/visitor/{id}', 'checkoutAdmin')->name('visitor.checkout_admin');
-    Route::post('/admin/visitor/update', 'update')->name('visitor.update');
+    Route::put('/admin/visitor/update/{id}', 'update')->name('visitor.update');
     Route::get('admin/search_visitor', 'searchVisitors')->name('visitor.search');
     Route::delete('/admin/delete_visitor/{id}', 'destroy');
+    Route::get('/admin/visitor/clear-filter', 'clearVisitorFilterAdmin')->name('visitors.clear-filter-admin');
+    Route::post('/admin/visitor/{id}/duplicate', 'duplicateEntry')->name('visitor.duplicate');
 
 });
 
@@ -215,39 +247,49 @@ Route::resource('/admin/security_staff', EmployeesController::class)->names([
     'destroy' => 'employee.destroy',
 ]);
 Route::controller(LostFoundController::class)->group(function () {
-    Route::get('admin/lost_found', 'lost_found_admin')->name('admin.lost.lost_found_admin');
-    Route::post('admin/store_lost', 'store_lost_admin')->name('admin.store');
+    Route::get('/admin/lost_found', 'lost_found_admin')->name('admin.lost.lost_found_admin');
+    Route::post('/admin/store_lost', 'store_lost_admin')->name('admin.store_lost');
     Route::put('/lost_found/update/{id}', 'updateLostFoundAdmin')->name('update.lost_found_admin');
     Route::delete('/lost_found/archive/{id}', 'destroy_lostFound')->name('archive.lost_found');
-    Route::get('/filter_lost_found', 'filterLostFoundAdmin');
+    Route::get('/admin/lost_found', 'filterLostFoundAdmin')->name('admin.lost.lost_found_admin');
+    Route::get('/admin/lost_found/clear-filter', 'clearFilterAdmin')->name('admin.lost.clear-filter');
+    Route::post('/admin/update_claimed/{id}', 'updateClaimed')->name('update_claimed');
+    Route::post('/admin/update_transfer/{id}', 'updateTransfer');
+
 });
 
 
 
 Route::get('/admin/activity-log', [ActivityController::class, 'index'])->name('admin.activity');
+Route::get('/activity/clear-filter', [ActivityController::class, 'clearFilter'])->name('activity.clear-filter');
 
 Route::controller(EmployeesController::class)->group(function (){
     Route::get('admin/profile', 'showProfileAdmin')->name('admin.layouts.profile_admin');
-    Route::post('admin/profile', 'addInformationAdmin')->name('profile.stores');
+    Route::put('admin/profile/{id}', 'addInformationAdmin')->name('profile.stores');
     Route::put('admin/profile/update/{id}', 'editInformationAdmin')->name('profile.updates');
     Route::get('admin/change-password', 'changePasswordAdmin')->name('auth.change-password');
+    Route::put('admin/profile/{id}/update-picture',  'updatePictureAdmin')->name('profile.updatePicture.admin');
+
 });
 
 
 Route::controller(PdfController::class)->group(function (){
-    Route::get('admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitor');
-    Route::get('admin/generate-pdf/pass_slip', 'generate_passSlip')->name('pdf.generate-pass');
-    Route::get('admin/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-lost');
+    Route::get('/admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitor');
+    Route::get('/generate-passSlipAdmin', 'generate_passSlip')->name('pdf.generate-pass');
+    Route::get('/admin/generate-pdf/violation', 'generate_violation')->name('pdf.generate-violation');
+    Route::get('/admin/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-lost');
+    Route::get('/admin/generate-pdf/looping', 'generateLoopingEmployee');
+
 });
 
 
 Route::controller(ViolationController::class)->group(function (){
-    Route::get('admin/violation', 'violationView')->name('admin.violation.violation');
+    Route::get('/admin/violation', 'violationView')->name('admin.violation.violation');
     Route::post('admin/violation', 'store_violation')->name('admin.store_violation');
     Route::put('/violation/update/{id}', 'update_violationAdmin')->name('store_violation');
     Route::delete('/violation/archive/{id}', 'destroy_violation');
     Route::post('/search-student',  'searchStudent')->name('admin.search_student');
-
+    Route::get('/admin/violation/clear-filter', 'clearViolationFilterAdmin')->name('admin.violation.clear-filter');
 
 });
 
@@ -256,14 +298,17 @@ Route::controller(ListController::class)->group(function (){
     Route::get('/admin/students', 'student_admin')->name('admin.students.student');
     Route::post('/admin/students', 'store_student_admin')->name('store_admin.student');
     Route::delete('/admin/student/delete/{id}', 'destroy_student_admin');
+    Route::put('/admin/student/update/{id}', 'updateStudentAdmin')->name('update_admin.student');
 
     Route::get('/admin/employees', 'all_employee_admin')->name('admin.employees.all_employee');
     Route::post('/admin/employees', 'store_all_employee_admin')->name('store_admin.employee');
+    Route::put('/employee/update/{id}', 'updateEmployeeAdmin')->name('update_admin.employee');
     Route::delete('/employee/delete/{id}', 'destroy_all_employee_admin');
 });
 
 
-
+Route::post('/excel_import_student', [ImportExcelController::class, 'import_excel'])->name('import.student');
+Route::post('/excel_import_employee', [ImportExcelController::class, 'import_excel_employee'])->name('import.employee');
 
 });
 

@@ -1,19 +1,53 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+<script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+
 <script>
     $(document).ready(function() {
 
-        let table = new DataTable('#passTable', {
+        $('.error-message').addClass('text-danger');
+        $('#addPassSlipModal').on('show.bs.modal', function() {
+    // Fetch the next pass number from the server when the modal opens
+    $.ajax({
+        url: "{{ route('pass_slip.next_number_sub') }}", // Your new route for generating the next pass number
+        method: 'GET',
+        success: function(resp) {
+            // Update the pass number field with the next available pass number
+            $('#p_no').val(resp.passNumber);
+        },
+        error: function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to generate the next pass number',
+            });
+        }
+    });
+});
+
+         new DataTable('#passTable', {
             responsive: true,
-            "ordering": false,
+            ordering: false,
+
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]], // Add length menu options
+            language: {
+                lengthMenu: "_MENU_ entries",
+                search: "Search:",
+
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+    ]
         });
 
         $('#addPassForm').on('submit', function(e) {
             e.preventDefault();
 
+            $('.error-message').empty();
+
+            // Show loading spinner and disable submit button
+            let submitButton = $('.add_pass_slip');
+            submitButton.prop('disabled', true);
+            $('#loadingSpinner').show();
             let formData = $(this).serialize();
 
             $.ajax({
@@ -22,9 +56,23 @@
                 data: formData,
                 success: function(resp) {
                     if (resp.status == 'success') {
-                        $('.modal-backdrop').remove();
-                        $('#addPassSlipModal').modal('hide');
+                        $.ajax({
+                            url: "{{ route('pass_slip.next_number_sub') }}", // Your new route for generating the next pass number
+                            method: 'GET',
+                            success: function(resp) {
+                                // Update the pass number field with the next available pass number
+                                $('#p_no').val(resp.passNumber);
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Failed to generate the next pass number',
+                                });
+                            }
+                        });
                         $('#addPassForm')[0].reset();
+                        $('.error-message').empty();
                         $('#passTable').load(location.href + ' #passTable');
                         $('#latestPassSlips').load(location.href + ' #latestPassSlips');
                         $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
@@ -44,18 +92,99 @@
                     }
                 },
                 error: function(err) {
-                    $('.errorMessage').html('');
+                // Clear all error messages first
+                $('.error-message').html('');
+
+                if (err.responseJSON && err.responseJSON.errors) {
                     let errors = err.responseJSON.errors;
-                    $.each(errors, function(index, value) {
-                        $('.errorMessage').append('<span class="text-danger">' +
-                            value + '</span>' + '<br>');
+
+                    // Loop through each error and display it
+                    Object.keys(errors).forEach(function(field) {
+                        let errorMessage = errors[field][0]; // Get first error message
+                        $(`#${field}_error`).text(errorMessage); // Set the error message text
                     });
                 }
+            },
+            complete: function() {
+                // Hide loading spinner and enable submit button
+                $('#loadingSpinner').hide();
+                submitButton.prop('disabled', false);
+            }
             });
         });
 
-    });
 
+        $('.updatePassSlipFormSub').on('submit', function(e) {
+        e.preventDefault();
+
+    let form = $(this);
+    let formData = new FormData(this);
+    let submitButton = form.find('.update_pass');
+    let modalId = form.attr('id').split('-')[1];
+    let modal = $('#updatePassSlip-' + modalId);
+
+    submitButton.prop('disabled', true);
+    form.find('#loadingSpinnerer').show();
+
+    $.ajax({
+        url: form.attr('action'),
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                modal.modal('hide');
+                localStorage.setItem('showToast', 'true');
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+        },
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                form.find('.error-message').remove();
+
+                $.each(errors, function(field, messages) {
+                    let input = form.find('[name="' + field + '"]');
+                    input.addClass('is-invalid');
+                    input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
+                });
+            }
+        },
+        complete: function() {
+            form.find('#loadingSpinnerer').hide();
+            submitButton.prop('disabled', false);
+        }
+    });
+});
+
+        $('.modal').on('hidden.bs.modal', function() {
+            $('.is-invalid').removeClass('is-invalid');
+            $('.error-message').text('');
+        });
+});
+
+$(document).ready(function() {
+    if (localStorage.getItem('showToast') === 'true') {
+        Swal.fire({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            icon: 'success',
+            title: 'Pass Slip updated successfully',
+        });
+
+        localStorage.removeItem('showToast');
+    }
+});
     function searchEmployee() {
         let searchValue = $('#search_employee').val();
 
@@ -80,7 +209,9 @@
                         // Display the employee suggestions
                         data.employees.forEach(function(employee) {
                             let resultItem = $('<div></div>').addClass('result-item').html(`
-                                <a href="#" class="btn btn-primary">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
+                                <div class="w-100 bg-primary">
+                                    <a href="#" class="btn w-100 btn-primary text-start">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
+                                </div>
                             `);
 
                             resultItem.on('click', function() {
@@ -109,9 +240,6 @@
                     console.error('Error:', error);
                 }
             });
-        } else {
-            clearEmployeeFields();
-            $('#employee_results').empty();
         }
     }
 

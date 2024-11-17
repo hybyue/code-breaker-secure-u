@@ -1,6 +1,6 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+<script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+
 
 <script>
     $.ajaxSetup({
@@ -14,65 +14,32 @@
     $(document).ready(function () {
         new DataTable('#studentTable', {
         responsive: true,
-        ordering: false,
+        "ordering": false,
+        language: {
+                lengthMenu: "_MENU_ entries",
+            },
+            columnDefs: [
+        { targets: "_all", defaultContent: "" }
+            ]
         });
 
-        $('#violationFormAdmin').on('submit', function(e){
+        $('#studentFormAdmin').on('submit', function(e){
             e.preventDefault();
 
             $('.errorMessage').html('');
             let formData = $(this).serialize();
 
             $.ajax({
-                url: "{{ route('admin.store_violation') }}",
+                url: "{{ route('store_admin.student') }}",
                 method: 'POST',
                 data: formData,
-                success: function(response) {
-                    if(response.status == 'success') {
-                        $('#violationFormAdmin')[0].reset();
+                success: function(resp) {
+                    if(resp.status == 'success') {
+                        $('#studentFormAdmin')[0].reset();
 
-                        $('#violationTable').load(location.href + ' #violationTable', function() {
+                        $('#studentTable').load(location.href + ' #studentTable');
+                        $('#updatesStudentAdmin').load(location.href + ' #updatesStudentAdmin');
 
-                            $('.modal').modal({
-                                backdrop: 'static',
-                                keyboard: true
-                            });
-
-                            $('.viewModal').on('click', function() {
-                                let id = $(this).data('id');  // Get the violation ID from the data attribute
-                                let targetModal = $(this).data('bs-target');  // Get the target modal ID
-
-                                $(targetModal).find('.modal-body').html('Violation ID: ' + id);
-
-                                // Check if modal instance exists and dispose of it
-                                let modalInstance = bootstrap.Modal.getInstance(document.querySelector(targetModal));
-                                if (modalInstance) {
-                                    modalInstance.dispose();
-                                }
-
-
-                                $(targetModal).modal('show');
-                                console.log("View violation with ID: " + id);
-                            });
-
-                            $('.editModal').on('click', function() {
-                                let id = $(this).data('id');
-                                let targetModal = $(this).data('bs-target');
-
-                                $(targetModal).find('.modal-body').html('Edit Violation ID: ' + id);
-
-                                // Check if modal instance exists and dispose of it
-                                let modalInstance = bootstrap.Modal.getInstance(document.querySelector(targetModal));
-                                if (modalInstance) {
-                                    modalInstance.dispose();
-                                }
-                                $(targetModal).modal('show');
-
-                                console.log("Edit violation with ID: " + id);  // This log shows the violation ID
-                            });
-
-
-                        });
 
                         Swal.fire({
                             toast: true,
@@ -85,7 +52,7 @@
                             timer: 2500,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Violation added successfully',
+                            title: 'Student added successfully',
                         });
                     }
                 },

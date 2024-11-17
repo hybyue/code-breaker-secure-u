@@ -23,8 +23,18 @@ class Student extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['student_no', 'first_name', 'middle_name', 'last_name', 'course'])
-        ->logOnlyDirty();
+            ->logOnly([
+                'student_no',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'course'
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->logUnguarded()
+            ->setDescriptionForEvent(fn(string $eventName) => "This student record has been {$eventName}")
+            ->useLogName('student');
     }
 
     protected static $logName = 'student';

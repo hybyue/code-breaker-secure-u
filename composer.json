@@ -7,11 +7,10 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.2",
-        "inspector-apm/inspector-laravel": "^4.9",
-        "kreait/laravel-firebase": "^5.9",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "maatwebsite/excel": "^3.1",
         "spatie/laravel-activitylog": "^4.8"
     },
     "require-dev": {

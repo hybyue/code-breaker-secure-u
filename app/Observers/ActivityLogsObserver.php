@@ -2,9 +2,10 @@
 
 namespace App\Observers;
 
-use App\Models\User;
 use App\Services\FirebaseService;
-class UserObserver
+use Spatie\Activitylog\Models\Activity;
+
+class ActivityLogsObserver
 {
     protected $firebaseService;
 
@@ -16,25 +17,25 @@ class UserObserver
     /**
      * Handle the User "created" event.
      */
-    public function created(User $user): void
+    public function created(Activity $activity): void
     {
-        $this->firebaseService->syncUser($user);
+        $this->firebaseService->syncActivityLogs($activity);user: 
     }
 
     /**
      * Handle the User "updated" event.
      */
-    public function updated(User $user): void
+    public function updated(Activity $activity): void
     {
-        $this->firebaseService->syncUser($user);
+        $this->firebaseService->syncActivityLogs($activity);
     }
 
     /**
      * Handle the User "deleted" event.
      */
-    public function deleted(User $user): void
+    public function deleted(Activity $activity): void
     {
-        $this->firebaseService->deleteUser($user);
+        $this->firebaseService->deleteActivityLogs($activity);
     }
-
 }
+

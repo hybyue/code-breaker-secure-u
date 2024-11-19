@@ -331,7 +331,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="gender" class="form-label">Gender:</label>
                                 <select class="form-select" id="gender" name="gender" required>
-                                    <option value="{{$user->gender}}" selected>{{$user->gender}}</option>
+                                    <option value="" selected disabled>Select Gender</option>
                                     <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
                                     <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
                                     <option value="Other" {{ $user->gender == 'Other' ? 'selected' : '' }}>Other</option>
@@ -340,7 +340,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="civil_status" class="form-label">Civil Status:</label>
                                 <select class="form-select" id="civil_status" name="civil_status" required>
-                                    <option value="{{$user->civil_status}}" selected>{{$user->civil_status}}</option>
+                                    <option value="" selected disabled>Select Civil Status</option>
                                     <option value="Single" {{ $user->civil_status == 'Single' ? 'selected' : '' }}>Single</option>
                                     <option value="Married" {{ $user->civil_status == 'Married' ? 'selected' : '' }}>Married</option>
                                     <option value="Divorced" {{ $user->civil_status == 'Divorced' ? 'selected' : '' }}>Divorced</option>
@@ -349,16 +349,16 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="contact_no" class="form-label">Contact No:</label>
-                                <input type="text" class="form-control" id="contact_no"  placeholder="09*********" name="contact_no" value="{{ $user->contact_no }}" required>
+                                <input type="text" class="form-control" id="contact_no"  placeholder="09*********" minlength="11" maxlength="11" name="contact_no" value="{{ $user->contact_no }}" required>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="date_birth" class="form-label">Date of Birth:</label>
-                                <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $user->date_birth ? \Carbon\Carbon::parse($user->date_birth)->format('Y-m-d') : '' }}" required>
+                                <input type="date" class="form-control" id="date_birth" name="date_birth" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Employment Type:</label>
                                 <select class="form-select" name="employment_type" required>
-                                    <option value="{{$user->employment_type}}" selected>{{$user->employment_type}}</option>
+                                    <option value="" selected disabled>Select Employment Type</option>
                                     <option value="Part-Time" {{ $user->employment_type == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
                                     <option value="Full-Time" {{ $user->employment_type == 'Full-Time' ? 'selected' : '' }}>Full-Time</option>
                                     <option value="Other" {{ $user->employment_type == 'Other' ? 'selected' : '' }}>Other</option>
@@ -370,7 +370,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
-                                <input type="text" class="form-control" id="emergency_contact_number"  placeholder="09*********" name="emergency_contact_number" value="{{ $user->emergency_contact_number }}" required>
+                                <input type="text" class="form-control" id="emergency_contact_number"  placeholder="09*********" name="emergency_contact_number" minlength="11" maxlength="11" value="{{ $user->emergency_contact_number }}" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="date_hired" class="form-label">Date Hired:</label>
@@ -390,7 +390,19 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="position" class="form-label">Position:</label>
-                                <input type="text" class="form-control" id="position" name="position" value="{{ $user->position }}" required>
+                                <select class="form-select" id="position" name="position" required>
+                                    <option value="" selected disabled>Select Position</option>
+                                    <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
+                                    <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
+                                    <option value="Security lll" {{ $user->position == 'Security lll' ? 'selected' : '' }}>Security lll</option>
+                                    <option value="Security Guard l" {{ $user->position == 'Security Guard l' ? 'selected' : '' }}>Security Guard l</option>
+                                    <option value="Security Guard ll" {{ $user->position == 'Security Guard ll' ? 'selected' : '' }}>Security Guard ll</option>
+                                    <option value="Security Guard lll" {{ $user->position == 'Security Guard lll' ? 'selected' : '' }}>Security Guard lll</option>
+                                    <option value="Casual, Security" {{ $user->position == 'Casual, Security' ? 'selected' : '' }}>Casual, Security</option>
+                                    <option value="Part-time Security" {{ $user->position == 'Part-time Security' ? 'selected' : '' }}>Part-time Security</option>
+                                    <option value="Support Staff" {{ $user->position == 'Support Staff' ? 'selected' : '' }}>Support Staff</option>
+                                    <option value="Other" {{ $user->position == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -445,7 +457,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="gender" class="form-label">Gender:</label>
                                     <select class="form-select" id="gender" name="gender" required>
-                                        <option value="{{$user->gender}}" selected>{{$user->gender}}</option>
                                         <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
                                         <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
                                         <option value="Other" {{ $user->gender == 'Other' ? 'selected' : '' }}>Other</option>
@@ -454,7 +465,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="civil_status" class="form-label">Civil Status:</label>
                                     <select class="form-select" id="civil_status" name="civil_status" required>
-                                        <option value="{{$user->civil_status}}" selected>{{$user->civil_status}}</option>
                                         <option value="Single" {{ $user->civil_status == 'Single' ? 'selected' : '' }}>Single</option>
                                         <option value="Married" {{ $user->civil_status == 'Married' ? 'selected' : '' }}>Married</option>
                                         <option value="Divorced" {{ $user->civil_status == 'Divorced' ? 'selected' : '' }}>Divorced</option>
@@ -484,7 +494,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
-                                    <input type="text" class="form-control" id="emergency_contact_number" placeholder="09*********" name="emergency_contact_number" value="{{ $user->emergency_contact_number }}" required>
+                                    <input type="text" class="form-control" id="emergency_contact_number" placeholder="09*********" minlength="11" maxlength="11" name="emergency_contact_number" value="{{ $user->emergency_contact_number }}" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="date_hired" class="form-label">Date Hired:</label>
@@ -504,7 +514,18 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="position" class="form-label">Position:</label>
-                                    <input type="text" class="form-control" id="position" name="position" value="{{ $user->position }}" required>
+                                    <select class="form-select" id="position" name="position" required>
+                                        <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
+                                        <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
+                                        <option value="Security lll" {{ $user->position == 'Security lll' ? 'selected' : '' }}>Security lll</option>
+                                        <option value="Security Guard l" {{ $user->position == 'Security Guard l' ? 'selected' : '' }}>Security Guard l</option>
+                                        <option value="Security Guard ll" {{ $user->position == 'Security Guard ll' ? 'selected' : '' }}>Security Guard ll</option>
+                                        <option value="Security Guard lll" {{ $user->position == 'Security Guard lll' ? 'selected' : '' }}>Security Guard lll</option>
+                                        <option value="Casual, Security" {{ $user->position == 'Casual, Security' ? 'selected' : '' }}>Casual, Security</option>
+                                        <option value="Part-time Security" {{ $user->position == 'Part-time Security' ? 'selected' : '' }}>Part-time Security</option>
+                                        <option value="Support Staff" {{ $user->position == 'Support Staff' ? 'selected' : '' }}>Support Staff</option>
+                                        <option value="Other" {{ $user->position == 'Other' ? 'selected' : '' }}>Other</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">

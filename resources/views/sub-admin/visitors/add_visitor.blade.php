@@ -27,7 +27,7 @@
                                     <span class="text-danger" id="middle_name_error"></span>
                             </div>
                             <div class="form-group">
-                                <label for="person_to_visit">Person to Visit & Company:</label>
+                                <label for="person_to_visit">Colleges/Deparment:</label>
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="" selected disabled>Select Department or Office</option>
                                         <!-- Colleges -->
@@ -103,15 +103,10 @@
                                 </select>
                                 <span class="text-danger" id="id_type_error"></span>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="form-group">
                                 <label for="id_number">ID Number:</label>
                                 <input type="text" class="form-control" id="id_number" name="id_number" required>
                                 <span class="text-danger" id="id_number_error"></span>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="id_image">Image ID:</label>
-                                <input type="file" class="form-control" id="cameraInput" name="id_image" accept="image/*" capture="environment">
-                                <span class="text-danger" id="id_image_error"></span>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center mt-3">

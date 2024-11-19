@@ -167,7 +167,7 @@
                      <table class="table table-bordered ">
                          <thead>
                              <tr>
-                                 <th>Person to visit & Company</th>
+                                 <th>Colleges/Department</th>
                                  <th>Purpose</th>
                                  <th>Time in</th>
                                  <th>Time out</th>
@@ -211,12 +211,12 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="visited_person_name" class="form-label">Person Visited Name</label>
-                                    <input type="text" class="form-control" id="visited_person_name"
+                                    <input type="text" class="form-control" id="visited_person_name" value="{{$visit->visited_person_name}}"
                                         name="visited_person_name" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="visited_person_position" class="form-label">Person Visited Position</label>
-                                    <input type="text" class="form-control" id="visited_person_position"
+                                    <input type="text" class="form-control" id="visited_person_position" value="{{$visit->visited_person_position}}"
                                         name="visited_person_position" required>
                                 </div>
                             </div>

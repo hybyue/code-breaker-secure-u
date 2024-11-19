@@ -1,7 +1,6 @@
 @extends('layouts.sidebar')
 
 @section('title', 'Pass slip')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 @section('content')
 <div class="container pass-slip">

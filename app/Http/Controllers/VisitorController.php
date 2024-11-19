@@ -80,7 +80,6 @@ public function store(Request $request)
         'purpose' => 'required|string|max:255',
         'id_type' => 'required|string|max:30',
         'id_number' => 'required|string|max:50',
-        'id_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ],
     [
         'first_name.regex' => 'Must no number or syntax.',
@@ -112,12 +111,6 @@ public function store(Request $request)
     $visitor->time_in = now()->format('H:i:s');
     $visitor->user_id = Auth::id();
 
-    // Handle ID image upload
-    if ($request->hasFile('id_image')) {
-        $fileName = time() . '_' . $request->file('id_image')->getClientOriginalName();
-        $path = $request->file('id_image')->storeAs('id_images', $fileName, 'public');
-        $visitor['id_image'] = '/storage/' . $path;
-    }
 
     $visitor->save();
 
@@ -296,7 +289,6 @@ public function store_visit(Request $request)
         'purpose' => 'required|string|max:255',
         'id_type' => 'required|string|max:30',
         'id_number' => 'required|string|max:50',
-        'id_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ],
     [
         'first_name.regex' => 'Must no number or syntax.',
@@ -326,13 +318,6 @@ public function store_visit(Request $request)
     $visitor->date = now()->format('Y-m-d H:i:s');
     $visitor->time_in = now()->format('H:i:s');
     $visitor->user_id = Auth::id();
-
-    if ($request->hasFile('id_image')) {
-        $fileName = time() . '_' . $request->file('id_image')->getClientOriginalName();
-        $path = $request->file('id_image')->storeAs('id_images', $fileName, 'public');
-        $visitor['id_image'] = '/storage/' . $path;
-    }
-
     $visitor->save();
 
 

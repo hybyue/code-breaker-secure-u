@@ -14,14 +14,34 @@
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
+        }
+        .header-left, .header-right {
+            display: flex;
+            align-items: flex-start;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+        }
+        .header-text {
+            display: flex;
+            flex-direction: column;
         }
         .header .university-name {
             font-weight: bold;
             font-size: 16px;
+            color: #ca0808;
+            margin-bottom: 2px;
+        }
+        .tagline {
+            font-size: 10px;
         }
         .header .office-name {
             font-size: 10px;
             font-weight: bold;
+            margin-top: 5px;
         }
         .date, .recipient {
             font-size: 12px;
@@ -80,14 +100,83 @@
             margin: 0;
             font-size: 11px;
         }
+        .header-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+        }
+        .header-content {
+            display: table;
+        }
+        .logo-cell {
+            display: table-cell;
+            vertical-align: top;
+
+            padding-right: 10px;
+        }
+        .text-cell {
+            display: table-cell;
+            vertical-align: top;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+        }
+        .university-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #ca0808;
+            margin-bottom: 2px;
+        }
+        .tagline {
+            font-size: 10px;
+        }
+        .office-name {
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .header-right {
+            display: table;
+            margin-left: auto;
+        }
+        .header-content.align-right {
+            float: right;
+        }
 
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="university-name"></div>
-        <div class="office-name"></div>
-    </div>
+    <table class="header-table">
+        <tr>
+            <td width="50%">
+                <div class="header-content">
+                    <div class="logo-cell">
+                        <img src="{{ public_path('images/ucu-logo.png') }}" alt="UCU Logo" class="logo">
+                    </div>
+                    <div class="text-cell">
+                        <div class="university-name">Urdaneta City University</div>
+                        <div class="tagline">Owned and operated by the City Government of Urdaneta</div>
+                    </div>
+                </div>
+            </td>
+            <td width="50%" style="text-align: right;">
+                <div class="header-content align-right">
+                    <div class="logo-cell">
+                        <img src="{{ public_path('images/ucu-logo.png') }}" alt="Security Logo" class="logo">
+                    </div>
+                    <div class="text-cell">
+                        <div class="office-name">Security Management Office</div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <div class="date bold-text">{{ $date }}</div>
     <div class="recipient">

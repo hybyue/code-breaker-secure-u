@@ -36,7 +36,7 @@
                                 <input type="text" class="form-control" id="middle_name_{{ $visit->id }}" name="middle_name" value="{{ $visit->middle_name }}">
                             </div>
                             <div class="form-group">
-                                <label for="person_to_visit">Person to Visit & Company:</label>
+                                <label for="person_to_visit">Colleges/Deparment:</label>
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="{{ $visit->person_to_visit }}" selected>{{ $visit->person_to_visit }}</option>
                                         <!-- Colleges -->

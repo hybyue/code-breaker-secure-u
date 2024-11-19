@@ -111,6 +111,7 @@ class AuthController extends Controller
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'email' => $request->email,
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password),
             'type' => "0"
         ]);

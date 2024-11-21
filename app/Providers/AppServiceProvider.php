@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\View\Composers\AdminComposer;
+use App\Models\Student;
 use App\Models\User;
 use App\Observers\ActivityLogsObserver;
+use App\Observers\StudentObserver;
 use Spatie\Activitylog\Models\Activity;
 
 class AppServiceProvider extends ServiceProvider
@@ -39,5 +41,6 @@ class AppServiceProvider extends ServiceProvider
         });
         User::observe(UserObserver::class);
         Activity::observe(ActivityLogsObserver::class);
+        Student::observe(StudentObserver::class);
     }
 }

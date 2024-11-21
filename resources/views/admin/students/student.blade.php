@@ -57,6 +57,10 @@
                 <th>Student Number</th>
                 <th>Name</th>
                 <th>Course</th>
+                <th>Contact Number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Year Level</th>
                 <th></th>
             </tr>
         </thead>
@@ -68,6 +72,10 @@
                 {{$student->middle_name}}.
             @endif</td>
             <td>{{$student->course}}</td>
+            <td>{{$student->contact_number}}</td>
+            <td>{{$student->email}}</td>
+            <td>{{$student->address}}</td>
+            <td>{{$student->year_level}}</td>
 
                 <td class="text-center">
                     <a href="" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateStudentModalAd-{{ $student->id }}">

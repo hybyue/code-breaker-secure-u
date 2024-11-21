@@ -7,7 +7,11 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.2",
+<<<<<<< HEAD
         "kreait/firebase-php": "^7.16",
+=======
+        "kreait/laravel-firebase": "^5.9",
+>>>>>>> 7f197361df7589f78d607860ca940205707e7eb6
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",

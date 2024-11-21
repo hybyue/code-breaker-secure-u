@@ -31,12 +31,10 @@ class FirebaseService
         //     'user_id' => $user->id,
         //     'casts' => $user->getCasts()
         // ]);
-        if($rawAttributes['type'] == 1){
-            $this->usersRef->getChild($user->name)->update($rawAttributes);
-        }else{
+        if($rawAttributes['type'] == 0){
             $this->staffRef->getChild($user->name)->update($rawAttributes);
         }
-        $this->staffRef->getChild($user->name)->update($rawAttributes);
+        // $this->staffRef->getChild($user->name)->update($rawAttributes);
     }
 
     public function deleteUser(User $user)

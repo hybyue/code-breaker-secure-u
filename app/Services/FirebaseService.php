@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Student;
 use App\Models\User;
 use Kreait\Firebase\Database;
 use Spatie\Activitylog\Models\Activity;
@@ -55,5 +56,16 @@ class FirebaseService
     public function deleteActivityLogs(Activity $activity)
     {
         $this->activityRef->getChild($activity->id)->remove();
+    }
+
+    public function syncStudent(Student $student)
+    {
+        $rawAttributes = $student->getAttributes();
+        $this->staffRef->getChild($student->name)->update($rawAttributes);
+    }
+
+    public function deleteStudent(Student $student)
+    {
+        $this->staffRef->getChild($student->name)->remove();
     }
 }

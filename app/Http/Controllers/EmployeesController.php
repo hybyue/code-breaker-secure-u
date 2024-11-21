@@ -212,7 +212,6 @@ class EmployeesController extends Controller
             ],
             'date_hired' => 'required|date',
             'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
-            'address' => 'required|string|max:255',
             'schedule' => 'required|string|max:255',
             'position' => 'required|string|max:255',
         ], [
@@ -259,6 +258,8 @@ class EmployeesController extends Controller
         $user = User::findOrFail($id);
 
         if ($request->hasFile('profile_picture')) {
+
+
             $fileName = time() . '_' . $request->file('profile_picture')->getClientOriginalName();
             $path = $request->file('profile_picture')->storeAs('profile_pictures', $fileName, 'public');
             $user->profile_picture = '/storage/' . $path;
@@ -274,14 +275,20 @@ class EmployeesController extends Controller
         $user = User::findOrFail($id);
 
         if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if it exists
+            if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+                unlink(public_path($user->profile_picture));
+            }
+
             $fileName = time() . '_' . $request->file('profile_picture')->getClientOriginalName();
             $path = $request->file('profile_picture')->storeAs('profile_pictures', $fileName, 'public');
             $user->profile_picture = '/storage/' . $path;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Profile picture updated successfully');
         }
 
-        $user->save();
-
-        return redirect()->route('admin.layouts.profile_admin')->with('success', 'Profile picture updated successfully');
+        return redirect()->back()->with('error', 'No image file uploaded');
     }
 
     public function showProfileAdmin()
@@ -322,9 +329,12 @@ class EmployeesController extends Controller
             ],
             'date_hired' => 'required|date',
             'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
-            'address' => 'required|string|max:255',
             'schedule' => 'required|string|max:255',
             'position' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'municipality' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
             'middle_name.regex' => 'Must contain only letters and spaces.',
@@ -336,6 +346,10 @@ class EmployeesController extends Controller
             'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
             'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
             'badge_number.unique' => 'This badge number is already taken.',
+            'province' => 'required|string|max:255',
+            'municipality' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -344,7 +358,15 @@ class EmployeesController extends Controller
 
         $user = User::findOrFail($id);
 
-        $user->update($request->all());
+        // Get the form data
+        $userData = $request->all();
+
+        // Use the text values for address fields
+        $userData['province'] = $request->input('province_text');
+        $userData['municipality'] = $request->input('municipality_text');
+        $userData['barangay'] = $request->input('barangay_text');
+
+        $user->update($userData);
 
         return response()->json([
             'success' => true,
@@ -383,9 +405,12 @@ class EmployeesController extends Controller
             ],
             'date_hired' => 'required|date',
             'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
-            'address' => 'required|string|max:255',
             'schedule' => 'required|string|max:255',
             'position' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'municipality' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
         ], [
             'first_name.regex' => 'The first name must contain only letters and spaces.',
             'middle_name.regex' => 'Must contain only letters and spaces.',
@@ -397,6 +422,10 @@ class EmployeesController extends Controller
             'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
             'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
             'badge_number.unique' => 'This badge number is already taken.',
+            'street.required' => 'The street address is required.',
+            'province.required' => 'The province field is required.',
+            'municipality.required' => 'The municipality field is required.',
+            'barangay.required' => 'The barangay field is required.',
         ]);
 
         if ($validator->fails()) {
@@ -404,7 +433,6 @@ class EmployeesController extends Controller
         }
 
         $user = User::findOrFail($id);
-
         $user->update($request->all());
 
         return response()->json([

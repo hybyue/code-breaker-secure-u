@@ -145,6 +145,12 @@
                               N/A
                           @endif
                       </p>
+                      <div class="modal-proof-image mb-3">
+                        @if($item->proof_image)
+                            <p><strong>Proof Claimed: </strong></p>
+                            <img src="{{ asset($item->proof_image) }}" alt="Proof Image" class="img-fluid rounded border">
+                        @endif
+                    </div>
                   </div>
               </div>
             </div>
@@ -190,6 +196,13 @@
 
 .btn-close:hover {
     opacity: 1;
+}
+.modal-proof-image img {
+    max-height: 350px;
+    object-fit: contain;
+    width: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
 }
 </style>
 @endsection

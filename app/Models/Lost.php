@@ -26,7 +26,8 @@ class Lost extends Model
         'is_claimed',
         'security_staff',
         'description',
-        'is_transferred'
+        'is_transferred',
+        'proof_image'
     ];
 
 
@@ -45,7 +46,8 @@ class Lost extends Model
         'is_claimed',
         'security_staff',
         'description',
-        'is_transferred'])
+        'is_transferred',
+        'proof_image'])
         ->logOnlyDirty()
         ->dontSubmitEmptyLogs()
         ->logUnguarded()

@@ -122,8 +122,8 @@
                     </div>
                     @if ($user)
                     <h3 class="card-title mb-3">{{ $user->first_name }} @if($user->middle_name){{ $user->middle_name }}. @endif {{ $user->last_name }}</h3>
-                    <p class="card-text text-start mb-2"><i class="bi bi-envelope"></i> {{ $user->email }}</p>
-                    @if($user->id_number)<p class="card-text text-start"><i class="bi bi-person-badge"></i> ID No. {{ $user->id_number }}</p>@endif
+                    <p class="card-text mb-2"><i class="bi bi-envelope"></i> {{ $user->email }}</p>
+                    @if($user->id_number)<p class="card-text"><i class="bi bi-person-badge"></i> ID No. {{ $user->id_number }}</p>@endif
                 @endif
                 </div>
             </div>

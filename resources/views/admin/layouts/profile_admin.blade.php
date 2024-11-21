@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
+    <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('css/profile_admin.css') }}" rel="stylesheet">
 
@@ -77,8 +78,8 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    @if($user->address)
-                                        <p><span class="info-title">Address:</span> <span class="info-value">{{ $user->address }}</span></p>
+                                    @if($user->street || $user->barangay || $user->municipality || $user->province )
+                                        <p><span class="info-title">Address:</span> <span class="info-value">{{ $user->street }}, {{ $user->barangay }} {{ $user->municipality }}, {{ $user->province }}</span></p>
                                     @endif
                                     @if($user->contact_no)
                                         <p><span class="info-title">Contact No:</span> <span class="info-value">{{ $user->contact_no }}</span></p>
@@ -153,7 +154,7 @@
                             <ul class="mb-0"></ul>
                         </div>
 
-                        < class="row">
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="id_number" class="form-label">ID Number:</label>
                                 <input type="text" class="form-control" id="id_number" name="id_number" value="{{ $user->id_number }}" required>
@@ -218,17 +219,45 @@
                                 <label for="date_hired" class="form-label">Date Hired:</label>
                                 <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="mb-3">
                                 <label for="badge_number" class="form-label">Badge Number:</label>
                                 <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="address" class="form-label">Address:</label>
-                                <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="schedule" class="form-label">Schedule:</label>
-                                <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $user->schedule }}" required>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Address Information:</label>
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+                                        <label class="form-label">Street Address:</label>
+                                        <input type="text" class="form-control" name="street" value="{{ $user->street }}" placeholder="Street Address" required>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label">Province:</label>
+                                        <select class="form-select" name="province" required>
+                                            <option value="" disabled>Select Province</option>
+                                            @if($user->province)
+                                                <option value="{{ $user->province }}" selected>{{ $user->province }}</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label">Municipality:</label>
+                                        <select class="form-select" name="municipality" required>
+                                            <option value="" disabled>Select Municipality/City</option>
+                                            @if($user->municipality)
+                                                <option value="{{ $user->municipality }}" selected>{{ $user->municipality }}</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label">Barangay:</label>
+                                        <select class="form-select" name="barangay" required>
+                                            <option value="" disabled>Select Barangay</option>
+                                            @if($user->barangay)
+                                                <option value="{{ $user->barangay }}" selected>{{ $user->barangay }}</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="position" class="form-label">Position:</label>
@@ -328,13 +357,45 @@
                                     <label for="date_hired" class="form-label">Date Hired:</label>
                                     <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="mb-3">
                                     <label for="badge_number" class="form-label">Badge Number:</label>
                                     <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="address" class="form-label">Address:</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}" required>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Address Information:</label>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Street Address:</label>
+                                            <input type="text" class="form-control" name="street" value="{{ $user->street }}" placeholder="Street Address" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Province:</label>
+                                            <select class="form-select" name="province" required>
+                                                <option value="" disabled>Select Province</option>
+                                                @if($user->province)
+                                                    <option value="{{ $user->province }}" selected>{{ $user->province }}</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-2"
+                                            <label class="form-label">Municipality:</label>
+                                            <select class="form-select" name="municipality" required>
+                                                <option value="" disabled>Select Municipality/City</option>
+                                                @if($user->municipality)
+                                                    <option value="{{ $user->municipality }}" selected>{{ $user->municipality }}</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Barangay:</label>
+                                            <select class="form-select" name="barangay" required>
+                                                <option value="" disabled>Select Barangay</option>
+                                                @if($user->barangay)
+                                                    <option value="{{ $user->barangay }}" selected>{{ $user->barangay }}</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="schedule" class="form-label">Schedule:</label>
@@ -359,6 +420,8 @@
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
     <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
     <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+    <script src="{{ asset('js/profile.js')}}"></script>
+
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
     <script>
@@ -405,16 +468,18 @@
                 data: $(this).serialize(),
                 success: function(response) {
                     if (response.success) {
-                        $('#updatePersonalInformation').modal('hide');
 
                         localStorage.setItem('showToast', 'true');
                         location.reload();
+                        console.log(response);
                     }
+
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
                         let errors = xhr.responseJSON.errors;
                         $('.error-message').remove();
+                        console.log(xhr.responseJSON.errors);
 
                         $.each(errors, function(field, messages) {
                             let input = $('[name="' + field + '"]');
@@ -434,68 +499,63 @@
     });
 
     $(document).ready(function() {
-    if (localStorage.getItem('showToast') === 'true') {
-        // Show the toast notification
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: 'Information updated successfully',
-        });
+        function showToast(type, message) {
+    Swal.fire({
+        toast: true,
+        position: 'top-right',
+        iconColor: 'white',
+        customClass: {
+            popup: 'colored-toast',
+        },
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+        icon: type,
+        title: message,
+    });
+}
 
-        // Clear the flag
+$(document).ready(function () {
+    if (localStorage.getItem('showToast')) {
+        showToast('success', 'Information updated successfully');
         localStorage.removeItem('showToast');
     }
-
-    if (localStorage.getItem('showToastS') === 'true') {
-        // Show the toast notification
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: 'Information added successfully',
-        });
-
+    if (localStorage.getItem('showToastS')) {
+        showToast('success', 'Information added successfully');
         localStorage.removeItem('showToastS');
+    }
+    if (localStorage.getItem('showToastProf')) {
+        showToast('success', 'Profile added successfully');
+        localStorage.removeItem('showToastProf');
     }
 });
 
+});
 
- // Function to preview image
- function previewImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const previewImage = document.getElementById('preview-image');
-            const previewIcon = document.getElementById('preview-icon');
+function previewImage(input, imageId, iconId) {
+    const file = input.files[0];
+    const reader = new FileReader();
 
-            if (previewImage) {
-                previewImage.src = e.target.result;
-            } else if (previewIcon) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.id = 'preview-image';
-                img.className = 'profile-picture mb-3';
-                previewIcon.parentNode.replaceChild(img, previewIcon);
-            }
+    reader.onload = function (e) {
+        // Replace the icon with the image preview
+        const imageElement = document.getElementById(imageId);
+        const iconElement = document.getElementById(iconId);
+
+        if (iconElement) {
+            iconElement.style.display = 'none'; // Hide the icon
         }
-        reader.readAsDataURL(input.files[0]);
+
+        if (imageElement) {
+            imageElement.src = e.target.result; // Set the image preview
+            imageElement.style.display = 'block'; // Show the image
+        }
+    };
+
+    if (file) {
+        reader.readAsDataURL(file); // Read the image file as a data URL
     }
 }
+
 
     // Handle profile picture change
     document.getElementById('profile-picture-input').addEventListener('change', function() {
@@ -514,6 +574,7 @@
                 if (result.isConfirmed) {
                     previewImage(this, 'main-profile-image', 'main-profile-icon');
                     document.getElementById('profilePictureForm').submit();
+                    localStorage.setItem('showToastProf', 'true');
                 } else {
                     this.value = '';
                 }

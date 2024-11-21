@@ -44,7 +44,7 @@ class Visitor extends Model
         'id_image',
         'visited_person_name',
         'visited_person_position',
-        'id_number',
+
     ];
 
 
@@ -67,7 +67,7 @@ class Visitor extends Model
                 'id_image',
                 'visited_person_name',
                 'visited_person_position',
-                'id_number',
+
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()

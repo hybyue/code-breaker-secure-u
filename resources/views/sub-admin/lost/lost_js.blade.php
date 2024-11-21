@@ -105,7 +105,6 @@ $(document).ready(function () {
         contentType: false,
         success: function(response) {
             if (response.success) {
-                modal.modal('hide');
                 localStorage.setItem('showToast', 'true');
                 location.reload();
             }
@@ -162,42 +161,64 @@ $(document).ready(function() {
 </script>
 
 <script>
-  function markAsClaimed(id) {
+ function markAsClaimed(id) {
     Swal.fire({
-        icon: 'question',
-        title: 'Are you sure?',
-        text: 'Do you want to mark this item as claimed?',
+        title: 'Upload Proof of Claim',
+        html: `
+            <input type="file" id="proof_image" name="proof_image" class="form-control mb-3">
+            <small class="text-muted">Upload an image as proof of claim (JPEG, PNG, JPG only).</small>
+        `,
         showCancelButton: true,
-        confirmButtonColor: '#0B9B19',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, mark as claimed',
-        cancelButtonText: 'Cancel'
+        confirmButtonText: 'Mark as Claimed',
+        cancelButtonText: 'Cancel',
+        preConfirm: () => {
+            const fileInput = document.getElementById('proof_image');
+            if (!fileInput.files.length) {
+                Swal.showValidationMessage('Please upload an image');
+            }
+            return fileInput.files[0];
+        },
     }).then((result) => {
         if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('proof_image', result.value); // Add the file
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+            // Show loading spinner
+            Swal.fire({
+                title: 'Processing...',
+                html: '<div class="spinner-border text-primary" role="status"></div>',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                backdrop: true
+            });
+
+            // Send the request via AJAX
             $.ajax({
                 url: `/sub-admin/update_claimed/${id}`,
                 type: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    is_claimed: 1
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        // Save success message to localStorage
+                        localStorage.setItem('successMessage', response.message);
+                        location.reload(); // Reload the page
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
                 },
-                success: function(response) {
-                    localStorage.setItem('successMessage', 'Item has been marked as claimed');
-                    location.reload();
+                error: function () {
+                    Swal.fire('Error', 'Something went wrong!', 'error');
                 },
-                error: function(xhr) {
-                    console.error(xhr);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'There was a problem updating the claim status. Please try again.',
-                        confirmButtonColor: '#0B9B19'
-                    });
-                }
             });
         }
     });
 }
+
+
+
 
 function markAsTransfer(id) {
     Swal.fire({

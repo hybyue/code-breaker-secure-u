@@ -63,9 +63,89 @@
             margin: 0;
             font-size: 11px;
         }
+
+        .header-content {
+            display: flex;
+            align-items: center; /* Align items vertically in the center */
+        }
+
+        .header-table td {
+        border: none;
+        padding: 0;
+
+    }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px; /* Adds spacing between the logo and text */
+        }
+
+        .text-container {
+            display: inline-block;
+        }
+
+        .university-name {
+            font-weight: bold;
+            font-size: 26px;
+            color: #ca0808;
+            margin: 0;
+        }
+
+        .tagline {
+            font-size: 10px;
+            color: #ca0808;
+            margin: 0;
+        }
+
+        .security-container {
+            text-align: center;
+        }
+
+        .security-name {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0;
+            margin-top: 5px;
+        }
+
+        .header-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .blue-line {
+            width: 100%;
+            height: 2px;
+            background-color: blue;
+            margin: 0;
+
+        }
     </style>
 </head>
 <body>
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="header-content">
+                    <!-- Left Logo with Urdaneta City University -->
+                    <img src="{{ public_path('images/ucu-logo.png') }}" alt="UCU Logo" class="logo">
+                    <div class="text-container">
+                        <div class="university-name">Urdaneta City University</div>
+                        <div class="tagline">Owned and operated by the City Government of Urdaneta</div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="security-container">
+                    <!-- Security Logo -->
+                    <img src="{{ public_path('images/ucu-logo.png') }}" alt="Security Logo" class="logo">
+                    <div class="security-name">Security Management Office</div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="blue-line"></div>
 
 
         <p class="date bold-text text-start"> {{ $date }}</p>
@@ -87,7 +167,7 @@
                 <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                 <td>{{ $visit->first_name }} {{ $visit->middle_name }}. {{ $visit->last_name }}</td>
                 <td>{{$visit->person_to_visit}}</td>
-                <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('g:i A') }} - {{ \Carbon\Carbon::parse($visit->time_out)->format('g:i A') }}</td>
+                <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('H:i ') }} - {{ \Carbon\Carbon::parse($visit->time_out)->format('H:i ') }}</td>
             </tr>
             @endforeach
         </tbody>

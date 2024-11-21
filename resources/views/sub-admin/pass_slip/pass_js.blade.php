@@ -134,7 +134,6 @@
         contentType: false,
         success: function(response) {
             if (response.success) {
-                modal.modal('hide');
                 localStorage.setItem('showToast', 'true');
                 setTimeout(() => {
                     location.reload();

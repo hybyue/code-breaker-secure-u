@@ -105,6 +105,8 @@ Route::controller(LostFoundController::class)->group(function () {
     Route::get('/sub-admin/lost_found',  'filterLostFounds')->name('sub-admin.lost.lost_found');
     Route::post('/sub-admin/batch_transfered/', 'batchTransferUnclaimed');
     Route::get('/sub-admin/lost_found/clear-filter', 'clearFilter')->name('sub-admin.lost.clear-filter');
+    Route::post('/sub-admin/update_claimed_with_proof',  'updateClaimedWithProof');
+
 
 });
 

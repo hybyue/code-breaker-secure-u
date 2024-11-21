@@ -1,110 +1,136 @@
-$(document).ready(function() {
-    // API URLs for Philippine addresses
-    const BASE_URL = 'https://ph-locations-api.buonzz.com/v1';
-    let provinces = [];
-    let cities = [];
-    let barangays = [];
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all province dropdowns
+    document.querySelectorAll('.modal select[name="province"]').forEach(provinceSelect => {
+        loadProvinces(provinceSelect);
+    });
 
-    // Function to load provinces
-    function loadProvinces() {
-        $.ajax({
-            url: `${BASE_URL}/provinces`,
-            method: 'GET',
-            success: function(response) {
-                provinces = response.data;
-                $('#province').empty().append('<option value="">Select Province</option>');
-                provinces.sort((a, b) => a.name.localeCompare(b.name)).forEach(function(province) {
-                    $('#province').append(`<option value="${province.name}">${province.name}</option>`);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading provinces:', error);
-            }
-        });
-    }
+    async function loadProvinces(provinceSelect) {
+        try {
+            const response = await fetch('https://psgc.gitlab.io/api/provinces');
+            const provinces = await response.json();
 
-    // Function to load cities
-    function loadCities(province) {
-        $.ajax({
-            url: `${BASE_URL}/cities`,
-            method: 'GET',
-            success: function(response) {
-                cities = response.data.filter(city => city.province === province);
-                $('#city').empty().append('<option value="">Select City/Municipality</option>');
-                cities.sort((a, b) => a.name.localeCompare(b.name)).forEach(function(city) {
-                    $('#city').append(`<option value="${city.name}">${city.name}</option>`);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading cities:', error);
-            }
-        });
-    }
+            provinceSelect.innerHTML = '<option value="" selected disabled>Select Province</option>';
 
-    // Function to load barangays
-    function loadBarangays(city) {
-        $.ajax({
-            url: `${BASE_URL}/barangays`,
-            method: 'GET',
-            success: function(response) {
-                barangays = response.data.filter(barangay => barangay.city === city);
-                $('#barangay').empty().append('<option value="">Select Barangay</option>');
-                barangays.sort((a, b) => a.name.localeCompare(b.name)).forEach(function(barangay) {
-                    $('#barangay').append(`<option value="${barangay.name}">${barangay.name}</option>`);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading barangays:', error);
-            }
-        });
-    }
+            // Sort provinces alphabetically
+            provinces.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Event listeners
-    $('#province').on('change', function() {
-        const selectedProvince = $(this).val();
-        if (selectedProvince) {
-            loadCities(selectedProvince);
-            $('#city').val('');
-            $('#barangay').empty().append('<option value="">Select Barangay</option>');
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.code;
+                option.textContent = province.name;
+                provinceSelect.appendChild(option);
+            });
+            provinceSelect.disabled = false;
+
+            // Add change event listener
+            provinceSelect.addEventListener('change', function() {
+                const modal = this.closest('.modal');
+                const municipalitySelect = modal.querySelector('select[name="municipality"]');
+                const barangaySelect = modal.querySelector('select[name="barangay"]');
+                handleProvinceChange(this.value, municipalitySelect, barangaySelect);
+            });
+        } catch (error) {
+            console.error('Error loading provinces:', error);
         }
-        updateFullAddress();
-    });
+    }
 
-    $('#city').on('change', function() {
-        const selectedCity = $(this).val();
-        if (selectedCity) {
-            loadBarangays(selectedCity);
-            $('#barangay').val('');
+    async function handleProvinceChange(provinceCode, municipalitySelect, barangaySelect) {
+        municipalitySelect.innerHTML = '<option value="" selected disabled>Select Municipality/City</option>';
+        barangaySelect.innerHTML = '<option value="" selected disabled>Select Barangay</option>';
+
+        if (!provinceCode) {
+            municipalitySelect.disabled = true;
+            barangaySelect.disabled = true;
+            return;
         }
-        updateFullAddress();
-    });
 
-    $('#barangay').on('change', function() {
-        updateFullAddress();
-    });
+        try {
+            municipalitySelect.disabled = false;
+            barangaySelect.disabled = true;
 
-    // Function to update full address
-    function updateFullAddress() {
-        const streetAddress = $('#street_address').val();
-        const barangay = $('#barangay').val();
-        const city = $('#city').val();
-        const province = $('#province').val();
+            const response = await fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities-municipalities`);
+            const municipalities = await response.json();
 
-        let addressParts = [];
-        if (streetAddress) addressParts.push(streetAddress);
-        if (barangay) addressParts.push('Barangay ' + barangay);
-        if (city) addressParts.push(city);
-        if (province) addressParts.push(province);
+            municipalities.sort((a, b) => a.name.localeCompare(b.name));
 
-        const fullAddress = addressParts.join(', ');
-        $('#address').val(fullAddress);
+            municipalities.forEach(municipality => {
+                const option = document.createElement('option');
+                option.value = municipality.code;
+                option.textContent = municipality.name;
+                municipalitySelect.appendChild(option);
+            });
+
+            municipalitySelect.addEventListener('change', function() {
+                handleMunicipalityChange(this.value, barangaySelect);
+            });
+        } catch (error) {
+            console.error('Error loading municipalities:', error);
+        }
     }
 
-    // Load provinces on page load
-    loadProvinces();
+    async function handleMunicipalityChange(municipalityCode, barangaySelect) {
+        barangaySelect.innerHTML = '<option value="" selected disabled>Select Barangay</option>';
 
-    // If there are existing values, set them
-    if ($('#province').data('value')) {
-        $('#province').val($('#province').data('value')).trigger('change');
+        if (!municipalityCode) {
+            barangaySelect.disabled = true;
+            return;
+        }
+
+        try {
+            barangaySelect.disabled = false;
+
+            const response = await fetch(`https://psgc.gitlab.io/api/cities-municipalities/${municipalityCode}/barangays`);
+            const barangays = await response.json();
+
+            barangays.sort((a, b) => a.name.localeCompare(b.name));
+
+            barangays.forEach(barangay => {
+                const option = document.createElement('option');
+                option.value = barangay.code;
+                option.textContent = barangay.name;
+                barangaySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading barangays:', error);
+        }
     }
+
+    // Store the selected text values instead of codes
+   // Handle form submissions
+   document.querySelectorAll('#addProfileFormAdmin, #updateProfileFormAdmin').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        const modal = this.closest('.modal');
+
+        // Get the selected text values from each dropdown
+        const provinceSelect = modal.querySelector('select[name="province"]');
+        const municipalitySelect = modal.querySelector('select[name="municipality"]');
+        const barangaySelect = modal.querySelector('select[name="barangay"]');
+
+        // Create hidden inputs for each address component
+        if (provinceSelect && provinceSelect.selectedIndex > 0) {
+            const provinceInput = document.createElement('input');
+            provinceInput.type = 'hidden';
+            provinceInput.name = 'province';
+            provinceInput.value = provinceSelect.options[provinceSelect.selectedIndex].text;
+            this.appendChild(provinceInput);
+        }
+
+        if (municipalitySelect && municipalitySelect.selectedIndex > 0) {
+            const municipalityInput = document.createElement('input');
+            municipalityInput.type = 'hidden';
+            municipalityInput.name = 'municipality';
+            municipalityInput.value = municipalitySelect.options[municipalitySelect.selectedIndex].text;
+            this.appendChild(municipalityInput);
+        }
+
+        if (barangaySelect && barangaySelect.selectedIndex > 0) {
+            const barangayInput = document.createElement('input');
+            barangayInput.type = 'hidden';
+            barangayInput.name = 'barangay';
+            barangayInput.value = barangaySelect.options[barangaySelect.selectedIndex].text;
+            this.appendChild(barangayInput);
+        }
+    });
 });
+});
+

@@ -32,18 +32,6 @@
             font-weight: bold;
         }
 
-        .drop-me {
-            z-index: 5000;
-        }
-        .notification-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 
@@ -58,21 +46,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                     @if (Route::has('login'))
                     @auth
-                    <div class="dropdown">
-                        <a class="btn dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            @if($user->profile_picture)
-                            <img src="{{ asset($user->profile_picture) }}" alt="User" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid #ffffff;">
-                            @else
-                            <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
-                            @endif
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">
-                            <li><a class="dropdown-item" href="{{ url('/home')}}">Home</a></li>
-                            <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/sub-admin/change-password')}}">Change password</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/logout') }}">Sign out</a></li>
-                        </ul>
-                    </div>
+                    <p></p>
                     @else
                     <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
                     @if (Route::has('register'))

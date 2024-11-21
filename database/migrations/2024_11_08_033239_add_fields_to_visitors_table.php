@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::table('visitors', function (Blueprint $table) {
             $table->string('visited_person_name')->nullable()->after('person_to_visit');
             $table->string('visited_person_position')->nullable()->after('visited_person_name');
-            $table->string('id_image')->nullable()->after('visited_person_position');
         });
     }
 
@@ -24,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('visitors', function (Blueprint $table) {
-            $table->dropColumn(['visited_person_name', 'visited_person_position', 'id_image']);
+            $table->dropColumn(['visited_person_name', 'visited_person_position']);
         });
     }
 };

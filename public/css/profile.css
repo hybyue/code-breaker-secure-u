@@ -1,0 +1,133 @@
+body {
+    background-color: #d1d1d1
+}
+
+.profile-card {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    border: none;
+}
+
+
+.profile-picture, .profile-picture-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    display: block;
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-placeholder {
+    background-color: transparent;
+    font-size: 150px;
+    line-height: 150px;
+    text-align: center;
+    color: #ffffff;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    width: 150px;
+    border: 4px solid #ffffff;
+}
+
+.position-relative {
+    width: 150px;
+    margin: 0 auto;
+    display: block;
+}
+
+.edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: pointer;
+}
+
+.edit-overlay:hover {
+    opacity: 1;
+}
+
+.edit-overlay i {
+    color: white;
+    font-size: 24px;
+}
+.personal-info {
+    margin-bottom: 30px;
+}
+
+.info-title {
+    font-weight: 600;
+    color: #2C3539;
+    min-width: 150px;
+    display: inline-block;
+}
+
+.info-value {
+    color: #555;
+}
+
+.info-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    color: #2C3539;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.btn-edit {
+    padding: 8px 20px;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+
+
+.colored-toast.swal2-icon-success {
+    background-color: #3a8f09 !important;
+}
+.colored-toast.swal2-icon-error {
+    background-color: #ad1111 !important;
+}
+.colored-toast.swal2-icon-warning {
+    background-color: #f8bb86 !important;
+}
+.colored-toast.swal2-icon-info {
+    background-color: #3fc3ee !important;
+}
+.colored-toast.swal2-icon-question {
+    background-color: #87adbd !important;
+}
+.colored-toast .swal2-title {
+    color: white;
+}
+.colored-toast .swal2-close {
+    color: white;
+}
+.colored-toast .swal2-html-container {
+    color: white;
+}

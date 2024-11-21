@@ -42,10 +42,12 @@ class User extends Authenticatable implements CanResetPassword
         'emergency_contact_number',
         'date_hired',
         'badge_number',
-        'address',
         'schedule',
         'position',
-
+        'province',
+        'municipality',
+        'barangay',
+        'street',
     ];
 
     /**

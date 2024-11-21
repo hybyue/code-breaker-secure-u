@@ -4,146 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
+
     <title>Profile Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css">
+    <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
 
-    <style>
-        body {
-            background-color: #d1d1d1
-        }
-
-        .profile-card {
-            width: 100%;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-            border: none;
-        }
-
-
-       .profile-picture, .profile-picture-placeholder {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
-            border: 4px solid #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-picture-placeholder {
-            background-color: transparent;
-            font-size: 150px;
-            line-height: 150px;
-            text-align: center;
-            color: #ffffff;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 150px;
-            width: 150px;
-            border: 4px solid #ffffff;
-        }
-
-        .position-relative {
-            width: 150px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .edit-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-            cursor: pointer;
-        }
-
-        .edit-overlay:hover {
-            opacity: 1;
-        }
-
-        .edit-overlay i {
-            color: white;
-            font-size: 24px;
-        }
-        .personal-info {
-            margin-bottom: 30px;
-        }
-
-        .info-title {
-            font-weight: 600;
-            color: #2C3539;
-            min-width: 150px;
-            display: inline-block;
-        }
-
-        .info-value {
-            color: #555;
-        }
-
-        .info-section {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            color: #2C3539;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .btn-edit {
-            padding: 8px 20px;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-
-
-        .colored-toast.swal2-icon-success {
-            background-color: #3a8f09 !important;
-        }
-        .colored-toast.swal2-icon-error {
-            background-color: #ad1111 !important;
-        }
-        .colored-toast.swal2-icon-warning {
-            background-color: #f8bb86 !important;
-        }
-        .colored-toast.swal2-icon-info {
-            background-color: #3fc3ee !important;
-        }
-        .colored-toast.swal2-icon-question {
-            background-color: #87adbd !important;
-        }
-        .colored-toast .swal2-title {
-            color: white;
-        }
-        .colored-toast .swal2-close {
-            color: white;
-        }
-        .colored-toast .swal2-html-container {
-            color: white;
-        }
-
-    </style>
 
 </head>
 <body>
@@ -232,8 +99,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     @if($user->address)
-                                        <p><span class="info-title">Address:</span> <span class="info-value">{{ $user->address }}</span></p>
-                                    @endif
+                                    <p><span class="info-title">Address:</span> <span class="info-value">{{ $user->address }}</span></p>
+                                @endif
                                     @if($user->contact_no)
                                         <p><span class="info-title">Contact No:</span> <span class="info-value">{{ $user->contact_no }}</span></p>
                                     @endif
@@ -376,13 +243,29 @@
                                 <label for="date_hired" class="form-label">Date Hired:</label>
                                 <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="mb-3">
                                 <label for="badge_number" class="form-label">Badge Number:</label>
                                 <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="address" class="form-label">Address:</label>
-                                <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}" required>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Address: </label>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <select class="form-select" name="province" required>
+                                            <option value="" selected disabled>Select Province</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select class="form-select" name="city" required disabled>
+                                            <option value="" selected disabled>Select Municipality</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <select class="form-select" name="barangay" required disabled>
+                                            <option value="" selected disabled>Select Barangay</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="schedule" class="form-label">Schedule:</label>
@@ -500,13 +383,29 @@
                                     <label for="date_hired" class="form-label">Date Hired:</label>
                                     <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="mb-3">
                                     <label for="badge_number" class="form-label">Badge Number:</label>
                                     <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="address" class="form-label">Address:</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}" required>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Address</label>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <select class="form-select" name="province" required>
+                                                <option value="" selected disabled>Select Province</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <select class="form-select" name="city" required disabled>
+                                                <option value="" selected disabled>Select Municipality</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <select class="form-select" name="barangay" required disabled>
+                                                <option value="" selected disabled>Select Barangay</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="schedule" class="form-label">Schedule:</label>
@@ -542,6 +441,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
     <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+    <script src="{{ asset('js/philapi.js')}}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
@@ -669,24 +572,28 @@
 
     <script>
     // Function to preview image
-    function previewImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const previewImage = document.getElementById('preview-image');
-            const previewIcon = document.getElementById('preview-icon');
 
-            if (previewImage) {
-                previewImage.src = e.target.result;
-            } else if (previewIcon) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.id = 'preview-image';
-                img.className = 'profile-picture mb-3';
-                previewIcon.parentNode.replaceChild(img, previewIcon);
-            }
+function previewImage(input, imageId, iconId) {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        // Replace the icon with the image preview
+        const imageElement = document.getElementById(imageId);
+        const iconElement = document.getElementById(iconId);
+
+        if (iconElement) {
+            iconElement.style.display = 'none'; // Hide the icon
         }
-        reader.readAsDataURL(input.files[0]);
+
+        if (imageElement) {
+            imageElement.src = e.target.result; // Set the image preview
+            imageElement.style.display = 'block'; // Show the image
+        }
+    };
+
+    if (file) {
+        reader.readAsDataURL(file); // Read the image file as a data URL
     }
 }
 
@@ -713,6 +620,9 @@
             });
         }
     });
+
     </script>
+
+
 </body>
 </html>

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Urdaneta City University Login Page">
     <meta name="author" content="UCU">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login</title>
     <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
@@ -156,6 +157,12 @@
 
     <script>
         $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $('form').on('submit', function(e) {
                 e.preventDefault();
 
@@ -227,6 +234,20 @@
                                 timerProgressBar: true,
                                 icon: 'error',
                                 title: errorMessage,
+                            });
+                        } else if (xhr.status === 419) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-right',
+                                iconColor: 'white',
+                                customClass: {
+                                    popup: 'colored-toast',
+                                },
+                                showConfirmButton: false,
+                                timer: 2500,
+                                timerProgressBar: true,
+                                icon: 'error',
+                                title: 'Session expired. Please refresh the page.',
                             });
                         } else {
                             Swal.fire({

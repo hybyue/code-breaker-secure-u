@@ -12,30 +12,6 @@
 <script>
     $(document).ready(function () {
 
-        // let lastOpenedViewModalId = null;
-//TODO: awit gagawin ko na to next time
-// $('.edit-button').on('click', function() {
-//     var id = $(this).data('id');
-//     lastOpenedViewModalId = id; // Store the current view modal's ID
-//     $('#viewEntries-' + id).addClass('view-modal');
-//     $('#updateViolationModal-' + id).addClass('edit-modal');
-// });
-
-// $('.edit-modal').on('hidden.bs.modal', function () {
-//     if (lastOpenedViewModalId) {
-//         $('#viewEntries-' + lastOpenedViewModalId).modal('show');
-//     }
-//     $('.view-modal').removeClass('view-modal');
-// });
-
-// // Remove backdrop on both modals close
-// $('.modal').on('hidden.bs.modal', function () {
-//     if (!$('.modal.show').length) {
-//         $('body').removeClass('modal-open');
-//         $('.modal-backdrop').remove();
-//     }
-// });
-
         new DataTable('#violationTable', {
             responsive: true,
             ordering: false,

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2024 at 03:08 PM
+-- Generation Time: Nov 21, 2024 at 02:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1261,7 +1261,25 @@ INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `ev
 (1583, 'student', 'created a Student Information on Student ID number 20215428', 'App\\Models\\Student', 'created', 76, 'App\\Models\\User', 1, '{\"attributes\":{\"student_no\":\"20215428\",\"first_name\":\"Ivan  Sison\",\"middle_name\":\"College of Information Technology\",\"last_name\":\"male\",\"course\":\"4\"}}', NULL, '2024-11-15 07:49:19', '2024-11-15 07:49:19'),
 (1584, 'student', 'created a Student Information on Student ID number 20216071', 'App\\Models\\Student', 'created', 77, 'App\\Models\\User', 1, '{\"attributes\":{\"student_no\":\"20216071\",\"first_name\":\"Nicky James  Buemio\",\"middle_name\":\"College of Information Technology\",\"last_name\":\"male\",\"course\":\"4\"}}', NULL, '2024-11-15 07:49:19', '2024-11-15 07:49:19'),
 (1585, 'student', 'created a Student Information on Student ID number 20220891', 'App\\Models\\Student', 'created', 78, 'App\\Models\\User', 1, '{\"attributes\":{\"student_no\":\"20220891\",\"first_name\":\"Chritian  Nepomuceno\",\"middle_name\":\"College of Information Technology\",\"last_name\":\"male\",\"course\":\"4\"}}', NULL, '2024-11-15 07:49:19', '2024-11-15 07:49:19'),
-(1586, 'student', 'created a Student Information on Student ID number 20219428', 'App\\Models\\Student', 'created', 79, 'App\\Models\\User', 1, '{\"attributes\":{\"student_no\":\"20219428\",\"first_name\":\"Raymark Mina\",\"middle_name\":\"College of Information Technology\",\"last_name\":\"male\",\"course\":\"4\"}}', NULL, '2024-11-15 07:49:19', '2024-11-15 07:49:19');
+(1586, 'student', 'created a Student Information on Student ID number 20219428', 'App\\Models\\Student', 'created', 79, 'App\\Models\\User', 1, '{\"attributes\":{\"student_no\":\"20219428\",\"first_name\":\"Raymark Mina\",\"middle_name\":\"College of Information Technology\",\"last_name\":\"male\",\"course\":\"4\"}}', NULL, '2024-11-15 07:49:19', '2024-11-15 07:49:19'),
+(1587, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-19 16:48:27', '2024-11-19 16:48:27'),
+(1588, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 00:17:40', '2024-11-20 00:17:40'),
+(1589, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 07:17:12', '2024-11-20 07:17:12'),
+(1590, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 11:21:42', '2024-11-20 11:21:42'),
+(1591, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 12:09:13', '2024-11-20 12:09:13'),
+(1592, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 13:12:33', '2024-11-20 13:12:33'),
+(1593, 'lost_found', 'updated a Lost and Found Information on id number 32', 'App\\Models\\Lost', 'updated', 32, 'App\\Models\\User', 2, '{\"attributes\":{\"object_img\":\"C:\\\\xampp\\\\tmp\\\\php53D2.tmp\"},\"old\":{\"object_img\":\"\\/storage\\/lost_images\\/1728635360_download.jpeg\"}}', NULL, '2024-11-20 13:24:41', '2024-11-20 13:24:41'),
+(1594, 'lost_found', 'updated a Lost and Found Information on id number 32', 'App\\Models\\Lost', 'updated', 32, 'App\\Models\\User', 1, '{\"attributes\":{\"last_name\":\"Lurdes\",\"object_img\":\"\\/storage\\/lost_images\\/1732109714_90812ecb-72d2-416c-b3c1-8657655d439b-realid_license.webp\"},\"old\":{\"last_name\":\"Rhodes\",\"object_img\":\"C:\\\\xampp\\\\tmp\\\\php53D2.tmp\"}}', NULL, '2024-11-20 13:35:16', '2024-11-20 13:35:16'),
+(1595, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 14:11:11', '2024-11-20 14:11:11'),
+(1596, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 14:26:03', '2024-11-20 14:26:03'),
+(1597, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 15:40:12', '2024-11-20 15:40:12'),
+(1598, 'violation', 'created a Violation information on ID number 107', 'App\\Models\\Violation', 'created', 107, 'App\\Models\\User', 2, '{\"attributes\":{\"user_id\":2,\"student_no\":\"20212393\",\"first_name\":\"Ralphy\",\"middle_initial\":\"D\",\"last_name\":\"Prado\",\"course\":\"BSIT\",\"violation_type\":\"Slipper\\/Sandals\",\"date\":\"2024-11-20\"}}', NULL, '2024-11-20 15:44:06', '2024-11-20 15:44:06'),
+(1599, 'lost_found', 'updated a Lost and Found Information on id number 32', 'App\\Models\\Lost', 'updated', 32, 'App\\Models\\User', 2, '{\"attributes\":{\"is_claimed\":1,\"proof_image\":\"\\/storage\\/proof_claimed\\/1732118775_ID.jpeg\"},\"old\":{\"is_claimed\":0,\"proof_image\":null}}', NULL, '2024-11-20 16:06:17', '2024-11-20 16:06:17'),
+(1600, 'lost_found', 'updated a Lost and Found Information on id number 31', 'App\\Models\\Lost', 'updated', 31, 'App\\Models\\User', 2, '{\"attributes\":{\"is_claimed\":1,\"proof_image\":\"\\/storage\\/proof_claimed\\/1732119148_ID.jpeg\"},\"old\":{\"is_claimed\":0,\"proof_image\":null}}', NULL, '2024-11-20 16:12:28', '2024-11-20 16:12:28'),
+(1601, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 17:47:30', '2024-11-20 17:47:30'),
+(1602, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-20 18:36:51', '2024-11-20 18:36:51'),
+(1603, 'default', 'logged in', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"ip\":\"127.0.0.1\"}', NULL, '2024-11-21 00:31:54', '2024-11-21 00:31:54'),
+(1604, 'lost_found', 'updated a Lost and Found Information on id number 32', 'App\\Models\\Lost', 'updated', 32, 'App\\Models\\User', 1, '{\"attributes\":{\"is_claimed\":1,\"proof_image\":\"\\/storage\\/proof_claimed\\/1732150620_aliaga04.JPG\"},\"old\":{\"is_claimed\":0,\"proof_image\":null}}', NULL, '2024-11-21 00:57:03', '2024-11-21 00:57:03');
 
 -- --------------------------------------------------------
 
@@ -1316,15 +1334,6 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('5c785c036466adea360111aa28563bfd556b5fba', 'i:2;', 1731656499),
-('5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1731656499;', 1731656499),
-('user-is-online-1', 'b:1;', 1731658225);
 
 -- --------------------------------------------------------
 
@@ -1489,20 +1498,21 @@ CREATE TABLE `lost_found` (
   `security_staff` varchar(255) DEFAULT NULL,
   `is_claimed` tinyint(1) NOT NULL DEFAULT 0,
   `description` text DEFAULT NULL,
-  `is_transferred` tinyint(1) DEFAULT NULL
+  `is_transferred` tinyint(1) DEFAULT NULL,
+  `proof_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `lost_found`
 --
 
-INSERT INTO `lost_found` (`id`, `user_id`, `object_type`, `first_name`, `middle_name`, `last_name`, `course`, `object_img`, `created_at`, `updated_at`, `location`, `security_staff`, `is_claimed`, `description`, `is_transferred`) VALUES
-(1, 1, 'Tumbler', 'David', 'D', 'Garcia', 'Student', '/storage/lost_images/1728634941_nice.jpeg', '2024-08-22 01:18:28', '2024-11-05 18:55:31', NULL, '2', 1, NULL, NULL),
-(2, 4, 'phone', 'Raymark', 'B', 'Mina', 'Visitor', '/storage/lost_images/1724325699_nokia 3210.jpeg', '2024-08-22 11:21:39', '2024-11-05 18:55:35', NULL, NULL, 0, NULL, 1),
-(12, 1, 'Student ID', 'Angelo Austin', 'A', 'Aquino', 'Student', '/storage/lost_images/1731381052_ID.jpeg', '2024-09-05 06:03:51', '2024-11-12 03:11:13', 'Gazebo', NULL, 0, 'IT students ID', 1),
-(23, 1, 'phone', 'Raymark', 'B', 'Mina', 'Student', '/storage/lost_images/1726128814_nokia 3210.jpeg', '2024-09-09 10:39:23', '2024-11-14 16:34:33', NULL, NULL, 0, NULL, NULL),
-(31, 6, 'Iphone 15 pro max', 'David Earl Gabriel', NULL, 'Garcia', 'Student', '/storage/lost_images/1728635303_iphone11.jpeg', '2024-09-12 11:21:23', '2024-11-14 16:42:22', NULL, NULL, 0, NULL, 0),
-(32, 2, 'Driver\'s license ID', 'Marissa', NULL, 'Rhodes', 'Head', '/storage/lost_images/1728635360_download.jpeg', '2024-09-13 11:48:12', '2024-11-14 16:41:47', 'Department 1', 'Ryan', 0, 'dd', 0);
+INSERT INTO `lost_found` (`id`, `user_id`, `object_type`, `first_name`, `middle_name`, `last_name`, `course`, `object_img`, `created_at`, `updated_at`, `location`, `security_staff`, `is_claimed`, `description`, `is_transferred`, `proof_image`) VALUES
+(1, 1, 'Tumbler', 'David', 'D', 'Garcia', 'Student', '/storage/lost_images/1728634941_nice.jpeg', '2024-08-22 01:18:28', '2024-11-05 18:55:31', NULL, '2', 1, NULL, NULL, NULL),
+(2, 4, 'phone', 'Raymark', 'B', 'Mina', 'Visitor', '/storage/lost_images/1724325699_nokia 3210.jpeg', '2024-08-22 11:21:39', '2024-11-05 18:55:35', NULL, NULL, 0, NULL, 1, NULL),
+(12, 1, 'Student ID', 'Angelo Austin', 'A', 'Aquino', 'Student', '/storage/lost_images/1731381052_ID.jpeg', '2024-09-05 06:03:51', '2024-11-12 03:11:13', 'Gazebo', NULL, 0, 'IT students ID', 1, NULL),
+(23, 1, 'phone', 'Raymark', 'B', 'Mina', 'Student', '/storage/lost_images/1726128814_nokia 3210.jpeg', '2024-09-09 10:39:23', '2024-11-14 16:34:33', NULL, NULL, 0, NULL, NULL, NULL),
+(31, 6, 'Iphone 15 pro max', 'David Earl Gabriel', NULL, 'Garcia', 'Student', '/storage/lost_images/1728635303_iphone11.jpeg', '2024-09-12 11:21:23', '2024-11-20 16:12:28', NULL, NULL, 0, NULL, 0, NULL),
+(32, 2, 'Driver\'s license ID', 'Marissa', NULL, 'Lurdes', 'Head', '/storage/lost_images/1732109714_90812ecb-72d2-416c-b3c1-8657655d439b-realid_license.webp', '2024-09-13 11:48:12', '2024-11-21 00:57:02', 'Department 1', 'Ryan', 1, 'dd', 0, '/storage/proof_claimed/1732150620_aliaga04.JPG');
 
 -- --------------------------------------------------------
 
@@ -1550,7 +1560,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (30, '2024_11_08_042930_add_fields_to_pass_slip_table', 13),
 (31, '2024_11_09_122716_add_fields_to_user_table', 14),
 (32, '2024_11_10_160249_add_fields_to_visitors_table', 14),
-(33, '2024_11_12_001250_add_fields_to_violation_table', 15);
+(33, '2024_11_12_001250_add_fields_to_violation_table', 15),
+(34, '2024_11_19_181919_add_fields_to_users', 16),
+(35, '2024_11_19_183923_add_fields_to_lost_found', 16);
 
 -- --------------------------------------------------------
 
@@ -1677,8 +1689,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('FnTgRtYOoAPmOLXdhbGlsf9jhTZj0Lw1tmpLUdUb', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'ZXlKcGRpSTZJbWxRZGxGeWVHSnFXbVZtYWtsQk5reDZkV0pOTlVFOVBTSXNJblpoYkhWbElqb2lRM2hLT1ZKUE5VbHVkVTVDTDFSNk9XeHRhbXN6ZVZwUGEwVXJXVFowYzJaeFVIRXdaWFkyZGtka09VTXlNa2xzUjFObEsxaHhaVXg2YlRONGFVODNWblYwTDBWcFEwaFVPVEZuTjJSalduWTRibWcyY1hCc1EwTldkak13UlV4WmNYZzVaVVpxZVhnM2VHZEZNR3RvZEZabFJuZFBRVmxJY3l0MmVtMVVRMFEyWjFkelFsVlJXVmh3VDJjd1ZtMDFkSGt6WWxwSGJ6SklRamh6WWtneU5YZzNSMGxxUXpRME5GbFpZMDFKYm5GU2IySmpRamhDZDBNM2JUUjRkbm8xTlZONVRGQk5ieXRXYlhaeVRUUnVXU3ROYTBwVFlYUnBVVVpTZFVJelFXOVlhRXRLV1VzM1VVaE1ZazlPYUhveU0xbDBVbVZVWlRVMGNrcEJTWHBEZVZacUszUXJZVGh3WWpkaFVIUlBVVVp3VDBaM1R6TlpkREZ2Y21vMVZITXZabVpYUW1sUE0wTnNNa05pYXpOVlpWYzNlbGRFVUZBeVpYZGpUazF3TDI4M1IzUlRaMWhzTkhkV2FWQTVWMkZXZG1KVmVYaHNlSGd6WjBKdFpFMHJaekZDWkc1aFMwTm5UVWw2VEU5S1ZVWjRla3hsWnpGU2FuRXlhMVJKV20wMlVWWlBNbWhKZERORlFuWnJSMjlEV1ZWMVVHcFlOR3BKVkVwTVptRllUMVJoVmxsaWFURjJURlZ6VjFRMGRURlVjMUoxZUVaNlZucFFVSFpPWkN0SldpSXNJbTFoWXlJNklqTm1ZVGRsTVdabVltVmtNRGN3Tm1abE1HSXpPV1E0T1RSbU1qZ3dZVGhsT0RNNE5HTmhPR0ppWTJNM01tWTFaR013TW1JeU56azBPVGN5WXpsbU1qTWlMQ0owWVdjaU9pSWlmUT09', 1731658166),
-('nmXlHP5hbPW9vRscHDVnn85soEySnsGLsIqOYcgK', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 'ZXlKcGRpSTZJbEZyVWxoMmN5dExaVzVVY0VjeWFVMVpja29yVW5jOVBTSXNJblpoYkhWbElqb2lVMEp2UzBsb2MyOTNPRXgxUzBWbVNuWnphekJwYzBKNGVrRklXbTR4YzA4NVJGbHNVMkpyZEhSSGJUVTNjRGg1TWxCTFlsTnJWVEZtVjI1WE5VdzRVMVJqVkhaNGNWTTNNMlZoV0cxTmNGUkljMmxzVjNFeUt6ZHVTVTlWUkhGVGVEVkdkWFpUY0VaTGRESnRSVXAwYmpKWVdVTlRka2RxTlhWWVlVZHNVMk5FU0U1MVRuUnNZMU5qVldJelFVRkJRVkI0U2pkMmVFZFhSV2haYVZKM01HNW1TR1F4T0hCTlpsUnlTMmR3WkZSMFFWRlZTR294WW01NU9UZFlUVEk0U2tKT1ZrZEtaa1pQVmt3elNGSm5SMHRvWlVoUldqQXJiVlZVUkdoUVZVMVZjakZ0U2tGYU9UQnRTa0k1VlZWWVNYWlRielIyWVhsUWNXVnBNa1F6U1RCTlVWaHhWamRYWm0xeVEzZGpaa3B0ZUVWblpFOWtTa2R4Y0ZKcldXZzRja1l5VFdWTlUycFJhVXc1UWtkMk9HdGtkREZGYjNWaVNXazRNV281VlVKbFdWTjNibWhMYURoV1pHbG5USEp2WjFWbGJFUTJTM0J2ZUVsT09FWnBhbUpNVkdGVEwyWlJTWGROUFNJc0ltMWhZeUk2SW1NMk5tTmpNRFpoTTJRd04yRTJObUkxWVdRM1l6azBOR1pqWVRNeFkyVmtPVFEyTURZNU5XUXhNVFk0WkRKbVpqSXhOVGszTkRVeFlUazVaamswTm1RaUxDSjBZV2NpT2lJaWZRPT0=', 1731656620);
+('BGp4jiIPfr7Fu4pOSu5duxuUhKF2FLTDcqXxYJ9I', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'ZXlKcGRpSTZJbXgzUVdSeGRHYzRMM1ZpTXpWcWFXY3lWblI2Vm1jOVBTSXNJblpoYkhWbElqb2lLMk5UT0hrNFJTdFhRbGRqTlVsNVYzZHVVMVV4UTFWMVZGcEVSWGxRU1ZsS1VtZ3lkWHAwT1VFcmNteFZZVUp6TDJKa1UwOVJPV2N6WVdGR1dVZ3JRa2RCZG5wSVJ5OVBjRmhoTVN0aWNuYzVTVmRNYmxOdGJHMTBaVW95WkRjdk1rVktZamNyYjFkMFVpczFhV1ppTm5ZMFMzVXdibEJUUmxCS1JHcFNkMHhrU1hkWlQyRlVhVFJhT1RoSFYwZzFiMGhRWkVKTE0wMVRSVGxTV0Vaa05FOU9MMmx4VDBWUE1HNUhTVlZ5Y21sYWFHdHJWRGQxTlhsRFZGQldOVGM1VGtNNU9YQkhSMWxXT0ZWSVVXVkxOa3BoVUZBeVIyczFSek52WTBKU05HWXJOa0ZqWm1JMk5qaGtVSEp0Y3pGVlRYcEdlRGhKTW1WaGIzbHJiSEpJYkVWWmFXVnJPRmhKT0ZOcmRFSlpZMnBTYlZCUlVFRXJTa05EUjB4eFZYRTVVamx5T1U1cE5FZGFZbFZ5VFhVNWQyc3ZjbkI0VnpGWFJEWk1jVTVtT1c4d1FrZE1hRnBTVFhCeFVWRnlabUptTTFSRVUwcFpZVzVSYzFSNVlYQjZXVUo2ZGxCWFEzZDZaVVU0UFNJc0ltMWhZeUk2SW1aa01ERTNaVE16T0dZeU1UZzNZV05oWWpnM1pqUmlNbVUwTVRSaU5qTmxOVGszTXpNeFlqZzFNalEzWXpKbE5HRTFZekJoTkdVME1EQmxObU15WWpZaUxDSjBZV2NpT2lJaWZRPT0=', 1732150629),
+('uYPHiSE83zg3yvSWZ9zcfmBdxQ06r1YTQx64Dsle', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'ZXlKcGRpSTZJamM0WjJJNFIyZzBkVU5pVEc5amEwVmFVMkZwV1djOVBTSXNJblpoYkhWbElqb2liVEZLU0hJNWVtUmxVVXBrTnpGWFEyaEZXRE5sTjBSemNUa3dVbkl6TUc5WUswWlpOMlJJV0dsWVRGcFhkMnBRVWtoVk9YbDVkMWQwVTAxa05Yb3diak5uU1VKSU4zWkZjbmRCYkVwWWNubGFjV1ZyV0hOU2MybE1SVmhhYTJ3dk1sSklObTA0Y1VrM1FXOHZZa05JYUZWQ2FFMHlOeTlsVjAxU1ZXVnpja1ZzTkROa1FsQXhMMGQxYkd4RWQyWmtTM2M1WjJOU2NVUXhkMFZyUzBwbVdGRmtXbk0zYW1WSU15OHlVbGxRVWt4WlVVcFhVbGxpUzJ3eFUwUjNhell4ZFhGNFZ6bGFhR28zYmpKc1NsZFhOSEo0YjBobGQyWjNkRk12VVZWRUsxTjFOMDlOWnpoclpqQlhlRXRUYnpGbGFXWnFXVkpvWTBwbGNHTTBNWG92ZEVGMlprNXlia1p5Ym5rNVp6TkRVbVVyV2tsQlpGaHBkVTlxTWxwQmRqRm5iMGQ2YjNwMVRUSlpVbE4zZVhsaVRVaE9PRXR6T0dsdVkyTXZabEpMZGxCRlFVUjBiMFpvVTBSQlFVNU1WVlpSWTJkS2JqWmtOM0ZQUTFaVk9HbFBNV1pIUVVGUVZteHllREJqUFNJc0ltMWhZeUk2SWpBMVptWTRPR1k1TXpReU9ETmtORGt4WmpNeE1EYzNabVV5T1dNd1pUSTJZekJpWWpOaU1ERXdNR0ZtTkRFNU1XRXpPREEyWm1WbU9XVTNOVGN6Tm1JaUxDSjBZV2NpT2lJaWZRPT0=', 1732128702);
 
 -- --------------------------------------------------------
 
@@ -1790,7 +1802,6 @@ CREATE TABLE `users` (
   `emergency_contact_name` varchar(255) DEFAULT NULL,
   `position` varchar(255) DEFAULT NULL,
   `schedule` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1802,25 +1813,29 @@ CREATE TABLE `users` (
   `civil_status` varchar(255) DEFAULT NULL,
   `contact_no` varchar(255) DEFAULT NULL,
   `date_birth` date DEFAULT NULL,
-  `employment_type` varchar(255) DEFAULT NULL
+  `employment_type` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `municipality` varchar(255) DEFAULT NULL,
+  `barangay` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `type`, `last_seen`, `profile_picture`, `badge_number`, `date_hired`, `emergency_contact_number`, `emergency_contact_name`, `position`, `schedule`, `address`, `remember_token`, `created_at`, `updated_at`, `id_number`, `first_name`, `middle_name`, `last_name`, `gender`, `civil_status`, `contact_no`, `date_birth`, `employment_type`) VALUES
-(1, 'Manny', 'admin@example.com', '2024-08-21 04:53:47', '$2y$12$VLGs/xKoThb5akKFjk4yauECq1q8/npfodLG9wvc4PjXC7cW/R4jO', 1, '2024-11-15 08:09:26', '/storage/profile_pictures/1731508528_logos.png', '92929', '2023-01-17', '0994824428', 'David Garcia', 'Head', 'Monday to Friday', 'Urdanet City Pangasinan', 'Tu7qnRmjvG3WubRTc126b6saTenETXJSS4j9wrLqRI95QosMTiByZLlgyPR1', '2024-08-21 04:53:48', '2024-11-15 08:09:26', 'SS00111', 'Manny', 'D', 'Calicass', 'male', 'Divorced', '09845985981', '2000-06-13', 'Part-Time'),
-(2, 'Lea', 'user@example.com', '2024-08-21 04:53:48', '$2y$12$7.AJhY0XCnjNs/XqCY6qXOJx/QtVy3eL/u.vpAiVNp35PyzLw00LC', 0, '2024-11-15 07:43:39', '/storage/profile_pictures/1731507245_lhu.jpg', '123455', '2024-08-22', '09874382738', 'David Garcias', 'Guards', 'M-W-F', 'Asingan Pangasinan', 'NYIwNzP4ALQpp1EUGXiDVyFEXW55h7chWer9BFCT77fzCaQOzBmpy8C01uRm', '2024-08-21 04:53:48', '2024-11-15 07:43:39', 'SS1234', 'Lea Mae', NULL, 'Cruz', 'female', 'Married', '09569473576', '2002-01-29', 'Full-Time'),
-(3, 'Angelo', 'gabertanjelo@gmail.com', NULL, '$2y$12$7tY3eyGZIfLRW0g/79bqiuCTtLl7/UcKgrOU6HBjN2nNxrVk2D1vW', 0, NULL, NULL, '7887', '2018-09-09', '09876678982', 'Lea Vie Gabertan', 'Security Staff', 'Monday to Friday', 'Villasis Pangasinan', NULL, '2024-08-22 10:53:56', '2024-11-15 01:56:55', 'SS0084', 'Angelo Darren', NULL, 'Gabertan', 'male', 'Single', '09876534567', '2000-11-15', 'Full-Time'),
-(4, 'Raymark', 'fizzmina07@gmail.com', NULL, '$2y$12$dvy307WoufiE9ZtLrFEVlOSQEZBq8/t9pfGLAVsr8DcryYRughVpi', 0, '2024-08-22 11:27:04', NULL, 'SS0083', '2015-04-23', '0987645678', 'Nega Tepace', 'Guard', 'Monday to Saturday', 'Umingan Pangasinan', NULL, '2024-08-22 11:08:50', '2024-11-15 01:54:00', 'SS082', 'Raymark', 'G', 'Mina', 'male', 'Married', '09876543217', '1975-11-15', 'Part-Time'),
-(5, 'David', 'gabriellodavid47@gmail.com', NULL, '$2y$12$vAr2x8JW5eykmxNXOgYOMO4IYaVKsUTC67tXBtnLeV21aebRJ5biu', 0, '2024-10-05 07:18:21', NULL, '7722', '2020-03-17', '09878998789', 'Angelina Jolie', 'Guard', 'Monday to Friday', 'Moncada Tarlac', 'Jb0tr3WcHqNQLBru4X5QkStU8PQ24hqoKEx1VgugRq9xbeSeRI3Iuzd84dwc', '2024-09-04 03:24:53', '2024-11-15 01:59:05', 'SS0085', 'David Earl Gabriel', 'D', 'Garcia', 'male', 'Single', '09823456747', '2001-11-15', 'Part-Time'),
-(6, 'Nicky James Buemio', 'nicky123@gmail.com', NULL, '$2y$12$TZzj8CPiWrWNh.VdRFW0QedyNwI7MSJKoccFnOUJj45I.Vk.O/6vW', 0, '2024-09-13 07:18:43', NULL, '4567', '2016-09-23', '09876543223', 'Micaella Bwakag', 'Guard', 'MONDAY TO SATURDAY', 'Urdanet City Pangasinan', NULL, '2024-09-11 15:11:18', '2024-11-15 01:50:53', 'SS0081', 'Nicky James', NULL, 'Buemio', 'male', 'Married', '09876543216', '2001-11-15', 'Full-Time'),
-(7, 'Shiela Mae', 'shielagonzaga@ucu.edu.ph', NULL, '$2y$12$8I1JpXyzwfheqkMJbLRzv.S4NwYdeJgpsTCNiKaZJgpjMIN7aOMpa', 0, '2024-10-11 10:28:58', NULL, '0985', '2019-06-07', '09876543214', 'Elmer Curry', 'Security Staff', 'Monday to Friday', 'Santa Barbara Pangasinan', NULL, '2024-10-11 10:05:16', '2024-11-15 01:47:22', 'SS006', 'Sheila Mae', NULL, 'Gonzaga', 'female', 'Single', '0954584583', '1998-01-16', 'Part-Time'),
-(8, 'Ryan', 'cielosion75@gmail.com', NULL, '$2y$12$c9.lODP63hK4at7/tBmSdO5IbBpr/NQ6jcFoBvFjnfmFc3KOb6DsO', 0, NULL, NULL, '0986', '2020-12-27', '09876543213', 'Shiela Cielo', 'Guard', 'MONDAY TO SATURDAY', 'Urdanet City Pangasinan', NULL, '2024-10-14 11:24:30', '2024-11-15 01:45:24', 'SS007', 'Ryan', NULL, 'Cielo', 'male', 'Married', '098776651323', '2012-01-10', 'Part-Time'),
-(9, 'jerimich', 'hm123@gmail.com', NULL, '$2y$12$0U4saUFq0FB5tr1jOfNNBe/Ro5AsYW9rdh/OrxN8DS3Z9bSJtE4By', 0, NULL, NULL, '0988', '2018-03-15', '09876543212', 'Puti Datu', 'Head', 'MONDAY TO SATURDAY', 'Urdanet City Pangasinan', NULL, '2024-10-18 13:00:50', '2024-11-15 01:43:26', 'SS008', 'Jerimich', 'D', 'Datu', 'male', 'Married', '09984927492', '2007-02-24', 'Full-Time'),
-(10, 'khen', 'harden123@gmail.com', NULL, '$2y$12$HqyzjcCER6aac2fZN0h0R.GIJqe6.tmvcTg8VMojNIiOnGgVa8PUO', 0, '2024-11-12 17:14:22', '/storage/profile_pictures/1731428321_iphone11.jpeg', '0987', '2019-03-12', '09876543211', 'Nelda James', 'Guard', 'M-W-F', 'Urdanet City Pangasinan', NULL, '2024-10-31 00:55:01', '2024-11-15 01:40:48', 'SS0010', 'Harden', NULL, 'James', 'male', 'Divorced', '09569473576', '1997-05-13', 'Part-Time'),
-(16, 'austingelo', 'nbaugust10@gmail.com', NULL, '$2y$12$t0wiBIOgrZd4ZWHx3QoTzOxcNLdsVTLS8HpqczGvdN5VY9fMhPXU2', 0, '2024-11-15 02:45:02', NULL, '0810', '2020-10-08', '09989898776', 'Angelo Butaro', 'Head', 'Monday to Saturday', 'Urdaneta City Pangasinan', NULL, '2024-11-15 02:26:03', '2024-11-15 02:45:02', 'SS0810', 'Austin Gelo', NULL, 'Romantico', 'male', 'Widowed', '09887766554', '2001-10-08', 'Full-Time');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `type`, `last_seen`, `profile_picture`, `badge_number`, `date_hired`, `emergency_contact_number`, `emergency_contact_name`, `position`, `schedule`, `remember_token`, `created_at`, `updated_at`, `id_number`, `first_name`, `middle_name`, `last_name`, `gender`, `civil_status`, `contact_no`, `date_birth`, `employment_type`, `province`, `municipality`, `barangay`, `street`) VALUES
+(1, 'Manny', 'admin@example.com', '2024-08-21 04:53:47', '$2y$12$VLGs/xKoThb5akKFjk4yauECq1q8/npfodLG9wvc4PjXC7cW/R4jO', 1, '2024-11-21 00:57:05', '/storage/profile_pictures/1732112997_dio.jpeg', '92929', '2023-01-17', '0994824428', 'David Garcia', 'Head', 'Monday to Friday', 'Tu7qnRmjvG3WubRTc126b6saTenETXJSS4j9wrLqRI95QosMTiByZLlgyPR1', '2024-08-21 04:53:48', '2024-11-21 00:57:05', 'SS00111', 'Ralphy', 'D', 'Calicass', 'male', 'Divorced', '09845985981', '2000-06-13', 'Part-Time', 'Pangasinan', 'City of Urdaneta', 'San Vicente', 'Sampagiuta/H120'),
+(2, 'Lea', 'user@example.com', '2024-08-21 04:53:48', '$2y$12$7.AJhY0XCnjNs/XqCY6qXOJx/QtVy3eL/u.vpAiVNp35PyzLw00LC', 0, '2024-11-20 18:36:30', '/storage/profile_pictures/1732108469_face-scan.png', '123455', '2024-08-22', '09874382738', 'David Garcias', 'Security l', 'M-W-F', 'IYaWeRzRMooI9du7nasH9He4Cl2caOlSwDc3LaMGNT2NKGb0u87FFZQy6gtH', '2024-08-21 04:53:48', '2024-11-20 18:36:30', 'SS1234', 'Lea Mae', NULL, 'Cruz', 'male', 'Married', '09569473576', '2002-01-29', 'Full-Time', NULL, NULL, NULL, NULL),
+(3, 'Angelo', 'gabertanjelo@gmail.com', NULL, '$2y$12$7tY3eyGZIfLRW0g/79bqiuCTtLl7/UcKgrOU6HBjN2nNxrVk2D1vW', 0, NULL, NULL, '7887', '2018-09-09', '09876678982', 'Lea Vie Gabertan', 'Security Staff', 'Monday to Friday', NULL, '2024-08-22 10:53:56', '2024-11-15 01:56:55', 'SS0084', 'Angelo Darren', NULL, 'Gabertan', 'male', 'Single', '09876534567', '2000-11-15', 'Full-Time', NULL, NULL, NULL, NULL),
+(4, 'Raymark', 'fizzmina07@gmail.com', NULL, '$2y$12$dvy307WoufiE9ZtLrFEVlOSQEZBq8/t9pfGLAVsr8DcryYRughVpi', 0, '2024-08-22 11:27:04', NULL, 'SS0083', '2015-04-23', '0987645678', 'Nega Tepace', 'Guard', 'Monday to Saturday', NULL, '2024-08-22 11:08:50', '2024-11-15 01:54:00', 'SS082', 'Raymark', 'G', 'Mina', 'male', 'Married', '09876543217', '1975-11-15', 'Part-Time', NULL, NULL, NULL, NULL),
+(5, 'David', 'gabriellodavid47@gmail.com', NULL, '$2y$12$vAr2x8JW5eykmxNXOgYOMO4IYaVKsUTC67tXBtnLeV21aebRJ5biu', 0, '2024-10-05 07:18:21', NULL, '7722', '2020-03-17', '09878998789', 'Angelina Jolie', 'Guard', 'Monday to Friday', 'Jb0tr3WcHqNQLBru4X5QkStU8PQ24hqoKEx1VgugRq9xbeSeRI3Iuzd84dwc', '2024-09-04 03:24:53', '2024-11-15 01:59:05', 'SS0085', 'David Earl Gabriel', 'D', 'Garcia', 'male', 'Single', '09823456747', '2001-11-15', 'Part-Time', NULL, NULL, NULL, NULL),
+(6, 'Nicky James Buemio', 'nicky123@gmail.com', NULL, '$2y$12$TZzj8CPiWrWNh.VdRFW0QedyNwI7MSJKoccFnOUJj45I.Vk.O/6vW', 0, '2024-09-13 07:18:43', NULL, '4567', '2016-09-23', '09876543223', 'Micaella Bwakag', 'Guard', 'MONDAY TO SATURDAY', NULL, '2024-09-11 15:11:18', '2024-11-15 01:50:53', 'SS0081', 'Nicky James', NULL, 'Buemio', 'male', 'Married', '09876543216', '2001-11-15', 'Full-Time', NULL, NULL, NULL, NULL),
+(7, 'Shiela Mae', 'shielagonzaga@ucu.edu.ph', NULL, '$2y$12$8I1JpXyzwfheqkMJbLRzv.S4NwYdeJgpsTCNiKaZJgpjMIN7aOMpa', 0, '2024-10-11 10:28:58', NULL, '0985', '2019-06-07', '09876543214', 'Elmer Curry', 'Security Staff', 'Monday to Friday', NULL, '2024-10-11 10:05:16', '2024-11-15 01:47:22', 'SS006', 'Sheila Mae', NULL, 'Gonzaga', 'female', 'Single', '0954584583', '1998-01-16', 'Part-Time', NULL, NULL, NULL, NULL),
+(8, 'Ryan', 'cielosion75@gmail.com', NULL, '$2y$12$c9.lODP63hK4at7/tBmSdO5IbBpr/NQ6jcFoBvFjnfmFc3KOb6DsO', 0, NULL, NULL, '0986', '2020-12-27', '09876543213', 'Shiela Cielo', 'Guard', 'MONDAY TO SATURDAY', NULL, '2024-10-14 11:24:30', '2024-11-15 01:45:24', 'SS007', 'Ryan', NULL, 'Cielo', 'male', 'Married', '098776651323', '2012-01-10', 'Part-Time', NULL, NULL, NULL, NULL),
+(9, 'jerimich', 'hm123@gmail.com', NULL, '$2y$12$0U4saUFq0FB5tr1jOfNNBe/Ro5AsYW9rdh/OrxN8DS3Z9bSJtE4By', 0, NULL, NULL, '0988', '2018-03-15', '09876543212', 'Puti Datu', 'Head', 'MONDAY TO SATURDAY', NULL, '2024-10-18 13:00:50', '2024-11-15 01:43:26', 'SS008', 'Jerimich', 'D', 'Datu', 'male', 'Married', '09984927492', '2007-02-24', 'Full-Time', NULL, NULL, NULL, NULL),
+(10, 'khen', 'harden123@gmail.com', NULL, '$2y$12$HqyzjcCER6aac2fZN0h0R.GIJqe6.tmvcTg8VMojNIiOnGgVa8PUO', 0, '2024-11-12 17:14:22', '/storage/profile_pictures/1731428321_iphone11.jpeg', '0987', '2019-03-12', '09876543211', 'Nelda James', 'Guard', 'M-W-F', NULL, '2024-10-31 00:55:01', '2024-11-15 01:40:48', 'SS0010', 'Harden', NULL, 'James', 'male', 'Divorced', '09569473576', '1997-05-13', 'Part-Time', NULL, NULL, NULL, NULL),
+(16, 'austingelo', 'nbaugust10@gmail.com', NULL, '$2y$12$t0wiBIOgrZd4ZWHx3QoTzOxcNLdsVTLS8HpqczGvdN5VY9fMhPXU2', 0, '2024-11-15 02:45:02', NULL, '0810', '2020-10-08', '09989898776', 'Angelo Butaro', 'Head', 'Monday to Saturday', NULL, '2024-11-15 02:26:03', '2024-11-15 02:45:02', 'SS0810', 'Austin Gelo', NULL, 'Romantico', 'male', 'Widowed', '09887766554', '2001-10-08', 'Full-Time', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1855,7 +1870,8 @@ INSERT INTO `violations` (`id`, `user_id`, `student_no`, `first_name`, `middle_i
 (77, 1, '20215674', 'Raymark', 'B', 'Mina', 'BSIT', 'Earings', '2024-09-19', NULL, NULL, NULL, 1, '2024-09-19 08:01:20', '2024-10-11 07:53:27'),
 (78, 1, '20238976', 'Nathaniel', 'O', 'Grande', 'BSA', 'No Uniform', '2024-09-19', NULL, NULL, NULL, 1, '2024-09-19 08:03:23', '2024-10-11 07:52:49'),
 (96, 1, '20230932', 'Alex Ian', 'O', 'Ubaldo', 'BSCE', 'Earings', '2024-10-18', NULL, NULL, NULL, 1, '2024-10-17 04:11:24', '2024-10-17 04:11:24'),
-(97, 1, '20230932', 'Alex Ian', 'O', 'Ubaldo', 'BSCE', 'Tattere Pants', '2024-10-19', NULL, NULL, NULL, 2, '2024-10-17 04:12:19', '2024-11-07 16:17:18');
+(97, 1, '20230932', 'Alex Ian', 'O', 'Ubaldo', 'BSCE', 'Tattere Pants', '2024-10-19', NULL, NULL, NULL, 2, '2024-10-17 04:12:19', '2024-11-07 16:17:18'),
+(107, 2, '20212393', 'Ralphy', 'D', 'Prado', 'BSIT', 'Slipper/Sandals', '2024-11-20', NULL, NULL, NULL, 1, '2024-11-20 15:44:05', '2024-11-20 15:44:05');
 
 -- --------------------------------------------------------
 
@@ -2065,7 +2081,7 @@ ALTER TABLE `visitors`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1587;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1605;
 
 --
 -- AUTO_INCREMENT for table `all_employees`
@@ -2107,7 +2123,7 @@ ALTER TABLE `lost_found`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `parkings`
@@ -2137,7 +2153,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `violations`
 --
 ALTER TABLE `violations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT for table `visitors`

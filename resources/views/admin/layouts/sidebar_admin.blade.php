@@ -145,12 +145,12 @@
                         <span>Violation</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                {{-- <li class="sidebar-item">
                     <a href="{{route('admin.register')}}" class="sidebar-link {{ Route::is('admin.register') ? 'active' : '' }}">
                         <i class="bi bi-lock"></i>
                         <span>Create Account</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="sidebar-item">
                     <a href="{{route('admin.employees.all_employee')}}" class="sidebar-link {{ Route::is('admin.employees.all_employee') ? 'active' : '' }}">
@@ -164,12 +164,12 @@
                         <span>Students</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                {{-- <li class="sidebar-item">
                     <a href="{{ route('admin.activity') }}" class="sidebar-link {{ Route::is('admin.activity') ? 'active' : '' }}">
                         <i class="bi bi-arrow-right-circle"></i>
                         <span>Activity Log</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </aside>
         <div class="main">

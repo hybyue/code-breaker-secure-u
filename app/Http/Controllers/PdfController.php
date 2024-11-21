@@ -26,7 +26,7 @@ class PdfController extends Controller
         $query->where('employee_type', $request->employee_type);
     }
 
-    $passSlips = $query->get();
+    $passSlips = $query->latest()->get();
     $user = Auth::user();
 
     $data = [
@@ -55,7 +55,7 @@ class PdfController extends Controller
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $visitors = $query->get();
+        $visitors = $query->latest()->get();
         $user = Auth::user();
         $data = [
             'title' => 'Reports for Visitors',
@@ -81,7 +81,7 @@ class PdfController extends Controller
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $lost_found = $query->get();
+        $lost_found = $query->latest()->get();
         $user = Auth::user();
         $data = [
             'title' => 'Reports for Lost Found',
@@ -105,7 +105,7 @@ class PdfController extends Controller
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $violations = $query->get();
+        $violations = $query->latest()->get();
         $user = Auth::user();
         $data = [
             'title' => 'Reports for Violation',
@@ -143,7 +143,7 @@ class PdfController extends Controller
             }
         }
 
-        $passSlips = $query->get();
+        $passSlips = $query->latest()->get();
         $user = Auth::user();
 
         // Prepare data for PDF

@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    font-size: 12px;
+}
+.header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.header-left, .header-right {
+    display: flex;
+    align-items: flex-start;
+}
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+.header-text {
+    display: flex;
+    flex-direction: column;
+}
+.header .university-name {
+    font-weight: bold;
+    font-size: 16px;
+    color: #ca0808;
+    margin-bottom: 2px;
+}
+.tagline {
+    font-size: 10px;
+}
+.header .office-name {
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.date, .recipient {
+    font-size: 12px;
+}
+.date {
+    margin-top: 3.5rem;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+th, td {
+    border: 1px solid black;
+    padding: 5px;
+    font-size: 12px;
+}
+th {
+    color: #ca0808;
+    text-align: center;
+    font-size: 12px;
+}
+.signature-section {
+    margin-top: 20px;
+    width: 100%;
+    position: relative;
+}
+.signature {
+    text-align: left;
+    display: inline-block;
+    width: 30%;
+}
+.signature:first-child {
+    float: left;
+}
+.signature:last-child {
+    float: right;
+}
+.signature .line {
+    margin-top: -14.8px;
+    display: inline-block;
+    border-bottom: 2px solid black;
+    width: 145px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+.guard-text {
+    margin-top: 3rem;
+}
+.text-danger {
+    color: #d11e1e;
+}
+.signature p {
+    margin: 0;
+    font-size: 11px;
+}
+.header-table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+.header-table td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+}
+.header-content {
+    display: table;
+}
+.logo-cell {
+    display: table-cell;
+    vertical-align: top;
+
+    padding-right: 10px;
+}
+.text-cell {
+    display: table-cell;
+    vertical-align: top;
+}
+.logo {
+    width: 60px;
+    height: 60px;
+}
+.university-name {
+    font-weight: bold;
+    font-size: 16px;
+    color: #ca0808;
+    margin-bottom: 2px;
+}
+.tagline {
+    font-size: 10px;
+}
+.office-name {
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.header-right {
+    display: table;
+    margin-left: auto;
+}
+.header-content.align-right {
+    float: right;
+}

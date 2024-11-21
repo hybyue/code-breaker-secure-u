@@ -100,53 +100,62 @@
             margin: 0;
             font-size: 11px;
         }
-        .header-table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-        .header-table td {
-            border: none;
-            padding: 0;
-            vertical-align: top;
-        }
         .header-content {
-            display: table;
+            display: flex;
+            align-items: center; /* Align items vertically in the center */
         }
-        .logo-cell {
-            display: table-cell;
-            vertical-align: top;
 
-            padding-right: 10px;
-        }
-        .text-cell {
-            display: table-cell;
-            vertical-align: top;
-        }
+        .header-table td {
+        border: none;
+        padding: 0;
+
+    }
+
         .logo {
             width: 60px;
             height: 60px;
+            margin-right: 10px; /* Adds spacing between the logo and text */
         }
+
+        .text-container {
+            display: inline-block;
+        }
+
         .university-name {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 26px;
             color: #ca0808;
-            margin-bottom: 2px;
+            margin: 0;
         }
+
         .tagline {
             font-size: 10px;
+            color: #ca0808;
+            margin: 0;
         }
-        .office-name {
-            font-size: 10px;
+
+        .security-container {
+            text-align: center;
+        }
+
+        .security-name {
+            font-size: 12px;
             font-weight: bold;
+            margin: 0;
             margin-top: 5px;
         }
-        .header-right {
-            display: table;
-            margin-left: auto;
+
+        .header-table {
+            width: 100%;
+            margin-bottom: 20px;
         }
-        .header-content.align-right {
-            float: right;
+
+        .blue-line {
+            width: 100%;
+            height: 2px;
+            background-color: blue;
+            margin: 0;
+
         }
 
     </style>
@@ -154,29 +163,28 @@
 <body>
     <table class="header-table">
         <tr>
-            <td width="50%">
+            <td>
                 <div class="header-content">
-                    <div class="logo-cell">
-                        <img src="{{ public_path('images/ucu-logo.png') }}" alt="UCU Logo" class="logo">
-                    </div>
-                    <div class="text-cell">
+                    <!-- Left Logo with Urdaneta City University -->
+                    <img src="{{ public_path('images/ucu-logo.png') }}" alt="UCU Logo" class="logo">
+                    <div class="text-container">
                         <div class="university-name">Urdaneta City University</div>
                         <div class="tagline">Owned and operated by the City Government of Urdaneta</div>
                     </div>
                 </div>
             </td>
-            <td width="50%" style="text-align: right;">
-                <div class="header-content align-right">
-                    <div class="logo-cell">
-                        <img src="{{ public_path('images/ucu-logo.png') }}" alt="Security Logo" class="logo">
-                    </div>
-                    <div class="text-cell">
-                        <div class="office-name">Security Management Office</div>
-                    </div>
+            <td>
+                <div class="security-container">
+                    <!-- Security Logo -->
+                    <img src="{{ public_path('images/ucu-logo.png') }}" alt="Security Logo" class="logo">
+                    <div class="security-name">Security Management Office</div>
                 </div>
             </td>
         </tr>
     </table>
+
+    <div class="blue-line"></div>
+
 
     <div class="date bold-text">{{ $date }}</div>
     <div class="recipient">

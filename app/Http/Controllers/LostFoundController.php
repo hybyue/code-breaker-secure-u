@@ -87,7 +87,7 @@ class LostFoundController extends Controller
 
         $validatedData = Validator::make($request->all(),[
             'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'object_type' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
+            'object_type' => 'required|string|max:255',
             'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
             'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
             'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
@@ -100,7 +100,6 @@ class LostFoundController extends Controller
             'object_img.mimes' => 'Allowed image types: jpeg, png, jpg, gif, svg.',
             'object_img.max' => 'Image size cannot exceed 2MB.',
             'object_type.required' => 'Object type is required.',
-            'object_type.regex' => 'Object type should contain only letters and spaces.',
             'object_type.max' => 'Object type cannot exceed 255 characters.',
             'first_name.required' => 'First name is required.',
             'first_name.regex' => 'First name should contain only letters and spaces.',
@@ -178,18 +177,27 @@ class LostFoundController extends Controller
     }
 
     public function updateClaimed(Request $request, $id)
-{
-    $lostItem = Lost::find($id);
+    {
+        $lostItem = Lost::find($id);
 
-    if ($lostItem) {
-        $lostItem->is_claimed = $request->is_claimed;
-        $lostItem->save();
+        if ($lostItem) {
+            // Check if an image is uploaded
+            if ($request->hasFile('proof_image')) {
+                $fileName = time() . '_' . $request->file('proof_image')->getClientOriginalName();
+                $path = $request->file('proof_image')->storeAs('proof_claimed', $fileName, 'public');
+                $lostItem['proof_image'] = '/storage/' . $path;
+            }
 
-        return response()->json(['success' => true]);
-    } else {
-        return response()->json(['success' => false], 404);
+            // Update the claim status
+            $lostItem->is_claimed = 1;
+            $lostItem->save();
+
+            return response()->json(['success' => true, 'message' => 'Item marked as claimed']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Item not found'], 404);
     }
-}
+
 
 public function updateTransfer(Request $request, $id)
 {

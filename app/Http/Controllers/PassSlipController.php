@@ -571,82 +571,83 @@ private function generatePassNumber()
 
 
 
+    public function getVisitorStats($timeframe)
+    {
+        switch ($timeframe) {
+        case 'weekly':
+                $data = Visitor::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
+                    ->where('created_at', '>=', now()->subDays(7))
+                    ->groupBy('date')
+                    ->get();
+                break;
+            case 'monthly':
+                $data = Visitor::select(DB::raw('MONTH(created_at) as month'), DB::raw('count(*) as total'))
+                    ->whereYear('created_at', date('Y'))
+                    ->groupBy('month')
+                    ->get();
+                break;
+            case 'yearly':
+                $data = Visitor::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
+                    ->groupBy('year')
+                    ->get();
+                break;
+            default:
+                return response()->json(['error' => 'Invalid timeframe'], 400);
+        }
+
+        return response()->json($data);
+    }
+
     public function getVisitorData(Request $request)
     {
         $timePeriod = $request->query('timePeriod');
         $labels = [];
-
         $visitor_count = [];
         $pass_slip_count = [];
         $lost_found_count = [];
         $violation_count = [];
 
+        $currentYear = date('Y');
+
         switch ($timePeriod) {
-            case 'monthly':
-                $visitors = Visitor::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
+            case 'weekly':
+                $startDate = now()->startOfWeek();
+                $endDate = now()->endOfWeek();
 
-                $labels = $visitors->pluck('month')->toArray();
-                $visitor_count = $visitors->pluck('count')->toArray();
-
-                $pass_slips = PassSlip::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
-
-                $labels = $pass_slips->pluck('month')->toArray();
-                $pass_slip_count = $pass_slips->pluck('count')->toArray();
-
-                $lost_found = Lost::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
-
-                $labels = $lost_found->pluck('month')->toArray();
-                $lost_found_count = $lost_found->pluck('count')->toArray();
-
-                $violations = Violation::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
-
-                $labels = $violations->pluck('month')->toArray();
-                $violation_count = $violations->pluck('count')->toArray();
+                for ($date = $startDate; $date <= $endDate; $date->addDay()) {
+                    if ($date->dayOfWeek >= 1 && $date->dayOfWeek <= 5) {
+                        $labels[] = $date->format('D');
+                        $visitor_count[] = Visitor::whereDate('created_at', $date)->count();
+                        $pass_slip_count[] = PassSlip::whereDate('created_at', $date)->count();
+                        $lost_found_count[] = Lost::whereDate('created_at', $date)->count();
+                        $violation_count[] = Violation::whereDate('created_at', $date)->count();
+                    }
+                }
                 break;
+
+            case 'monthly':
+                for ($month = 1; $month <= 12; $month++) {
+                    $labels[] = date('M', mktime(0, 0, 0, $month, 1));
+                    $visitor_count[] = Visitor::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                    $pass_slip_count[] = PassSlip::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                    $lost_found_count[] = Lost::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                    $violation_count[] = Violation::whereYear('created_at', $currentYear)
+                        ->whereMonth('created_at', $month)->count();
+                }
+                break;
+
             case 'yearly':
-                $visitors = Visitor::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $visitors->pluck('year')->toArray();
-                $visitor_count = $visitors->pluck('total')->toArray();
-
-                $pass_slips = PassSlip::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $pass_slips->pluck('year')->toArray();
-                $pass_slip_count = $pass_slips->pluck('total')->toArray();
-
-                $lost_found = Lost::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $lost_found->pluck('year')->toArray();
-                $lost_found_count = $lost_found->pluck('total')->toArray();
-
-                $violations = Violation::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as total'))
-                    ->groupBy('year')
-                    ->orderBy('year')
-                    ->get();
-
-                $labels = $violations->pluck('year')->toArray();
-                $violation_count = $violations->pluck('total')->toArray();
+                $startYear = Visitor::min(DB::raw('YEAR(created_at)')) ?: $currentYear;
+                for ($year = $startYear; $year <= $currentYear; $year++) {
+                    $labels[] = $year;
+                    $visitor_count[] = Visitor::whereYear('created_at', $year)->count();
+                    $pass_slip_count[] = PassSlip::whereYear('created_at', $year)->count();
+                    $lost_found_count[] = Lost::whereYear('created_at', $year)->count();
+                    $violation_count[] = Violation::whereYear('created_at', $year)->count();
+                }
                 break;
         }
 
@@ -656,24 +657,23 @@ private function generatePassNumber()
             'passSlip' => $pass_slip_count,
             'lost' => $lost_found_count,
             'violation' => $violation_count
-            ]);
+        ]);
     }
 
     public function getVisitorTotalData()
-{
-    $visitorCount = Visitor::count();
-    $passSlipCount = PassSlip::count();
-    $lostFoundCount = Lost::count();
-    $violationCount = Violation::count();
+    {
+        $visitorCount = Visitor::count();
+        $passSlipCount = PassSlip::count();
+        $lostFoundCount = Lost::count();
+        $violationCount = Violation::count();
 
-    return response()->json([
-        'visitor' => $visitorCount,
-        'passSlip' => $passSlipCount,
-        'lost' => $lostFoundCount,
-        'violation' => $violationCount
-    ]);
-}
-
+        return response()->json([
+            'visitor' => $visitorCount,
+            'passSlip' => $passSlipCount,
+            'lost' => $lostFoundCount,
+            'violation' => $violationCount
+        ]);
+    }
 public function calculateLateMinutes($timeOut, $timeIn)
 {
     // Convert strings to Carbon instances if they aren't already

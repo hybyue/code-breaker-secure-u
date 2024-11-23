@@ -82,7 +82,23 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
+                    zoom: {
+                        pan: {
+                            enabled: true,
+                            mode: 'xy'
+                        },
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'xy',
+                        }
+                    },
                     legend: {
                         labels: {
                             font: {
@@ -168,6 +184,7 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         labels: {
@@ -188,6 +205,12 @@ const ctx = document.getElementById('visitorChart').getContext('2d');
                 }
             }
         });
+    }
+
+    function resetZoom() {
+        if (visitorChart) {
+            visitorChart.resetZoom();
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {

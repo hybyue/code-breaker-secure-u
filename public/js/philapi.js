@@ -9,15 +9,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('https://psgc.gitlab.io/api/provinces/');
             const provinces = await response.json();
 
-            provinceSelect.innerHTML = '<option value="" selected disabled>Select Province</option>';
+            // Store the current selected province name
+            const currentProvince = provinceSelect.querySelector('option[selected]')?.textContent;
+
+            provinceSelect.innerHTML = '<option value="" disabled>Select Province</option>';
 
             // Sort provinces alphabetically
             provinces.sort((a, b) => a.name.localeCompare(b.name));
 
             provinces.forEach(province => {
                 const option = document.createElement('option');
-                option.value = province.code;
+                option.value = province.name;
                 option.textContent = province.name;
+                if (province.name === currentProvince) {
+                    option.selected = true;
+                    // Store the code as a data attribute for API calls
+                    option.dataset.code = province.code;
+                    // Trigger change event to load municipalities
+                    handleProvinceChange(province.code,
+                        provinceSelect.closest('.modal').querySelector('select[name="city"]'),
+                        provinceSelect.closest('.modal').querySelector('select[name="barangay"]')
+                    );
+                }
                 provinceSelect.appendChild(option);
             });
             provinceSelect.disabled = false;
@@ -27,7 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modal = this.closest('.modal');
                 const citySelect = modal.querySelector('select[name="city"]');
                 const barangaySelect = modal.querySelector('select[name="barangay"]');
-                handleProvinceChange(this.value, citySelect, barangaySelect);
+                // Find the selected option and get its code from the data attribute
+                const selectedOption = this.options[this.selectedIndex];
+                const provinceCode = provinces.find(p => p.name === selectedOption.value)?.code;
+                handleProvinceChange(provinceCode, citySelect, barangaySelect);
             });
         } catch (error) {
             console.error('Error loading provinces:', error);
@@ -35,18 +51,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function handleProvinceChange(provinceCode, citySelect, barangaySelect) {
-        citySelect.innerHTML = '<option value="" selected disabled>Select Municipality</option>';
-        barangaySelect.innerHTML = '<option value="" selected disabled>Select Barangay</option>';
-
-        if (!provinceCode) {
-            citySelect.disabled = true;
-            barangaySelect.disabled = true;
-            return;
-        }
-
         try {
             citySelect.disabled = false;
             barangaySelect.disabled = true;
+
+            const currentCity = citySelect.querySelector('option[selected]')?.textContent;
+
+            citySelect.innerHTML = '<option value="" disabled>Select Municipality</option>';
 
             const [citiesResponse, muniResponse] = await Promise.all([
                 fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities/`),
@@ -62,40 +73,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
             allLocations.forEach(location => {
                 const option = document.createElement('option');
-                option.value = location.code;
+                option.value = location.name;
                 option.textContent = location.name;
+                option.dataset.code = location.code;
+                if (location.name === currentCity) {
+                    option.selected = true;
+                    handleMunicipalityChange(location.code, barangaySelect);
+                }
                 citySelect.appendChild(option);
             });
 
             // Add change event listener to city select
             citySelect.addEventListener('change', function() {
-                handleCityChange(this.value, barangaySelect);
+                const selectedOption = this.options[this.selectedIndex];
+                const locationCode = allLocations.find(l => l.name === selectedOption.value)?.code;
+                handleMunicipalityChange(locationCode, barangaySelect);
             });
         } catch (error) {
             console.error('Error loading cities/municipalities:', error);
         }
     }
 
-    async function handleCityChange(cityCode, barangaySelect) {
-        barangaySelect.innerHTML = '<option value="" selected disabled>Select Barangay</option>';
-
-        if (!cityCode) {
-            barangaySelect.disabled = true;
-            return;
-        }
-
+    async function handleMunicipalityChange(municipalityCode, barangaySelect) {
         try {
             barangaySelect.disabled = false;
 
-            const response = await fetch(`https://psgc.gitlab.io/api/cities-municipalities/${cityCode}/barangays/`);
+            const currentBarangay = barangaySelect.querySelector('option[selected]')?.textContent;
+
+            barangaySelect.innerHTML = '<option value="" disabled>Select Barangay</option>';
+
+            const response = await fetch(`https://psgc.gitlab.io/api/cities-municipalities/${municipalityCode}/barangays`);
             const barangays = await response.json();
 
             barangays.sort((a, b) => a.name.localeCompare(b.name));
 
             barangays.forEach(barangay => {
                 const option = document.createElement('option');
-                option.value = barangay.code;
+                option.value = barangay.name;
                 option.textContent = barangay.name;
+                if (barangay.name === currentBarangay) {
+                    option.selected = true;
+                }
                 barangaySelect.appendChild(option);
             });
         } catch (error) {
@@ -107,15 +125,36 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('#addProfileForm, #updateProfileForm').forEach(form => {
         form.addEventListener('submit', function(e) {
             const modal = this.closest('.modal');
-            const province = modal.querySelector('select[name="province"]').options[modal.querySelector('select[name="province"]').selectedIndex].text;
-            const city = modal.querySelector('select[name="city"]').options[modal.querySelector('select[name="city"]').selectedIndex].text;
-            const barangay = modal.querySelector('select[name="barangay"]').options[modal.querySelector('select[name="barangay"]').selectedIndex].text;
 
-            const addressInput = document.createElement('input');
-            addressInput.type = 'hidden';
-            addressInput.name = 'address';
-            addressInput.value = `${barangay}, ${city}, ${province}`;
-            this.appendChild(addressInput);
+            // Get the selected text values from each dropdown
+            const provinceSelect = modal.querySelector('select[name="province"]');
+            const municipalitySelect = modal.querySelector('select[name="city"]');
+            const barangaySelect = modal.querySelector('select[name="barangay"]');
+
+            // Create hidden inputs for each address component
+            if (provinceSelect && provinceSelect.selectedIndex > 0) {
+                const provinceInput = document.createElement('input');
+                provinceInput.type = 'hidden';
+                provinceInput.name = 'province';
+                provinceInput.value = provinceSelect.options[provinceSelect.selectedIndex].text;
+                this.appendChild(provinceInput);
+            }
+
+            if (municipalitySelect && municipalitySelect.selectedIndex > 0) {
+                const municipalityInput = document.createElement('input');
+                municipalityInput.type = 'hidden';
+                municipalityInput.name = 'municipality';
+                municipalityInput.value = municipalitySelect.options[municipalitySelect.selectedIndex].text;
+                this.appendChild(municipalityInput);
+            }
+
+            if (barangaySelect && barangaySelect.selectedIndex > 0) {
+                const barangayInput = document.createElement('input');
+                barangayInput.type = 'hidden';
+                barangayInput.name = 'barangay';
+                barangayInput.value = barangaySelect.value;
+                this.appendChild(barangayInput);
+            }
         });
     });
 });

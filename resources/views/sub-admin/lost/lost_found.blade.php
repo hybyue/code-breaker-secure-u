@@ -70,8 +70,8 @@
                         @elseif($item->is_transferred == 1)
                         <p class="text-danger">Transferred</p>
                         @else
-                        <button class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="custom-tooltip" title="Mark as Claimed" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
-                        <a href="javascript:void(0)" class="btn btn-sm text-white bg-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="custom-tooltip" title="Transfer to CSLD" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
+                        <button class="btn btn-sm btn-warning"  onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                        <a href="javascript:void(0)" class="btn btn-sm text-white bg-dark" title="Transfer to CSLD" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
 
                         @endif
                     </td>
@@ -135,16 +135,14 @@
                               <span class="badge bg-danger">Not Claimed</span>
                           @endif
                       </p>
+                      @if ($item->security_staff)
                       <p><strong>Assist by:</strong>
-                          @if ($item->user_id)
                               @php
-                                  $user = App\Models\User::find($item->user_id);
+                                  $user = App\Models\User::find($item->security_staff);
                               @endphp
                               {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
-                          @else
-                              N/A
-                          @endif
                       </p>
+                      @endif
                       <div class="modal-proof-image mb-3">
                         @if($item->proof_image)
                             <p><strong>Proof Claimed: </strong></p>

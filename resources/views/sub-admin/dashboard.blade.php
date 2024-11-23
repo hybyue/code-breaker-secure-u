@@ -81,13 +81,13 @@
         <!-- Pie Chart Column -->
         <div class="col-md-6">
             <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
-            <div class="chart-container position-relative">
-                <div id="pieChartLoader" class="chart-loader d-none">
+            <div class="chart-container-pie position-relative">
+                <div id="pieChartLoader" class="chart-loader d-none mt-4">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
+                <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4 mt-5"></canvas>
             </div>
         </div>
     </div>
@@ -131,11 +131,20 @@
         border-radius: 5px;
     }
     #visitorPieChart, #visitorChart {
-        max-height: 500px !important;
+        height: 100% !important;
+        width: 100% !important;
     }
     .chart-container {
         position: relative;
-        min-height: 300px;
+        height: 400px !important;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .chart-container-pie {
+        position: relative;
+        height: 450px !important;
+        width: 100%;
+        margin-bottom: 10px;
     }
     .chart-loader {
         position: absolute;

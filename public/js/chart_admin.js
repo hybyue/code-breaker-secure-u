@@ -1,117 +1,141 @@
 const ctx = document.getElementById('visitorChart').getContext('2d');
 let visitorChart;
 
+function showLoader(chartType) {
+    const loader = document.getElementById(chartType === 'bar' ? 'barChartLoader' : 'pieChartLoader');
+    loader.classList.remove('d-none');
+}
+
+function hideLoader(chartType) {
+    const loader = document.getElementById(chartType === 'bar' ? 'barChartLoader' : 'pieChartLoader');
+    loader.classList.add('d-none');
+}
+
 function fetchData(timePeriod) {
-    // Update the time label
     const timeLabel = document.getElementById('timeLabel');
-        timeLabel.textContent = `${capitalizeFirstLetter(timePeriod)} Statistics`;
+    timeLabel.textContent = `${capitalizeFirstLetter(timePeriod)} Statistics`;
 
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            button.classList.remove('btn-dark');
-            button.classList.add('btn-secondary');
-        });
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.classList.remove('btn-dark');
+        button.classList.add('btn-secondary');
+    });
 
-        document.getElementById(`${timePeriod}Btn`).classList.remove('btn-secondary');
-        document.getElementById(`${timePeriod}Btn`).classList.add('btn-dark');
+    document.getElementById(`${timePeriod}Btn`).classList.remove('btn-secondary');
+    document.getElementById(`${timePeriod}Btn`).classList.add('btn-dark');
 
-    // Fetch data based on the time period (weekly, monthly, yearly)
+    showLoader('bar');
     fetch(`/admin/visitor-data?timePeriod=${timePeriod}`)
         .then(response => response.json())
         .then(data => {
             updateChart(timePeriod, data.labels, data.visitor, data.passSlip, data.lost, data.violation);
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.error('Error fetching data:', error))
+        .finally(() => hideLoader('bar'));
 }
 
 function updateChart(timePeriod, labels, visitors, pass_slips, lost_found, violations) {
-    // Format labels for months if 'monthly' is selected
-    if (timePeriod === 'monthly') {
-        labels = labels.map(monthNum => {
-            return new Date(0, monthNum - 1).toLocaleString('en-US', { month: 'long' });
-        });
-    }
-
-    // Destroy the previous chart instance if it exists
     if (visitorChart) {
         visitorChart.destroy();
     }
 
-    // Create a new chart instance
     visitorChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [
-            {
-                label: 'Visitor',
-                data: visitors,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2
-            },
-            {
-                label: 'Pass Slips',
-                data: pass_slips,
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2
-            },
-            {
-                label: 'Lost and Found',
-                data: lost_found,
-                backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                borderColor: 'rgba(255, 206, 86, 1)',
-                borderWidth: 2
-            },
-            {
-                label: 'Violations',
-                data: violations,
-                backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 2
-            }
-        ]
+                {
+                    label: 'Visitor',
+                    data: visitors,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Pass Slips',
+                    data: pass_slips,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Lost and Found',
+                    data: lost_found,
+                    backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Violations',
+                    data: violations,
+                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 2
+                }
+            ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const value = tooltipItem.raw;
+                            return `${tooltipItem.dataset.label}: ${value}`;
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    }
                 }
             }
         }
     });
 }
 
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-
-
 const ctxPie = document.getElementById('visitorPieChart').getContext('2d');
 let visitorPieChart;
 
 function fetchTotalData() {
+    showLoader('pie');
     fetch('/admin/visitor-total-data')
         .then(response => response.json())
         .then(data => {
             updatePieChart(data.visitor, data.passSlip, data.lost, data.violation);
         })
-        .catch(error => console.error('Error fetching total data:', error));
+        .catch(error => console.error('Error fetching total data:', error))
+        .finally(() => hideLoader('pie'));
 }
 
 function updatePieChart(visitors, pass_slips, lost_found, violations) {
-    // Calculate the total sum
     const totalSum = visitors + pass_slips + lost_found + violations;
 
-    // Destroy the previous pie chart instance if it exists
     if (visitorPieChart) {
         visitorPieChart.destroy();
     }
 
-    // Create a new pie chart instance
     visitorPieChart = new Chart(ctxPie, {
         type: 'pie',
         data: {
@@ -135,9 +159,14 @@ function updatePieChart(visitors, pass_slips, lost_found, violations) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top'
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -153,6 +182,9 @@ function updatePieChart(visitors, pass_slips, lost_found, violations) {
     });
 }
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     fetchData('monthly');

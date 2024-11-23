@@ -38,37 +38,49 @@ window.addEventListener("load", () => {
     }
 });
 
-// Handle select elements for "Person to Visit & Company" and "ID Type"
-        document.addEventListener('DOMContentLoaded', function () {
-    const personToVisitSelect = document.getElementById('person_to_visit');
-    const idTypeSelect = document.getElementById('id_type');
+// Handle select elements with "Other" option
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle all select elements that need "Other" option functionality
+    function initializeSelectElements() {
+        // Get all select elements by their name attributes
+        const selectNames = ['person_to_visit', 'id_type', 'violation_type', 'course'];
 
-    if (personToVisitSelect) {
-        personToVisitSelect.addEventListener('change', function () {
-            handleOtherOption(this, 'personToVisitOtherInput');
+        selectNames.forEach(name => {
+            document.querySelectorAll(`select[name="${name}"]`).forEach(select => {
+                select.addEventListener('change', function() {
+                    console.log(`Change detected for ${name}:`, this.value);
+                    const parentForm = this.closest('form');
+                    const formId = parentForm ? parentForm.id : 'default';
+                    const inputId = `${name}OtherInput_${formId}`;
+                    handleOtherOption(this, inputId);
+                });
+            });
         });
     }
 
-    if (idTypeSelect) {
-        idTypeSelect.addEventListener('change', function () {
-            handleOtherOption(this, 'idTypeOtherInput');
-        });
-    }
+    // Initial setup
+    initializeSelectElements();
+
+    // Re-initialize when modals are shown (for dynamically loaded content)
+    document.addEventListener('shown.bs.modal', function () {
+        initializeSelectElements();
+    });
 });
 
 function handleOtherOption(selectElement, inputId) {
-    const otherInputId = `${inputId}`;
-    let otherInput = document.getElementById(otherInputId);
+    const parentDiv = selectElement.parentNode;
+    let otherInput = parentDiv.querySelector(`#${inputId}`);
 
     if (selectElement.value === 'Other') {
         if (!otherInput) {
             const inputField = document.createElement('input');
             inputField.type = 'text';
-            inputField.id = otherInputId;
+            inputField.id = inputId;
             inputField.name = selectElement.name;
             inputField.className = 'form-control mt-2';
-            inputField.placeholder = 'Other Please specify';
-            selectElement.parentNode.appendChild(inputField);
+            inputField.placeholder = 'Please specify';
+            inputField.required = true;
+            parentDiv.appendChild(inputField);
         }
     } else {
         if (otherInput) {
@@ -102,7 +114,3 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-$(document).ready(function() {
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-});

@@ -60,7 +60,6 @@ class LostFoundController extends Controller
             'last_name' => $request->last_name,
             'course' => $request->course,
             'location' => $request->location,
-            'security_staff' => Auth::user()->id,
             'description' => $request->description,
             'is_claimed' => 0,
             'is_transferred' => 0,
@@ -189,6 +188,7 @@ class LostFoundController extends Controller
             }
 
             // Update the claim status
+            $lostItem->security_staff = Auth::user()->id;
             $lostItem->is_claimed = 1;
             $lostItem->save();
 
@@ -263,7 +263,6 @@ public function lost_found_admin(Request $request)
             'last_name' => $request->last_name,
             'course' => $request->course,
             'location' => $request->location,
-            'security_staff' => Auth::user()->id,
             'description' => $request->description,
             'is_claimed' => 0,
             'is_transferred' => 0,

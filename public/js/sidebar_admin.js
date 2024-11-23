@@ -82,9 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Initialize Bootstrap Tooltips
-    const tooltipTriggerList = document.querySelectorAll("[data-bs-toggle='tooltip']");
-    [...tooltipTriggerList].forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 });
 
 // Loading Bar Animation

@@ -117,23 +117,38 @@
 </div>
 
 <div class="row p-3">
+    <!-- Bar Chart Column -->
     <div class="col-md-6">
-        <div class="container">
-            <div id="timeLabel" class="h4 font-weight-bold mb-4"><h4>Select Time Period</h4></div>
-                <div class="flex space-x-2 mb-4">
-                    <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2 rounded">Monthly</button>
-                    <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary rounded">Yearly</button>
+        <div id="timeLabel" class="h4 font-weight-bold mb-3">Select Time Period</div>
+        <div class="d-flex mb-3">
+            <button onclick="fetchData('weekly')" id="weeklyBtn" class="btn btn-primary me-2">Weekly</button>
+            <button onclick="fetchData('monthly')" id="monthlyBtn" class="btn btn-primary me-2">Monthly</button>
+            <button onclick="fetchData('yearly')" id="yearlyBtn" class="btn btn-primary">Yearly</button>
+        </div>
+        <div class="chart-container position-relative">
+            <div id="barChartLoader" class="chart-loader d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-                <canvas id="visitorChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
+            </div>
+            <canvas id="visitorChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
         </div>
     </div>
+
+    <!-- Pie Chart Column -->
     <div class="col-md-6">
-        <div class="container">
-            <div id="pieLabel" class="h4 font-weight-bold mb-4"><h4>Pie Chart</h4></div>
-            <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4"></canvas>
+        <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
+        <div class="chart-container-pie position-relative">
+            <div id="pieChartLoader" class="chart-loader d-none mt-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <canvas id="visitorPieChart" class="bg-white shadow-md rounded-lg p-4 mt-5"></canvas>
         </div>
     </div>
 </div>
+
 <script src="{{ asset('js/chart_admin.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('tailwindcharts/js/apexcharts.js') }}"></script>
@@ -146,6 +161,34 @@
     }
     .icon-container i{
         vertical-align: middle;
+    }
+    #visitorPieChart, #visitorChart {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    .chart-container {
+        position: relative;
+        height: 400px !important;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .chart-container-pie {
+        position: relative;
+        height: 450px !important;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .chart-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
     }
 </style>
 

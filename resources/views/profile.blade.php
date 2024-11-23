@@ -96,11 +96,11 @@
                                     @if($user->date_birth)
                                         <p><span class="info-title">Date of Birth:</span> <span class="info-value">{{ \Carbon\Carbon::parse($user->date_birth)->format('F d, Y')}}</span></p>
                                     @endif
+                                    @if($user->street || $user->barangay || $user->municipality || $user->province )
+                                        <p><span class="info-title">Address:</span> <span class="info-value">{{ $user->street }}, {{ $user->barangay }} {{ $user->municipality }}, {{ $user->province }}</span></p>
+                                    @endif
                                 </div>
                                 <div class="col-md-6">
-                                    @if($user->address)
-                                    <p><span class="info-title">Address:</span> <span class="info-value">{{ $user->address }}</span></p>
-                                @endif
                                     @if($user->contact_no)
                                         <p><span class="info-title">Contact No:</span> <span class="info-value">{{ $user->contact_no }}</span></p>
                                     @endif
@@ -248,21 +248,37 @@
                                 <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Address: </label>
+                                <label class="form-label">Address Information:</label>
                                 <div class="row">
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Street Address:</label>
+                                        <input type="text" class="form-control" name="street" value="{{ $user->street }}" placeholder="Street Address" required>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Province:</label>
                                         <select class="form-select" name="province" required>
-                                            <option value="" selected disabled>Select Province</option>
+                                            <option value="" disabled>Select Province</option>
+                                            @if($user->province)
+                                                <option value="{{ $user->province }}" selected>{{ $user->province }}</option>
+                                            @endif
                                         </select>
                                     </div>
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Municipality:</label>
                                         <select class="form-select" name="city" required disabled>
-                                            <option value="" selected disabled>Select Municipality</option>
+                                            <option value="" disabled>Select Municipality/City</option>
+                                            @if($user->municipality)
+                                                <option value="{{ $user->municipality }}" selected>{{ $user->municipality }}</option>
+                                            @endif
                                         </select>
                                     </div>
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Barangay:</label>
                                         <select class="form-select" name="barangay" required disabled>
-                                            <option value="" selected disabled>Select Barangay</option>
+                                            <option value="" disabled>Select Barangay</option>
+                                            @if($user->barangay)
+                                                <option value="{{ $user->barangay }}" selected>{{ $user->barangay }}</option>
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -388,21 +404,37 @@
                                     <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Address</label>
+                                    <label class="form-label">Address Information:</label>
                                     <div class="row">
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Street Address:</label>
+                                            <input type="text" class="form-control" name="street" value="{{ $user->street }}" placeholder="Street Address" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Province:</label>
                                             <select class="form-select" name="province" required>
-                                                <option value="" selected disabled>Select Province</option>
+                                                <option value="" disabled>Select Province</option>
+                                                @if($user->province)
+                                                    <option value="{{ $user->province }}" selected>{{ $user->province }}</option>
+                                                @endif
                                             </select>
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Municipality:</label>
                                             <select class="form-select" name="city" required disabled>
-                                                <option value="" selected disabled>Select Municipality</option>
+                                                <option value="" disabled>Select Municipality/City</option>
+                                                @if($user->municipality)
+                                                    <option value="{{ $user->municipality }}" selected>{{ $user->municipality }}</option>
+                                                @endif
                                             </select>
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Barangay:</label>
                                             <select class="form-select" name="barangay" required disabled>
-                                                <option value="" selected disabled>Select Barangay</option>
+                                                <option value="" disabled>Select Barangay</option>
+                                                @if($user->barangay)
+                                                    <option value="{{ $user->barangay }}" selected>{{ $user->barangay }}</option>
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -571,29 +603,26 @@
     </script>
 
     <script>
-    // Function to preview image
-
 function previewImage(input, imageId, iconId) {
     const file = input.files[0];
     const reader = new FileReader();
 
     reader.onload = function (e) {
-        // Replace the icon with the image preview
         const imageElement = document.getElementById(imageId);
         const iconElement = document.getElementById(iconId);
 
         if (iconElement) {
-            iconElement.style.display = 'none'; // Hide the icon
+            iconElement.style.display = 'none';
         }
 
         if (imageElement) {
-            imageElement.src = e.target.result; // Set the image preview
-            imageElement.style.display = 'block'; // Show the image
+            imageElement.src = e.target.result;
+            imageElement.style.display = 'block';
         }
     };
 
     if (file) {
-        reader.readAsDataURL(file); // Read the image file as a data URL
+        reader.readAsDataURL(file);
     }
 }
 

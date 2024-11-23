@@ -32,7 +32,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'registerSave')->name('register.save');
 
     Route::get('login', 'login')->name('login');
-    route::post('login', 'loginAction')->name('login.action')->middleware('throttle:5,10');
+    route::post('login', 'loginAction')->name('login.action');
 
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
 
@@ -200,6 +200,7 @@ Route::controller(PassSlipController::class)->group(function (){
     route::post('/search-employee', 'searchEmployee')->name('search_employee');
     Route::post('/admin/passS_slip/{id}', 'checkoutAdmin')->name('passSlip.checkout_admin');
     Route::get('/admin/visitor-data', 'getVisitorData');
+    Route::get('/visitor-stats/{timeframe}', 'getVisitorStats');
     Route::get('/admin/visitor-total-data',  'getVisitorTotalData');
     Route::get('/admin/generate_number/',  'generateNextPassNumber')->name('pass_slip.next_number');
     Route::get('/admin/pass-slip/clear-filter', 'clearPassSlipFilterAd')->name('pass_slip.clear-filter-admin');

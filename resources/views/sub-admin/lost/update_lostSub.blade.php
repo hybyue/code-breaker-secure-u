@@ -41,8 +41,16 @@
                             </div>
                             <div class="mb-3">
                                 <label for="lostCourse-{{ $item->id }}" class="form-label">Role:</label>
-                                <input type="text" class="form-control" id="lostCourse-{{ $item->id }}" name="course" value="{{ $item->course }}">
-                            </div>
+                                <select class="form-select" id="course" name="course">
+                                    <option value="{{$item->course }}" selected>{{$item->course}}</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Employee">Employee</option>
+                                    <option value="Janitor">Janitor</option>
+                                    <option value="Visitor">Visitor</option>
+                                    <option value="Head">Head</option>
+                                    <option value="President">President</option>
+                                    <option value="Other">Other</option>
+                                </select>                            </div>
                             <div class="mb-3">
                                 <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
                                 <input type="file" class="form-control" id="lostImage-{{ $item->id }}" name="object_img" onchange="previewImage(event, {{ $item->id }})">

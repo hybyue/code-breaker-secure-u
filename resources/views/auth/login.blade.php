@@ -198,13 +198,7 @@
                         }
                     },
                     error: function(xhr) {
-                        if (xhr.status === 404) {
-                                $('#emailError').text(xhr.responseJSON.message);
-                                $('#email').addClass('border-red-500');
-                        } else if( xhr.status === 401){
-                            $('#passwordError').text(xhr.responseJSON.message);
-                            $('#password').addClass('border-red-500');
-                        } else if (xhr.status === 429) {
+                        if (xhr.status === 429) {
                             Swal.fire({
                                 toast: true,
                                 position: 'top-right',
@@ -216,8 +210,35 @@
                                 timer: 2500,
                                 timerProgressBar: true,
                                 icon: 'error',
-                                title: "Too many login attempts. Please try again in 10 minutes.",
+                                title: xhr.responseJSON.message,
                             });
+
+                            // Extract time from message and disable button
+                            const message = xhr.responseJSON.message;
+                            const timeMatch = message.match(/(\d+) minute[s]? and (\d+) second[s]?|(\d+) second[s]?/);
+
+                            if (timeMatch) {
+                                let totalSeconds;
+                                if (timeMatch[1] && timeMatch[2]) {
+                                    // Minutes and seconds format
+                                    totalSeconds = (parseInt(timeMatch[1]) * 60) + parseInt(timeMatch[2]);
+                                } else {
+                                    // Seconds only format
+                                    totalSeconds = parseInt(timeMatch[3]);
+                                }
+
+                                $submitButton.prop('disabled', true);
+                                setTimeout(() => {
+                                    $submitButton.prop('disabled', false);
+                                    $submitButton.html(originalButtonText);
+                                }, totalSeconds * 1000);
+                            }
+                        } else if (xhr.status === 404) {
+                            $('#emailError').text(xhr.responseJSON.message);
+                            $('#email').addClass('border-red-500');
+                        } else if (xhr.status === 401) {
+                            $('#passwordError').text(xhr.responseJSON.message);
+                            $('#password').addClass('border-red-500');
                         } else if (xhr.status === 422) {
                             const errors = xhr.responseJSON.errors;
                             const errorMessage = Object.values(errors).flat().join('\n');

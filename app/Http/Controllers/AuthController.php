@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -137,79 +138,88 @@ class AuthController extends Controller
     }
 
     public function loginAction(Request $request)
-{
-    $this->checkTooManyFailedAttempts($request);
-    // Validate input
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
+    {
+        $email = strtolower($request->input('email'));
+        if (FacadesRateLimiter::tooManyAttempts($email, 5)) {
+            $seconds = FacadesRateLimiter::availableIn($email);
 
-    // If validation fails, return error as JSON
-    if ($validator->fails()) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Validation failed',
-            'errors' => $validator->errors()
-        ], 422); // Unprocessable Entity status code
-    }
+            // Format the remaining time
+            $minutes = floor($seconds / 60);
+            $remainingSeconds = $seconds % 60;
+            $timeMessage = '';
 
-    // Attempt to login
-    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-        // Check if email exists in the system to provide a more specific message
-        if (!User::where('email', $request->email)->exists()) {
+            if ($minutes > 0) {
+                $minuteWord = $minutes > 1 ? 'minutes' : 'minute';
+                $secondWord = $remainingSeconds > 1 ? 'seconds' : 'second';
+                $timeMessage = "{$minutes} {$minuteWord} and {$remainingSeconds} {$secondWord}";
+            } else {
+                $secondWord = $seconds > 1 ? 'seconds' : 'second';
+                $timeMessage = "{$seconds} {$secondWord}";
+            }
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Email is not registered'
-            ], 404); // Not Found
-        }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Incorrect password'
-        ], 401); // Unauthorized
-    }
-
-    // Regenerate session on successful login
-    $request->session()->regenerate();
-
-    activity()
-        ->causedBy(Auth::user())
-        ->withProperties(['ip' => $request->ip()])
-        ->log('logged in');
-
-    // Check if the user is admin or sub-admin
-    if (Auth::user()->type == 'admin') {
-        return response()->json([
-            'status' => 'success',
-            'redirect' => route('admin.dashboard')
-        ]);
-    } else {
-        return response()->json([
-            'status' => 'success',
-            'redirect' => route('sub-admin.dashboard')
-        ]);
-    }
-}
-
-    // Check for too many failed attempts
-    protected function checkTooManyFailedAttempts($request)
-    {
-        if (FacadesRateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
-            $seconds = FacadesRateLimiter::availableIn($this->throttleKey($request));
-
-            return response()->json([
-                'message' => 'Too many attempts',
-                'seconds' => $seconds
+                'message' => "Too many login attempts. Please try again in {$timeMessage}.",
             ], 429);
         }
-    }
 
-    protected function throttleKey(Request $request)
-    {
-        return strtolower($request->input('email')) . '|' . $request->ip();
-    }
+        // Validate input
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
+        // If validation fails, return error as JSON
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Attempt to login
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+            // Increment the rate limiter counter for this email with a decay time of 10 minutes
+            FacadesRateLimiter::hit($email, 600); // 600 seconds = 10 minutes
+
+            // Check if email exists in the system to provide a more specific message
+            if (!User::where('email', $request->email)->exists()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Email is not registered'
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Incorrect password'
+            ], 401);
+        }
+
+        // Clear rate limiting for this email on successful login
+        FacadesRateLimiter::clear($email);
+
+        // Rest of your successful login code...
+        $request->session()->regenerate();
+
+        activity()
+            ->causedBy(Auth::user())
+            ->withProperties(['ip' => $request->ip()])
+            ->log('logged in');
+
+        if (Auth::user()->type == 'admin') {
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('admin.dashboard')
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('sub-admin.dashboard')
+            ]);
+        }
+    }
 
     public function changePassword(Request $request)
     {

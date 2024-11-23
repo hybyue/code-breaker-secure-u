@@ -6,18 +6,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadProvinces(provinceSelect) {
         try {
-            const response = await fetch('https://psgc.gitlab.io/api/provinces');
+            const response = await fetch('https://psgc.gitlab.io/api/provinces/');
             const provinces = await response.json();
 
-            provinceSelect.innerHTML = '<option value="" selected disabled>Select Province</option>';
+            // Store the current selected province name
+            const currentProvince = provinceSelect.querySelector('option[selected]')?.textContent;
+
+            provinceSelect.innerHTML = '<option value="" disabled>Select Province</option>';
 
             // Sort provinces alphabetically
             provinces.sort((a, b) => a.name.localeCompare(b.name));
 
             provinces.forEach(province => {
                 const option = document.createElement('option');
-                option.value = province.code;
+                option.value = province.name;
                 option.textContent = province.name;
+                if (province.name === currentProvince) {
+                    option.selected = true;
+                    // Store the code as a data attribute for API calls
+                    option.dataset.code = province.code;
+                    // Trigger change event to load municipalities
+                    handleProvinceChange(province.code,
+                        provinceSelect.closest('.modal').querySelector('select[name="city"]'),
+                        provinceSelect.closest('.modal').querySelector('select[name="barangay"]')
+                    );
+                }
                 provinceSelect.appendChild(option);
             });
             provinceSelect.disabled = false;
@@ -25,59 +38,69 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add change event listener
             provinceSelect.addEventListener('change', function() {
                 const modal = this.closest('.modal');
-                const municipalitySelect = modal.querySelector('select[name="municipality"]');
+                const citySelect = modal.querySelector('select[name="city"]');
                 const barangaySelect = modal.querySelector('select[name="barangay"]');
-                handleProvinceChange(this.value, municipalitySelect, barangaySelect);
+                // Find the selected option and get its code from the data attribute
+                const selectedOption = this.options[this.selectedIndex];
+                const provinceCode = provinces.find(p => p.name === selectedOption.value)?.code;
+                handleProvinceChange(provinceCode, citySelect, barangaySelect);
             });
         } catch (error) {
             console.error('Error loading provinces:', error);
         }
     }
 
-    async function handleProvinceChange(provinceCode, municipalitySelect, barangaySelect) {
-        municipalitySelect.innerHTML = '<option value="" selected disabled>Select Municipality/City</option>';
-        barangaySelect.innerHTML = '<option value="" selected disabled>Select Barangay</option>';
-
-        if (!provinceCode) {
-            municipalitySelect.disabled = true;
-            barangaySelect.disabled = true;
-            return;
-        }
-
+    async function handleProvinceChange(provinceCode, citySelect, barangaySelect) {
         try {
-            municipalitySelect.disabled = false;
+            citySelect.disabled = false;
             barangaySelect.disabled = true;
 
-            const response = await fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities-municipalities`);
-            const municipalities = await response.json();
+            const currentCity = citySelect.querySelector('option[selected]')?.textContent;
 
-            municipalities.sort((a, b) => a.name.localeCompare(b.name));
+            citySelect.innerHTML = '<option value="" disabled>Select Municipality</option>';
 
-            municipalities.forEach(municipality => {
+            const [citiesResponse, muniResponse] = await Promise.all([
+                fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities/`),
+                fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/municipalities/`)
+            ]);
+
+            const cities = await citiesResponse.json();
+            const municipalities = await muniResponse.json();
+
+            const allLocations = [...cities, ...municipalities].sort((a, b) =>
+                a.name.localeCompare(b.name)
+            );
+
+            allLocations.forEach(location => {
                 const option = document.createElement('option');
-                option.value = municipality.code;
-                option.textContent = municipality.name;
-                municipalitySelect.appendChild(option);
+                option.value = location.name;
+                option.textContent = location.name;
+                option.dataset.code = location.code;
+                if (location.name === currentCity) {
+                    option.selected = true;
+                    handleMunicipalityChange(location.code, barangaySelect);
+                }
+                citySelect.appendChild(option);
             });
 
-            municipalitySelect.addEventListener('change', function() {
-                handleMunicipalityChange(this.value, barangaySelect);
+            // Add change event listener to city select
+            citySelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const locationCode = allLocations.find(l => l.name === selectedOption.value)?.code;
+                handleMunicipalityChange(locationCode, barangaySelect);
             });
         } catch (error) {
-            console.error('Error loading municipalities:', error);
+            console.error('Error loading cities/municipalities:', error);
         }
     }
 
     async function handleMunicipalityChange(municipalityCode, barangaySelect) {
-        barangaySelect.innerHTML = '<option value="" selected disabled>Select Barangay</option>';
-
-        if (!municipalityCode) {
-            barangaySelect.disabled = true;
-            return;
-        }
-
         try {
             barangaySelect.disabled = false;
+
+            const currentBarangay = barangaySelect.querySelector('option[selected]')?.textContent;
+
+            barangaySelect.innerHTML = '<option value="" disabled>Select Barangay</option>';
 
             const response = await fetch(`https://psgc.gitlab.io/api/cities-municipalities/${municipalityCode}/barangays`);
             const barangays = await response.json();
@@ -86,8 +109,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             barangays.forEach(barangay => {
                 const option = document.createElement('option');
-                option.value = barangay.code;
+                option.value = barangay.name;
                 option.textContent = barangay.name;
+                if (barangay.name === currentBarangay) {
+                    option.selected = true;
+                }
                 barangaySelect.appendChild(option);
             });
         } catch (error) {

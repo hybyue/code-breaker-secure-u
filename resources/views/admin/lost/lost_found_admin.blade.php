@@ -137,16 +137,14 @@
                                     <span class="badge bg-danger">Not Claimed</span>
                                 @endif
                             </p>
+                            @if ($item->security_staff)
                             <p><strong>Assist by:</strong>
-                                @if ($item->user_id)
                                     @php
-                                        $user = App\Models\User::find($item->user_id);
+                                        $user = App\Models\User::find($item->security_staff);
                                     @endphp
                                     {{ $user->first_name }} {{ $user->middle_name ? $user->middle_name . ' ' : '' }}{{ $user->last_name }}
-                                @else
-                                    N/A
-                                @endif
                             </p>
+                            @endif
                             <div class="modal-proof-image mb-3">
                                 @if($item->proof_image)
                                     <p><strong>Proof Claimed: </strong></p>

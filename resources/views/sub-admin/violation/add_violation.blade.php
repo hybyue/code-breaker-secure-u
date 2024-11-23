@@ -1,6 +1,6 @@
 
 {{-- Add Violation --}}
-<div class="modal fade" id="violationModal" tabindex="-1" aria-labelledby="violationModalLabel" aria-hidden="true">
+<div class="modal fade" id="violationModal" tabindex="-1" aria-labelledby="violationModalLabel" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -47,6 +47,7 @@
                                 <option value="Croca">Croca</option>
                                 <option value="Short/Skirt">Short/Skirt</option>
                                 <option value="Sleeveless/Shoulder">Sleeveless/Shoulder</option>
+
                                 <option value="Other">Other</option>
                             </select>
                         </div>

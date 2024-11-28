@@ -77,6 +77,10 @@
                                 <label for="description-{{ $item->id }}" class="form-label">Description:</label>
                                 <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
                             </div>
+                            <div class="col-md-12 mb-2">
+                                <label for="remarks" class="form-label">Remarks:</label>
+                                <textarea class="form-control" id="remarks-{{ $item->id }}" name="remarks" rows="2" placeholder="Optional">{{$item->remarks}}</textarea>
+                            </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-primary update_lost w-50">
                                     <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>

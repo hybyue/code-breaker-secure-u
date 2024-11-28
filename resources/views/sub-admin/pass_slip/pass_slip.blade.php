@@ -16,7 +16,6 @@
                 <i class="bi bi-file-earmark-pdf-fill"></i> PDF
             </a> --}}
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModal()">Generate Report</a>
-            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Looping Report</a>
 
                     </div>
 
@@ -80,24 +79,26 @@
             </thead>
             <tbody>
 
-                @foreach ($latestPassSlips as $passSlip)
-                    <tr>
-                    <td>{{ $passSlip->p_no }}</td>
-                    <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
-                    <td>{{ $passSlip->department}}</td>
-                    <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
-                    <td id="time-in-{{ $passSlip->id }}" class="text-center"
-                        @if($passSlip->is_exceeded)
+                    @foreach ($latestPassSlips as $passSlip)
+                        <tr>
+                        <td>{{ $passSlip->p_no }}</td>
+                        <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
+                        <td>{{ $passSlip->department}}</td>
+                        <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
+                        <td id="time-in-{{ $passSlip->id }}" class="text-center"
+                            @if($passSlip->is_exceeded)
                             style="background-color: red; color: white;"
-                            title="{{ $passSlip->late_minutes >= 60
-                                ? floor($passSlip->late_minutes / 60) . ' hr ' . ($passSlip->late_minutes % 60) . ' min late'
-                                : $passSlip->late_minutes . ' min late' }}"
+                            title="Exceeded validity period of {{ number_format($passSlip->validity_hours, 1) }} hours by {{
+                                $passSlip->late_minutes >= 60
+                                ? floor($passSlip->late_minutes / 60) . ' hr ' . ($passSlip->late_minutes % 60) . ' min'
+                                : $passSlip->late_minutes . ' min'
+                            }}"
                         @endif>
                         @if(is_null($passSlip->time_in))
                         <div>
                             <span id="time-in-display-{{ $passSlip->id }}"></span>
-                            <form action="{{ route('passSlip.checkout_admin', $passSlip->id) }}" method="POST">
+                            <form action="{{ route('passSlip.checkout', $passSlip->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
                             </form>
@@ -108,14 +109,13 @@
                                 <br>
                                 <small>(
                                     @if($passSlip->late_minutes >= 60)
-                                        {{ floor($passSlip->late_minutes / 60) }} hr
+                                        {{ floor($passSlip->late_minutes / 60) }} hr late
                                         @if($passSlip->late_minutes % 60 > 0)
-                                            {{ $passSlip->late_minutes % 60 }} min
+                                            {{ $passSlip->late_minutes % 60 }} min late
                                         @endif
                                     @else
-                                        {{ $passSlip->late_minutes }} min
-                                    @endif
-                                    late)
+                                        {{ $passSlip->late_minutes }} min late
+                                    @endif)
                                 </small>
                             @endif
                         @endif
@@ -195,6 +195,7 @@
                             <th>Purpose</th>
                             <th>Time Out</th>
                             <th>Time In</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -241,6 +242,7 @@
                                     N/A
                                 @endif
                             </td>
+                            <td>{{ $entry->remarks }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -251,32 +253,6 @@
 </div>
 @endforeach
 </div>
-
-
-<script>
-    function searchTable() {
-        var input, filter, table, tr, td, i, j, txtValue;
-        input = document.getElementById("search");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("passTable");
-        tr = table.getElementsByTagName("tr");
-        for (i = 1; i < tr.length; i++) { // Start from 1 to skip the header row
-            tr[i].style.display = "none"; // Hide the row initially
-            td = tr[i].getElementsByTagName("td");
-            for (j = 0; j < td.length; j++) {
-                if (td[j]) {
-                    txtValue = td[j].textContent || td[j].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = ""; // Show the row if any column matches the search
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-</script>
-
 
 
 

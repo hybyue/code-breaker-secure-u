@@ -173,6 +173,7 @@
                                  <th>Time out</th>
                                  <th>Visited Person Name</th>
                                  <th>Visited Person Position</th>
+                                 <th>Remarks</th>
                              </tr>
                          </thead>
                          <tbody>
@@ -181,9 +182,10 @@
                                  <td>{{ $entry->person_to_visit }}</td>
                                  <td>{{ $entry->purpose }}</td>
                                  <td>{{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</td>
-                                 <td>{{ $entry->time_out ? \Carbon\Carbon::parse($entry->time_out)->format('g:i A') : 'N/A' }}</td>
-                                 <td>{{ $entry->visited_person_name ?? 'N/A' }}</td>
-                                 <td>{{ $entry->visited_person_position ?? 'N/A' }}</td>
+                                 <td>{{ $entry->time_out ? \Carbon\Carbon::parse($entry->time_out)->format('g:i A')}}</td>
+                                 <td>{{ $entry->visited_person_name}}</td>
+                                 <td>{{ $entry->visited_person_position}}</td>
+                                 <td>{{ $entry->remarks}}</td>
                              </tr>
                              @endforeach
                          </tbody>

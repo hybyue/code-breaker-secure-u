@@ -176,7 +176,7 @@
             <td>
                 <div class="security-container">
                     <!-- Security Logo -->
-                    <img src="{{ public_path('images/ucu-logo.png') }}" alt="Security Logo" class="logo">
+                    <img src="{{ public_path('images/SMO.png') }}" alt="Security Logo" class="logo">
                     <div class="security-name">Security Management Office</div>
                 </div>
             </td>
@@ -206,14 +206,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($passSlips as $passSlip)
+            @foreach($looping as $item)
             <tr>
-                <td>{{ $passSlip->first_name }} @if($passSlip->middle_name){{ $passSlip->middle_name }}.@endif {{ $passSlip->last_name }}</td>
-                <td>{{ $passSlip->department }}</td>
-                <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i') }}</td>
-                <td class="text-danger">{{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i') }}</td>
-                <td></td>
+                <td>{{ $item->name }}</td>
+                <td>{{ $item->department }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->date)->format('F d, Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->time_out)->format('H:i') }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->time_in)->format('H:i') }}</td>
+                <td>{{ $item->remarks }}</td>
             </tr>
             @endforeach
 

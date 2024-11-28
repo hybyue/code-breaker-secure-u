@@ -101,6 +101,12 @@
                             <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00" required>
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>
+                            <span class="text-danger error-message" id="remarks_error"></span>
+                        </div>
+
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
                             <button type="submit" class="btn btn-success add_pass_slip">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>

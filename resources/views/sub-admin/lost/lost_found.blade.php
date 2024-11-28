@@ -1,9 +1,7 @@
 @extends('layouts.sidebar')
 
 @section('title', 'Lost and Found')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @section('content')
 <div class="container mt-3 pass-slip">
     <div class="row">
@@ -125,7 +123,8 @@
                       <p><strong>Finder's Name:</strong> {{ $item->last_name }}, {{ $item->first_name }} @if($item->middle_name) {{ $item->middle_name }}. @endif</p>
                       <p><strong>Role:</strong> {{ $item->course }}</p>
                       <p><strong>Location:</strong> {{ $item->location }}</p>
-                      <p><strong>Description:</strong> {{ $item->description ?: 'No description provided' }}</p>
+                      @if($item->description)<p><strong>Description:</strong> {{ $item->description }}</p>@endif
+                      @if($item->remarks)<p><strong>Remarks:</strong> {{ $item->remarks}}</p>@endif
                       <p><strong>Status:</strong>
                           @if($item->is_claimed == 1)
                               <span class="badge bg-success">Claimed</span>

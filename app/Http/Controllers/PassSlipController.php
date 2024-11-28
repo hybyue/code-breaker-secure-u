@@ -26,12 +26,11 @@ class PassSlipController extends Controller
     public function filterPassSlip(Request $request)
 {
     if ($request->filled('start_date') || $request->filled('end_date') ||
-    $request->filled('employee_type') || $request->filled('violation_filter')) {
+    $request->filled('employee_type')) {
     session(['pass_slip_filter' => [
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
         'employee_type' => $request->employee_type,
-        'violation_filter' => $request->violation_filter
     ]]);
 }
 
@@ -43,7 +42,6 @@ $filterData = session('pass_slip_filter', [
     'start_date' => $request->start_date,
     'end_date' => $request->end_date,
     'employee_type' => $request->employee_type,
-    'violation_filter' => $request->violation_filter
 ]);
 
 // Apply filters
@@ -59,13 +57,7 @@ if (!empty($filterData['employee_type'])) {
     $query->where('employee_type', $filterData['employee_type']);
 }
 
-if (!empty($filterData['violation_filter'])) {
-    if ($filterData['violation_filter'] == '1') {
-        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-    } elseif ($filterData['violation_filter'] == '0') {
-        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-    }
-}
+
 
 // Update to use $filterData instead of $request
 $latestPassSlips = PassSlip::select('pass_slips.*')
@@ -80,13 +72,6 @@ $latestPassSlips = PassSlip::select('pass_slips.*')
         }
         if (!empty($filterData['employee_type'])) {
             $subQuery->where('pass_slips.employee_type', $filterData['employee_type']);
-        }
-        if (!empty($filterData['violation_filter'])) {
-            if ($filterData['violation_filter'] == '1') {
-                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-            } elseif ($filterData['violation_filter'] == '0') {
-                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-            }
         }
     })
     ->latest()
@@ -149,16 +134,19 @@ private function generatePassNoSub()
             'purpose' => 'required|string|max:255',
             'time_out' => 'required|date_format:H:i',
             'check_business' => 'required|string',
-            'driver_name' => 'nullable|alpha|max:100',
+            'driver_name' => 'nullable|string|max:100',
+            'remarks' => 'nullable|string|max:255',
+            'validity_hours' => 'required|numeric|min:0.5',
         ],
         [
             'destination.max' => 'Destination must be less than 100 characters.',
             'check_business.required' => 'Check Business is required.',
             'check_business.string' => 'Check Business must be a string.',
             'purpose.max' => 'Purpose must be less than 255 characters.',
-            'driver_name.alpha' => 'Must no number or special characters.',
             'driver_name.max' => 'Driver Name must be less than 100 characters.',
-
+            'validity_hours.required' => 'Validity period is required.',
+            'validity_hours.numeric' => 'Validity must be a number.',
+            'validity_hours.min' => 'Validity must be at least 30 minutes.',
         ]);
         PassSlip::create([
             'user_id' => Auth::id(),
@@ -172,10 +160,12 @@ private function generatePassNoSub()
             'employee_type' => $request->employee_type,
             'purpose' => $request->purpose,
             'date' => now()->format('Y-m-d H:i:s'),
-            'time_out' => $request->time_out,
+            'time_out' =>  Carbon::parse($request->time_out)->format('H:i'),
             'time_out_by' => Auth::user()->id,
             'check_business' => $request->check_business,
             'driver_name' => $request->driver_name,
+            'remarks' => $request->remarks,
+            'validity_hours' => $request->validity_hours,
         ]);
 
 
@@ -185,73 +175,70 @@ private function generatePassNoSub()
     }
 
     public function updatePassSlip(Request $request, string $id)
-    {
+{
+    try {
         $validatedData = Validator::make($request->all(), [
             'destination' => 'required|string|max:100',
             'employee_type' => 'required|string|max:255',
             'purpose' => 'required|string|max:255',
-            'time_out' => 'required',
-            'time_in' => 'required',
+            'time_out' => 'required|date_format:H:i',
+            'time_in' => 'required|date_format:H:i',
             'check_business' => 'required|string',
             'driver_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
-        ], [
-            'destination.max' => 'Destination must be less than 100 characters.',
-            'check_business.required' => 'Check Business is required.',
-            'check_business.string' => 'Check Business must be a string.',
-            'purpose.max' => 'Purpose must be less than 255 characters.',
-            'driver_name.regex' => 'Driver Name must contain letters and spaces only, with no numbers or special characters.',
-            'driver_name.max' => 'Driver Name must be less than 100 characters.',
+            'remarks' => 'nullable|string|max:255',
+            'validity_hours' => 'required|numeric|min:0.5',
         ]);
 
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()], 422);
         }
 
-        $passSlips = PassSlip::findOrFail($id);
+        $passSlip = PassSlip::findOrFail($id);
 
-        // Format time_in and time_out to 12-hour format with AM/PM
-        $timeIn = Carbon::parse($request->input('time_in'))->format('H:i:s');
-        $timeOut = Carbon::parse($request->input('time_out'))->format('H:i:s');
+        // Parse time values
+        $timeOut = Carbon::parse($request->input('time_out'));
+        $timeIn = Carbon::parse($request->input('time_in'));
 
-        $passSlips->time_in = $timeIn;
-        $passSlips->time_out = $timeOut;
+        // Calculate late minutes and exceeded status
+        $lateMinutesData = $this->calculateLateMinutes($timeOut, $timeIn, $request->validity_hours);
+        $lateMinutes = $lateMinutesData['total_minutes'];
+        $isExceeded = $lateMinutes > 0;
 
-        // Calculate late duration using the calculateLateMinutes function
-        $lateDuration = $this->calculateLateMinutes($timeOut, $timeIn);
-        $passSlips->late_minutes = $lateDuration['total_minutes'];
-        $passSlips->is_exceeded = $lateDuration['total_minutes'] > 0;
+        // Update pass slip
+        $passSlip->update([
+            'destination' => $request->destination,
+            'employee_type' => $request->employee_type,
+            'purpose' => $request->purpose,
+            'check_business' => $request->check_business,
+            'driver_name' => $request->driver_name,
+            'remarks' => $request->remarks,
+            'time_out' => $timeOut->format('H:i:s'),
+            'time_in' => $timeIn->format('H:i:s'),
+            'validity_hours' => $request->validity_hours,
+            'late_minutes' => $lateMinutes,
+            'is_exceeded' => $isExceeded,
+        ]);
 
-        // Calculate if exceeded 3 hours
-        $timeDifference = Carbon::parse($timeOut)->diffInHours(Carbon::parse($timeIn));
-        $isExceeded = $timeDifference >= 3;
-
-        // Update all fields including both late_minutes and exceeded status
-        $passSlips->update(array_merge(
-            $request->all(),
-            [
-                'time_in' => $timeIn,
-                'time_out' => $timeOut,
-                'late_minutes' => $lateDuration['total_minutes'],
-                'is_exceeded' => $isExceeded || $lateDuration['total_minutes'] > 0 // Exceeded if either condition is true
-            ]
-        ));
-
+        // Prepare response message
         $message = 'Pass slip updated successfully';
         if ($isExceeded) {
-            $message .= ". Exceeded 3 hours";
-            if ($lateDuration['total_minutes'] > 0) {
-                $message .= " and was " . $lateDuration['formatted'] . " late";
-            }
-        } elseif ($lateDuration['total_minutes'] > 0) {
-            $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+            $message .= ". Exceeded validity period by {$lateMinutesData['formatted']}";
         }
-        $message .= ".";
-
 
         return response()->json([
             'success' => true,
+            'message' => $message,
         ]);
+
+    } catch (\Exception $e) {
+        Log::error('Update Pass Slip Error: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while updating the pass slip: ' . $e->getMessage(),
+        ], 500);
     }
+}
+
 
 
 
@@ -408,6 +395,7 @@ private function generatePassNumber()
             'time_out' => 'required|date_format:H:i',
             'check_business' => 'required|string',
             'driver_name' => 'nullable|alpha|max:100',
+            'remarks' => 'nullable|string|max:255',
         ],
         [
             'destination.max' => 'Destination must be less than 100 characters.',
@@ -434,7 +422,8 @@ private function generatePassNumber()
             'time_out' => $request->time_out,
             'time_out_by' => Auth::user()->id,
             'check_business' => $request->check_business,
-            'driver_name' => $request->driver_name,
+            'driver_name' => $request->driver_name ?? null,
+            'remarks' => $request->remarks ?? null,
         ]);
 
         return response()->json([
@@ -442,23 +431,7 @@ private function generatePassNumber()
         ]);
     }
 
-    // public function checkoutAdmin($id)
-    // {
-    //     $pass_slip = PassSlip::findOrFail($id);
-    //     $currentTime = now();
-    //     $pass_slip->time_in = $currentTime->format('H:i:s');
-    //     $pass_slip->time_in_by = Auth::user()->id;
 
-    //     $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
-    //     $timeDifference = $timeOut->diffInHours($currentTime);
-
-    //     if ($timeDifference >= 3) {
-    //         $pass_slip->is_exceeded = true;
-    //     }
-    //     $pass_slip->save();
-
-    //     return redirect()->route('admin.pass_slip.pass_slip_admin')->with('success', 'Time In recorded successfully.');
-    // }
 
     public function updatePassSlipAdmin(Request $request, string $id)
     {
@@ -467,64 +440,60 @@ private function generatePassNumber()
                 'destination' => 'required|string|max:100',
                 'employee_type' => 'required|string|max:255',
                 'purpose' => 'required|string|max:255',
-                'time_out' => 'required',
-                'time_in' => 'required',
+                'time_out' => 'required|date_format:H:i',
+                'time_in' => 'required|date_format:H:i',
                 'check_business' => 'required|string',
                 'driver_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+                'remarks' => 'nullable|string|max:255',
+                'validity_hours' => 'required|numeric|min:0.5',
             ]);
 
             if ($validatedData->fails()) {
                 return response()->json(['errors' => $validatedData->errors()], 422);
             }
 
-            $passSlips = PassSlip::findOrFail($id);
+            $passSlip = PassSlip::findOrFail($id);
 
-            // Convert 12-hour format to 24-hour format with seconds
-            $timeIn = Carbon::parse($request->input('time_in'))
-                ->format('H:i:s'); // This will convert to 24-hour format with seconds
-            $timeOut = Carbon::parse($request->input('time_out'))
-                ->format('H:i:s');
+            // Parse time values
+            $timeOut = Carbon::parse($request->input('time_out'));
+            $timeIn = Carbon::parse($request->input('time_in'));
 
-            // Calculate late duration using the calculateLateMinutes function
-            $lateDuration = $this->calculateLateMinutes($timeOut, $timeIn);
-            $passSlips->late_minutes = $lateDuration['total_minutes'];
+            // Calculate late minutes and exceeded status
+            $lateMinutesData = $this->calculateLateMinutes($timeOut, $timeIn, $request->validity_hours);
+            $lateMinutes = $lateMinutesData['total_minutes'];
+            $isExceeded = $lateMinutes > 0;
 
-            // Calculate if exceeded 3 hours
-            $timeDifference = Carbon::parse($timeOut)->diffInHours(Carbon::parse($timeIn));
-            $isExceeded = $timeDifference >= 3;
+            // Update pass slip
+            $passSlip->update([
+                'destination' => $request->destination,
+                'employee_type' => $request->employee_type,
+                'purpose' => $request->purpose,
+                'check_business' => $request->check_business,
+                'driver_name' => $request->driver_name,
+                'remarks' => $request->remarks,
+                'time_out' => $timeOut->format('H:i:s'),
+                'time_in' => $timeIn->format('H:i:s'),
+                'validity_hours' => $request->validity_hours,
+                'late_minutes' => $lateMinutes,
+                'is_exceeded' => $isExceeded,
+            ]);
 
-            // Update all fields including both late_minutes and exceeded status
-            $passSlips->update(array_merge(
-                $request->except(['time_in', 'time_out']), // Exclude times from request data
-                [
-                    'time_in' => $timeIn,
-                    'time_out' => $timeOut,
-                    'late_minutes' => $lateDuration['total_minutes'],
-                    'is_exceeded' => $isExceeded || $lateDuration['total_minutes'] > 0 // Exceeded if either condition is true
-                ]
-            ));
-
+            // Prepare response message
             $message = 'Pass slip updated successfully';
             if ($isExceeded) {
-                $message .= ". Exceeded 3 hours";
-                if ($lateDuration['total_minutes'] > 0) {
-                    $message .= " and was " . $lateDuration['formatted'] . " late";
-                }
-            } elseif ($lateDuration['total_minutes'] > 0) {
-                $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+                $message .= ". Exceeded validity period by {$lateMinutesData['formatted']}";
             }
-            $message .= ".";
 
             return response()->json([
                 'success' => true,
-                'message' => $message
+                'message' => $message,
             ]);
 
         } catch (\Exception $e) {
             Log::error('Update Pass Slip Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while updating the pass slip: ' . $e->getMessage()
+                'message' => 'An error occurred while updating the pass slip: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -674,116 +643,111 @@ private function generatePassNumber()
             'violation' => $violationCount
         ]);
     }
-public function calculateLateMinutes($timeOut, $timeIn)
-{
-    // Convert strings to Carbon instances if they aren't already
-    $timeOut = Carbon::parse($timeOut);
-    $timeIn = Carbon::parse($timeIn);
+    public function calculateLateMinutes($timeOut, $timeIn, $validityHours)
+    {
+        // Convert strings to Carbon instances
+        $timeOut = Carbon::parse($timeOut);
+        $timeIn = Carbon::parse($timeIn);
 
-    // Calculate the time difference in minutes
-    $diffInMinutes = $timeOut->diffInMinutes($timeIn);
+        // Convert validity hours to minutes
+        $validityMinutes = $validityHours * 60;
 
-    // If the difference is more than 3 hours (180 minutes), calculate how many minutes over
-    if ($diffInMinutes > 180) {
-        $lateMinutes = $diffInMinutes - 180;
+        // Calculate the time difference in minutes between time out and time in
+        $actualDuration = $timeOut->diffInMinutes($timeIn);
 
-        // Convert to hours and minutes if more than 60 minutes
-        if ($lateMinutes >= 60) {
-            $hours = floor($lateMinutes / 60);
-            $minutes = $lateMinutes % 60;
+         Log::info("Actual Duration: $actualDuration minutes, Validity Minutes: $validityMinutes");
+
+        // If the actual duration exceeds the validity period
+        if ($actualDuration > $validityMinutes) {
+            $lateMinutes = $actualDuration - $validityMinutes;
+
+            // Convert to hours and minutes if necessary
+            if ($lateMinutes >= 60) {
+                $hours = floor($lateMinutes / 60);
+                $minutes = $lateMinutes % 60;
+                return [
+                    'total_minutes' => $lateMinutes,
+                    'formatted' => $hours . ' hr ' . ($minutes > 0 ? $minutes . ' min' : '')
+                ];
+            }
+
             return [
                 'total_minutes' => $lateMinutes,
-                'formatted' => $hours . ' hr ' . ($minutes > 0 ? $minutes . ' min' : '')
+                'formatted' => $lateMinutes . ' min'
             ];
         }
 
+        // If not late, return 0
         return [
-            'total_minutes' => $lateMinutes,
-            'formatted' => $lateMinutes . ' min'
+            'total_minutes' => 0,
+            'formatted' => '0 min'
         ];
     }
 
-    // If not over 3 hours, return 0
-    return [
-        'total_minutes' => 0,
-        'formatted' => '0'
-    ];
-}
-
-// Update the checkout methods to use the new format
-public function checkoutAdmin($id)
+    public function checkoutAdmin($id)
 {
     $pass_slip = PassSlip::findOrFail($id);
     $currentTime = now();
 
-    $pass_slip->time_in = $currentTime->format('H:i:s');
+    $pass_slip->time_in = $currentTime->format('H:i');
     $pass_slip->time_in_by = Auth::user()->id;
 
-    // Calculate late duration using the calculateLateMinutes function
-    $lateDuration = $this->calculateLateMinutes($pass_slip->time_out, $currentTime);
+    // Calculate late duration
+    $lateDuration = $this->calculateLateMinutes($pass_slip->time_out, $currentTime, $pass_slip->validity_hours);
     $pass_slip->late_minutes = $lateDuration['total_minutes'];
     $pass_slip->is_exceeded = $lateDuration['total_minutes'] > 0;
-
-    // Calculate if exceeded 3 hours
-    $timeDifference = Carbon::parse($pass_slip->time_out)->diffInHours($currentTime);
-    $isExceeded = $timeDifference >= 3;
-
-    // Set is_exceeded if either condition is true
-    $pass_slip->is_exceeded = $isExceeded || $lateDuration['total_minutes'] > 0;
 
     // Save the pass slip record
     $pass_slip->save();
 
     $message = 'Time In recorded successfully';
-    if ($isExceeded) {
-        $message .= ". Exceeded 3 hours";
-        if ($lateDuration['total_minutes'] > 0) {
-            $message .= " and was " . $lateDuration['formatted'] . " late";
-        }
-    } elseif ($lateDuration['total_minutes'] > 0) {
-        $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+    if ($lateDuration['total_minutes'] > 0) {
+        $message .= ". Exceeded validity period by " . $lateDuration['formatted'];
     }
-    $message .= ".";
 
     return redirect()->route('admin.pass_slip.pass_slip_admin')
         ->with('success', $message);
 }
 
+
+// Update the checkout methods to use the new format
 public function checkoutPassSlip($id)
 {
     $pass_slip = PassSlip::findOrFail($id);
     $currentTime = now();
 
-    $pass_slip->time_in = $currentTime->format('H:i:s');
+    $pass_slip->time_in = $currentTime->format('H:i');
     $pass_slip->time_in_by = Auth::user()->id;
 
-    // Calculate late duration using the calculateLateMinutes function
-    $lateDuration = $this->calculateLateMinutes($pass_slip->time_out, $currentTime);
+    // Calculate late duration
+    $lateDuration = $this->calculateLateMinutes($pass_slip->time_out, $currentTime, $pass_slip->validity_hours);
     $pass_slip->late_minutes = $lateDuration['total_minutes'];
     $pass_slip->is_exceeded = $lateDuration['total_minutes'] > 0;
-
-    // Calculate if exceeded 3 hours
-    $timeDifference = Carbon::parse($pass_slip->time_out)->diffInHours($currentTime);
-    $isExceeded = $timeDifference >= 3;
-
-    // Set is_exceeded if either condition is true
-    $pass_slip->is_exceeded = $isExceeded || $lateDuration['total_minutes'] > 0;
 
     // Save the pass slip record
     $pass_slip->save();
 
     $message = 'Time In recorded successfully';
-    if ($isExceeded) {
-        $message .= ". Exceeded 3 hours";
-        if ($lateDuration['total_minutes'] > 0) {
-            $message .= " and was " . $lateDuration['formatted'] . " late";
-        }
-    } elseif ($lateDuration['total_minutes'] > 0) {
-        $message .= ". Employee was " . $lateDuration['formatted'] . " late";
+    if ($lateDuration['total_minutes'] > 0) {
+        $message .= ". Exceeded validity period by " . $lateDuration['formatted'];
     }
-    $message .= ".";
 
     return redirect()->route('sub-admin.pass_slip.pass_slip')
         ->with('success', $message);
+}
+
+
+private function isExceeded($passSlip, $timeIn)
+{
+    $timeOut = Carbon::parse($passSlip->time_out);
+    $timeIn = Carbon::parse($timeIn);
+
+    // Convert validity hours to minutes for precise calculation
+    $validityMinutes = $passSlip->validity_hours * 60;
+
+    // Calculate the actual duration in minutes
+    $actualDuration = $timeOut->diffInMinutes($timeIn);
+
+    return $actualDuration > $validityMinutes;
 }
 }

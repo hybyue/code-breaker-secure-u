@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="shortcut icon" href="http://example.com/favicon.ico" />
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
+
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+
     <link href="{{ asset('css/sidebar.css')}}" rel="stylesheet" >
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css">
@@ -116,13 +119,31 @@
                         <span>Visitors</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="{{ route('sub-admin.pass_slip.pass_slip') }}"
-                       class="sidebar-link {{ Route::is('sub-admin.pass_slip.pass_slip') ? 'active' : '' }}">
+                <li class="sidebar-item {{
+                    Route::is('sub-admin.pass_slip.pass_slip') ||
+                    Route::is('sub-admin.looping.loopings') ? 'active' : ''
+                }}">
+                    <a href="#" class="sidebar-link has-dropdown" data-bs-target="#auth">
                         <i class="bi bi-pass"></i>
-                        <span>Pass Slip</span>
+                        <span>Pass Slip Management</span>
                     </a>
+                    <ul id="auth" class="sidebar-dropdown">
+                        <li class="sidebar-item">
+                            <a href="{{ route('sub-admin.pass_slip.pass_slip') }}"
+                               class="sidebar-link {{ Route::is('sub-admin.pass_slip.pass_slip') ? 'active' : '' }}">
+                               With Pass Slip
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('sub-admin.looping.loopings') }}"
+                               class="sidebar-link {{ Route::is('sub-admin.looping.loopings') ? 'active' : '' }}">
+                               Without Pass Slip
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
+
                 <li class="sidebar-item">
                     <a href="{{route('sub-admin.lost.lost_found')}}"
                        class="sidebar-link {{ Route::is('sub-admin.lost.lost_found') ? 'active' : '' }}">

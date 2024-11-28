@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Looping;
 use App\Models\Lost;
 use App\Models\PassSlip;
 use App\Models\Violation;
@@ -123,7 +124,7 @@ class PdfController extends Controller
 
     public function generateLoopingEmployee(Request $request)
     {
-        $query = PassSlip::query();
+        $query = Looping::query();
 
         // Apply date filter
         if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -135,34 +136,26 @@ class PdfController extends Controller
             $query->where('employee_type', $request->employee_type);
         }
 
-        if ($request->filled('violation_filter')) {
-            if ($request->violation_filter == '1') {
-                $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-            } elseif ($request->violation_filter == '0') {
-                $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-            }
-        }
 
-        $passSlips = $query->latest()->get();
+        $looping = $query->latest()->get();
         $user = Auth::user();
 
         // Prepare data for PDF
         $data = [
-            'passSlips' => $passSlips,
-            'title' => 'Filtered Pass Slip Report',
+            'looping' => $looping,
+            'title' => 'Filtered Looping Report',
             'date' => now()->format('F d, Y'),
             'user' => $user,
             'employee_type' => $request->employee_type ?? 'All',
-            'violation_filter' => $request->violation_filter ?? 'All',
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
         ];
 
         // Select the correct view based on employee type and violation filter
         if ($request->employee_type === 'Teaching') {
-            $view = ($request->violation_filter == 1) ? 'pdf.pdf-teaching' : 'pdf.pdf-teaching';
+            $view = 'pdf.pdf-teaching';
         } else {
-            $view = ($request->violation_filter == 1) ? 'pdf.pdf-non-teaching' : 'pdf.pdf-non-teaching';
+            $view = 'pdf.pdf-non-teaching';
         }
 
         // Generate PDF

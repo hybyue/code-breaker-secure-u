@@ -80,6 +80,7 @@ public function store(Request $request)
         'purpose' => 'required|string|max:255',
         'id_type' => 'required|string|max:30',
         'id_number' => 'required|string|max:50',
+        'remarks' => 'nullable|string|max:255',
     ],
     [
         'first_name.regex' => 'Must no number or syntax.',
@@ -106,7 +107,7 @@ public function store(Request $request)
     $visitor->purpose = $request->purpose;
     $visitor->id_type = $request->id_type;
     $visitor->id_number = $request->id_number;
-    $visitor->fill($request->except('id_image'));
+    $visitor->remarks = $request->remarks ?? null;
     $visitor->date = now()->format('Y-m-d H:i:s');
     $visitor->time_in = now()->format('H:i:s');
     $visitor->user_id = Auth::id();
@@ -144,6 +145,7 @@ public function update(Request $request, String $id)
         'visited_person_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
         'visited_person_position' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
         'id_number' => 'required|string|max:50',
+        'remarks' => 'nullable|string|max:255',
     ],
     [
         'first_name.regex' => 'Must no number or syntax.',
@@ -289,6 +291,7 @@ public function store_visit(Request $request)
         'purpose' => 'required|string|max:255',
         'id_type' => 'required|string|max:30',
         'id_number' => 'required|string|max:50',
+        'remarks' => 'nullable|string|max:255',
     ],
     [
         'first_name.regex' => 'Must no number or syntax.',
@@ -318,6 +321,7 @@ public function store_visit(Request $request)
     $visitor->date = now()->format('Y-m-d H:i:s');
     $visitor->time_in = now()->format('H:i:s');
     $visitor->user_id = Auth::id();
+    $visitor->remarks = $request->remarks ?? null;
     $visitor->save();
 
 
@@ -395,6 +399,7 @@ public function updateVisitorSub(Request $request, string $id)
         'id_number' => 'required|string|max:50',
         'visited_person_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
         'visited_person_position' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+        'remarks' => 'nullable|string|max:255',
     ],
     [
         'first_name.regex' => 'Must no number or syntax.',

@@ -131,6 +131,10 @@
                                 name="visited_person_position" value="{{ $visitor->visited_person_position }}">
                         </div>
                         @endif
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks_{{ $visitor->id }}" name="remarks" rows="2" placeholder="Optional">{{$visitor->remarks}}</textarea>
+                        </div>
                     </div>
                         <div class="form-group text-center mt-3">
                             <button type="submit" class="btn w-50 btn-primary text-white visitor_update" data-bs-dismiss="updateVisitorSub-{{ $visitor->id }}">

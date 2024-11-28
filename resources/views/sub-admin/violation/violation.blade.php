@@ -101,7 +101,6 @@
 
 </div>
 
-@include('sub-admin.violation.update_violation')
 
 
 {{-- Modal for showing all entries of a student --}}
@@ -121,6 +120,7 @@
                             <th>Violation No.</th>
                             <th>Date</th>
                             <th>Violation Type</th>
+                            <th>Remarks</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -130,6 +130,7 @@
                             <td>{{ $entry->violation_count }}</td>
                             <td>{{ \Carbon\Carbon::parse($entry->created_at)->format('F d, Y') }}</td>
                             <td>{{ $entry->violation_type }}</td>
+                            <td>{{ $entry->remarks }}</td>
                             <td class="text-center">
                                 <a href="javascript:void(0)" class="btn btn-sm text-white edit-button" style="background-color: #063292" data-id="{{ $violate->id }}" data-bs-toggle="modal" data-bs-target="#updateViolationModal-{{ $violate->id }}">
                                 <i class="bi bi-pencil-square"></i>
@@ -145,6 +146,8 @@
 </div>
 </div>
 @endforeach
+
+@include('sub-admin.violation.update_violation')
 @include('sub-admin.violation.violation_js')
 @include('sub-admin.violation.add_violation')
 

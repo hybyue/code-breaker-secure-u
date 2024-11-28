@@ -69,6 +69,11 @@
                             <label for="description" class="form-label">Description:</label>
                             <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>
+                            <span class="text-danger error-message" id="remarks_error"></span>
+                        </div>
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn btn-success add_lost w-50">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>

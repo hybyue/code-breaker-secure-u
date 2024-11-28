@@ -24,7 +24,8 @@ class Violation extends Model
         'date',
         'date_occured',
         'date_time_detected',
-        'incident_location'
+        'incident_location',
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -36,6 +37,7 @@ class Violation extends Model
         'course',
         'violation_type',
         'date',
+        'remarks',
     ];
 
     public function getActivitylogOptions(): LogOptions

@@ -35,7 +35,7 @@
                 <h4>Students</h4>
             </div>
 
-            <div class="col-md-6 text-end">
+            {{-- <div class="col-md-6 text-end">
                 <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addStudentModalAd">
                     <i class="bi bi-plus-circle-fill text-center"></i> Add New
                 </button>
@@ -47,7 +47,7 @@
                     </label>
                 </form>
             </div>
-        </div>
+        </div> --}}
 
 
     <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">

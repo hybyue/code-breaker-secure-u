@@ -48,6 +48,11 @@
                                 <option value="Other">Other</option>
                             </select>
                        </div>
+                       <div class="col-md-12 mb-2">
+                        <label for="remarks" class="form-label">Remarks:</label>
+                        <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>
+                        <span class="text-danger error-message" id="remarks_error"></span>
+                    </div>
                     </div>
                     <div class="form-group text-center mt-3">
                         <button type="submit" class="btn text-white add_violation" data-bs-dismiss="addViolationModalAd" style="background-color: #0B9B19">

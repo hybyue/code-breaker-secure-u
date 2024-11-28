@@ -18,7 +18,9 @@ class AllEmployee extends Model
         'middle_name',
         'designation',
         'department',
-        'status'];
+        'status',
+        'position'
+        ];
 
         public function getActivitylogOptions(): LogOptions
         {
@@ -30,7 +32,8 @@ class AllEmployee extends Model
                     'middle_name',
                     'designation',
                     'department',
-                    'status'
+                    'status',
+                    'position'
                 ])
                 ->logOnlyDirty()
                 ->dontSubmitEmptyLogs()

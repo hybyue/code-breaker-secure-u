@@ -27,6 +27,7 @@ class LostFoundController extends Controller
             'course' => 'nullable|regex:/^[A-Za-z\s]+$/|max:50',
             'location' => 'required|string|max:100',
             'description' => 'nullable|string|max:1000',
+            'remarks' => 'nullable|string|max:255',
         ],
         [
             'object_img.image' => 'The object image must be an image file.',
@@ -63,6 +64,7 @@ class LostFoundController extends Controller
             'description' => $request->description,
             'is_claimed' => 0,
             'is_transferred' => 0,
+            'remarks' => $request->remarks ?? null,
         ];
         if ($request->hasFile('object_img')) {
             $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
@@ -93,6 +95,7 @@ class LostFoundController extends Controller
             'course' => 'nullable|regex:/^[A-Za-z\s]+$/|max:50',
             'location' => 'required|string|max:100',
             'description' => 'nullable|string|max:1000',
+            'remarks' => 'nullable|string|max:255',
         ],
         [
             'object_img.image' => 'The object image must be an image file.',
@@ -112,7 +115,8 @@ class LostFoundController extends Controller
             'course.max' => 'Course cannot exceed 50 characters.',
             'location.required' => 'Location is required.',
             'description.max' => 'Description cannot exceed 1000 characters.',
-        ]);
+            'remarks.max' => 'Remarks cannot exceed 255 characters.',
+            ]);
 
         if ($validatedData->fails()) {
             return response()->json(['errors' => $validatedData->errors()], 422);
@@ -230,6 +234,7 @@ public function lost_found_admin(Request $request)
             'course' => 'nullable|regex:/^[A-Za-z\s]+$/|max:50',
             'location' => 'required|string|max:100',
             'description' => 'nullable|string|max:1000',
+            'remarks' => 'nullable|string|max:255',
         ],
         [
             'object_img.image' => 'The object image must be an image file.',
@@ -266,6 +271,7 @@ public function lost_found_admin(Request $request)
             'description' => $request->description,
             'is_claimed' => 0,
             'is_transferred' => 0,
+            'remarks' => $request->remarks ?? null,
         ];
         if ($request->hasFile('object_img')) {
             $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
@@ -307,6 +313,7 @@ public function lost_found_admin(Request $request)
         $lost_found->is_transferred = $request->input('is_transferred');
 
         $lost_found->description = $request->input('description');
+        $lost_found->remarks = $request->input('remarks');
 
           // Save the updated model
           $lost_found->save();

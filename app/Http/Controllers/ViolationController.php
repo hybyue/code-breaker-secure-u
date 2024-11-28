@@ -112,6 +112,8 @@ public function update_violationAdmin(Request $request, string $id)
     $validatedData = Validator::make($request->all(),[
         'violation_type' => 'required|string|max:100',
         'date' => 'required|date',
+
+        'remarks' => 'nullable|string|max:255',
     ],
     [
         ''

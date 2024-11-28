@@ -9,7 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="violationForm" action="{{route('store_violation', $violate->id)}}" method="POST">
+                <form id="violationForm" action="{{route('violation.update.admin', $violate->id)}}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -59,6 +59,10 @@
                         <input type="date" class="form-control" id="date" name="date" value="{{ \Carbon\Carbon::parse($violate->date)->format('Y-m-d') }}">
                     </div>
 
+                    <div class="col-md-12 mb-2">
+                        <label for="remarks" class="form-label">Remarks:</label>
+                        <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                    </div>
                     </div>
 
 

@@ -126,6 +126,10 @@
                             <input type="text" class="form-control" id="visited_person_position_{{ $visit->id }}"
                                 name="visited_person_position" value="{{ $visit->visited_person_position }}">
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                        </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

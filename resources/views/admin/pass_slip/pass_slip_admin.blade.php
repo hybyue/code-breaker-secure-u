@@ -194,6 +194,7 @@
                         <th>Purpose</th>
                         <th>Time Out</th>
                         <th>Time In</th>
+                        <th>Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -236,10 +237,9 @@
                                         {{ $user->last_name }}
                                     @endif
                                 </small>
-                            @else
-                                N/A
                             @endif
                         </td>
+                        <td>{{ $entry->remarks}}</td>
                     </tr>
                     @endforeach
                 </tbody>

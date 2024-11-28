@@ -99,11 +99,21 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out:</label>
-                            <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" value="{{ $passSlip->time_out }}" min="06:00" max="15:00" required>
+                            <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" value="{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i') }}" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_in" class="form-label">Time In:</label>
-                            <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{ $passSlip->time_in }}" min="06:00" max="15:00" required>
+                            <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i') }}" required>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="validity_hours" class="form-label">Validity (Hours):</label>
+                            <input type="number" class="form-control" id="validity_hours-{{ $passSlip->id }}"
+                                   name="validity_hours" step="0.5" min="0.5"
+                                   value="{{ $passSlip->validity_hours }}" required>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks-{{ $passSlip->id }}" name="remarks" rows="2" placeholder="Optional">{{$passSlip->remarks}}</textarea>
                         </div>
                         <div class="mt-2 text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

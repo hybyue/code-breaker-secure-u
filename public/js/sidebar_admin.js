@@ -45,41 +45,51 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Handling 'Other' Option Logic
+    // Move this code outside the nested DOMContentLoaded
+    function initializeSelectElements() {
+        const selectNames = ['person_to_visit', 'id_type', 'violation_type', 'course'];
+
+        selectNames.forEach(name => {
+            document.querySelectorAll(`select[name="${name}"]`).forEach(select => {
+                select.addEventListener('change', function() {
+                    console.log(`Change detected for ${name}:`, this.value);
+                    const parentForm = this.closest('form');
+                    const formId = parentForm ? parentForm.id : 'default';
+                    const inputId = `${name}OtherInput_${formId}`;
+                    handleOtherOption(this, inputId);
+                });
+            });
+        });
+    }
+
+    // Initial setup
+    initializeSelectElements();
+
+    // Re-initialize when modals are shown
+    document.addEventListener('shown.bs.modal', function () {
+        initializeSelectElements();
+    });
+
     function handleOtherOption(selectElement, inputId) {
-        const otherInputId = `${inputId}`;
-        let otherInput = document.getElementById(otherInputId);
+        const parentDiv = selectElement.parentNode;
+        let otherInput = parentDiv.querySelector(`#${inputId}`);
 
         if (selectElement.value === 'Other') {
             if (!otherInput) {
                 const inputField = document.createElement('input');
                 inputField.type = 'text';
-                inputField.id = otherInputId;
+                inputField.id = inputId;
                 inputField.name = selectElement.name;
                 inputField.className = 'form-control mt-2';
-                inputField.placeholder = 'Other Please specify';
-                selectElement.parentNode.appendChild(inputField);
+                inputField.placeholder = 'Please specify';
+                inputField.required = true;
+                parentDiv.appendChild(inputField);
             }
         } else {
             if (otherInput) {
                 otherInput.remove();
             }
         }
-    }
-
-    const personToVisitSelect = document.getElementById("person_to_visit");
-    const idTypeSelect = document.getElementById("id_type");
-
-    if (personToVisitSelect) {
-        personToVisitSelect.addEventListener("change", function () {
-            handleOtherOption(this, "personToVisitOtherInput");
-        });
-    }
-
-    if (idTypeSelect) {
-        idTypeSelect.addEventListener("change", function () {
-            handleOtherOption(this, "idTypeOtherInput");
-        });
     }
 
 });
@@ -94,3 +104,4 @@ window.addEventListener("load", () => {
         loading.parentNode.removeChild(loading);
     });
 });
+

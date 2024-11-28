@@ -1,5 +1,5 @@
-// Toggle sidebar and hamburger menu
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar toggle functionality
     const hamburger = document.querySelector("#toggle-btn");
     const sidebar = document.querySelector("#sidebar");
 
@@ -22,6 +22,45 @@ document.addEventListener("DOMContentLoaded", function () {
         adjustSidebar();
         window.addEventListener("resize", adjustSidebar);
     }
+
+    // Dropdown functionality
+    const dropdownToggles = document.querySelectorAll('.has-dropdown');
+
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            if (sidebar.classList.contains('expand')) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const dropdownId = this.getAttribute('data-bs-target');
+                const dropdown = document.querySelector(dropdownId);
+
+                // Always allow toggle regardless of active state
+                this.classList.toggle('collapsed');
+                dropdown.classList.toggle('show');
+            }
+        });
+    });
+
+    // Set initial state only - don't force it to stay open
+    const currentPath = window.location.pathname;
+    const dropdownItems = document.querySelectorAll('.sidebar-dropdown .sidebar-link');
+
+    dropdownItems.forEach(item => {
+        if (item.getAttribute('href') === currentPath) {
+            const parentDropdown = item.closest('.sidebar-dropdown');
+            const parentItem = item.closest('.sidebar-item');
+            if (parentDropdown && parentItem) {
+                // Set initial state only
+                parentDropdown.classList.add('show');
+                parentItem.classList.add('active');
+                const toggle = parentItem.querySelector('.has-dropdown');
+                if (toggle) {
+                    toggle.classList.add('collapsed');
+                }
+            }
+        }
+    });
 });
 
 // Handle loading bar
@@ -57,6 +96,31 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdownToggles = document.querySelectorAll('.has-dropdown');
+
+        dropdownToggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Get the dropdown menu
+                const dropdownId = this.getAttribute('data-bs-target');
+                const dropdown = document.querySelector(dropdownId);
+
+                // Close all other dropdowns
+                document.querySelectorAll('.sidebar-dropdown').forEach(function(d) {
+                    if (d !== dropdown) {
+                        d.classList.remove('show');
+                    }
+                });
+
+                // Toggle current dropdown
+                dropdown.classList.toggle('show');
+                this.classList.toggle('collapsed');
+            });
+        });
+    });
 
     // Initial setup
     initializeSelectElements();

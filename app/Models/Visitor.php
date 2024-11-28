@@ -26,6 +26,9 @@ class Visitor extends Model
         'time_out',
         'id_type',
         'entry_count',
+        'visited_person_name',
+        'visited_person_position',
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -44,7 +47,7 @@ class Visitor extends Model
         'id_image',
         'visited_person_name',
         'visited_person_position',
-
+        'remarks',
     ];
 
 

@@ -40,7 +40,6 @@
                                 <option value="" selected disabled>Select Employee Type</option>
                                 <option value="Teaching">Teaching</option>
                                 <option value="Non-Teaching">Non-Teaching</option>
-                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">

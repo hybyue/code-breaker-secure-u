@@ -107,6 +107,10 @@
                         <label for="time_in" class="form-label">Time In:</label>
                         <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" min="06:00" max="15:00" value="{{ $passSlip->time_in }}" required>
                     </div>
+                    <div class="col-md-12 mb-2">
+                        <label for="remarks" class="form-label">Remarks:</label>
+                        <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                    </div>
                     <div class="mt-2 text-center">
                         <button type="submit" class="btn btn-primary w-50 update_pass">
                             <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>

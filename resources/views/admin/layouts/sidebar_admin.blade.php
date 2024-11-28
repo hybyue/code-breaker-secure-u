@@ -37,16 +37,10 @@
             display: flex;
             align-items: center;
         }
-
         .navbar-logo {
             width: 40px;
             height: 40px;
-            margin-right: 10px;
-        }
-
-        .navbar-title {
-            font-size: 20px;
-            font-weight: bold;
+            object-fit: contain;
         }
 
         .drop-me {
@@ -61,10 +55,13 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #A10D0D">
         <div class="container-fluid">
             <div class="navbar-left">
-                <img src="{{ URL('images/UCU-logo.png') }}" alt="Logo" class="navbar-logo">
-                <span class="navbar-title text-white">Urdaneta City University</span>
+                <div class="d-flex align-items-center">
+                    <img src="{{ URL('images/UCU-logo.png') }}" alt="UCU Logo" class="navbar-logo">
+                    <span class="navbar-title text-white">Urdaneta City University</span>
+                </div>
             </div>
             <div class="d-flex justify-content-center align-items-center">
+
                 @if (Route::has('login'))
                     @auth
                         <div class="dropdown">
@@ -94,6 +91,8 @@
                         @endif
                     @endauth
                 @endif
+
+
             </div>
         </div>
     </nav>
@@ -104,8 +103,12 @@
                 <button id="toggle-btn" type="button"><i class="bi bi-list"></i></button>
 
                 <div class="sidebar-logo mt-3">
-                    <h4 class="text-start text-white">Secure-U</h4>
-
+                    <div class="d-flex align-items-center">
+                        <img src="{{ URL('images/smo1.png') }}"
+                             alt="SMO Logo"
+                             class="sidebar-smo-logo">
+                        <h6 class="text-white mb-0 ms-2">Security Management Office</h6>
+                    </div>
                 </div>
             </div>
             <ul class="sidebar-nav">

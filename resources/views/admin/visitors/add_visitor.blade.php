@@ -110,7 +110,11 @@
                             <input type="text" class="form-control" id="id_number" name="id_number" required>
                             <span class="text-danger" id="id_number_error"></span>
                         </div>
-
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>
+                            <span class="text-danger error-message" id="remarks_error"></span>
+                        </div>
                         <div class="form-group text-center mt-3">
                             <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19;">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>

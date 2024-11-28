@@ -125,6 +125,7 @@
                             <th>Violation No.</th>
                             <th>Date</th>
                             <th>Violation Type</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,6 +134,7 @@
                             <td>{{ $entry->violation_count }}</td>
                             <td>{{ \Carbon\Carbon::parse($entry->created_at)->format('F d, Y') }}</td>
                             <td>{{ $entry->violation_type }}</td>
+                            <td>{{ $entry->remarks }}</td>
                         </tr>
                         @endforeach
                     </tbody>

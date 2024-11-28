@@ -104,6 +104,17 @@
                             <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00">
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="validity_hours" class="form-label">Pass Slip Validity (Hours): </label>
+                            <input type="number" class="form-control" id="validity_hours" name="validity_hours"
+                                   step="0.5" min="0.5" value="3">
+                            <span class="text-danger error-message" id="validity_hours_error"></span>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>
+                            <span class="text-danger error-message" id="remarks_error"></span>
+                        </div>
                         <div class="mt-2 text-center">
                             <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>

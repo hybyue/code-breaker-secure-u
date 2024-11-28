@@ -33,7 +33,10 @@ class PassSlip extends Model
         'driver_name',
         'time_out_by',
         'time_in_by',
-        'is_exceeded'
+        'is_exceeded',
+        'remarks',
+        'validity_hours',
+        'late_minutes',
     ];
 
     protected $casts = [
@@ -61,7 +64,10 @@ class PassSlip extends Model
                 'driver_name',
                 'time_out_by',
                 'time_in_by',
-                'is_exceeded'
+                'is_exceeded',
+                'remarks',
+                'validity_hours',
+                'late_minutes'
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()

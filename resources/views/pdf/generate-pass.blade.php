@@ -140,7 +140,7 @@
             <td>
                 <div class="security-container">
                     <!-- Security Logo -->
-                    <img src="{{ public_path('images/ucu-logo.png') }}" alt="Security Logo" class="logo">
+                    <img src="{{ public_path('images/SMO.png') }}" alt="Security Logo" class="logo">
                     <div class="security-name">Security Management Office</div>
                 </div>
             </td>

@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route('update.lost_found_admin', $item->id)}}" method="POST"  enctype="multipart/form-data">
+                <form id="lostFoundUpdateForm-{{ $item->id }}" class="lostFoundUpdateForm" action="{{route('update.lost_found_admin', $item->id)}}" method="POST"  enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -78,8 +78,13 @@
                             <label for="description-{{ $item->id }}" class="form-label">Description:</label>
                             <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
                         </div>
-                        <div class="d-flex justify-content-center mt-3">
-                            <button type="submit" class="btn btn-primary">update</button>
+                        <div class="col-md-12 mb-2">
+                            <label for="remarks" class="form-label">Remarks:</label>
+                            <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3  w-50">
+                            <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
+                            <button type="submit" class="btn btn-primary update_lost">update</button>
                         </div>
                     </div>
                 </form>

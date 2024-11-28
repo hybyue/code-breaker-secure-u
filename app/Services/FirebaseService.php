@@ -13,14 +13,16 @@ class FirebaseService
     protected $database;
     protected $usersRef;
     protected $activityRef;
-
     protected $staffRef;
+    protected $studentRef;
+
     public function __construct(Database $database)
     {
         $this->database = $database;
         $this->usersRef = $this->database->getReference('ADMIN_CRED');
         $this->staffRef = $this->database->getReference('Staffs');
         $this->activityRef = $this->database->getReference('ActivityLogs');
+        $this->studentRef = $this->database->getReference('Students');
     }
 
     public function syncUser(User $user)
@@ -61,11 +63,11 @@ class FirebaseService
     public function syncStudent(Student $student)
     {
         $rawAttributes = $student->getAttributes();
-        $this->staffRef->getChild($student->name)->update($rawAttributes);
+        $this->studentRef->getChild($student->student_no)->update($rawAttributes);
     }
 
     public function deleteStudent(Student $student)
     {
-        $this->staffRef->getChild($student->name)->remove();
+        $this->studentRef->getChild($student->student_no)->remove();
     }
 }

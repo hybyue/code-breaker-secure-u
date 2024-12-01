@@ -181,8 +181,8 @@
                              <tr>
                                  <td>{{ $entry->person_to_visit }}</td>
                                  <td>{{ $entry->purpose }}</td>
-                                 <td>{{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}</td>
-                                 <td>{{ $entry->time_out ? \Carbon\Carbon::parse($entry->time_out)->format('g:i A')}}</td>
+                                 <td>{{ \Carbon\Carbon::parse($entry->time_in)->format('H:i') }}</td>
+                                 <td>{{ \Carbon\Carbon::parse($entry->time_out)->format('H:i')}}</td>
                                  <td>{{ $entry->visited_person_name}}</td>
                                  <td>{{ $entry->visited_person_position}}</td>
                                  <td>{{ $entry->remarks}}</td>

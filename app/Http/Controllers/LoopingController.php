@@ -56,6 +56,49 @@ class LoopingController extends Controller
         return view('sub-admin.looping.loopings', compact('loopingRecords', 'filterData'));
     }
 
+    public function index_admin(Request $request)
+    {
+        // Store filters in session if provided in the request
+        if ($request->filled('start_date') || $request->filled('end_date') ||
+            $request->filled('employee_type')) {
+            session(['looping_filter' => [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'employee_type' => $request->employee_type,
+            ]]);
+        }
+
+        // Get filter data from session or request
+        $filterData = session('looping_filter', [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'employee_type' => $request->employee_type,
+        ]);
+
+
+                    // Apply filters using session data
+            $query = Looping::query();
+            // Apply filters
+            if (!empty($filterData['start_date'])) {
+                    $query->whereDate('date', '>=', $filterData['start_date']);
+                }
+
+                if (!empty($filterData['end_date'])) {
+                    $query->whereDate('date', '<=', $filterData['end_date']);
+                }
+
+                if (!empty($filterData['employee_type'])) {
+                    $query->where('employee_type', $filterData['employee_type']);
+                }
+
+
+
+        // Remove the redundant where clause and just get the results
+        $loopingRecords = $query->latest()->get();
+
+        return view('admin.looping.loopings', compact('loopingRecords', 'filterData'));
+    }
+
 
     public function store(Request $request)
     {
@@ -64,9 +107,10 @@ class LoopingController extends Controller
             'department' => 'required|string|max:255',
             'employee_type' => 'required|string|max:255',
             'date' => 'required|date',
-            'time_in' => 'required',
+
             'time_out' => 'required',
-            'remarks' => 'nullable|string|max:1000',
+            'time_in' => 'nullable',
+            'remarks' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -80,8 +124,9 @@ class LoopingController extends Controller
                 'department' => $request->department,
                 'employee_type' => $request->employee_type,
                 'date' => $request->date,
-                'time_in' => Carbon::parse($request->time_in)->format('H:i:s'),
-                'time_out' => Carbon::parse($request->time_out)->format('H:i:s'),
+
+                'time_out' => Carbon::parse($request->time_out)->format('H:i'),
+                'time_in' => $request->time_in ? Carbon::parse($request->time_in)->format('H:i') : null,
                 'remarks' => $request->remarks,
             ]);
 
@@ -143,6 +188,12 @@ class LoopingController extends Controller
         session()->forget('looping_filter');
         return redirect()->route('sub-admin.looping.loopings');
     }
+    public function clearLoopingFilterAdmin()
+    {
+        session()->forget('looping_filter');
+        return redirect()->route('admin.looping.loopings');
+    }
+
 
     public function searchLooping(Request $request)
     {

@@ -105,9 +105,17 @@
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
                         <div class="col-md-12 mb-2">
-                            <label for="validity_hours" class="form-label">Pass Slip Validity (Hours): </label>
-                            <input type="number" class="form-control" id="validity_hours" name="validity_hours"
-                                   step="0.5" min="0.5" value="3">
+                            <label for="validity_hours" class="form-label">Pass Slip Validity: </label>
+                            <select class="form-select" id="validity_hours" name="validity_hours" required>
+                                <option value="0.5">30 Minutes</option>
+                                <option value="1">1 Hour</option>
+                                <option value="1.5">1 Hour and 30 Minutes</option>
+                                <option value="2">2 Hours</option>
+                                <option value="2.5">2 Hours and 30 Minutes</option>
+                                <option value="3" selected>3 Hours</option>
+                                <option value="3.5">3 Hours and 30 Minutes</option>
+                                <option value="4">4 Hours</option>
+                            </select>
                             <span class="text-danger error-message" id="validity_hours_error"></span>
                         </div>
                         <div class="col-md-12 mb-2">
@@ -116,7 +124,7 @@
                             <span class="text-danger error-message" id="remarks_error"></span>
                         </div>
                         <div class="mt-2 text-center">
-                            <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19">
+                            <button type="submit" class="btn text-white w-50 add_pass_slip" style="background-color: #0B9B19">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Save
                             </button>

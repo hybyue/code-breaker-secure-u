@@ -46,6 +46,15 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="position" class="form-label">Position:</label>
+                            <select type="text" class="form-select" id="position" name="position" required>
+                                <option value="Teaching" {{ $employee->position == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                <option value="Non-Teaching" {{ $employee->position == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" wire:click="mount">Save</button>

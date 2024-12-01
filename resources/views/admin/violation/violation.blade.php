@@ -132,7 +132,7 @@
                         @foreach($allViolations[$violation->student_no] as $entry)
                         <tr>
                             <td>{{ $entry->violation_count }}</td>
-                            <td>{{ \Carbon\Carbon::parse($entry->created_at)->format('F d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</td>
                             <td>{{ $entry->violation_type }}</td>
                             <td>{{ $entry->remarks }}</td>
                         </tr>

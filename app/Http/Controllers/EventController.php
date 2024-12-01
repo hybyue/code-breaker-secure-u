@@ -46,12 +46,15 @@ class EventController extends Controller
     public function showEvent()
     {
         // Total counts
-        $totalVisitors = Visitor::count();
+        // $totalVisitors = Visitor::count();
         $totalPassSlips = PassSlip::count();
         $totalViolation = Violation::count();
 
+        $todayVisitors = Visitor::withoutGlobalScopes()->whereDate('created_at', now()->toDateString())->count();
+        $totalVisitors = Visitor::withoutGlobalScopes()->whereYear('created_at', now()->year)->count();
+
         // Today's counts
-        $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
+        // $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
         $todayPassSlips = PassSlip::whereDate('created_at', Carbon::today())->count();
 
         $events = Event::all();
@@ -105,7 +108,7 @@ class EventController extends Controller
         $totalEvents = Event::count();
         $totalEmployees = AllEmployee::count();
         $totalStudent = Student::count();
-        $totalVisitor = Visitor::count();
+        $totalVisitor = Visitor::withoutGlobalScopes()->whereYear('created_at', now()->year)->count();
         $totalViolation = Violation::count();
         $totalLostFound = Lost::count();
         $totalPassSlip = PassSlip::count();

@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addLoopingForm" action="{{ route('store.looping_admin') }}" method="POST">
+                <form id="addLoopingFormAdmin" action="" method="POST">
                     @csrf
                     <div class="row">
                         <div class="mb-2 position-relative">
@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="mt-2 text-center">
-                            <button type="submit" class="btn text-white w-50" style="background-color: #0B9B19">
+                            <button type="submit" class="btn text-white w-50 add_looping" style="background-color: #0B9B19">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Save
                             </button>

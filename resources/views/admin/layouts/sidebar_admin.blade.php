@@ -130,12 +130,34 @@
                         <span>Visitors</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="{{ route('admin.pass_slip.pass_slip_admin') }}" class="sidebar-link {{ Route::is('admin.pass_slip.pass_slip_admin') ? 'active' : '' }}">
-                        <i class="bi bi-pass"></i>
-                        <span>Pass Slip</span>
-                    </a>
-                </li>
+
+
+            <li class="sidebar-item {{
+                Route::is('admin.pass_slip.pass_slip_admin') ||
+                Route::is('admin.looping.loopings') ? 'active' : ''
+            }}">
+                <a href="#" class="sidebar-link has-dropdown" data-bs-target="#passSlip">
+                    <i class="bi bi-pass"></i>
+                    <span>Pass Slip Management</span>
+                </a>
+                <ul id="passSlip" class="sidebar-dropdown">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.pass_slip.pass_slip_admin') }}"
+                           class="sidebar-link {{ Route::is('admin.pass_slip.pass_slip_admin') ? 'active' : '' }}">
+                           With Pass Slip
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.looping.loopings') }}"
+                           class="sidebar-link {{ Route::is('admin.looping.loopings') ? 'active' : '' }}">
+                           Without Pass Slip
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
                 <li class="sidebar-item">
                     <a href="{{ route('admin.lost.lost_found_admin')}}" class="sidebar-link {{ Route::is('admin.lost.lost_found_admin') ? 'active' : '' }}">
                         <i class="bi bi-box-seam-fill"></i>
@@ -154,19 +176,30 @@
                         <span>Create Account</span>
                     </a>
                 </li> --}}
+            <li class="sidebar-item {{
+                Route::is('admin.employees.all_employee') ||
+                Route::is('admin.students.student') ? 'active' : ''
+            }}">
+                <a href="#" class="sidebar-link has-dropdown" data-bs-target="#info">
+                    <i class="bi bi-person-vcard-fill"></i>
+                    <span>Information</span>
+                </a>
+                <ul id="info" class="sidebar-dropdown">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.employees.all_employee') }}"
+                           class="sidebar-link {{ Route::is('admin.employees.all_employee') ? 'active' : '' }}">
+                           Employees
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.students.student') }}"
+                           class="sidebar-link {{ Route::is('admin.students.student') ? 'active' : '' }}">
+                           Students
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="sidebar-item">
-                    <a href="{{route('admin.employees.all_employee')}}" class="sidebar-link {{ Route::is('admin.employees.all_employee') ? 'active' : '' }}">
-                        <i class="bi bi-person-vcard-fill"></i>
-                        <span>Employees</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="{{route('admin.students.student')}}" class="sidebar-link {{ Route::is('admin.students.student') ? 'active' : '' }}">
-                        <i class="bi bi-person-lines-fill"></i>
-                        <span>Students</span>
-                    </a>
-                </li>
                 {{-- <li class="sidebar-item">
                     <a href="{{ route('admin.activity') }}" class="sidebar-link {{ Route::is('admin.activity') ? 'active' : '' }}">
                         <i class="bi bi-arrow-right-circle"></i>

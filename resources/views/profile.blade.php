@@ -225,9 +225,9 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Employment Type:</label>
                                 <select class="form-select" name="employment_type" required>
-                                    <option value="" selected disabled>Select Employment Type</option>
-                                    <option value="Part-Time" {{ $user->employment_type == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
-                                    <option value="Full-Time" {{ $user->employment_type == 'Full-Time' ? 'selected' : '' }}>Full-Time</option>
+                                    <option value="" selected disabled>Select a Employment Type</option>
+                                    <option value="Teaching" {{ $user->employment_type == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                    <option value="Non-Teaching" {{ $user->employment_type == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                                     <option value="Other" {{ $user->employment_type == 'Other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
@@ -239,7 +239,7 @@
                                 <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
                                 <input type="text" class="form-control" id="emergency_contact_number"  placeholder="09*********" name="emergency_contact_number" minlength="11" maxlength="11" value="{{ $user->emergency_contact_number }}" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label for="date_hired" class="form-label">Date Hired:</label>
                                 <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $user->date_hired ? \Carbon\Carbon::parse($user->date_hired)->format('Y-m-d') : '' }}" required>
                             </div>
@@ -247,7 +247,7 @@
                                 <label for="badge_number" class="form-label">Badge Number:</label>
                                 <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $user->badge_number }}" required>
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Address Information:</label>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
@@ -381,9 +381,9 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Employment Type:</label>
                                     <select class="form-select" name="employment_type" required>
-                                        <option value="{{$user->employemt_type}}" selected>{{$user->employemt_type}}</option>
-                                        <option value="Part-Time" {{ $user->employment_type == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
-                                        <option value="Full-Time" {{ $user->employment_type == 'Full-Time' ? 'selected' : '' }}>Full-Time</option>
+                                        <option value="" selected disabled>Select a Employment Type</option>
+                                        <option value="Teaching" {{ $user->employment_type == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                        <option value="Non-Teaching" {{ $user->employment_type == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                                         <option value="Other" {{ $user->employment_type == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>

@@ -99,17 +99,25 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out:</label>
-                            <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" value="{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i') }}" required>
+                            <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}"min="06:00" max="15:00"  min="06:00" max="15:00"  name="time_out" value="{{$passSlip->time_out}}" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="time_in" class="form-label">Time In:</label>
-                            <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i') }}" required>
+                            <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{$passSlip->time_in}}">
                         </div>
                         <div class="col-md-12 mb-2">
-                            <label for="validity_hours" class="form-label">Validity (Hours):</label>
-                            <input type="number" class="form-control" id="validity_hours-{{ $passSlip->id }}"
-                                   name="validity_hours" step="0.5" min="0.5"
-                                   value="{{ $passSlip->validity_hours }}" required>
+                            <label for="validity_hours" class="form-label">Pass Slip Validity:</label>
+                            <select class="form-select" id="validity_hours" name="validity_hours" required>
+                                <option value="{{ $passSlip->validity_hours }}" selected>{{ $passSlip->validity_hours }} Hours</option>
+                                <option value="0.5">30 Minutes</option>
+                                <option value="1">1 Hour</option>
+                                <option value="1.5">1 Hour and 30 Minutes</option>
+                                <option value="2">2 Hours</option>
+                                <option value="2.5">2 Hours and 30 Minutes</option>
+                                <option value="3">3 Hours</option>
+                                <option value="3.5">3 Hours and 30 Minutes</option>
+                                <option value="4">4 Hours</option>
+                            </select>
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>

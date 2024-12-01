@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="violationForm" id="violationForm-{{$violate->id}}" action="{{ route('violation.update', $violate->id) }}" method="POST">
+                <form class="violationFormUpdate" id="violationFormUpdate-{{$violate->id}}" action="{{ route('violation.update', $violate->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     @if ($errors->any())
@@ -71,7 +71,7 @@
                     </div>
                     </div>
                     <div class="form-group text-center mt-3">
-                        <button type="submit" class="btn btn-primary text-white update_violation w-50">
+                        <button type="submit" class="btn btn-primary text-white update_violate w-50">
                             <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
                             Update</button>
                     </div>

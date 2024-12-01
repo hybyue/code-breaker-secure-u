@@ -13,7 +13,6 @@
                 <i class="bi bi-plus-circle-fill text-center"></i> Add New
             </a>
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalAd()">Generate Report</a>
-            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Looping Report</a>
 
 
                     </div>
@@ -103,7 +102,7 @@
                                     @if($passSlip->late_minutes >= 60)
                                         {{ floor($passSlip->late_minutes / 60) }} hr
                                         @if($passSlip->late_minutes % 60 > 0)
-                                            {{ $passSlip->late_minutes % 60 }} min
+                                           and {{ $passSlip->late_minutes % 60 }} min
                                         @endif
                                     @else
                                         {{ $passSlip->late_minutes }} min
@@ -146,7 +145,7 @@
 <div id="latestPassSlips">
 @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="viewPassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="viewPassSlipLabel-{{ $passSlip->id }}" aria-hidden="true">
-<div class="modal-dialog modal-xl">
+<div class="modal-dialog  w-100 mt-5 pt-4" style="max-width: 95%;">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="viewPassSlipLabel-{{ $passSlip->id }}">Pass Slip Information</h5>
@@ -206,11 +205,11 @@
                         <td>{{ $entry->p_no }}</td>
                         <td>{{ $entry->designation }}</td>
                         <td>{{ $entry->check_business }}</td>
-                        <td>{{ $entry->driver_name ?? 'N/A' }}</td>
+                        <td>{{ $entry->driver_name }}</td>
                         <td>{{ $entry->destination }}</td>
                         <td>{{ $entry->purpose }}</td>
                         <td>
-                            {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}
+                            {{ \Carbon\Carbon::parse($entry->time_out)->format('H:i') }}
                             <br>
                             <small class="text-muted">by:
                                 @if ($entry->time_out_by)
@@ -225,7 +224,7 @@
                         </td>
                         <td>
                             @if($entry->time_in)
-                                {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}
+                                {{ \Carbon\Carbon::parse($entry->time_in)->format('H:i') }}
                                 <br>
                                 <small class="text-muted">by:
                                     @if ($entry->time_in_by)

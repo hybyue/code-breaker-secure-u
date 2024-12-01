@@ -201,9 +201,9 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Employment Type:</label>
                                 <select class="form-select" name="employment_type" required>
-                                    <option value="" selected disabled>Select Employment Type</option>
-                                    <option value="Part-Time" {{ $user->employment_type == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
-                                    <option value="Full-Time" {{ $user->employment_type == 'Full-Time' ? 'selected' : '' }}>Full-Time</option>
+                                    <option value="" selected disabled>Select a Employment Type</option>
+                                    <option value="Teaching" {{ $user->employment_type == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                    <option value="Non-Teaching" {{ $user->employment_type == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                                     <option value="Other" {{ $user->employment_type == 'Other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
@@ -261,7 +261,18 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="position" class="form-label">Position:</label>
-                                <input type="text" class="form-control" id="position" name="position" value="{{ $user->position }}" required>
+                                <select class="form-select" id="position" name="position" required>
+                                    <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
+                                    <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
+                                    <option value="Security lll" {{ $user->position == 'Security lll' ? 'selected' : '' }}>Security lll</option>
+                                    <option value="Security Guard l" {{ $user->position == 'Security Guard l' ? 'selected' : '' }}>Security Guard l</option>
+                                    <option value="Security Guard ll" {{ $user->position == 'Security Guard ll' ? 'selected' : '' }}>Security Guard ll</option>
+                                    <option value="Security Guard lll" {{ $user->position == 'Security Guard lll' ? 'selected' : '' }}>Security Guard lll</option>
+                                    <option value="Casual, Security" {{ $user->position == 'Casual, Security' ? 'selected' : '' }}>Casual, Security</option>
+                                    <option value="Part-time Security" {{ $user->position == 'Part-time Security' ? 'selected' : '' }}>Part-time Security</option>
+                                    <option value="Support Staff" {{ $user->position == 'Support Staff' ? 'selected' : '' }}>Support Staff</option>
+                                    <option value="Other" {{ $user->position == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
                             </div>
 
                         </div>
@@ -339,10 +350,11 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Employment Type:</label>
-                                    <select class="form-select" name="employment_type">
-                                        <option value="{{$user->employement_type}}">{{$user->employement_type}}</option>
-                                        <option value="Part-Time" {{ $user->employment_type == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
-                                        <option value="Full-Time" {{ $user->employment_type == 'Full-Time' ? 'selected' : '' }}>Full-Time</option>
+                                    <select class="form-select" name="employment_type" required>
+                                        <option value="" selected disabled>Select a Employment Type</option>
+                                        <option value="Teaching" {{ $user->employment_type == 'Teaching' ? 'selected' : '' }}>Teaching</option>
+                                        <option value="Non-Teaching" {{ $user->employment_type == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
+                                        <option value="Other" {{ $user->employment_type == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -403,7 +415,18 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="position" class="form-label">Position:</label>
-                                    <input type="text" class="form-control" id="position" name="position" value="{{ $user->position }}" required>
+                                    <select class="form-select" id="position" name="position" required>
+                                        <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
+                                        <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
+                                        <option value="Security lll" {{ $user->position == 'Security lll' ? 'selected' : '' }}>Security lll</option>
+                                        <option value="Security Guard l" {{ $user->position == 'Security Guard l' ? 'selected' : '' }}>Security Guard l</option>
+                                        <option value="Security Guard ll" {{ $user->position == 'Security Guard ll' ? 'selected' : '' }}>Security Guard ll</option>
+                                        <option value="Security Guard lll" {{ $user->position == 'Security Guard lll' ? 'selected' : '' }}>Security Guard lll</option>
+                                        <option value="Casual, Security" {{ $user->position == 'Casual, Security' ? 'selected' : '' }}>Casual, Security</option>
+                                        <option value="Part-time Security" {{ $user->position == 'Part-time Security' ? 'selected' : '' }}>Part-time Security</option>
+                                        <option value="Support Staff" {{ $user->position == 'Support Staff' ? 'selected' : '' }}>Support Staff</option>
+                                        <option value="Other" {{ $user->position == 'Other' ? 'selected' : '' }}>Other</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">

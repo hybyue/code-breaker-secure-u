@@ -29,17 +29,17 @@
                         <input type="text" class="form-control" id="lostName" name="first_name" required>
                     </div>
                     <div class="col-md-6  mb-3">
-                        <label for="lostName" class="form-label">Middle Initial:</label>
+                        <label for="lostName" class="form-label">Finder Middle Initial:</label>
                         <input type="text" class="form-control" id="lostName" name="middle_name" >
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="lostName" class="form-label">Last Name:</label>
+                        <label for="lostName" class="form-label"> Finder Last Name:</label>
                         <input type="text" class="form-control" id="lostName" name="last_name" required>
                     </div>
                     <div class="mb-3">
                         <label for="lostCourse" class="form-label">Role:</label>
                         <select class="form-select" id="course" name="course" required>
-                            <option value="" selected disabled>Choose person's role</option>
+                            <option value="" selected disabled>Choose Finder's role</option>
                                 <option value="Student">Student</option>
                                 <option value="Employee">Employee</option>
                                 <option value="Janitor">Janitor</option>

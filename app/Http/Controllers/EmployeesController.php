@@ -128,6 +128,7 @@ class EmployeesController extends Controller
             'middle_name' => 'nullable|string|max:1|regex:/^[a-zA-Z\s]+$/',
             'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'gender' => 'required|string|in:Male,Female,male,female',
+            'employment_type' => 'required|string|in:Teaching,Non-Teaching',
             'civil_status' => 'required|string|in:Single,Married,Divorced,Widowed',
             'contact_no' => [
                 'required',
@@ -140,7 +141,6 @@ class EmployeesController extends Controller
                 'date',
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
-            'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
             'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'emergency_contact_number' => [
                 'required',
@@ -189,6 +189,7 @@ class EmployeesController extends Controller
             'first_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'middle_name' => 'nullable|string|max:1|regex:/^[a-zA-Z\s]+$/',
             'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'employment_type' => 'required|string|in:Teaching,Non-Teaching',
             'gender' => 'required|string|in:Male,Female,male,female',
             'civil_status' => 'required|string|in:Single,Married,Divorced,Widowed',
             'contact_no' => [
@@ -202,7 +203,6 @@ class EmployeesController extends Controller
                 'date',
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
-            'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
             'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'emergency_contact_number' => [
                 'required',
@@ -299,148 +299,6 @@ class EmployeesController extends Controller
         return view('admin.layouts.profile_admin', compact('user'));
     }
 
-    public function addInformationAdmin(Request $request, string $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'id_number' => 'required|string|max:255|unique:users,id_number,' . $id,
-            'first_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'middle_name' => 'nullable|string|max:1|regex:/^[a-zA-Z\s]+$/',
-            'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'gender' => 'required|string|in:Male,Female,male,female',
-            'civil_status' => 'required|string|in:Single,Married,Divorced,Widowed',
-            'contact_no' => [
-                'required',
-                'string',
-                'max:11',
-                'regex:/^([0-9\s\-\+\(\)]*)$/'
-            ],
-            'date_birth' => [
-                'required',
-                'date',
-                'before:' . now()->subYears(18)->format('Y-m-d')
-            ],
-            'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
-            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'emergency_contact_number' => [
-                'required',
-                'string',
-                'max:11',
-                'regex:/^([0-9\s\-\+\(\)]*)$/'
-            ],
-            'date_hired' => 'required|date',
-            'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
-            'schedule' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'municipality' => 'required|string|max:255',
-            'barangay' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-        ], [
-            'first_name.regex' => 'The first name must contain only letters and spaces.',
-            'middle_name.regex' => 'Must contain only letters and spaces.',
-            'middle_name.max' => 'Must only have 1 letter.',
-            'last_name.regex' => 'The last name must contain only letters and spaces.',
-            'contact_no.regex' => 'The contact number format is invalid.',
-            'date_birth.before' => 'You must be at least 18 years old.',
-            'id_number.unique' => 'This ID number is already taken.',
-            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
-            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
-            'badge_number.unique' => 'This badge number is already taken.',
-            'province' => 'required|string|max:255',
-            'municipality' => 'required|string|max:255',
-            'barangay' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = User::findOrFail($id);
-
-        // Get the form data
-        $userData = $request->all();
-
-        // Use the text values for address fields
-        $userData['province'] = $request->input('province_text');
-        $userData['municipality'] = $request->input('municipality_text');
-        $userData['barangay'] = $request->input('barangay_text');
-
-        $user->update($userData);
-
-        return response()->json([
-            'success' => true,
-            'user' => $user,
-            'message' => 'Profile information updated successfully.'
-        ]);
-    }
-
-    public function editInformationAdmin(Request $request, string $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'id_number' => 'required|string|max:255|unique:users,id_number,' . $id,
-            'first_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'middle_name' => 'nullable|string|max:1|regex:/^[a-zA-Z\s]+$/',
-            'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'gender' => 'required|string|in:Male,Female,male,female',
-            'civil_status' => 'required|string|in:Single,Married,Divorced,Widowed',
-            'contact_no' => [
-                'required',
-                'string',
-                'max:11',
-                'regex:/^([0-9\s\-\+\(\)]*)$/'
-            ],
-            'date_birth' => [
-                'required',
-                'date',
-                'before:' . now()->subYears(18)->format('Y-m-d')
-            ],
-            'employment_type' => 'required|string|in:Part-Time,Full-Time,Other',
-            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'emergency_contact_number' => [
-                'required',
-                'string',
-                'max:11',
-                'regex:/^([0-9\s\-\+\(\)]*)$/'
-            ],
-            'date_hired' => 'required|date',
-            'badge_number' => 'required|string|max:255|unique:users,badge_number,' . $id,
-            'schedule' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'municipality' => 'required|string|max:255',
-            'barangay' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-        ], [
-            'first_name.regex' => 'The first name must contain only letters and spaces.',
-            'middle_name.regex' => 'Must contain only letters and spaces.',
-            'middle_name.max' => 'Must only have 1 letter.',
-            'last_name.regex' => 'The last name must contain only letters and spaces.',
-            'contact_no.regex' => 'The contact number format is invalid.',
-            'date_birth.before' => 'You must be at least 18 years old.',
-            'id_number.unique' => 'This ID number is already taken.',
-            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
-            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
-            'badge_number.unique' => 'This badge number is already taken.',
-            'street.required' => 'The street address is required.',
-            'province.required' => 'The province field is required.',
-            'municipality.required' => 'The municipality field is required.',
-            'barangay.required' => 'The barangay field is required.',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-
-        return response()->json([
-            'success' => true,
-            'user' => $user,
-            'message' => 'Staff updated successfully'
-        ]);
-    }
     public function changePassword()
     {
         $user = Auth::user();

@@ -33,13 +33,15 @@
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addEmployeeModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <form action="{{route('import.employee')}}" method="POST" enctype="multipart/form-data" class="d-inline-flex align-items-center">
-                @csrf
-                <label for="file" class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;">
-                    <i class="bi bi-download"></i> Import Excel
-                    <input type="file" class="d-none" id="file" name="excel_file_employees" onchange="this.form.submit()">
-                </label>
-            </form>
+                <!-- Import Excel Form -->
+                <form action="{{ route('import.employee') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline-flex align-items-center">
+                    @csrf
+                    <label class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;" onclick="showWarning()">
+                        <i class="bi bi-download"></i> Import Excel
+                    </label>
+                    <input type="file" class="d-none" id="file" name="excel_file_employees" onchange="document.getElementById('importForm').submit()">
+                </form>
+
         </div>
      </div>
     </div>
@@ -70,19 +72,6 @@
 
                 <td class="text-center">
                     <a href="javascript:void(0)" class="editModal btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateEmployeeModalAd-{{$allEmployee->id}}"><i class="bi bi-pencil-square"></i></a>
-
-                    {{-- <div class="d-flex justify-content-center align-items-center">
-                        <div class="mx-1">
-                            <a href="javascript:void(0)" class="viewModal btn btn-sm text-white" style="background-color: #1e1f1e" data-id="{{ $allEmployee->id }}"   data-bs-toggle="modal" data-bs-target="#viewViolationAd-{{ $allEmployee->id }}"><i class="bi bi-eye"></i></a>
-                        </div>
-                        <div class="mx-1">
-                        </div>
-                        <div class="mx-1">
-                            <a href="javascript:void(0)" onclick="deleteEmployee({{$allEmployee->id}})" class="btn btn-sm text-white" style="background-color: #920606">
-                                <i class="bi bi-trash3-fill"></i>
-                            </a>
-                    </div>
-                    </div> --}}
                 </td>
             </tr>
 
@@ -102,47 +91,56 @@
 
 @include('admin.employees.employee_js')
 
-
-
-
-{{-- Modal for showing all entries of a student
-@foreach ($violations as $violation)
-<div class="modal fade" id="viewViolationAd-{{ $violation->id }}" tabindex="-1" aria-labelledby="viewViolationAdLabel-{{ $violation->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewViolationAdLabel-{{ $violation->id }}">Student Violations</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Violation No.</th>
-                            <th>Date</th>
-                            <th>Violation Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($allViolations[$violation->student_no] as $entry)
-                        <tr>
-                            <td>{{ $entry->violation_count }}</td>
-                            <td>{{ \Carbon\Carbon::parse($entry->created_at)->format('F d, Y') }}</td>
-                            <td>{{ $entry->violation_type }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach --}}
+<script>
+    function showWarning() {
+        Swal.fire({
+            title: 'Import Multiple Employee Data',
+            html: `
+                <p>Please ensure your Excel file follows the correct column order</p>
+                <br>
+                <br>
+                <table style="width: 100%; text-align: left; border-collapse: collapse; border: 1px solid #ddd;">
+                <thead>
+                    <tr>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Employee ID</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">First Name</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Middle Initial</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Last Name</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Designation</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Department</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Status</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Position</th>
+                    </tr>
+                </thead>
+            </table>
+            <br>
+            <br>
+                <p class='text-danger'>Uploading a file in a different format may result in errors.</p>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Proceed to Upload',
+            cancelButtonText: 'Cancel',
+            customClass: {
+            popup: 'custom-width',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Trigger the hidden file input
+                document.getElementById('file').click();
+            }
+        });
+    }
+</script>
 
 
 <style>
     .same-height-table td {
         vertical-align: middle;
+    }
+    .swal2-popup.custom-width {
+        width: 100%;
+        max-width: 1000px;
     }
 </style>
 

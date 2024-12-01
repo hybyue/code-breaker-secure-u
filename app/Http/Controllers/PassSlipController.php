@@ -124,9 +124,9 @@ private function generatePassNoSub()
     {
         $request->validate([
             'p_no' => 'required|string|max:255',
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:100',
+            'middle_name' => 'nullable|string|max:100',
+            'last_name' => 'required|string|max:100',
             'department' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'destination' => 'required|string|max:100',
@@ -181,8 +181,8 @@ private function generatePassNoSub()
             'destination' => 'required|string|max:100',
             'employee_type' => 'required|string|max:255',
             'purpose' => 'required|string|max:255',
-            'time_out' => 'required|date_format:H:i',
-            'time_in' => 'required|date_format:H:i',
+            'time_out' => 'required',
+            'time_in' => 'nullable',
             'check_business' => 'required|string',
             'driver_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
             'remarks' => 'nullable|string|max:255',
@@ -195,9 +195,11 @@ private function generatePassNoSub()
 
         $passSlip = PassSlip::findOrFail($id);
 
-        // Parse time values
+        // Parse time_out
         $timeOut = Carbon::parse($request->input('time_out'));
-        $timeIn = Carbon::parse($request->input('time_in'));
+
+        // Check if time_in is provided, otherwise set it to null
+        $timeIn = $request->input('time_in') ? Carbon::parse($request->input('time_in')) : null;
 
         // Calculate late minutes and exceeded status
         $lateMinutesData = $this->calculateLateMinutes($timeOut, $timeIn, $request->validity_hours);
@@ -212,8 +214,8 @@ private function generatePassNoSub()
             'check_business' => $request->check_business,
             'driver_name' => $request->driver_name,
             'remarks' => $request->remarks,
-            'time_out' => $timeOut->format('H:i:s'),
-            'time_in' => $timeIn->format('H:i:s'),
+            'time_out' => $timeOut->format('H:i'),
+            'time_in' => $timeIn ? $timeIn->format('H:i') : null,
             'validity_hours' => $request->validity_hours,
             'late_minutes' => $lateMinutes,
             'is_exceeded' => $isExceeded,
@@ -238,30 +240,6 @@ private function generatePassNoSub()
         ], 500);
     }
 }
-
-
-
-
-// public function checkoutPassSlip($id)
-// {
-//     $pass_slip = PassSlip::findOrFail($id);
-
-//     $currentTime = now();
-//     $pass_slip->time_in = $currentTime->format('H:i:s');
-//     $pass_slip->time_in_by = Auth::user()->id;
-
-//     $timeOut = \Carbon\Carbon::parse($pass_slip->time_out);
-//     $timeDifference = $timeOut->diffInHours($currentTime);
-
-//     if ($timeDifference >= 3) {
-//         $pass_slip->is_exceeded = true;
-//     }
-
-//     // Save the pass slip record
-//     $pass_slip->save();
-
-//     return redirect()->route('sub-admin.pass_slip.pass_slip')->with('success', 'Time In recorded successfully.');
-// }
 
 public function pass_slip_admin(Request $request)
 {
@@ -379,124 +357,6 @@ private function generatePassNumber()
     return $newPassNumber;
 }
 
-    public function store_slip_admin(Request $request)
-    {
-        $passNumber = $this->generatePassNumber();
-        $request->validate([
-            'p_no' => 'required|string|max:255',
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'destination' => 'required|string|max:100',
-            'employee_type' => 'required|string|max:255',
-            'purpose' => 'required|string|max:255',
-            'time_out' => 'required|date_format:H:i',
-            'check_business' => 'required|string',
-            'driver_name' => 'nullable|alpha|max:100',
-            'remarks' => 'nullable|string|max:255',
-        ],
-        [
-            'destination.max' => 'Destination must be less than 100 characters.',
-            'check_business.required' => 'Check Business is required.',
-            'check_business.string' => 'Check Business must be a string.',
-            'purpose.max' => 'Purpose must be less than 255 characters.',
-            'driver_name.alpha' => 'Must no number or special characters.',
-            'driver_name.max' => 'Driver Name must be less than 100 characters.',
-
-        ]);
-
-        PassSlip::create([
-            'user_id' => Auth::id(),
-            'p_no' => $request->p_no,
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'department' => $request->department,
-            'designation' => $request->designation,
-            'destination' => $request->destination,
-            'employee_type' => $request->employee_type,
-            'purpose' => $request->purpose,
-            'date' => now()->format('Y-m-d H:i:s'),
-            'time_out' => $request->time_out,
-            'time_out_by' => Auth::user()->id,
-            'check_business' => $request->check_business,
-            'driver_name' => $request->driver_name ?? null,
-            'remarks' => $request->remarks ?? null,
-        ]);
-
-        return response()->json([
-            'status' => 'success'
-        ]);
-    }
-
-
-
-    public function updatePassSlipAdmin(Request $request, string $id)
-    {
-        try {
-            $validatedData = Validator::make($request->all(), [
-                'destination' => 'required|string|max:100',
-                'employee_type' => 'required|string|max:255',
-                'purpose' => 'required|string|max:255',
-                'time_out' => 'required|date_format:H:i',
-                'time_in' => 'required|date_format:H:i',
-                'check_business' => 'required|string',
-                'driver_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
-                'remarks' => 'nullable|string|max:255',
-                'validity_hours' => 'required|numeric|min:0.5',
-            ]);
-
-            if ($validatedData->fails()) {
-                return response()->json(['errors' => $validatedData->errors()], 422);
-            }
-
-            $passSlip = PassSlip::findOrFail($id);
-
-            // Parse time values
-            $timeOut = Carbon::parse($request->input('time_out'));
-            $timeIn = Carbon::parse($request->input('time_in'));
-
-            // Calculate late minutes and exceeded status
-            $lateMinutesData = $this->calculateLateMinutes($timeOut, $timeIn, $request->validity_hours);
-            $lateMinutes = $lateMinutesData['total_minutes'];
-            $isExceeded = $lateMinutes > 0;
-
-            // Update pass slip
-            $passSlip->update([
-                'destination' => $request->destination,
-                'employee_type' => $request->employee_type,
-                'purpose' => $request->purpose,
-                'check_business' => $request->check_business,
-                'driver_name' => $request->driver_name,
-                'remarks' => $request->remarks,
-                'time_out' => $timeOut->format('H:i:s'),
-                'time_in' => $timeIn->format('H:i:s'),
-                'validity_hours' => $request->validity_hours,
-                'late_minutes' => $lateMinutes,
-                'is_exceeded' => $isExceeded,
-            ]);
-
-            // Prepare response message
-            $message = 'Pass slip updated successfully';
-            if ($isExceeded) {
-                $message .= ". Exceeded validity period by {$lateMinutesData['formatted']}";
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => $message,
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Update Pass Slip Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while updating the pass slip: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
 
 
     public function destroy_passSlip(string $id)

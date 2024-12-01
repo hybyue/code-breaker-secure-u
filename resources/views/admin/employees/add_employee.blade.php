@@ -42,6 +42,15 @@
                                 <option value="Non-Teaching">Non-Teaching</option>
                             </select>
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="position" class="form-label">Position:</label>
+                            <select type="text" class="form-select" id="position" name="position" required>
+                                <option value="" selected disabled>Select Employee Position</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Full-time">Full-Time</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
                         <div class="mt-2 d-flew justify-content-end align-items-end text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" wire:click="mount">Save</button>

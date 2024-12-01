@@ -107,7 +107,8 @@
                 success: function(response) {
                     if (response.success) {
                         localStorage.setItem('showToast', 'true');
-                        window.location.href = response.redirect_url;                    }
+                        location.reload();
+                     }
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {

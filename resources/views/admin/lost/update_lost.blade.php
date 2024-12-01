@@ -32,7 +32,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="lostCourse-{{ $item->id }}" class="form-label">Role:</label>
-                            <input type="text" class="form-control" id="lostCourse-{{ $item->id }}" name="course" value="{{ $item->course }}">
+                            <select class="form-select" id="course" name="course">
+                                <option value="Student" {{ $user->civil_status == 'Student' ? 'selected' : '' }}>Student</option>
+                                <option value="Employee" {{ $user->civil_status == 'Employee' ? 'selected' : '' }}>Employee</option>
+                                <option value="Janitor" {{ $user->civil_status == 'Janitor' ? 'selected' : '' }}>Janitor</option>
+                                <option value="Visitor" {{ $user->civil_status == 'Visitor' ? 'selected' : '' }}>Visitor</option>
+                                <option value="Head" {{ $user->civil_status == 'Head' ? 'selected' : '' }}>Head</option>
+                                <option value="President" {{ $user->civil_status == 'President' ? 'selected' : '' }}>President</option>
+                                <option value="Other" {{ $user->civil_status == 'Other' ? 'selected' : '' }}>Other</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
@@ -62,14 +70,14 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="isClaimed-{{ $item->id }}" class="form-label">Is Claimed:</label>
-                            <select class="form-control" id="isClaimed-{{ $item->id }}" name="is_claimed">
+                            <select class="form-select" id="isClaimed-{{ $item->id }}" name="is_claimed">
                                 <option value="1" {{ $item->is_claimed ? 'selected' : '' }}>Yes</option>
                                 <option value="0" {{ !$item->is_claimed ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="isTransferred-{{ $item->id }}" class="form-label">Is Transferred:</label>
-                            <select class="form-control" id="isTransferred-{{ $item->id }}" name="is_transferred">
+                            <select class="form-select" id="isTransferred-{{ $item->id }}" name="is_transferred">
                                 <option value="1" {{ $item->is_transferred ? 'selected' : '' }}>Yes</option>
                                 <option value="0" {{ !$item->is_transferred ? 'selected' : '' }}>No</option>
                             </select>
@@ -80,11 +88,13 @@
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>
-                            <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                            <textarea class="form-control" id="remarks-{{ $item->id }}" name="remarks" rows="2" placeholder="Optional">{{$item->remarks}}</textarea>
                         </div>
                         <div class="d-flex justify-content-center mt-3  w-50">
-                            <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
-                            <button type="submit" class="btn btn-primary update_lost">update</button>
+                            <button type="submit" class="btn btn-primary update_lost">
+                                <span class="spinner-border spinner-border-sm me-2" id="loadingSpinnerer" role="status" style="display: none;"></span>
+                                update
+                            </button>
                         </div>
                     </div>
                 </form>

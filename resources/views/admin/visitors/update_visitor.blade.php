@@ -128,7 +128,7 @@
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>
-                            <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                            <textarea class="form-control" id="remarks-{{ $visit->id }}" name="remarks" rows="2" placeholder="Optional">{{$visit->remarks}}</textarea>
                         </div>
 
                         <div class="modal-footer">

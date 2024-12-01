@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('department');
             $table->date('date');
-            $table->time('time_in');
+            $table->time('time_in')->nullable();
             $table->time('time_out');
             $table->text('remarks')->nullable();
             $table->timestamps();

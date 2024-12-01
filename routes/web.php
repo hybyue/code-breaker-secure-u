@@ -66,8 +66,8 @@ Route::get('/home', [EventController::class, 'showEvent'])->name('sub-admin.dash
 
 Route::controller(VisitorController::class)->group(function () {
     Route::get('/sub-admin/visitor',  'new_visitor')->name('sub-admin.visitors.visitor');
-    Route::post('/add-visitor', 'store_visit')->name('sub-admin.store');
-    Route::put('/sub-admin/visitor/update/{id}',  'updateVisitorSub')->name('update.visitorSub');
+    Route::post('/add-visitor', 'store')->name('sub-admin.store');
+    Route::put('/sub-admin/visitor/update/{id}',  'update')->name('update.visitorSub');
     Route::get('/sub-admin/visitor',  'filterVisitor')->name('sub-admin.visitors.visitor');
     Route::post('sub-admin/visitor/{id}/checkout',  'checkout')->name('visitor.checkout');
     Route::get('sub-admin/search_visitor',  'searchVisitor')->name('visitor.search');
@@ -120,7 +120,7 @@ Route::controller(EmployeesController::class)->group(function () {
 
 Route::controller(ViolationController::class)->group(function () {
     Route::get('/sub-admin/violation',  'violation')->name('sub-admin.violation.violation');
-    Route::post('sub-admin/violation',  'store_violate')->name('sub-admin.store_violate');
+    Route::post('sub-admin/violation',  'store_violation')->name('sub-admin.store_violate');
     Route::put('/sub-admin/violation/update/{id}',  'update_violation')->name('violation.update');
     Route::get('/sub-admin/violation',  'filterViolation')->name('sub-admin.violation.violation');
     Route::post('/sub-admin/search-student',  'searchStudentSub')->name('sub-admin.search_student');
@@ -201,8 +201,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 Route::controller(PassSlipController::class)->group(function (){
     Route::get('/admin/pass_slip',  'pass_slip_admin')->name('admin.pass_slip.pass_slip_admin');
-    Route::post('admin/pass_slip',  'store_slip_admin')->name('pass_slip.store');
-    Route::put('/pass_slip/update/{id}',  'updatePassSlipAdmin')->name('update.pass_slip_admin');
+    Route::post('admin/pass_slip',  'store_slip')->name('pass_slip.store');
+    Route::put('/pass_slip/update/{id}',  'updatePassSlip')->name('update.pass_slip_admin');
     Route::delete('/pass_slip/archive/{id}',  'destroy_passSlip')->name('archive.pass_slip');
     Route::get('/admin/pass_slip',  'filterPassSlipAdmin')->name('admin.pass_slip.pass_slip_admin');
     route::post('/search-employee', 'searchEmployee')->name('search_employee');
@@ -259,8 +259,8 @@ Route::resource('/admin/security_staff', EmployeesController::class)->names([
 ]);
 Route::controller(LostFoundController::class)->group(function () {
     Route::get('/admin/lost_found', 'lost_found_admin')->name('admin.lost.lost_found_admin');
-    Route::post('/admin/store_lost', 'store_lost_admin')->name('admin.store_lost');
-    Route::put('/lost_found/update/{id}', 'updateLostFoundAdmin')->name('update.lost_found_admin');
+    Route::post('/admin/store_lost', 'store_lost')->name('admin.store_lost');
+    Route::put('/lost_found/update/{id}', 'updateLostFound')->name('update.lost_found_admin');
     Route::delete('/lost_found/archive/{id}', 'destroy_lostFound')->name('archive.lost_found');
     Route::get('/admin/lost_found', 'filterLostFoundAdmin')->name('admin.lost.lost_found_admin');
     Route::get('/admin/lost_found/clear-filter', 'clearFilterAdmin')->name('admin.lost.clear-filter');
@@ -276,8 +276,8 @@ Route::get('/activity/clear-filter', [ActivityController::class, 'clearFilter'])
 
 Route::controller(EmployeesController::class)->group(function (){
     Route::get('admin/profile', 'showProfileAdmin')->name('admin.layouts.profile_admin');
-    Route::put('admin/profile/{id}', 'addInformationAdmin')->name('profile.stores');
-    Route::put('admin/profile/update/{id}', 'editInformationAdmin')->name('profile.updates');
+    Route::put('admin/profile/{id}', 'addInformation')->name('profile.stores');
+    Route::put('admin/profile/update/{id}', 'editInformation')->name('profile.updates');
     Route::get('admin/change-password', 'changePasswordAdmin')->name('auth.change-password');
     Route::put('admin/profile/{id}/update-picture',  'updatePictureAdmin')->name('profile.updatePicture.admin');
 
@@ -297,7 +297,7 @@ Route::controller(PdfController::class)->group(function (){
 Route::controller(ViolationController::class)->group(function (){
     Route::get('/admin/violation', 'violationView')->name('admin.violation.violation');
     Route::post('admin/violation', 'store_violation')->name('admin.store_violation');
-    Route::put('/violation/update/{id}', 'update_violationAdmin')->name('violation.update.admin');
+    Route::put('/violation/update/{id}', 'update_violation')->name('violation.update.admin');
     Route::delete('/violation/archive/{id}', 'destroy_violation');
     Route::post('/search-student',  'searchStudent')->name('admin.search_student');
     Route::get('/admin/violation/clear-filter', 'clearViolationFilterAdmin')->name('admin.violation.clear-filter');
@@ -317,6 +317,14 @@ Route::controller(ListController::class)->group(function (){
     Route::delete('/employee/delete/{id}', 'destroy_all_employee_admin');
 });
 
+Route::controller(LoopingController::class)->group(function () {
+    Route::get('/admin/looping', 'index_admin')->name('admin.looping.loopings');
+    Route::get('/admin/looping/clear-filter', 'clearLoopingFilterAdmin')->name('admin.looping.clear-filter');
+    Route::put('/admin/looping/update/{id}', 'update')->name('update.looping_admin');
+    Route::post('/admin/looping/store', 'store')->name('store.looping_admin');
+    route::post('/admin/search-looping', 'searchLooping')->name('subadmin.search_looping');
+
+});
 
 Route::post('/excel_import_student', [ImportExcelController::class, 'import_excel'])->name('import.student');
 Route::post('/excel_import_employee', [ImportExcelController::class, 'import_excel_employee'])->name('import.employee');

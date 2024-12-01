@@ -71,13 +71,14 @@ class ListController extends Controller
     public function store_all_employee_admin(Request $request)
     {
         $request->validate([
-            'employee_id' => 'required|string',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'middle_name' => 'nullable|string',
-            'designation' => 'required|string',
+            'employee_id' => 'required|string|max:25',
+            'first_name' => 'required|string|min:3|max:100',
+            'last_name' => 'required|string|min:3|max:100',
+            'middle_name' => 'nullable|string|max:1',
+            'designation' => 'required|string|max:150',
             'department' => 'required|string',
             'status' => 'required|string',
+            'position' => 'required|string',
             ]);
 
             $data = [
@@ -89,6 +90,7 @@ class ListController extends Controller
                 'designation' => $request->designation,
                 'department' => $request->department,
                 'status' => $request->status,
+                'position' => $request->position,
             ];
 
             AllEmployee::create($data);
@@ -100,6 +102,18 @@ class ListController extends Controller
 
         public function updateEmployeeAdmin(Request $request, string $id)
     {
+        $request->validate([
+            'employee_id' => 'required|string|max:25',
+            'first_name' => 'required|string|min:3|max:100',
+            'last_name' => 'required|string|min:3|max:100',
+            'middle_name' => 'nullable|string|max:1',
+            'designation' => 'required|string|max:150',
+            'department' => 'required|string',
+            'status' => 'required|string',
+            'position' => 'required|string',
+            ]);
+
+
         $passSlips = AllEmployee::findOrFail($id);
 
         $passSlips->update($request->all());

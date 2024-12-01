@@ -105,11 +105,25 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="time_in" class="form-label">Time In:</label>
-                        <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" min="06:00" max="15:00" value="{{ $passSlip->time_in }}" required>
+                        <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{ $passSlip->time_in }}">
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <label for="validity_hours" class="form-label">Pass Slip Validity:</label>
+                        <select class="form-select" id="validity_hours" name="validity_hours" required>
+                            <option value="{{ $passSlip->validity_hours }}" selected>{{ $passSlip->validity_hours }} Hours</option>
+                            <option value="0.5">30 Minutes</option>
+                            <option value="1">1 Hour</option>
+                            <option value="1.5">1 Hour and 30 Minutes</option>
+                            <option value="2">2 Hours</option>
+                            <option value="2.5">2 Hours and 30 Minutes</option>
+                            <option value="3">3 Hours</option>
+                            <option value="3.5">3 Hours and 30 Minutes</option>
+                            <option value="4">4 Hours</option>
+                        </select>
                     </div>
                     <div class="col-md-12 mb-2">
                         <label for="remarks" class="form-label">Remarks:</label>
-                        <textarea class="form-control" id="remarks-{{ $violate->id }}" name="remarks" rows="2" placeholder="Optional">{{$violate->remarks}}</textarea>
+                        <textarea class="form-control" id="remarks-{{ $passSlip->id }}" name="remarks" rows="2" placeholder="Optional">{{$passSlip->remarks}}</textarea>
                     </div>
                     <div class="mt-2 text-center">
                         <button type="submit" class="btn btn-primary w-50 update_pass">

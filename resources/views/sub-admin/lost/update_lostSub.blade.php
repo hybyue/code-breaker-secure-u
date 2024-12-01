@@ -28,29 +28,29 @@
                                 <input type="text" class="form-control" id="lostType-{{ $item->id }}" name="object_type" value="{{ $item->object_type }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="firstName-{{ $item->id }}" class="form-label">First Name:</label>
+                                <label for="firstName-{{ $item->id }}" class="form-label">Finder First Name:</label>
                                 <input type="text" class="form-control" id="firstName-{{ $item->id }}" name="first_name" value="{{ $item->first_name }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="middleName-{{ $item->id }}" class="form-label">Middle Initial:</label>
+                                <label for="middleName-{{ $item->id }}" class="form-label">Finder Middle Initial:</label>
                                 <input type="text" class="form-control" id="middleName-{{ $item->id }}" name="middle_name" value="{{ $item->middle_name }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="lastName-{{ $item->id }}" class="form-label">Last Name:</label>
+                                <label for="lastName-{{ $item->id }}" class="form-label">Finder Last Name:</label>
                                 <input type="text" class="form-control" id="lastName-{{ $item->id }}" name="last_name" value="{{ $item->last_name }}">
                             </div>
                             <div class="mb-3">
                                 <label for="lostCourse-{{ $item->id }}" class="form-label">Role:</label>
                                 <select class="form-select" id="course" name="course">
-                                    <option value="{{$item->course }}" selected>{{$item->course}}</option>
-                                    <option value="Student">Student</option>
-                                    <option value="Employee">Employee</option>
-                                    <option value="Janitor">Janitor</option>
-                                    <option value="Visitor">Visitor</option>
-                                    <option value="Head">Head</option>
-                                    <option value="President">President</option>
-                                    <option value="Other">Other</option>
-                                </select>                            </div>
+                                    <option value="Student" {{ $user->civil_status == 'Student' ? 'selected' : '' }}>Student</option>
+                                    <option value="Employee" {{ $user->civil_status == 'Employee' ? 'selected' : '' }}>Employee</option>
+                                    <option value="Janitor" {{ $user->civil_status == 'Janitor' ? 'selected' : '' }}>Janitor</option>
+                                    <option value="Visitor" {{ $user->civil_status == 'Visitor' ? 'selected' : '' }}>Visitor</option>
+                                    <option value="Head" {{ $user->civil_status == 'Head' ? 'selected' : '' }}>Head</option>
+                                    <option value="President" {{ $user->civil_status == 'President' ? 'selected' : '' }}>President</option>
+                                    <option value="Other" {{ $user->civil_status == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
                                 <input type="file" class="form-control" id="lostImage-{{ $item->id }}" name="object_img" onchange="previewImage(event, {{ $item->id }})">

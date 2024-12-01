@@ -119,14 +119,6 @@ public function store(Request $request)
 
 }
 
-
-public function edit(string $id)
-{
-    $visitors = Visitor::findOrFail($id);
-
-    return view('employee.edit', compact('visitors'));
-}
-
 /**
  * Update the specified resource in storage.
  */
@@ -135,15 +127,15 @@ public function update(Request $request, String $id)
     $visitor = Visitor::findOrFail($id);
 
     $validatedData = Validator::make($request->all(), [
-        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
-        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
-        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
+        'first_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:50',
+        'middle_name' => 'nullable|regex:/^[A-Za-z- \s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:50',
         'person_to_visit' => 'required|string|max:100',
         'purpose' => 'required|string|max:255',
         'id_type' => 'required|string|max:30',
         'id_number' => 'required|string|max:50',
-        'visited_person_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
-        'visited_person_position' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_name' => 'nullable|regex:/^[A-Za-z- \s]+$/|max:100',
+        'visited_person_position' => 'nullable|regex:/^[A-Za-z- \s]+$/|max:100',
         'id_number' => 'required|string|max:50',
         'remarks' => 'nullable|string|max:255',
     ],
@@ -168,11 +160,6 @@ public function update(Request $request, String $id)
     if ($validatedData->fails()) {
         return response()->json(['errors' => $validatedData->errors()], 422);
     }
-
-    $visitor->visited_person_name = $request->input('visited_person_name');
-    $visitor->visited_person_position = $request->input('visited_person_position');
-    $visitor->id_number = $request->input('id_number');
-
     $visitor->update($request->all());
 
 
@@ -199,7 +186,7 @@ public function checkoutAdmin($id)
 {
     $visitor = Visitor::findOrFail($id);
     request()->validate([
-        'visited_person_name' => 'required|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
         'visited_person_position' => 'required|string|max:100',
     ],
     [
@@ -280,56 +267,6 @@ public function clearVisitorFilter()
     session()->forget('visitor_filter');
     return redirect()->route('sub-admin.visitors.visitor');
 }
-
-public function store_visit(Request $request)
-{
-    $request->validate([
-        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
-        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
-        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
-        'person_to_visit' => 'required|string|max:100',
-        'purpose' => 'required|string|max:255',
-        'id_type' => 'required|string|max:30',
-        'id_number' => 'required|string|max:50',
-        'remarks' => 'nullable|string|max:255',
-    ],
-    [
-        'first_name.regex' => 'Must no number or syntax.',
-        'first_name.max' => 'Reached maximum 50 letters.',
-        'middle_name.max' => 'Only 1 letter needed.',
-        'last_name.regex' => 'Must no number or syntax.',
-        'last_name.max' => 'Reached maximum 50 letters.',
-        'person_to_visit.string' => 'Must no number or syntax.',
-        'person_to_visit.max' => 'Must below 100 letters',
-        'purpose.string' => 'Must no number or syntax.',
-        'purpose.max' => 'Must below 255 letters.',
-        'id_type.string' => 'Must no number or syntax.',
-        'id_type.max' => 'Must be below 30 letters.',
-        'id_number.required' => 'ID Number is required.',
-        'id_number.max' => 'ID Number must be below 50 characters.',
-    ]
-);
-
-    $visitor = new Visitor();
-    $visitor->first_name = $request->first_name;
-    $visitor->middle_name = $request->middle_name;
-    $visitor->last_name = $request->last_name;
-    $visitor->person_to_visit = $request->person_to_visit;
-    $visitor->purpose = $request->purpose;
-    $visitor->id_type = $request->id_type;
-    $visitor->id_number = $request->id_number;
-    $visitor->date = now()->format('Y-m-d H:i:s');
-    $visitor->time_in = now()->format('H:i:s');
-    $visitor->user_id = Auth::id();
-    $visitor->remarks = $request->remarks ?? null;
-    $visitor->save();
-
-
-    return response()->json([
-        'status' => 'success'
-    ]);
-}
-
 public function validateField(Request $request)
 {
     $field = $request->input('field');
@@ -360,7 +297,7 @@ public function checkout($id)
 
     // Add validation for the new fields
     request()->validate([
-        'visited_person_name' => 'required|regex:/^[A-Za-z\s]+$/|max:100',
+        'visited_person_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
         'visited_person_position' => 'required|string|max:100',
     ],
     [
@@ -385,56 +322,6 @@ public function searchVisitor(Request $request)
                         ->orWhere('middle_name', 'like', "%{$query}%")
                         ->get();
     return response()->json($visitors);
-}
-
-public function updateVisitorSub(Request $request, string $id)
-{
-    $validatedData = Validator::make($request->all(), [
-        'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
-        'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
-        'last_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
-        'person_to_visit' => 'required|string|max:100',
-        'purpose' => 'required|string|max:255',
-        'id_type' => 'required|string|max:30',
-        'id_number' => 'required|string|max:50',
-        'visited_person_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
-        'visited_person_position' => 'nullable|regex:/^[A-Za-z\s]+$/|max:100',
-        'remarks' => 'nullable|string|max:255',
-    ],
-    [
-        'first_name.regex' => 'Must no number or syntax.',
-        'first_name.max' => 'Reached maximum 50 letters.',
-        'middle_name.max' => 'Only 1 letter needed.',
-        'last_name.regex' => 'Must no number or syntax.',
-        'last_name.max' => 'Reached maximum 50 letters.',
-        'person_to_visit.string' => 'Must no number or syntax.',
-        'person_to_visit.max' => 'Must below 100 letters',
-        'purpose.string' => 'Must no number or syntax.',
-        'purpose.max' => 'Must below 255 letters.',
-        'id_type.string' => 'Must no number or syntax.',
-        'id_type.max' => 'Must be below 30 letters.',
-        'visited_person_name.max' => 'Must below 100 letters',
-        'visited_person_position.max' => 'Must below 100 letters',
-        'id_number.required' => 'ID Number is required.',
-        'id_number.max' => 'ID Number must be below 50 characters.',
-    ]);
-
-    if ($validatedData->fails()) {
-        return response()->json(['errors' => $validatedData->errors()], 422);
-    }
-
-    $visitor = Visitor::findOrFail($id);
-
-    $visitor->visited_person_name = $request->input('visited_person_name');
-    $visitor->visited_person_position = $request->input('visited_person_position');
-    $visitor->id_number = $request->input('id_number');
-    $visitor->update($request->all());
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Visitor updated successfully.',
-        'redirect_url' => route('sub-admin.visitors.visitor')
-    ]);
 }
 
 public function getVisitorStats($timeframe)

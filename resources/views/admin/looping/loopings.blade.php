@@ -1,4 +1,4 @@
-@extends('layouts.sidebar')
+@extends('admin.layouts.sidebar_admin')
 
 @section('title', 'Looping')
 
@@ -17,7 +17,7 @@
     </div>
 
     <div class="container mt-4">
-        <form action="/sub-admin/looping" method="GET">
+        <form action="/admin/looping" method="GET">
             <div class="row pb-3">
                 <div class="col-md-2">
                     <label for="start_date">Start Date:</label>
@@ -43,7 +43,7 @@
 
                 @if(session()->has('looping_filter'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="{{ url('/sub-admin/looping/clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
+                    <a href="{{ url('/admin/looping/clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -77,7 +77,7 @@
                         <div class="d-flex justify-content-center align-items-center">
 
                             <div class="mx-1">
-                                <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #063292" data-id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#updateLooping-{{ $item->id }}"><i class="bi bi-pencil-square"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #063292" data-id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#updateLoopingAdmin-{{ $item->id }}"><i class="bi bi-pencil-square"></i></a>
                             </div>
                         </div>
                     </td>
@@ -88,11 +88,11 @@
     </div>
 </div>
 
-@include('sub-admin.looping.update_looping')
+@include('admin.looping.update_looping')
 
-@include('sub-admin.looping.add_looping')
+@include('admin.looping.add_looping')
 
-@include('sub-admin.looping.looping_js')
+@include('admin.looping.looping_js')
 
 
 
@@ -138,7 +138,7 @@ function showPdfModalLooping() {
     document.getElementById('loadingBarLoop').style.display = 'block';
     document.getElementById('pdfIframeLoop').style.display = 'none';
 
-    const url = '/sub-admin/generate-pdf/looping?' + $.param({
+    const url = '/admin/generate-pdf/looping?' + $.param({
         start_date: $('#start_date').val(),
         end_date: $('#end_date').val(),
         employee_type: employeeType,

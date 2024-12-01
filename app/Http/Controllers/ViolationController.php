@@ -68,11 +68,20 @@ public function store_violation(Request $request)
 {
     $request->validate([
         'student_no' => 'required|string|max:255',
-        'first_name' => 'required|string|max:255',
-        'middle_initial' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
+        'first_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
+        'middle_initial' => 'nullable|regex:/^[A-Za-z- \s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
         'course' => 'required|string|max:255',
         'violation_type' => 'required|string|max:100',
+        'remarks' => 'nullable|string|max:255'
+    ],
+    [
+        'first_name.regex' => 'Must not contain numbers or special characters.',
+        'first_name.max' => 'Reached maximum 100 letters.',
+        'middle_initial.regex' => 'Must not contain numbers or special characters.',
+        'middle_initial.max' => 'Reached maximum 1 letter.',
+        'last_name.regex' => 'Must not contain numbers or special characters.',
+        'last_name.max' => 'Reached maximum 100 letters.',
     ]);
 
     $data = [
@@ -92,6 +101,7 @@ public function store_violation(Request $request)
 
     return response()->json([
         'status' => 'success',
+        'message' => 'Violation Added successfully.'
     ]);
 }
 
@@ -104,19 +114,27 @@ public function destroy_violation(string $id)
     return response()->json(['success' => true, 'tr' => 'tr_' . $id]);
 }
 
-public function update_violationAdmin(Request $request, string $id)
+public function update_violation(Request $request, string $id)
 {
 
     $violations = Violation::findOrFail($id);
 
     $validatedData = Validator::make($request->all(),[
+        'student_no' => 'required|string|max:255',
+        'first_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
+        'middle_initial' => 'nullable|regex:/^[A-Za-z- \s]+$/|max:1',
+        'last_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
+        'course' => 'required|string|max:255',
         'violation_type' => 'required|string|max:100',
-        'date' => 'required|date',
-
-        'remarks' => 'nullable|string|max:255',
+        'remarks' => 'nullable|string|max:255'
     ],
     [
-        ''
+        'first_name.regex' => 'Must not contain numbers or special characters.',
+        'first_name.max' => 'Reached maximum 100 letters.',
+        'middle_initial.regex' => 'Must not contain numbers or special characters.',
+        'middle_initial.max' => 'Reached maximum 1 letter.',
+        'last_name.regex' => 'Must not contain numbers or special characters.',
+        'last_name.max' => 'Reached maximum 100 letters.',
     ]);
 
     if ($validatedData->fails()) {
@@ -127,6 +145,7 @@ public function update_violationAdmin(Request $request, string $id)
 
     return response()->json([
         'success' => true,
+        'message' => 'Violation updated successfully.'
     ]);
 }
 
@@ -186,51 +205,6 @@ public function clearViolationFilter()
 {
     session()->forget('violation_filter');
     return redirect()->route('sub-admin.violation.violation');
-}
-
-public function store_violate(Request $request)
-{
-    $request->validate([
-        'student_no' => 'required|string|max:255',
-        'first_name' => 'required|string|max:255',
-        'middle_initial' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'course' => 'required|string|max:255',
-        'violation_type' => 'required|string|max:100',
-    ]);
-
-    $data = [
-        'user_id' => Auth::id(),
-        'student_no' => $request->student_no,
-        'first_name' => $request->first_name,
-        'middle_initial' => $request->middle_initial,
-        'last_name' => $request->last_name,
-        'course' => $request->course,
-        'violation_type' => $request->violation_type,
-        'date' => now(),
-    ];
-
-
-
-
-    Violation::create($data);
-
-    return response()->json([
-        'status' => 'success'
-    ]);
-}
-
-public function update_violation(Request $request, string $id)
-{
-
-    $violations = Violation::findOrFail($id);
-
-    $violations->update($request->all());
-
-
-    return redirect()->back()->with('success', 'Violation updated successfully');
-
-
 }
 
 public function searchStudent(Request $request)

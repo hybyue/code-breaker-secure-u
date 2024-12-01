@@ -109,13 +109,14 @@
                                 <br>
                                 <small>(
                                     @if($passSlip->late_minutes >= 60)
-                                        {{ floor($passSlip->late_minutes / 60) }} hr late
+                                        {{ floor($passSlip->late_minutes / 60) }} hr
                                         @if($passSlip->late_minutes % 60 > 0)
-                                            {{ $passSlip->late_minutes % 60 }} min late
+                                            and {{ $passSlip->late_minutes % 60 }} min
                                         @endif
                                     @else
-                                        {{ $passSlip->late_minutes }} min late
-                                    @endif)
+                                        {{ $passSlip->late_minutes }} min
+                                    @endif
+                                    late)
                                 </small>
                             @endif
                         @endif
@@ -207,11 +208,11 @@
                             <td>{{ $entry->p_no }}</td>
                             <td>{{ $entry->designation }}</td>
                             <td>{{ $entry->check_business }}</td>
-                            <td>{{ $entry->driver_name ?? 'N/A' }}</td>
+                            <td>{{ $entry->driver_name }}</td>
                             <td>{{ $entry->destination }}</td>
                             <td>{{ $entry->purpose }}</td>
                             <td>
-                                {{ \Carbon\Carbon::parse($entry->time_out)->format('g:i A') }}
+                                {{ \Carbon\Carbon::parse($entry->time_out)->format('H:i') }}
                                 <br>
                                 <small class="text-muted">by:
                                     @if ($entry->time_out_by)
@@ -226,7 +227,7 @@
                             </td>
                             <td>
                                 @if($entry->time_in)
-                                    {{ \Carbon\Carbon::parse($entry->time_in)->format('g:i A') }}
+                                    {{ \Carbon\Carbon::parse($entry->time_in)->format('H:i') }}
                                     <br>
                                     <small class="text-muted">by:
                                         @if ($entry->time_in_by)

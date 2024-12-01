@@ -49,6 +49,7 @@ class ImportExcel implements ToModel
                     $employee->designation = $row[4];
                     $employee->department = $row[5];
                     $employee->status = $row[6];
+                    $employee->position = $row[7];
                     $employee->save();
                 }
             }

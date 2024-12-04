@@ -47,7 +47,7 @@
 
 
     <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
-    <table id="violationTable" class="table table-bordered same-height-table">
+    <table id="violationTableUser" class="table table-bordered same-height-table">
         <thead>
             <tr>
                 <th class="text-start">Student Number</th>
@@ -161,8 +161,16 @@
             end_date: $('#end_date').val(),
         });;
 
-     document.getElementById('pdfViolationFrame').src = url;
+        const iframe = document.getElementById('pdfViolationFrame');
 
+        // Add load event listener to iframe
+        iframe.onload = function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Set iframe src to trigger loading
+        iframe.src = url;
      $('#pdfModalViolation').modal({
         backdrop: 'static',
         keyboard: false,
@@ -173,10 +181,6 @@
 
      $('#pdfModalViolation').modal('show');
 
-        setTimeout(function() {
-            document.getElementById('loadingBar').style.display = 'none';
-            document.getElementById('pdfViolationFrame').style.display = 'block';
-        }, 1000);
     }
 
 

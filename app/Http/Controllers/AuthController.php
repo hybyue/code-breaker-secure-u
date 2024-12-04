@@ -140,7 +140,13 @@ class AuthController extends Controller
     public function loginAction(Request $request)
     {
         $email = strtolower($request->input('email'));
-        if (FacadesRateLimiter::tooManyAttempts($email, 5)) {
+        $maxAttempts = 5;
+
+        // Get the current number of attempts
+        $attempts = FacadesRateLimiter::attempts($email);
+
+        // Check if we're at exactly 5 attempts
+        if ($attempts >= $maxAttempts) {
             $seconds = FacadesRateLimiter::availableIn($email);
 
             // Format the remaining time
@@ -180,8 +186,11 @@ class AuthController extends Controller
 
         // Attempt to login
         if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            // Increment the rate limiter counter for this email with a decay time of 10 minutes
+            // Increment the rate limiter counter
             FacadesRateLimiter::hit($email, 600); // 600 seconds = 10 minutes
+
+            // Get the updated number of attempts
+            $remainingAttempts = $maxAttempts - FacadesRateLimiter::attempts($email);
 
             // Check if email exists in the system to provide a more specific message
             if (!User::where('email', $request->email)->exists()) {
@@ -191,9 +200,31 @@ class AuthController extends Controller
                 ], 404);
             }
 
+            // If this was the 5th attempt, return the lockout message
+            if ($remainingAttempts <= 0) {
+                $seconds = FacadesRateLimiter::availableIn($email);
+                $minutes = floor($seconds / 60);
+                $remainingSeconds = $seconds % 60;
+                $timeMessage = '';
+
+                if ($minutes > 0) {
+                    $minuteWord = $minutes > 1 ? 'minutes' : 'minute';
+                    $secondWord = $remainingSeconds > 1 ? 'seconds' : 'second';
+                    $timeMessage = "{$minutes} {$minuteWord} and {$remainingSeconds} {$secondWord}";
+                } else {
+                    $secondWord = $seconds > 1 ? 'seconds' : 'second';
+                    $timeMessage = "{$seconds} {$secondWord}";
+                }
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Too many login attempts. Please try again in {$timeMessage}."
+                ], 429);
+            }
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Incorrect password'
+                'message' => "Incorrect password. {$remainingAttempts} attempts remaining."
             ], 401);
         }
 

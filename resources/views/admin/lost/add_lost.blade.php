@@ -51,7 +51,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="lostImage" class="form-label">Image:</label>
-                        <input type="file" class="form-control" id="lostImage" name="object_img">
+                        <input type="file" class="form-control" id="cameraInput" name="object_img" accept="image/*" capture="environment">
+
+                        <div id="imagePreview" class="mt-2">
+                            <img id="previewImage" class="d-none img-fluid" alt="Preview">
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="location" class="form-label">Location:</label>

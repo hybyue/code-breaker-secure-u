@@ -78,7 +78,7 @@
                                  alt="Profile Picture"
                                  style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; vertical-align: middle; border: 3px solid #b9b9b9;">
                         @else
-                            <i class="bi bi-person-circle" style="font-size: 45px; color: white; vertical-align: middle;"></i>
+                            <i class="bi bi-person-circle" style="font-size: 35px; color: white; vertical-align: middle;"></i>
                         @endif
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end drop-me" aria-labelledby="userMenuButton">

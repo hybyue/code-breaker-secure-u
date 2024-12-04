@@ -57,8 +57,8 @@
                     <th>Name</th>
                     <th>Department</th>
                     <th>Date</th>
-                    <th>Time In</th>
                     <th>Time Out</th>
+                    <th>Time In</th>
                     <th>Remarks</th>
                     <th></th>
                 </tr>
@@ -69,8 +69,9 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->department }}</td>
                     <td>{{\Carbon\Carbon::parse($item->date)->format('F d, Y') }}</td>
-                    <td>{{\Carbon\Carbon::parse($item->time_in)->format('h:i') }}</td>
                     <td>{{\Carbon\Carbon::parse($item->time_out)->format('h:i') }}</td>
+                    <td>{{ $item->time_in ? \Carbon\Carbon::parse($item->time_in)->format('h:i') : ' ' }}</td>
+
                     <td>{{ $item->remarks }}</td>
 
                     <td>
@@ -144,14 +145,28 @@ function showPdfModalLooping() {
         employee_type: employeeType,
     });
 
-    document.getElementById('pdfIframeLoop').src = url;
+    const iframe = document.getElementById('pdfIframeLoop');
+
+        // Add load event listener to iframe
+        iframe.onload = function() {
+            document.getElementById('loadingBarLoop').style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Set iframe src to trigger loading
+        iframe.src = url;
+
+        $('#pdfModalLooping').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false,
+            scrollY: false,
+            scrollX: true,
+        });
 
     $('#pdfModalLooping').modal('show');
 
-    setTimeout(function() {
-        document.getElementById('loadingBarLoop').style.display = 'none';
-        document.getElementById('pdfIframeLoop').style.display = 'block';
-    }, 2000);
+
 }
 </script>
 @endsection

@@ -48,7 +48,7 @@
 
                         <div class="col-md-6 mb-2">
                             <label for="time_in" class="form-label">Time In:</label>
-                            <input type="time" class="form-control" id="time_in" name="time_in" value="{{ $record->time_in }}" required>
+                            <input type="time" class="form-control" id="time_in" name="time_in" value="{{ $record->time_in }}">
                             <span class="text-danger error-message" id="time_in_error"></span>
                         </div>
 

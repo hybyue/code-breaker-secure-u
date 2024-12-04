@@ -110,16 +110,16 @@
                     <div class="col-md-12 mb-2">
                         <label for="validity_hours" class="form-label">Pass Slip Validity:</label>
                         <select class="form-select" id="validity_hours" name="validity_hours" required>
-                            <option value="{{ $passSlip->validity_hours }}" selected>{{ $passSlip->validity_hours }} Hours</option>
-                            <option value="0.5">30 Minutes</option>
-                            <option value="1">1 Hour</option>
-                            <option value="1.5">1 Hour and 30 Minutes</option>
-                            <option value="2">2 Hours</option>
-                            <option value="2.5">2 Hours and 30 Minutes</option>
-                            <option value="3">3 Hours</option>
-                            <option value="3.5">3 Hours and 30 Minutes</option>
-                            <option value="4">4 Hours</option>
+                            <option value="0.5" {{ $passSlip->validity_hours == '0.5' ? 'selected' : '' }}>30 Minutes</option>
+                            <option value="1" {{ $passSlip->validity_hours == '1' ? 'selected' : '' }}>1 Hour</option>
+                            <option value="1.5" {{ $passSlip->validity_hours == '1.5' ? 'selected' : '' }}>1 Hour and 30 Minutes</option>
+                            <option value="2" {{ $passSlip->validity_hours == '2' ? 'selected' : '' }}>2 Hours</option>
+                            <option value="2.5" {{ $passSlip->validity_hours == '2.5' ? 'selected' : '' }}>2 Hours and 30 Minutes</option>
+                            <option value="3" {{ $passSlip->validity_hours == '3' ? 'selected' : '' }}>3 Hours</option>
+                            <option value="3.5" {{ $passSlip->validity_hours == '3.5' ? 'selected' : '' }}>3 Hours and 30 Minutes</option>
+                            <option value="4" {{ $passSlip->validity_hours == '4' ? 'selected' : '' }}>4 Hours</option>
                         </select>
+
                     </div>
                     <div class="col-md-12 mb-2">
                         <label for="remarks" class="form-label">Remarks:</label>

@@ -42,8 +42,9 @@ $(document).ready(function () {
                 if(resp.status == 'success') {
                     $('#addLostForm')[0].reset();
 
-                    $('#addLostForm').find('.is-invalid').removeClass('is-invalid');
-                    $('#addLostForm').find('.error-message').remove();
+
+                    $('.error-message').remove();
+                    $('#previewImage').attr('src', '').addClass('d-none');
 
                     $('#tableLostAdmin').load(location.href + ' #tableLostAdmin');
                     $('#lostFoundUpdateAd').load(location.href + ' #lostFoundUpdateAd');
@@ -60,7 +61,7 @@ $(document).ready(function () {
                         timer: 2500,
                         timerProgressBar: true,
                         icon: 'success',
-                        title: 'Sticker List added successfully',
+                        title: 'Lost and Found added successfully',
                     });
                 }
             },
@@ -84,14 +85,13 @@ $(document).ready(function () {
     });
 
 
-    $('.lostFoundUpdateForm').on('submit', function(e) {
+    $(document).on('submit', '.lostFoundUpdateForm', function(e) {
     e.preventDefault();
 
     let form = $(this);
     let formData = new FormData(this);
     let submitButton = form.find('.update_lost');
     let modalId = form.attr('id').split('-')[1];
-    let modal = $('#lostFoundUpdateForm-' + modalId);
 
     submitButton.prop('disabled', true);
     form.find('#loadingSpinnerer').show();
@@ -104,8 +104,27 @@ $(document).ready(function () {
         contentType: false,
         success: function(response) {
             if (response.success) {
-                localStorage.setItem('showToast', 'true');
-                location.reload();
+                $('#lostFoundUpdateForm-' + modalId).modal('hide');
+                $('.modal-backdrop').remove();
+                $('.error-message').remove();
+
+                $('#tableLostAdmin').load(location.href + ' #tableLostAdmin');
+                $('#lostFoundUpdateAd').load(location.href + ' #lostFoundUpdateAd');
+                $('#viewLostFoundAd').load(location.href + ' #viewLostFoundAd');
+
+                Swal.fire({
+                        toast: true,
+                        position: 'top-right',
+                        iconColor: 'white',
+                        customClass: {
+                            popup: 'colored-toast',
+                        },
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true,
+                        icon: 'success',
+                        title: 'Lost and Found updated successfully',
+                    });
             }
         },
         error: function(xhr) {
@@ -134,26 +153,6 @@ $(document).ready(function () {
     });
 });
 
-
-$(document).ready(function() {
-    if (localStorage.getItem('showToast') === 'true') {
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: 'Visitor updated successfully',
-        });
-
-        localStorage.removeItem('showToast');
-    }
-});
 
 </script>
 
@@ -307,7 +306,16 @@ function showPdfModalLost() {
         end_date: $('#end_date').val()
     });
 
-    document.getElementById('pdfLostFrame').src = url;
+    const iframe = document.getElementById('pdfLostFrame');
+
+        // Add load event listener to iframe
+        iframe.onload = function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Set iframe src to trigger loading
+        iframe.src = url;
 
     $('#pdfModalLostAd').modal({
         backdrop:'static',
@@ -329,11 +337,6 @@ function showPdfModalLost() {
     });
 
     $('#pdfModalLostAd').modal('show');
-
-    setTimeout(function() {
-        document.getElementById('loadingBar').style.display = 'none';
-        document.getElementById('pdfLostFrame').style.display = 'block';
-    }, 2000);
     }
 
 
@@ -349,4 +352,31 @@ function showPdfModalLost() {
         localStorage.removeItem('successMessage');
     }
 });
+</script>
+
+
+<script>
+    // Handle camera input
+    document.getElementById('cameraInput').addEventListener('change', function(e) {
+        handleImageSelect(e);
+    });
+
+    // Handle file input
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        handleImageSelect(e);
+    });
+
+    function handleImageSelect(e) {
+        const preview = document.getElementById('previewImage');
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            }
+
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    }
 </script>

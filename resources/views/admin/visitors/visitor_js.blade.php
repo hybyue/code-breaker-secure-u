@@ -96,18 +96,18 @@
     });
 
 
-    $('.updateVisitorForm').on('submit', function(e) {
+    $(document).on('submit', '.updateVisitorForm', function(e) {
     e.preventDefault();
 
     let form = $(this);
     let formData = new FormData(this);
     let submitButton = form.find('.update_visitor');
     let modalId = form.attr('id').split('-')[1];
-    let modal = $('#updateVisitor-' + modalId);
 
     submitButton.prop('disabled', true);
     form.find('#loadingSpinnerer').show();
 
+    $('.error-message').remove();
     $.ajax({
         url: form.attr('action'),
         method: 'POST',
@@ -116,9 +116,31 @@
         contentType: false,
         success: function(response) {
             if (response.success) {
-                modal.modal('hide');
-                localStorage.setItem('showToast', 'true');
-                location.reload();
+                $('#updateVisitor-' + modalId).modal('hide');
+                $('.modal-backdrop').remove();
+
+
+                $('#visitorTable').load(location.href + ' #visitorTable');
+                $('#dynamicModals').load(location.href + ' #dynamicModals');
+                $('#updateDynamicModals').load(location.href + ' #updateDynamicModals');
+                $('#timeOut_visitor').load(location.href + ' #timeOut_visitor');
+
+                $('.error-message').remove();
+                const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-right',
+                        iconColor: 'white',
+                        customClass: {
+                            popup: 'colored-toast',
+                        },
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Visitor updated successfully'
+                    });
             }
         },
         error: function(xhr) {

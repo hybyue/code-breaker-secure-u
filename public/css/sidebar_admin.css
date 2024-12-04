@@ -172,6 +172,7 @@ a.sidebar-link {
     min-width: 200px;
     display: none;
     border-radius: 4px;
+    opacity: 0;
     z-index: 1000;
     max-height: none;
 }

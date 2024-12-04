@@ -18,6 +18,12 @@
             columnDefs: [ { targets: "_all", defaultContent: "" } ]
 
         });
+
+        $('#addVisitorModal').on('hidden.bs.modal', function () {
+            $('body').css('overflow', 'auto');
+        });
+
+
         // Visitor form submission
         $('#visitorForm').on('submit', function (e) {
             e.preventDefault();
@@ -37,6 +43,10 @@
                 contentType: false,
                 success: function (resp) {
                     if (resp.status == 'success') {
+
+                        $('#addVisitorModal').modal('hide');
+                        $('.modal-backdrop').remove();
+
                         $('#visitorForm')[0].reset();
                         removeDynamicFields();
                         $('.text-danger').html('');
@@ -86,14 +96,16 @@
             $('#idTypeOtherInput').remove();
         }
 
-        $('.visitorFormSub').on('submit', function(e) {
+        $(document).on('submit', '.visitorFormSub', function(e) {
             e.preventDefault();
 
             let form = $(this);
             let formData = new FormData(this);
             let submitButton = form.find('.visitor_update');
             let modalId = form.attr('id').split('-')[1];
-            let modal = $('#updateVisitorSub-' + modalId);
+
+            $('.error-message').remove();
+
 
             submitButton.prop('disabled', true);
             form.find('#loadingSpinnerer').show();
@@ -106,8 +118,31 @@
                 contentType: false,
                 success: function(response) {
                     if (response.success) {
-                        localStorage.setItem('showToast', 'true');
-                        location.reload();
+                    $('#updateVisitorSub-' + modalId).modal('hide');
+                    $('.modal-backdrop').remove();
+
+                    $('.error-message').remove();
+
+                    $('#viewDynamicModal').load(location.href + ' #viewDynamicModal'),
+                    $('#timeOut_visitor').load(location.href + ' #timeOut_visitor'),
+                    $('#visitorTableSubAdmin').load(location.href + ' #visitorTableSubAdmin');
+                    $('#updateDynamicModal').load(location.href + ' #updateDynamicModal');
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-right',
+                            iconColor: 'white',
+                            customClass: {
+                                popup: 'colored-toast',
+                            },
+                            showConfirmButton: false,
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Visitor updated successfully',
+                        });
                      }
                 },
                 error: function(xhr) {
@@ -137,23 +172,4 @@
 
     });
 
-    $(document).ready(function() {
-        if (localStorage.getItem('showToast') === 'true') {
-            Swal.fire({
-                toast: true,
-                position: 'top-right',
-                iconColor: 'white',
-                customClass: {
-                    popup: 'colored-toast',
-                },
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                icon: 'success',
-                title: 'Visitor updated successfully',
-            });
-
-            localStorage.removeItem('showToast');
-        }
-    });
 </script>

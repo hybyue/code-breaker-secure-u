@@ -85,9 +85,9 @@
                     @foreach($latestVisitors as $visit)
                  <tr>
             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
-            <td>{{ $visit->last_name }}, {{ $visit->first_name }}
+            <td>{{ ucfirst( $visit->last_name) }}, {{ ucfirst($visit->first_name) }}
                 @if ($visit->middle_name)
-                    {{ $visit->middle_name }}.
+                    {{ ucfirst($visit->middle_name) }}.
                 @endif
             </td>
             <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('H:i') }}</td>
@@ -275,7 +275,16 @@
                 end_date: $('#end_date').val(),
             });;
 
-         document.getElementById('pdfVisitorFrame').src = url;
+            const iframe = document.getElementById('pdfVisitorFrame');
+
+            // Add load event listener to iframe
+            iframe.onload = function() {
+                document.getElementById('loadingBar').style.display = 'none';
+                iframe.style.display = 'block';
+            };
+
+            // Set iframe src to trigger loading
+            iframe.src = url;
 
          $('#pdfModalVisitor').modal({
             backdrop: 'static',
@@ -287,10 +296,6 @@
 
          $('#pdfModalVisitor').modal('show');
 
-            setTimeout(function() {
-                document.getElementById('loadingBar').style.display = 'none';
-                document.getElementById('pdfVisitorFrame').style.display = 'block';
-            }, 1000);
         }
 
 

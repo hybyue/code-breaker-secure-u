@@ -244,8 +244,16 @@
             end_date: $('#end_date').val(),
         });;
 
-     document.getElementById('pdfVisitorFrame').src = url;
+        const iframe = document.getElementById('pdfVisitorFrame');
 
+        // Add load event listener to iframe
+        iframe.onload = function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Set iframe src to trigger loading
+        iframe.src = url;
      $('#pdfModalVisitorAd').modal({
         backdrop: 'static',
         keyboard: false,
@@ -256,10 +264,7 @@
 
      $('#pdfModalVisitorAd').modal('show');
 
-        setTimeout(function() {
-            document.getElementById('loadingBar').style.display = 'none';
-            document.getElementById('pdfVisitorFrame').style.display = 'block';
-        }, 1000);
+
     }
 
     function duplicateEntry(visitorId) {

@@ -12,6 +12,15 @@
 <script>
     $(document).ready(function () {
 
+
+        $('#violationModal').on('hidden.bs.modal', function () {
+            $('body').css('overflow', 'auto');
+        });
+
+        $('#updateViolationDynamic').on('hidden.bs.modal', function () {
+            $('body').css('overflow', 'auto');
+        });
+
         new DataTable('#violationTable', {
             responsive: true,
             ordering: false,
@@ -41,10 +50,16 @@
             success: function(resp) {
                 if(resp.status == 'success') {
                     $('#violationModal').modal('hide');
+                    $('.modal-backdrop').remove();
+
+
                     $('#violationForms')[0].reset();
-                    $('#violationTable').load(location.href + ' #violationTable');
-                    $('#updateViolationDynamic').load(location.href + ' #updateViolationDynamic');
+                    $('.text-danger').html('');
+                    $('#violationTableUser').load(location.href + ' #violationTableUser');
                     $('#showViolationDynamic').load(location.href + ' #showViolationDynamic');
+
+                    $('#updateViolationDynamic').load(location.href + ' #updateViolationDynamic');
+
 
                     Swal.fire({
                         toast: true,
@@ -59,7 +74,7 @@
                         icon: 'success',
                         title: 'Violation added successfully',
                     });
-                    $('.modal-backdrop').remove();
+
 
                 }
             },
@@ -77,48 +92,69 @@
         })
     });
 
-    $('.violationFormUpdate').on('submit', function(e) {
-    e.preventDefault();
+ // Update Violation Form
+ $(document).on('submit', '.violationFormUpdate', function (e) {
+        e.preventDefault();
 
-    let form = $(this);
-    let formData = new FormData(this);
-    let submitButton = form.find('.update_violate');
-    let modalId = form.attr('id').split('-')[1];
-    let modal = $('#violationFormUpdate-' + modalId);
+        let form = $(this);
+        let formData = new FormData(this);
+        let submitButton = form.find('.update_violate');
+        let modalId = form.attr('id').split('-')[1];
+        $('.error-message').remove();
 
-    submitButton.prop('disabled', true);
-    form.find('#loadingSpinnerer').show();
+        submitButton.prop('disabled', true);
+        form.find('#loadingSpinnerer').show();
 
-    $.ajax({
-        url: form.attr('action'),
-        method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.success) {
-                localStorage.setItem('showToast', 'true');
-                location.reload();
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    $('#updateViolationModal-' + modalId).modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('.error-message').remove();
+
+                    // Dynamically reload sections
+                    $('#violationTableUser').load(location.href + ' #violationTableUser');
+                    $('#updateViolationDynamic').load(location.href + ' #updateViolationDynamic');
+                    $('#showViolationDynamic').load(location.href + ' #showViolationDynamic');
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-right',
+                        iconColor: 'white',
+                        customClass: {
+                            popup: 'colored-toast',
+                        },
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true,
+                        icon: 'success',
+                        title: 'Violation updated successfully',
+                    });
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    form.find('.error-message').remove();
+
+                    $.each(errors, function (field, messages) {
+                        let input = form.find('[name="' + field + '"]');
+                        input.addClass('is-invalid');
+                        input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
+                    });
+                }
+            },
+            complete: function () {
+                form.find('#loadingSpinnerer').hide();
+                submitButton.prop('disabled', false);
             }
-        },
-        error: function(xhr) {
-            if (xhr.status === 422) {
-                let errors = xhr.responseJSON.errors;
-                form.find('.error-message').remove();
-
-                $.each(errors, function(field, messages) {
-                    let input = form.find('[name="' + field + '"]');
-                    input.addClass('is-invalid');
-                    input.after('<div class="invalid-feedback error-message">' + messages[0] + '</div>');
-                });
-            }
-        },
-        complete: function() {
-            form.find('#loadingSpinnerer').hide();
-            submitButton.prop('disabled', false);
-        }
+        });
     });
-});
 
 
     $('.modal').on('hidden.bs.modal', function() {
@@ -198,27 +234,3 @@
 
 
    </script>
-
-
-<script>
-$(document).ready(function() {
-    if (localStorage.getItem('showToast') === 'true') {
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: 'Visitor updated successfully',
-        });
-
-        localStorage.removeItem('showToast');
-    }
-});
-
-</script>

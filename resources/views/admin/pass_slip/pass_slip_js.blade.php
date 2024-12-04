@@ -125,17 +125,18 @@
         });
     });
 
-    $('.updatePassSlipFormAd').on('submit', function(e) {
+    $(document).on('submit','.updatePassSlipFormAd', function(e) {
     e.preventDefault();
 
     let form = $(this);
     let formData = new FormData(this);
     let submitButton = form.find('.update_pass');
     let modalId = form.attr('id').split('-')[1];
-    let modal = $('#updatePassSlipAd-' + modalId);
 
     submitButton.prop('disabled', true);
     form.find('#loadingSpinnerer').show();
+
+    $('.error-message').remove();
 
     $.ajax({
         url: form.attr('action'),
@@ -145,9 +146,30 @@
         contentType: false,
         success: function(response) {
             if (response.success) {
-                modal.modal('hide');
-                localStorage.setItem('showToast', 'true');
-                location.reload();
+                $('#updatePassSlipAd-' + modalId).modal('hide');
+                $('.modal-backdrop').remove();
+                $('.error-message').remove();
+
+
+                $('#passTable').load(location.href + ' #passTable');
+                $('#latestPassSlips').load(location.href + ' #latestPassSlips');
+                $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
+
+                const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-right',
+                        iconColor: 'white',
+                        customClass: {
+                            popup: 'colored-toast',
+                        },
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Pass Slip updated successfully'
+                    });
             }
         },
         error: function(xhr) {
@@ -173,28 +195,6 @@
             $('.error-message').text('');
         });
 });
-
-$(document).ready(function() {
-    if (localStorage.getItem('showToast') === 'true') {
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: 'Pass Slip updated successfully',
-        });
-
-        localStorage.removeItem('showToast');
-    }
-});
-
-
 
    </script>
 

@@ -166,6 +166,10 @@
             $('form').on('submit', function(e) {
                 e.preventDefault();
 
+                $('#emailError').text('');
+                $('#passwordError').text('');
+                $('#email, #password').removeClass('border-red-500');
+
                 var $submitButton = $('button[type="submit"]');
                 var originalButtonText = $submitButton.html();
 
@@ -232,6 +236,9 @@
                                     $submitButton.prop('disabled', false);
                                     $submitButton.html(originalButtonText);
                                 }, totalSeconds * 1000);
+
+                                $submitButton.prop('disabled', false);
+                                $submitButton.html(originalButtonText);
                             }
                         } else if (xhr.status === 404) {
                             $('#emailError').text(xhr.responseJSON.message);
@@ -256,6 +263,9 @@
                                 icon: 'error',
                                 title: errorMessage,
                             });
+
+                            $submitButton.prop('disabled', false);
+                            $submitButton.html(originalButtonText);
                         } else if (xhr.status === 419) {
                             Swal.fire({
                                 toast: true,
@@ -270,6 +280,8 @@
                                 icon: 'error',
                                 title: 'Session expired. Please refresh the page.',
                             });
+                            $submitButton.prop('disabled', false);
+                            $submitButton.html(originalButtonText);
                         } else {
                             Swal.fire({
                                 toast: true,
@@ -284,6 +296,8 @@
                                 icon: 'error',
                                 title: 'An unexpected error occurred',
                             });
+                            $submitButton.prop('disabled', false);
+                            $submitButton.html(originalButtonText);
                         }
                     },
                     complete: function(xhr, status) {

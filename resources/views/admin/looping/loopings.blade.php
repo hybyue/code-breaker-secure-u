@@ -51,14 +51,14 @@
     </div>
 
     <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
-        <table id="loopingTable" class="table table-bordered same-height-table">
+        <table id="loopingTableAdmin" class="table table-bordered same-height-table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Department</th>
                     <th>Date</th>
-                    <th>Time In</th>
                     <th>Time Out</th>
+                    <th>Time In</th>
                     <th>Remarks</th>
                     <th></th>
                 </tr>
@@ -69,8 +69,9 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->department }}</td>
                     <td>{{\Carbon\Carbon::parse($item->date)->format('F d, Y') }}</td>
-                    <td>{{\Carbon\Carbon::parse($item->time_in)->format('h:i') }}</td>
                     <td>{{\Carbon\Carbon::parse($item->time_out)->format('h:i') }}</td>
+                    <td>{{ $item->time_in ? \Carbon\Carbon::parse($item->time_in)->format('h:i') : ' ' }}</td>
+
                     <td>{{ $item->remarks }}</td>
 
                     <td>
@@ -107,7 +108,7 @@
             <div class="modal-body">
                 <div id="loadingBarLoop" style="display:none; text-align: center;">
                     <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="sr-only"></span>
 
                     </div>
                 </div>
@@ -144,14 +145,18 @@ function showPdfModalLooping() {
         employee_type: employeeType,
     });
 
-    document.getElementById('pdfIframeLoop').src = url;
+    const iframe = document.getElementById('pdfIframeLoop');
+
+        // Add load event listener to iframe
+        iframe.onload = function() {
+            document.getElementById('loadingBarLoop').style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Set iframe src to trigger loading
+        iframe.src = url;
 
     $('#pdfModalLooping').modal('show');
-
-    setTimeout(function() {
-        document.getElementById('loadingBarLoop').style.display = 'none';
-        document.getElementById('pdfIframeLoop').style.display = 'block';
-    }, 2000);
 }
 </script>
 @endsection

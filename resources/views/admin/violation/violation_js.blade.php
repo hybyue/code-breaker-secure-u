@@ -13,6 +13,11 @@
     <script>
     $(document).ready(function () {
 
+        $('#addViolationModalAd').on('hidden.bs.modal', function () {
+            $('body').css('overflow', 'auto');
+        });
+
+
         new DataTable('#violationTable', {
         responsive: true,
         ordering: false,
@@ -78,7 +83,7 @@
 
     });
 
-    $('.violationFormUpdateAdmin').on('submit', function(e) {
+    $(document).on('submit', '.violationFormUpdateAdmin', function(e) {
     e.preventDefault();
 
     let form = $(this);
@@ -98,9 +103,14 @@
         contentType: false,
         success: function(response) {
             if (response.success) {
-                modal.modal('hide');
-                localStorage.setItem('showToast', 'true');
-                location.reload();
+                $('#updateViolationModalAd-' + modalId).modal('hide');
+                $('.modal-backdrop').remove();
+
+                $('.error-message').remove();
+                $('#violationTable').load(location.href + ' #violationTable');
+                $('#latestViolations').load(location.href + ' #latestViolations');
+                $('#latestUpdateViolation').load(location.href + ' #latestUpdateViolation');
+
             }
         },
         error: function(xhr) {
@@ -251,7 +261,16 @@
             end_date: $('#end_date').val(),
         });;
 
-     document.getElementById('pdfViolationFrame').src = url;
+        const iframe = document.getElementById('pdfViolationFrame');
+
+        // Add load event listener to iframe
+        iframe.onload = function() {
+            document.getElementById('loadingBar').style.display = 'none';
+            iframe.style.display = 'block';
+        };
+
+        // Set iframe src to trigger loading
+        iframe.src = url;
 
      $('#pdfModalViolationAd').modal({
         backdrop: 'static',
@@ -263,10 +282,6 @@
 
      $('#pdfModalViolationAd').modal('show');
 
-        setTimeout(function() {
-            document.getElementById('loadingBar').style.display = 'none';
-            document.getElementById('pdfViolationFrame').style.display = 'block';
-        }, 1000);
     }
 
 
@@ -288,7 +303,7 @@
                 timer: 2500,
                 timerProgressBar: true,
                 icon: 'success',
-                title: 'Visitor updated successfully',
+                title: 'Violation updated successfully',
             });
 
             localStorage.removeItem('showToast');

@@ -143,6 +143,20 @@ a.sidebar-link {
     display: block !important;
 }
 
+#sidebar:not(.expand) .sidebar-item.active .sidebar-dropdown {
+    display: none !important;
+    max-height: 0 !important;
+    opacity: 0;
+}
+
+#sidebar:not(.expand) .sidebar-item:hover .sidebar-dropdown {
+    display: block !important;
+    opacity: 1 !important;
+    max-height: 500px !important;
+}
+
+
+
 .has-dropdown {
     position: relative;
 }

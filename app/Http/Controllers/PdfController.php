@@ -14,50 +14,74 @@ use Illuminate\Support\Facades\Auth;
 
 class PdfController extends Controller
 {
+    private function filterByUserType($query)
+    {
+        $user = Auth::user();
+
+        // If user is not admin (type = 1), filter by user_id
+        if ($user->type == 'user') {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query;
+    }
     public function generate_passSlip(Request $request)
-{
-    $query = PassSlip::query();
+    {
+        $user = Auth::user();
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereDate('date', '>=', $request->start_date)
-              ->whereDate('date', '<=', $request->end_date);
+
+        // Initialize query for PassSlip
+        $query = PassSlip::query();
+        $this->filterByUserType($query);
+
+
+
+        // Apply date range filter if provided
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('date', '>=', $request->start_date)
+                  ->whereDate('date', '<=', $request->end_date);
+        }
+
+        // Apply employee type filter if provided
+        if ($request->filled('employee_type')) {
+            $query->where('employee_type', $request->employee_type);
+        }
+
+
+        // Get the filtered pass slips
+        $passSlips = $query->latest()->get();
+
+        // Prepare the data for the PDF
+        $data = [
+            'title' => 'Reports for Pass Slip',
+            'date' => now()->format('F d, Y'),
+            'passSlips' => $passSlips,
+            'user' => $user,
+            'employee_type' => $request->employee_type ?? 'All',
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ];
+
+        // Generate the PDF using the data
+        $pdf = Pdf::loadView('pdf.generate-pass', $data);
+
+        // Return the PDF stream
+        return $pdf->stream();
     }
-
-    if ($request->filled('employee_type')) {
-        $query->where('employee_type', $request->employee_type);
-    }
-
-    $passSlips = $query->latest()->get();
-    $user = Auth::user();
-
-    $data = [
-        'title' => 'Reports for Pass Slip',
-        'date' => now()->format('F d, Y'),
-        'passSlips' => $passSlips,
-        'user' => $user,
-        'employee_type' => $request->employee_type ?? 'All',
-        'start_date' => $request->start_date,
-        'end_date' => $request->end_date,
-    ];
-
-
-    $pdf = Pdf::loadView('pdf.generate-pass', $data);
-
-    return $pdf->stream();
-}
-
 
     public function generate_visitor(Request $request)
     {
-        $query = Visitor::query();
+        $user = Auth::user();
 
+        $query = Visitor::query();
+        $this->filterByUserType($query);
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereDate('created_at', '>=', $request->start_date)
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
+
         $visitors = $query->latest()->get();
-        $user = Auth::user();
         $data = [
             'title' => 'Reports for Visitors',
             'date' => now()->format('F d, Y'),
@@ -76,6 +100,7 @@ class PdfController extends Controller
     public function generate_lost(Request $request)
     {
         $query = Lost::query();
+        $this->filterByUserType($query);
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereDate('created_at', '>=', $request->start_date)
@@ -100,6 +125,7 @@ class PdfController extends Controller
     public function generate_violation(Request $request)
     {
         $query = Violation::query();
+        $this->filterByUserType($query);
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereDate('created_at', '>=', $request->start_date)
@@ -125,6 +151,7 @@ class PdfController extends Controller
     public function generateLoopingEmployee(Request $request)
     {
         $query = Looping::query();
+        $this->filterByUserType($query);
 
         // Apply date filter
         if ($request->filled('start_date') && $request->filled('end_date')) {

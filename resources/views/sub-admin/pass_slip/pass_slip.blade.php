@@ -148,7 +148,7 @@
 <div id="latestPassSlips">
 @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="viewPassSlip-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="viewPassSlipLabel-{{ $passSlip->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog w-100 mt-5 pt-4" style="max-width: 95%;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewPassSlipLabel-{{ $passSlip->id }}">Pass Slip Details</h5>
@@ -197,6 +197,7 @@
                             <th>Time Out</th>
                             <th>Time In</th>
                             <th>Remarks</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -244,6 +245,9 @@
                                 @endif
                             </td>
                             <td>{{ $entry->remarks }}</td>
+                            <td>
+                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlip-{{ $passSlip->id }}"><i class="bi bi-pencil-square"></i></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -279,28 +283,6 @@
     </div>
 </div>
 
-<!-- Modal Structure -->
-<div class="modal fade" id="pdfModalLooping" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel">PDF Preview Looping</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="loadingBarLoop" style="display:none; text-align: center;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-
-                    </div>
-                </div>
-
-                <!-- PDF display iframe -->
-                <iframe id="pdfIframeLoop" src="" style="width: 100%; height: 500px; border: none;"></iframe>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <script>
@@ -315,7 +297,17 @@
         employee_type: $('#employee_type').val()
     });
 
-    document.getElementById('pdfIframe').src = url;
+    // Get iframe element
+    const iframe = document.getElementById('pdfIframe');
+
+    // Add load event listener to iframe
+    iframe.onload = function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        iframe.style.display = 'block';
+    };
+
+    // Set iframe src to trigger loading
+    iframe.src = url;
 
     $('#pdfModal').modal({
         backdrop:'static',
@@ -338,11 +330,6 @@
     });
 
     $('#pdfModal').modal('show');
-
-    setTimeout(function() {
-        document.getElementById('loadingBar').style.display = 'none';
-        document.getElementById('pdfIframe').style.display = 'block';
-    }, 2000);
 }
 
 function showPdfModalLooping() {
@@ -369,7 +356,17 @@ function showPdfModalLooping() {
         violation_filter: violationFilter
     });
 
-    document.getElementById('pdfIframeLoop').src = url;
+    // Get iframe element
+    const iframe = document.getElementById('pdfIframeLoop');
+
+    // Add load event listener to iframe
+    iframe.onload = function() {
+        document.getElementById('loadingBarLoop').style.display = 'none';
+        iframe.style.display = 'block';
+    };
+
+    // Set iframe src to trigger loading
+    iframe.src = url;
 
     $('#pdfModalLooping').modal({
         backdrop:'static',
@@ -391,11 +388,6 @@ function showPdfModalLooping() {
     });
 
     $('#pdfModalLooping').modal('show');
-
-    setTimeout(function() {
-        document.getElementById('loadingBarLoop').style.display = 'none';
-        document.getElementById('pdfIframeLoop').style.display = 'block';
-    }, 2000);
 }
     </script>
 <style>

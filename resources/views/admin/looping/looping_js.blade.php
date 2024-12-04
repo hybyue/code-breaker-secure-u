@@ -140,14 +140,13 @@ function searchEmployee() {
         });
 
         // Update Looping Form Submit
-        $('.updateLoopingFormAdmin').on('submit', function(e) {
+        $(document).on('submit', '.updateLoopingFormAdmin', function(e) {
             e.preventDefault();
 
             let form = $(this);
             let formData = new FormData(this);
             let submitButton = form.find('.update_looping');
             let modalId = form.attr('id').split('-')[1];
-            let modal = $('#updateLoopingAdmin-' + modalId);
 
             submitButton.prop('disabled', true);
             form.find('#loadingSpinnerer').show();
@@ -160,10 +159,27 @@ function searchEmployee() {
                 contentType: false,
                 success: function(response) {
                     if (response.success) {
-                        localStorage.setItem('showToast', 'true');
-                        setTimeout(() => {
-                            location.reload();
-                        }, 500);
+                        $('#updateLoopingAdmin-' + modalId).modal('hide');
+                        $('.modal-backdrop').remove();
+                        $('.error-message').remove();
+
+                        $('#loopingTableAdmin').load(location.href + ' #loopingTableAdmin');
+                        $('#latestLoopingRecords').load(location.href + ' #latestLoopingRecords');
+                        $('#latestUpdateLooping').load(location.href + ' #latestUpdateLooping');
+
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-right',
+                            iconColor: 'white',
+                            customClass: {
+                                popup: 'colored-toast',
+                            },
+                            showConfirmButton: false,
+                            timer: 2500,
+                            timerProgressBar: true,
+                            icon: 'success',
+                            title: 'Looping record updated successfully',
+                        });
                     }
                 },
                 error: function(xhr) {
@@ -185,24 +201,11 @@ function searchEmployee() {
             });
         });
 
-        // Toast notification for updates
-        if (localStorage.getItem('showToast') === 'true') {
-            Swal.fire({
-                toast: true,
-                position: 'top-right',
-                iconColor: 'white',
-                customClass: {
-                    popup: 'colored-toast',
-                },
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                icon: 'success',
-                title: 'Looping record updated successfully',
-            });
-
-            localStorage.removeItem('showToast');
-        }
+        $('.modal').on('hidden.bs.modal', function() {
+            $('.is-invalid').removeClass('is-invalid');
+            $('.modal-backdrop').remove();
+            $('.error-message').text('');
+        });
     });
 
 </script>

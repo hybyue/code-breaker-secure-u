@@ -142,7 +142,7 @@
             <td>
                 <div class="security-container">
                     <!-- Security Logo -->
-                    <img src="{{ public_path('images/SMO.png') }}" alt="Security Logo" class="logo">
+                    <img src="{{ public_path('images/smo.jpg') }}" alt="Security Logo" class="logo">
                     <div class="security-name">Security Management Office</div>
                 </div>
             </td>
@@ -202,7 +202,7 @@
             <p>@if(!empty($user))
                 <strong>{{ strtoupper($user->first_name) }} @if($user->middle_name){{ strtoupper($user->middle_name) }}.@endif {{ strtoupper($user->last_name) }}</strong>
                 @endif</p>
-            <p>Secretary, Security Management</p>
+            <p>{{ ucfirst($user->position) }}, Security Management</p>
             <span class="line"></span>
         </div>
         <div class="signature">

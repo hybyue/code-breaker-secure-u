@@ -250,30 +250,6 @@
 @endforeach
 </div>
 
-<script>
-    function searchTable() {
-        var input, filter, table, tr, td, i, j, txtValue;
-        input = document.getElementById("search");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("passTable");
-        tr = table.getElementsByTagName("tr");
-        for (i = 1; i < tr.length; i++) {
-            tr[i].style.display = "none";
-            td = tr[i].getElementsByTagName("td");
-            for (j = 0; j < td.length; j++) {
-                if (td[j]) {
-                    txtValue = td[j].textContent || td[j].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-
-</script>
 
 <!-- Modal Structure -->
 <div class="modal fade" id="pdfModalAd" tabindex="-1" aria-labelledby="pdfModalAdLabel" aria-hidden="true">
@@ -330,7 +306,16 @@
         employee_type: $('#employee_type').val()
     });
 
-    document.getElementById('pdfIframe').src = url;
+    const iframe = document.getElementById('pdfIframe');
+
+    // Add load event listener to iframe
+    iframe.onload = function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        iframe.style.display = 'block';
+    };
+
+    // Set iframe src to trigger loading
+    iframe.src = url;
 
     $('#pdfModalAd').modal({
         backdrop:'static',
@@ -353,11 +338,6 @@
     });
 
     $('#pdfModalAd').modal('show');
-
-    setTimeout(function() {
-        document.getElementById('loadingBar').style.display = 'none';
-        document.getElementById('pdfIframe').style.display = 'block';
-    }, 2000);
 }
 
 function showPdfModalLooping() {

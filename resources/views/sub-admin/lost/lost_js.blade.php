@@ -27,9 +27,10 @@ $(document).ready(function () {
     $('#addLostFoundForm').on('submit', function(e){
         e.preventDefault();
 
-        let formData = new FormData(this);
-        let submitButton = $('#addLostFoundForm').find('.add_lost_admin');
 
+        let formData = new FormData(this);
+
+        let submitButton = $('.add_lost');
         submitButton.prop('disabled', true);
         $('#addLostFoundForm').find('#loadingSpinner').show();
 
@@ -43,12 +44,13 @@ $(document).ready(function () {
                 if(resp.status == 'success') {
                     $('#addLostFoundForm')[0].reset();
 
-                    $('#addLostFoundForm').find('.is-invalid').removeClass('is-invalid');
-                    $('#addLostFoundForm').find('.error-message').remove();
+                    $('.error-message').empty();
+                    $('#previewImage').attr('src', '').addClass('d-none');
 
+                    $('#viewModalLostFound').load(location.href + ' #viewModalLostFound');
                     $('#lostTable').load(location.href + ' #lostTable');
                     $('#updateLostFoundsDynamic').load(location.href + ' #updateLostFoundsDynamic');
-                    $('#viewModalLostFound').load(location.href + ' #viewModalLostFound');
+
 
                     Swal.fire({
                         toast: true,
@@ -85,14 +87,13 @@ $(document).ready(function () {
     });
 
 
-    $('.updateLostFoundForm').on('submit', function(e) {
+    $(document).on('submit','.updateLostFoundForm', function(e) {
     e.preventDefault();
 
     let form = $(this);
     let formData = new FormData(this);
     let submitButton = form.find('.update_lost');
     let modalId = form.attr('id').split('-')[1];
-    let modal = $('#updateLostFound-' + modalId);
 
     submitButton.prop('disabled', true);
     form.find('#loadingSpinnerer').show();
@@ -105,8 +106,27 @@ $(document).ready(function () {
         contentType: false,
         success: function(response) {
             if (response.success) {
-                localStorage.setItem('showToast', 'true');
-                location.reload();
+                $('#updateLostFound-' + modalId).modal('hide');
+                $('.modal-backdrop').remove();
+                $('.error-message').remove();
+
+                $('#lostTable').load(location.href + ' #lostTable');
+                $('#updateLostFoundsDynamic').load(location.href + ' #updateLostFoundsDynamic');
+                $('#viewModalLostFound').load(location.href + ' #viewModalLostFound');
+
+                Swal.fire({
+                            toast: true,
+                            position: 'top-right',
+                            iconColor: 'white',
+                            customClass: {
+                                popup: 'colored-toast',
+                            },
+                            showConfirmButton: false,
+                            timer: 2500,
+                            timerProgressBar: true,
+                            icon: 'success',
+                            title: 'Lost and Found updated successfully',
+                        });
             }
         },
         error: function(xhr) {
@@ -137,26 +157,6 @@ $(document).ready(function () {
 
 });
 
-$(document).ready(function() {
-
-    if (localStorage.getItem('showToast') === 'true') {
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'white',
-            customClass: {
-                popup: 'colored-toast',
-            },
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            icon: 'success',
-            title: 'Lost and Found updated successfully',
-        });
-
-        localStorage.removeItem('showToast');
-    }
-});
 
 </script>
 
@@ -267,7 +267,16 @@ function showPdfModalLost() {
         end_date: $('#end_date').val()
     });
 
-    document.getElementById('pdfLostFrame').src = url;
+    const iframe = document.getElementById('pdfLostFrame');
+
+    // Add load event listener to iframe
+    iframe.onload = function() {
+        document.getElementById('loadingBar').style.display = 'none';
+        iframe.style.display = 'block';
+    };
+
+    // Set iframe src to trigger loading
+    iframe.src = url;
 
     $('#pdfModalLost').modal({
         backdrop:'static',
@@ -290,10 +299,7 @@ function showPdfModalLost() {
 
     $('#pdfModalLost').modal('show');
 
-    setTimeout(function() {
-        document.getElementById('loadingBar').style.display = 'none';
-        document.getElementById('pdfLostFrame').style.display = 'block';
-    }, 2000);
+
     }
 
 //     function previewImage(event, id) {

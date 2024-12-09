@@ -11,9 +11,14 @@
                     @csrf
                     <div class="row">
                         <div class="mb-2 position-relative">
-                            <input type="text" class="form-control" id="search_employee"
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search_employee"
                                 placeholder="Type ID or Name" oninput="searchEmployee()">
-                            <span class="text-danger error-message" id="search_employee_error"></span>
+                                <button class="btn btn-primary" type="button" id="clear_search" onclick="clearSearch()">
+                                    <span class="spinner-border spinner-border-sm me-2" id="searchSpinner" role="status" style="display: none;"></span>
+                                    Clear
+                                </button>
+                            </div>
                             <div id="employee_results" class="col-md-12 results-container"></div>
                             <!-- This will show suggestions -->
                         </div>

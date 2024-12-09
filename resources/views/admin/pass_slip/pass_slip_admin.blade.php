@@ -3,10 +3,10 @@
 @section('title', 'Pass slip')
 
 @section('content')
-<div class="container mt-3 pass-slip">
+<div class="container mt-4 pass-slip">
     <div class="row">
         <div class="col-md-6">
-            <h4>Pass Slip</h4>
+            <h4 class="font-weight-bold">Pass Slip</h4>
         </div>
         <div class=" col-md-6 text-end">
             <a href="#" class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addPassSlipModal">
@@ -36,15 +36,6 @@
                             <option value="Non-Teaching" {{ session('pass_slip_filter.employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label for="violation_filter">Violation Filter:</label>
-                        <select class="form-select" id="violation_filter" name="violation_filter">
-                            <option value="">All</option>
-                            <option value="1" {{ session('pass_slip_filter.violation_filter') == '1' ? 'selected' : '' }}>Exceeded 3 Hours</option>
-                            <option value="0" {{ session('pass_slip_filter.violation_filter') == '0' ? 'selected' : '' }}>Not Exceeded</option>
-                        </select>
-                    </div>
-
                     <div class="col-md-1 mt-4">
                         <button type="submit" class="btn btn-dark">Filter</button>
                     </div>
@@ -182,7 +173,7 @@
                     </div>
                 </div>
             </div>
-            <table class="table table-bordered">
+            <table class="table table-bordered same-height-table" style="overflow-x:auto;">
                 <thead>
                     <tr>
                         <th>Pass Slip No.</th>
@@ -194,6 +185,7 @@
                         <th>Time Out</th>
                         <th>Time In</th>
                         <th>Remarks</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -239,6 +231,9 @@
                             @endif
                         </td>
                         <td>{{ $entry->remarks}}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlipAd-{{ $passSlip->id }}" onclick="$('#viewPassSlip-{{ $passSlip->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

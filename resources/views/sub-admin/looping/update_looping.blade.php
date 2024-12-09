@@ -1,5 +1,5 @@
 <div id="latestUpdateLooping">
-@foreach($loopingRecords as $record)
+@foreach($allLoopings as $record)
 <div class="modal fade" id="updateLooping-{{ $record->id }}" tabindex="-1" aria-labelledby="updateLoopingModalLabel-{{ $record->id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

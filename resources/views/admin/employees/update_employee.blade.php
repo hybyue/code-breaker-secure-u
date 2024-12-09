@@ -30,7 +30,7 @@
                             <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{$employee->middle_name}}" placeholder="Optional" >
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="department" class="form-label">Department:</label>
+                            <label for="department" class="form-label">Department/Office:</label>
                             <input type="text" class="form-control" id="department" name="department" value="{{$employee->department}}" required>
                         </div>
                         <div class="col-md-6">
@@ -40,17 +40,18 @@
                         <div class=" mb-3">
                             <label for="status" class="form-label">Employee Type:</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="{{$employee->status}}" selected disabled>{{$employee->status}}</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
+                                <option value="" selected disabled>Select Employee Type</option>
+                                <option value="Teaching" {{ $employee->status == 'Teaching' ? 'selected' : ''}}>Teaching</option>
+                                <option value="Non-Teaching" {{ $employee->status == 'Non-Teaching' ? 'selected' : ''}}>Non-Teaching</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="position" class="form-label">Position:</label>
                             <select type="text" class="form-select" id="position" name="position" required>
-                                <option value="Teaching" {{ $employee->position == 'Teaching' ? 'selected' : '' }}>Teaching</option>
-                                <option value="Non-Teaching" {{ $employee->position == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
+                                <option value="" selected disabled>Select Employee's Position</option>
+                                <option value="Part-Time" {{ $employee->position == 'Part-Time' ? 'selected' : '' }}>Part-Time</option>
+                                <option value="Full-time" {{ $employee->position == 'Full-time' ? 'selected' : '' }}>Full-time</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>

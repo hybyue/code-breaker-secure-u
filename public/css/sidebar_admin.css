@@ -364,8 +364,37 @@ a.sidebar-link {
 }
 
 .sidebar-logo h6 {
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.2;
     white-space: normal;
 }
 
+.modal-header {
+    background-color: #2c3539;
+    color: white;
+}
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+
+.table {
+    min-width: 900px;  /* Minimum width to ensure content fits */
+    width: 100%;        /* Takes full width of container */
+    border: 1px solid #2f3031;  /* Border around entire table */
+    margin-bottom: 0;   /* Remove bottom margin */
+}
+
+  /* Container for the table with horizontal scroll */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem;      /* Add some padding around the table */
+    background: #f8f9fa; /* Light background for the container */
+    border-radius: 0.5rem; /* Rounded corners */
+}

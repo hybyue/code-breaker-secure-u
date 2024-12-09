@@ -51,7 +51,7 @@
                                     <option value="Other" {{ $item->course == 'Other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
                                 <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
                                 <input type="file" class="form-control" id="lostImage-{{ $item->id }}" name="object_img" onchange="previewImage(event, {{ $item->id }})">
                                 {{-- <div class="d-flex justify-content-center">
@@ -67,8 +67,8 @@
                                         <p>Updated Image:</p>
                                         <img id="newImagePreview-{{ $item->id }}" class="img-fluid mt-2" style="max-width: 100px; display: none;">
                                     </div>
-                                </div> --}}
-                            </div>
+                                </div>
+                            </div> --}}
                             <div class="col-md-6 mb-3">
                                 <label for="location-{{ $item->id }}" class="form-label">Location:</label>
                                 <input type="text" class="form-control" id="location-{{ $item->id }}" name="location" value="{{ $item->location }}">

@@ -13,10 +13,10 @@
                         <div class="mb-2 position-relative">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="search_employee"
-                                    placeholder="Search Employee ID or Name"  oninput="searchEmployee()">
-                                <button class="btn btn-primary" type="button" id="searchButton">
+                                    placeholder="Search Employee ID or Name"  oninput="searchEmployee()" >
+                                <button class="btn btn-primary" type="button" id="clear_search" onclick="clearSearch()">
                                     <span class="spinner-border spinner-border-sm me-2" id="searchSpinner" role="status" style="display: none;"></span>
-                                    Search
+                                    Clear
                                 </button>
                             </div>
                             <div id="employee_results" class="col-md-12 results-container"></div>
@@ -24,23 +24,18 @@
 
                         <div class="col-md-6 mb-2">
                             <label for="name" class="form-label">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control bg-body-secondary" id="name" name="name" required readonly>
                             <span class="text-danger error-message" id="name_error"></span>
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <label for="department" class="form-label">Department:</label>
-                            <input type="text" class="form-control" id="department" name="department" required>
+                            <input type="text" class="form-control bg-body-secondary" id="department" name="department" required readonly>
                             <span class="text-danger error-message" id="department_error"></span>
                         </div>
-
                         <div class="col-md-6 mb-2">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="employee_type" name="employee_type" required>
-                                <option value="" selected disabled>Select Employee Type</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
-                            </select>
+                            <input class="form-control bg-body-secondary" id="status" name="employee_type" required readonly>
                             <span class="text-danger error-message" id="employee_type_error"></span>
                         </div>
 

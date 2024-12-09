@@ -249,12 +249,11 @@ public function pass_slip_admin(Request $request)
 public function filterPassSlipAdmin(Request $request)
 {
     if ($request->filled('start_date') || $request->filled('end_date') ||
-    $request->filled('employee_type') || $request->filled('violation_filter')) {
+    $request->filled('employee_type')) {
     session(['pass_slip_filter' => [
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
         'employee_type' => $request->employee_type,
-        'violation_filter' => $request->violation_filter
     ]]);
 }
 
@@ -282,14 +281,6 @@ if (!empty($filterData['employee_type'])) {
     $query->where('employee_type', $filterData['employee_type']);
 }
 
-if (!empty($filterData['violation_filter'])) {
-    if ($filterData['violation_filter'] == '1') {
-        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-    } elseif ($filterData['violation_filter'] == '0') {
-        $query->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-    }
-}
-
 // Update to use $filterData instead of $request
 $latestPassSlips = PassSlip::select('pass_slips.*')
     ->join(DB::raw('(SELECT MAX(id) as id FROM pass_slips GROUP BY last_name, first_name, middle_name, date, department, designation) as latest'),
@@ -303,13 +294,6 @@ $latestPassSlips = PassSlip::select('pass_slips.*')
         }
         if (!empty($filterData['employee_type'])) {
             $subQuery->where('pass_slips.employee_type', $filterData['employee_type']);
-        }
-        if (!empty($filterData['violation_filter'])) {
-            if ($filterData['violation_filter'] == '1') {
-                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) >= 3');
-            } elseif ($filterData['violation_filter'] == '0') {
-                $subQuery->whereRaw('TIMESTAMPDIFF(HOUR, time_out, IFNULL(time_in, NOW())) < 3');
-            }
         }
     })
     ->latest()
@@ -376,7 +360,7 @@ private function generatePassNumber()
             // Check if search term is ID or name
             if ($request->filled('search')) {
                 $searchTerm = $request->search;
-                $query->where('employee_id', $searchTerm)
+                $query->where('employee_id', 'like', '%' . $searchTerm .  '%')
                       ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
                       ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
             }

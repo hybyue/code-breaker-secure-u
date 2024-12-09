@@ -16,9 +16,9 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
 
     <link href="{{ asset('css/sidebar.css')}}" rel="stylesheet" >
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> --}}
+    <link rel="stylesheet" href="{{ asset('offline_extender/css/sweetalert2.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('offline_extender/css/dataTables.bootstrap5.min.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
 
@@ -102,8 +102,13 @@
         <aside id="sidebar">
             <div class="container">
                 <button id="toggle-btn" type="button"><i class="bi bi-list"></i></button>
-                <div class="sidebar-logo sidebar-header">
-                    <h4 class="text-white text-center">Secure-U</h4>
+                  <div class="sidebar-logo mt-3">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ URL('images/smo1.png') }}"
+                             alt="SMO Logo"
+                             class="sidebar-smo-logo">
+                        <h6 class="font-text-bold text-white mb-0 ms-1">Security Management Office</h6>
+                    </div>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -162,7 +167,7 @@
         </aside>
 
 
-        <div class="main p-3" style="background-color: #f5f4f4;">
+        <div class="main" style="background-color: #f5f4f4;">
             @yield('content')
         </div>
     </div>
@@ -170,17 +175,17 @@
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.min.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="{{ asset('offline_extender/js/dataTables.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('offline_extender/js/dataTables.bootstrap5.min.js')}}" type="text/javascript"></script>
 
     <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+    {{-- <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script> --}}
     <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

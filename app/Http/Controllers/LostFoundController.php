@@ -19,7 +19,7 @@ class LostFoundController extends Controller
        public function store_lost(Request $request)
     {
         $validatedData = Validator::make($request->all(),[
-            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'object_type' => 'required|regex:/^[A-Za-z\s]+$/|max:255',
             'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
             'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
@@ -32,7 +32,7 @@ class LostFoundController extends Controller
         [
             'object_img.image' => 'The object image must be an image file.',
             'object_img.mimes' => 'Allowed image types: jpeg, png, jpg, gif, svg.',
-            'object_img.max' => 'Image size cannot exceed 2MB.',
+            'object_img.max' => 'Image size cannot exceed 10MB.',
             'object_type.required' => 'Object type is required.',
             'object_type.regex' => 'Object type should contain only letters and spaces.',
             'object_type.max' => 'Object type cannot exceed 255 characters.',
@@ -87,7 +87,7 @@ class LostFoundController extends Controller
         $lost_found = Lost::findOrFail($id);
 
         $validatedData = Validator::make($request->all(),[
-            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'object_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
             'object_type' => 'required|string|max:255',
             'first_name' => 'required|regex:/^[A-Za-z\s]+$/|max:50',
             'middle_name' => 'nullable|regex:/^[A-Za-z\s]+$/|max:1',
@@ -96,11 +96,12 @@ class LostFoundController extends Controller
             'location' => 'required|string|max:100',
             'description' => 'nullable|string|max:1000',
             'remarks' => 'nullable|string|max:255',
+            'is_claimed' => 'nullable|boolean',
+            'is_transferred' => 'nullable|boolean',
         ],
         [
             'object_img.image' => 'The object image must be an image file.',
             'object_img.mimes' => 'Allowed image types: jpeg, png, jpg, gif, svg.',
-            'object_img.max' => 'Image size cannot exceed 2MB.',
             'object_type.required' => 'Object type is required.',
             'object_type.max' => 'Object type cannot exceed 255 characters.',
             'first_name.required' => 'First name is required.',
@@ -122,17 +123,10 @@ class LostFoundController extends Controller
             return response()->json(['errors' => $validatedData->errors()], 422);
         }
 
-        if ($request->hasFile('object_img')) {
-            if ($lost_found->object_img && file_exists(public_path($lost_found->object_img))) {
-                unlink(public_path($lost_found->object_img));
-            }
 
-            $fileName = time() . '_' . $request->file('object_img')->getClientOriginalName();
-            $path = $request->file('object_img')->storeAs('lost_images', $fileName, 'public');
-            $lost_found->object_img = '/storage/' . $path;
-        }
 
         $lost_found->update($request->all());
+
 
 
         return response()->json([

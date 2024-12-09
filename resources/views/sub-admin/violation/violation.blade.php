@@ -7,9 +7,9 @@
 @section('content')
 <div class="container mt-3 pass-slip">
 
-    <div class="row">
+    <div class="row p-3 mt-3">
         <div class="col-md-6">
-            <h4>Violation</h4>
+            <h4 class="font-weight-bold">Violation</h4>
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#violationModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
@@ -107,14 +107,40 @@
 <div id="showViolationDynamic">
 @foreach ($violations as $violation)
 <div class="modal fade" id="viewEntries-{{ $violation->id }}" tabindex="-1" aria-labelledby="viewEntriesLabel-{{ $violation->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewEntriesLabel-{{ $violation->id }}">Student Violations</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered">
+                <div class="container mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h5 class="mb-1 text-primary">
+                                        {{$violation->last_name}}, {{$violation->first_name}}
+                                        @if($violation->middle_name)
+                                            <span class="text-primary">{{$violation->middle_name}}.</span>
+                                        @endif
+                                    </h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="badge bg-light text-dark p-2">
+                                            <i class="bi bi-building me-1"></i>
+                                            {{$violation->course}}
+                                        </div>
+                                        <div class="badge bg-success text-white p-2">
+                                            <i class="bi bi-clock-history me-1"></i>
+                                            {{$violation->violation_count}} Violation Count
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered same-height-table" style="overflow-x:auto;">
                     <thead>
                         <tr>
                             <th>Violation No.</th>
@@ -132,7 +158,7 @@
                             <td>{{ $entry->violation_type }}</td>
                             <td>{{ $entry->remarks }}</td>
                             <td class="text-center">
-                                <a href="javascript:void(0)" class="btn btn-sm text-white edit-button" style="background-color: #063292" data-id="{{ $violate->id }}" data-bs-toggle="modal" data-bs-target="#updateViolationModal-{{ $violate->id }}">
+                                <a href="javascript:void(0)" class="btn btn-sm text-white edit-button" style="background-color: #063292" data-id="{{ $violation->id }}" data-bs-toggle="modal" data-bs-target="#updateViolationModal-{{ $violation->id }}" onclick="$('#viewEntries-{{ $violation->id }}').modal('hide')">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
                             </td>
@@ -144,12 +170,40 @@
         </div>
     </div>
 </div>
-</div>
 @endforeach
+
+</div>
+
+
 
 @include('sub-admin.violation.update_violation')
 @include('sub-admin.violation.violation_js')
 @include('sub-admin.violation.add_violation')
+
+
+
+
+
+<!-- TODO::Modal PDF Preview -->
+<div class="modal fade" id="pdfModalViolation" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Violation Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- PDF Preview will be embedded here -->
+                <div id="loadingBar" style="display:none; text-align: center;">
+                    <div class="spinner-border" role="status">
+                    </div>
+                </div>
+                <iframe id="pdfViolationFrame" src="" style="width: 100%; height: 500px; border: none;"></iframe>
+
+        </div>
+    </div>
+</div>
+
 
 <script>
     function showPdfModalViolation() {

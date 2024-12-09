@@ -133,6 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
+
 });
 
 // Loading Bar Animation

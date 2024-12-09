@@ -4,19 +4,19 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addLoopingModalLabel">Add Looping Record</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addLoopingForm" action="{{ route('store.looping_admin') }}" method="POST">
+                <form id="addLoopingForm" action="{{ route('store.looping') }}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="mb-2 position-relative">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="search_employee"
-                                    placeholder="Search Employee ID or Name"  oninput="searchEmployee()">
-                                <button class="btn btn-primary" type="button" id="searchButton">
+                                    placeholder="Search Employee ID or Name"  oninput="searchEmployee()" >
+                                <button class="btn btn-primary" type="button" id="clear_search" onclick="clearSearch()">
                                     <span class="spinner-border spinner-border-sm me-2" id="searchSpinner" role="status" style="display: none;"></span>
-                                    Search
+                                    Clear
                                 </button>
                             </div>
                             <div id="employee_results" class="col-md-12 results-container"></div>
@@ -24,23 +24,19 @@
 
                         <div class="col-md-6 mb-2">
                             <label for="name" class="form-label">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name" required readonly>
                             <span class="text-danger error-message" id="name_error"></span>
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <label for="department" class="form-label">Department:</label>
-                            <input type="text" class="form-control" id="department" name="department" required>
+                            <input type="text" class="form-control" id="department" name="department" required readonly>
                             <span class="text-danger error-message" id="department_error"></span>
                         </div>
 
                         <div class="col-md-6 mb-2">
                             <label for="employee_type" class="form-label">Employee Type:</label>
-                            <select class="form-select" id="employee_type" name="employee_type" required>
-                                <option value="" selected disabled>Select Employee Type</option>
-                                <option value="Teaching">Teaching</option>
-                                <option value="Non-Teaching">Non-Teaching</option>
-                            </select>
+                            <input class="form-control" id="status" name="employee_type" required readonly>
                             <span class="text-danger error-message" id="employee_type_error"></span>
                         </div>
 
@@ -80,33 +76,3 @@
         </div>
     </div>
 </div>
-
-<style>
-.results-container {
-    position: absolute;
-    width: 100%;
-    max-height: 200px;
-    max-width: 470px;
-    min-width: 250px;
-    overflow-y: auto;
-    z-index: 1000;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-top: 2px;
-}
-
-.result-item {
-    cursor: pointer;
-}
-
-.result-item:hover {
-    background-color: #f8f9fa;
-}
-
-.spinner-border-sm {
-    width: 1rem;
-    height: 1rem;
-}
-</style>

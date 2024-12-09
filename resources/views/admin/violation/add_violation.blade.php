@@ -10,27 +10,42 @@
                 <form id="violationFormAdmin" action="" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="form-group">
-                            <label for="student_no">Student Number:</label>
-                            <input type="text" class="form-control" id="student_no" name="student_no" required>
-                        </div>
-                        <div id="student_results" class="col-md-12 bg-primary results-container"></div>
+                        <div class="mb-2 position-relative">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search_student" name="search_student" placeholder="Type Student Number or Name" oninput="searchStudent()">
 
+                                <button class="btn btn-primary" type="button" id="clear_search" onclick="clearSearch()">
+                                    <span class="spinner-border spinner-border-sm me-2" id="searchSpinner" role="status" style="display: none;"></span>
+                                    Clear
+                                </button>
+                            </div>
+                        <div id="student_results" class="col-md-12 results-container"></div>
+                    </div>
+                        <div class="form-group">
+                        <label for="student_no">Student Number:</label>
+                        <input type="text" class="form-control bg-body-secondary" id="student_no" name="student_no" required readonly>
+                        <span class="text-danger error-message" id="student_no_error"></span>
+                        </div>
                         <div class="col-md-4 form-group">
                             <label for="last_name">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <input type="text" class="form-control bg-body-secondary " id="last_name" name="last_name" required readonly>
+                            <span class="text-danger error-message" id="last_name_error"></span>
+
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="first_name">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            <input type="text" class="form-control bg-body-secondary" id="first_name" name="first_name" required readonly>
+                            <span class="text-danger error-message" id="first_name_error"></span>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="middle_initial">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_initial" placeholder="Optional" name="middle_initial">
+                            <input type="text" class="form-control bg-body-secondary" id="middle_name" placeholder="Optional" name="middle_initial" readonly>
+                            <span class="text-danger error-message" id="middle_name_error"></span>
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
-                            <input type="text" class="form-control" id="course" name="course" required>
+                            <input type="text" class="form-control bg-body-secondary" id="course" name="course" required readonly>
+                            <span class="text-danger error-message" id="course_error"></span>
                         </div>
                         <div class="form-group">
                             <label for="violation_type">Violation Type:</label>

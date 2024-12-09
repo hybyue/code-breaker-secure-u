@@ -100,7 +100,7 @@ class PassSlip extends Model
             ->where('department', $model->department)
             ->where('designation', $model->designation)
             ->where('employee_type', $model->employee_type)
-            ->whereDate('created_at', $today)
+            ->whereDate('date', $today)
             ->count();
 
         $model->exit_count = $existingEntriesToday + 1;

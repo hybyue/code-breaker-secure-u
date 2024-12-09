@@ -136,28 +136,29 @@
                 contentType: false,
                 success: function(response) {
                     if (response.success) {
+                        // Close both modals and remove all backdrops
                         $('#updatePassSlip-' + modalId).modal('hide');
                         $('.modal-backdrop').remove();
                         $('.error-message').remove();
 
-
+                        // Refresh your tables
                         $('#passTable').load(location.href + ' #passTable');
                         $('#latestPassSlips').load(location.href + ' #latestPassSlips');
                         $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
-                                Swal.fire({
-                                    toast: true,
-                                    position: 'top-right',
-                                    iconColor: 'white',
-                                    customClass: {
-                                        popup: 'colored-toast',
-                                    },
-                                    showConfirmButton: false,
-                                    timer: 2500,
-                                    timerProgressBar: true,
-                                    icon: 'success',
-                                    title: 'Pass Slip updated successfully',
-                                });
 
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-right',
+                            iconColor: 'white',
+                            customClass: {
+                                popup: 'colored-toast',
+                            },
+                            showConfirmButton: false,
+                            timer: 2500,
+                            timerProgressBar: true,
+                            icon: 'success',
+                            title: 'Pass Slip updated successfully',
+                        });
                     }
                 },
                 error: function(xhr) {
@@ -179,7 +180,7 @@
             });
         });
 
-        $('.modal').on('hidden.bs.modal', function() {
+        $('.modal').on('hidden.bs.modal', function () {
             $('.is-invalid').removeClass('is-invalid');
             $('.error-message').text('');
         });
@@ -189,6 +190,10 @@
         let searchValue = $('#search_employee').val();
 
         if (searchValue.length >= 2) {
+
+            $('#searchSpinner').show();
+            $('#clear_search').show();
+
             let formData = new FormData();
             formData.append('search', searchValue);
 
@@ -202,6 +207,8 @@
                 processData: false,
                 contentType: false,
                 success: function(data) {
+                    $('#searchSpinner').hide();
+
                     if (data.success && data.employees.length > 0) {
                         let resultsContainer = $('#employee_results');
                         resultsContainer.empty(); // Clear previous results
@@ -237,10 +244,22 @@
                     }
                 },
                 error: function(error) {
+                    $('#searchSpinner').hide();
                     console.error('Error:', error);
                 }
             });
-        }
+        } else {
+                    $('#searchSpinner').hide(); // Hide spinner if input is less than 2 characters
+                    $('#employee_results').empty(); // Clear results
+            }
+
+    }
+    function clearSearch() {
+        // Clear only the search input
+        $('#search_employee').val('');
+
+        // Clear only the results container
+        $('#employee_results').empty();
     }
 
     function clearEmployeeFields() {

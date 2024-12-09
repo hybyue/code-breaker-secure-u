@@ -27,9 +27,9 @@
 
 <div class="container mt-3 pass-slip">
 
-    <div class="row">
+    <div class="row p-2">
         <div class="col-md-6">
-            <h4>Employees</h4>
+            <h4 class="font-weight-bold">Employees</h4>
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addEmployeeModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>

@@ -2,15 +2,17 @@
 
 @section('title', 'Visitors')
 @section('content')
-<div class="row mt-4 p-2">
+<div class="row mt-2 p-4">
     <div class="col-md-6">
-        <h4>Visitor</h4>
+        <h4 class="font-weight-bold">Visitor</h4>
     </div>
-    <div class="col-md-6 text-end">
-        <a href="javascript:void(0)" id="add-visitor-btn" class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
-            <i class="bi bi-plus-circle-fill"></i> Add New
-        </a>
-        <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalVisitor()">Generate Report</a>
+    <div class="col-md-6 col-sm-4 text-end">
+        <div class="btn-group">
+            <a href="javascript:void(0)" id="add-visitor-btn" class="btn text-white" style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
+                <i class="bi bi-plus-circle-fill"></i> Add New
+            </a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalVisitor()">Generate Report</a>
+        </div>
     </div>
 </div>
 <div class="container mt-2">
@@ -40,7 +42,7 @@
         <div class="container p-2 bg-body-secondary rounded" style="overflow-x:auto;">
         <div class="row p-4">
             <div class="col-12 p-1">
-                <table id="visitorTable" class="table table-light p-3 table-bordered table-responsive table-rounded table-striped same-height-table">
+                <table id="visitorTable" class="table table-light p-3 table-bordered table-striped same-height-table">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -127,7 +129,7 @@
       {{-- Modal for showing all entries of a visitor --}}
       @foreach ($latestVisitors as $visit)
       <div class="modal fade" id="viewEntries-{{ $visit->id }}" tabindex="-1" aria-labelledby="viewEntriesLabel-{{ $visit->id }}" aria-hidden="true">
-         <div class="modal-dialog modal-xl">
+         <div class="modal-dialog w-100 mt-5 pt-4" style="max-width: 95%;">
              <div class="modal-content">
                  <div class="modal-header">
                      <h5 class="modal-title" id="viewEntriesLabel-{{ $visit->id }}">Visitor Entries</h5>
@@ -164,7 +166,7 @@
                             </div>
                         </div>
                     </div>
-                     <table class="table table-bordered ">
+                     <table class="table table-bordered same-height-table" style="overflow-x:auto;">
                          <thead>
                              <tr>
                                  <th>Colleges/Department</th>
@@ -174,6 +176,7 @@
                                  <th>Visited Person Name</th>
                                  <th>Visited Person Position</th>
                                  <th>Remarks</th>
+                                 <th></th>
                              </tr>
                          </thead>
                          <tbody>
@@ -186,6 +189,9 @@
                                  <td>{{ $entry->visited_person_name}}</td>
                                  <td>{{ $entry->visited_person_position}}</td>
                                  <td>{{ $entry->remarks}}</td>
+                                 <td>
+                                    <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitor-{{ $visit->id }}" onclick="$('#viewEntries-{{ $visit->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
+                                 </td>
                              </tr>
                              @endforeach
                          </tbody>
@@ -333,6 +339,8 @@
     .error{
         color: rgb(209, 20, 20);
     }
+
+
 </style>
 
 

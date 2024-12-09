@@ -44,22 +44,24 @@
                         </div>
                         <div class="mb-3">
                             <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
-                            <input type="file" class="form-control" id="lostImage-{{ $item->id }}" name="object_img" onchange="previewImage(event, {{ $item->id }})">
+                            <input type="file" class="form-control" id="cameraInput-{{ $item->id }}" name="object_img" accept="image/*" onchange="previewImage(event, {{ $item->id }})">
+
                             {{-- <div class="d-flex justify-content-center">
                                 <div class="container p-1">
                                     <p>Current Image:</p>
                                     @if($item->object_img)
-                                    <img id="currentImage-{{ $item->id }}" src="{{ asset($item->object_img) }}"  alt="Current Image" class="img-fluid mt-2" style="max-width: 100px;">
+                                        <img id="currentImage-{{ $item->id }}" src="{{ asset($item->object_img) }}" alt="Current Image" class="img-fluid mt-2" style="max-width: 100px;">
                                     @else
-                                    <span class="text-muted">No Image</span>
+                                        <span class="text-muted">No Image</span>
                                     @endif
                                 </div>
-                                <div class="container p-1">
+                                <div id="imagePreview-{{ $item->id }}" class="container p-1">
                                     <p>Updated Image:</p>
-                                    <img id="newImagePreview-{{ $item->id }}" class="img-fluid mt-2" style="max-width: 100px; display: none;">
+                                    <img id="previewImage-{{ $item->id }}" class="d-none img-fluid" alt="Preview" style="max-width: 100px;">
                                 </div>
-                            </div> --}}
-                        </div>
+                            </div>
+                        </div> --}}
+
                         <div class="col-md-6 mb-3">
                             <label for="location-{{ $item->id }}" class="form-label">Location:</label>
                             <input type="text" class="form-control" id="location-{{ $item->id }}" name="location" value="{{ $item->location }}">

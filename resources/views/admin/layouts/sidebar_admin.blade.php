@@ -10,7 +10,7 @@
 
     <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 	<link rel="shortcut icon" href="http://example.com/favicon.ico" />
 	<link href="{{  asset('bootstrap-5.3.3-dist/css/bootstrap.css')}}" rel="stylesheet" >
@@ -44,8 +44,20 @@
         }
 
         .drop-me {
-            z-index: 1000;
+            z-index: 5000;
         }
+        .navbar .profile-picture {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #b9b9b9;
+    }
+
+
+    .btn-group .btn {
+        margin-right: 5px;
+    }
 
     </style>
 </head>
@@ -107,7 +119,7 @@
                         <img src="{{ URL('images/smo1.png') }}"
                              alt="SMO Logo"
                              class="sidebar-smo-logo">
-                        <h6 class="text-white mb-0 ms-2">Security Management Office</h6>
+                        <h6 class="font-text-bold text-white mb-0 ms-1">Security Management Office</h6>
                     </div>
                 </div>
             </div>
@@ -208,25 +220,30 @@
                 </li> --}}
             </ul>
         </aside>
-        <div class="main">
+        <div class="main" style="background-color: #f5f4f4;">
             @yield('content')
         </div>
     </div>
 
 
 
-<!-- Popper.js -->
+{{-- <!-- Popper.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> --}}
 
 
-    <script src="{{ asset('js/sidebar_admin.js') }}"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('js/sidebar_admin.js') }}"></script>
+<script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
 
-    <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{{ asset('offline_extender/js/dataTables.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('offline_extender/js/dataTables.bootstrap5.min.js')}}" type="text/javascript"></script>
+<script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
+<script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
 
 
 

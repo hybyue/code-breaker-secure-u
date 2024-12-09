@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="container pass-slip">
-    <div class="row">
+    <div class="row mt-3 p-3">
         <div class="col-md-6">
-            <h4>Pass Slip</h4>
+            <h4 class="font-weight-bold">Pass Slip</h4>
         </div>
         <div class=" col-md-6 text-end">
             <a href="#" class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addPassSlipModal">
@@ -17,8 +17,8 @@
             </a> --}}
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModal()">Generate Report</a>
 
-                    </div>
-
+            </div>
+    </div>
                     <div class="container mt-4">
                         <form action="/sub-admin/pass_slip" method="GET">
                             <div class="row pb-3">
@@ -38,14 +38,6 @@
                                         <option value="Non-Teaching" {{ session('pass_slip_filter.employee_type') == 'Non-Teaching' ? 'selected' : '' }}>Non-Teaching</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="violation_filter">Violation Filter:</label>
-                                    <select class="form-select" id="violation_filter" name="violation_filter">
-                                        <option value="">All</option>
-                                        <option value="1" {{ session('pass_slip_filter.violation_filter') == '1' ? 'selected' : '' }}>Exceeded 3 Hours</option>
-                                        <option value="0" {{ session('pass_slip_filter.violation_filter') == '0' ? 'selected' : '' }}>Not Exceeded</option>
-                                    </select>
-                                </div>
 
                                 <div class="col-md-1 mt-4 pt-2">
                                     <button type="submit" class="btn btn-dark">Filter</button>
@@ -61,15 +53,15 @@
                     </div>
 
 
-
-    <div class="container bg-body-secondary rounded" style="overflow-x:auto; width:100%;">
+</div>
+    <div class="container table-container bg-body-secondary rounded">
 
         <table id="passTable" class="table table-bordered same-height-table">
             <thead>
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
-                    <th>Office/Dept</th>
+                    <th>Office/Dept.</th>
                     <th>Date</th>
                     <th>Time Out</th>
                     <th>Time In</th>
@@ -185,12 +177,12 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered">
+                <div class="table-container">
+                    <table class="table table-bordered same-height-table" style="overflow-x:auto;">
                     <thead>
                         <tr>
                             <th>Pass Slip No.</th>
                             <th>Designation</th>
-                            <th>Absence Type</th>
                             <th>Driver Name</th>
                             <th>Destination</th>
                             <th>Purpose</th>
@@ -208,7 +200,6 @@
                         <tr>
                             <td>{{ $entry->p_no }}</td>
                             <td>{{ $entry->designation }}</td>
-                            <td>{{ $entry->check_business }}</td>
                             <td>{{ $entry->driver_name }}</td>
                             <td>{{ $entry->destination }}</td>
                             <td>{{ $entry->purpose }}</td>
@@ -246,12 +237,13 @@
                             </td>
                             <td>{{ $entry->remarks }}</td>
                             <td>
-                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlip-{{ $passSlip->id }}"><i class="bi bi-pencil-square"></i></a>
+                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlip-{{ $passSlip->id }}" onclick="$('#viewPassSlip-{{ $passSlip->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
     </div>
@@ -397,6 +389,10 @@ function showPdfModalLooping() {
 
     .table{
         min-width: 750px;
+    }
+
+    .modal-backdrop[data-bs-backdrop="static"]{
+        display: none;
     }
 </style>
 @endsection

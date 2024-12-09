@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="container mt-3 pass-slip">
-    <div class="row">
+    <div class="row p-3">
         <div class="col-md-6">
-            <h4>Lost and Found</h4>
+            <h4 class="font-weight-bold">Lost and Found</h4>
         </div>
         <div class="col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addNewLostModalSub"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
@@ -42,7 +42,7 @@
         </form>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
+    <div class="container mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
         <table id="lostTable" class="table table-bordered same-height-table">
             <thead>
                 <tr>
@@ -100,7 +100,7 @@
 @foreach($lost_found as $item)
 <!-- View Modal -->
 <div class="modal fade" id="viewLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-l">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewLostFoundLabel-{{ $item->id }}">View Lost Item</h5>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -41,5 +42,7 @@ class Looping extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }
 

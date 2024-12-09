@@ -259,57 +259,87 @@ function searchEmployee() {
     let searchValue = document.getElementById('search_employee').value;
 
     if (searchValue.length >= 2) {
+
+        $('#searchSpinner').show();
+        $('#clear_search').show();
+
         let formData = new FormData();
         formData.append('search', searchValue);
 
-        fetch('{{ route('search_employee') }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.employees.length > 0) {
-                let resultsContainer = document.getElementById('employee_results');
-                resultsContainer.innerHTML = '';
-                data.employees.forEach(employee => {
-                    let resultItem = document.createElement('div');
-                    resultItem.classList.add('result-item');
-                    resultItem.innerHTML = `
-                    <div class="w-100 bg-primary">
-                        <a href="#" class="btn w-100 btn-primary text-start">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
-                    </div>
-                    `;
+        $.ajax({
+                url: "{{ route('search_employee') }}",
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $('#searchSpinner').hide();
 
-                    resultItem.onclick = function() {
-                        // Autofill the form fields when the user clicks an item
-                        document.getElementById('employee_id').value = employee.employee_id || '';
-                        document.getElementById('last_name').value = employee.last_name;
-                        document.getElementById('first_name').value = employee.first_name;
-                        document.getElementById('middle_name').value = employee.middle_name || '';
-                        document.getElementById('department').value = employee.department;
-                        document.getElementById('designation').value = employee.designation;
-                        document.getElementById('status').value = employee.status;
+                    if (data.success && data.employees.length > 0) {
+                        let resultsContainer = $('#employee_results');
+                        resultsContainer.empty(); // Clear previous results
 
-                        // Clear the results after selection
-                        resultsContainer.innerHTML = '';
-                    };
+                        // Display the employee suggestions
+                        data.employees.forEach(function(employee) {
+                            let resultItem = $('<div></div>').addClass('result-item').html(`
+                                <div class="w-100 bg-primary">
+                                    <a href="#" class="btn w-100 btn-primary text-start">${employee.employee_id}, ${employee.first_name} ${employee.last_name} -${employee.designation} -${employee.department}</a>
+                                </div>
+                            `);
 
-                    resultsContainer.appendChild(resultItem);
-                });
-            } else {
-                clearEmployeeFields();
-                document.getElementById('employee_results').innerHTML = '<div class="no-results">No matching employees found</div>';
+                            resultItem.on('click', function() {
+                                // Autofill the form fields when the user clicks an item
+                                $('#employee_id').val(employee.employee_id || '');
+                                $('#last_name').val(employee.last_name);
+                                $('#first_name').val(employee.first_name);
+                                $('#middle_name').val(employee.middle_name || '');
+                                $('#department').val(employee.department);
+                                $('#designation').val(employee.designation);
+                                $('#status').val(employee.status);
+
+                                // Clear the results after selection
+                                resultsContainer.empty();
+                            });
+
+                            resultsContainer.append(resultItem);
+                        });
+                    } else {
+                        clearEmployeeFields();
+                        $('#employee_results').html(
+                            '<div class="no-results">No matching employees found</div>');
+                    }
+                },
+                error: function(error) {
+                    $('#searchSpinner').hide();
+                    console.error('Error:', error);
+                }
+            });
+        } else {
+                    $('#searchSpinner').hide(); // Hide spinner if input is less than 2 characters
+                    $('#employee_results').empty(); // Clear results
             }
-        })
-        .catch(error => console.error('Error:', error));
-     }
-    //   else {
-    //     clearEmployeeFields();
-    //     document.getElementById('employee_results').innerHTML = '';
-    // }
-}
+
+    }
+    function clearSearch() {
+        // Clear only the search input
+        $('#search_employee').val('');
+
+        // Clear only the results container
+        $('#employee_results').empty();
+    }
+
+    function clearEmployeeFields() {
+        let fields = ['last_name', 'first_name', 'middle_name', 'department', 'designation', 'status'];
+
+        fields.forEach(field => {
+            let element = document.getElementById(field);
+            if (element) {
+                element.value = '';
+            }
+        });
+    }
 
     </script>

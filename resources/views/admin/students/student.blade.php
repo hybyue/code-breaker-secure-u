@@ -30,9 +30,9 @@
 <div class="container mt-3 pass-slip">
 
 
-        <div class="row">
+        <div class="row p-2">
             <div class="col-md-6">
-                <h4>Students</h4>
+                <h4 class="font-weight-bold">Students</h4>
             </div>
 
             {{-- <div class="col-md-6 text-end">
@@ -54,28 +54,28 @@
     <table id="studentTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
-                <th>Student Number</th>
-                <th>Name</th>
-                <th>Course</th>
-                <th>Contact Number</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Year Level</th>
-                <th></th>
+                <th class="text-center">Student Number</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Course</th>
+                <th class="text-center">Contact Number</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Address</th>
+                <th class="text-center">Year Level</th>
+                <th class="text-center"></th>
             </tr>
         </thead>
         <tbody>
             @foreach ($students as $student)
             <tr id="tr_{{$student->id}}">
-            <td>{{$student->student_no}}</td>
-            <td>{{$student->last_name}}, {{$student->first_name}} @if ($student->middle_name)
+            <td class="text-start">{{$student->student_no}}</td>
+            <td class="text-start">{{$student->last_name}}, {{$student->first_name}} @if ($student->middle_name)
                 {{$student->middle_name}}.
             @endif</td>
-            <td>{{$student->course}}</td>
-            <td>{{$student->contact_number}}</td>
-            <td>{{$student->email}}</td>
-            <td>{{$student->address}}</td>
-            <td>{{$student->year_level}}</td>
+            <td class="text-start">{{$student->course}}</td>
+            <td class="text-start">{{$student->contact_number}}</td>
+            <td class="text-start">{{$student->email}}</td>
+            <td class="text-start">{{$student->address}}</td>
+            <td class="text-center">{{$student->year_level}}</td>
 
                 <td class="text-center">
                     <a href="" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateStudentModalAd-{{ $student->id }}">

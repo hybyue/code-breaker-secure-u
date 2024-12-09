@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class LoopingController extends Controller
@@ -51,9 +52,27 @@ class LoopingController extends Controller
 
 
         // Remove the redundant where clause and just get the results
-        $loopingRecords = $query->latest()->get();
+        $latestLoopings = Looping::select('looping.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM looping GROUP BY name, department, employee_type) as latest'),
+                'looping.id', '=', 'latest.id')
+            ->where(function ($subQuery) use ($filterData) {
+                if (!empty($filterData['start_date'])) {
+                    $subQuery->whereDate('looping.date', '>=', $filterData['start_date']);
+                }
+                if (!empty($filterData['end_date'])) {
+                    $subQuery->whereDate('looping.date', '<=', $filterData['end_date']);
+                }
+                if (!empty($filterData['employee_type'])) {
+                    $subQuery->where('looping.employee_type', $filterData['employee_type']);
+                }
+            })
+            ->latest()
+            ->get();
 
-        return view('sub-admin.looping.loopings', compact('loopingRecords', 'filterData'));
+        // Get all loopings for the modal details
+        $allLoopings = $query->get();
+
+        return view('sub-admin.looping.loopings', compact('latestLoopings', 'allLoopings', 'filterData'));
     }
 
     public function index_admin(Request $request)
@@ -94,9 +113,26 @@ class LoopingController extends Controller
 
 
         // Remove the redundant where clause and just get the results
-        $loopingRecords = $query->latest()->get();
+        $latestLoopings = Looping::select('looping.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM looping GROUP BY name, department, employee_type) as latest'),
+                'looping.id', '=', 'latest.id')
+            ->where(function ($subQuery) use ($filterData) {
+                if (!empty($filterData['start_date'])) {
+                    $subQuery->whereDate('looping.date', '>=', $filterData['start_date']);
+                }
+                if (!empty($filterData['end_date'])) {
+                    $subQuery->whereDate('looping.date', '<=', $filterData['end_date']);
+                }
+                if (!empty($filterData['employee_type'])) {
+                    $subQuery->where('looping.employee_type', $filterData['employee_type']);
+                }
+            })
+            ->latest()
+            ->get();
 
-        return view('admin.looping.loopings', compact('loopingRecords', 'filterData'));
+        $allLoopings = $query->get();
+
+        return view('admin.looping.loopings', compact('latestLoopings', 'allLoopings', 'filterData'));
     }
 
 
@@ -217,8 +253,10 @@ class LoopingController extends Controller
                 'first_name',
                 'middle_name',
                 'last_name',
-                'department'
-            ])->limit(5)->get();
+                'department',
+                'designation',
+                'status'
+            ])->limit(7)->get();
 
             if ($employees->count() > 0) {
                 return response()->json([

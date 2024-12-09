@@ -1,6 +1,5 @@
-
 {{-- Add Violation --}}
-<div class="modal fade" id="violationModal" tabindex="-1" aria-labelledby="violationModalLabel" aria-modal="true" role="dialog">
+<div class="modal fade" id="violationModal" tabindex="-1" aria-labelledby="violationModalLabel" aria-modal="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,31 +9,49 @@
             <div class="modal-body">
                 <form id="violationForms" action="" method="POST">
                     @csrf
-                    <div class="row">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label for="student_no">Student Number:</label>
-                                <input type="text" class="form-control" id="student_no" name="student_no" required>
+                     <div class="row">
+                        <div class="mb-2 position-relative">
+                            <div class="input-group">
+                            <input type="text" class="form-control" id="search_student" name="search_student" placeholder="Type Student Number or Name" oninput="searchStudentSub()">
+                            <button class="btn btn-primary" type="button" id="clear_search" onclick="clearSearch()">
+                                <span class="spinner-border spinner-border-sm me-2" id="searchSpinner" role="status" style="display: none;"></span>
+                                Clear
+                            </button>
                             </div>
-                            <div id="student_results" class="col-md-12 results-container"></div>
+                            <span class="text-danger error-message" id="search_student_error"></span>
+                        <div id="student_results" class="col-md-12 results-container"></div>
+                    </div>
+                        <div class="mb-1">
+                            <label for="student_no">Student Number:</label>
+                            <input type="text" class="form-control" id="student_no" name="student_no" required readonly>
+                            <span class="text-danger error-message" id="student_no_error"></span>
                         </div>
-                        <div class="col-md-4 form-group">
+
+                        <div class="col-md-4 mb-1">
                             <label for="last_name">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required readonly>
+                            <span class="text-danger error-message" id="last_name_error"></span>
+
                         </div>
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-4 mb-1">
                             <label for="first_name">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required readonly>
+                            <span class="text-danger error-message" id="first_name_error"></span>
                         </div>
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-4 mb-1">
                             <label for="middle_initial">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_initial" placeholder="Optional" name="middle_initial">
+                            <input type="text" class="form-control" id="middle_name" placeholder="Optional" name="middle_initial" readonly>
+                            <span class="text-danger error-message" id="middle_initial_error"></span>
+
                         </div>
-                        <div class="form-group">
+                        <div class="mb-1">
                             <label for="course">Course:</label>
-                            <input type="text" class="form-control" id="course" name="course" required>
+                            <input type="text" class="form-control" id="course" name="course" required readonly>
+                            <span class="text-danger error-message" id="course_error"></span>
+
                         </div>
-                        <div class="form-group">
+
+                        <div class="mb-1">
                             <label for="violation_type">Violation Type:</label>
                             <select class="form-select" id="violation_type" name="violation_type" required>
                                 <option value="" selected disabled>Select Violation Type</option>
@@ -47,9 +64,10 @@
                                 <option value="Croca">Croca</option>
                                 <option value="Short/Skirt">Short/Skirt</option>
                                 <option value="Sleeveless/Shoulder">Sleeveless/Shoulder</option>
-
                                 <option value="Other">Other</option>
                             </select>
+                            <span class="text-danger error-message" id="violation_type_error"></span>
+
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>
@@ -58,7 +76,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group text-center mt-3">
+                    <div class="mb-1 text-center mt-3">
                         <button type="submit" class="btn text-white w-50 add_violation" style="background-color: #0B9B19">
                             <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                             Submit</button>
@@ -69,25 +87,4 @@
     </div>
 </div>
 
-
-
-<!-- TODO::Modal PDF Preview -->
-<div class="modal fade" id="pdfModalViolation" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel">Violation Report</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- PDF Preview will be embedded here -->
-                <div id="loadingBar" style="display:none; text-align: center;">
-                    <div class="spinner-border" role="status">
-                    </div>
-                </div>
-                <iframe id="pdfViolationFrame" src="" style="width: 100%; height: 500px; border: none;"></iframe>
-
-        </div>
-    </div>
-</div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\AllStudent;
+use App\Models\Student;
 use App\Models\Violation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,19 +69,16 @@ public function store_violation(Request $request)
 {
     $request->validate([
         'student_no' => 'required|string|max:255',
-        'first_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
-        'middle_initial' => 'nullable|regex:/^[A-Za-z- \s]+$/|max:1',
-        'last_name' => 'required|regex:/^[A-Za-z- \s]+$/|max:100',
+        'first_name' => 'required|string|max:100',
+        'middle_initial' => 'nullable|string|max:1',
+        'last_name' => 'required|string|max:100',
         'course' => 'required|string|max:255',
         'violation_type' => 'required|string|max:100',
         'remarks' => 'nullable|string|max:255'
     ],
     [
-        'first_name.regex' => 'Must not contain numbers or special characters.',
         'first_name.max' => 'Reached maximum 100 letters.',
-        'middle_initial.regex' => 'Must not contain numbers or special characters.',
         'middle_initial.max' => 'Reached maximum 1 letter.',
-        'last_name.regex' => 'Must not contain numbers or special characters.',
         'last_name.max' => 'Reached maximum 100 letters.',
     ]);
 
@@ -207,53 +205,52 @@ public function clearViolationFilter()
     return redirect()->route('sub-admin.violation.violation');
 }
 
-public function searchStudent(Request $request)
-    {
-        try {
-            $query = AllStudent::query();
+// public function searchStudent(Request $request)
+//     {
+//         try {
+//             $query = AllStudent::query();
 
-            // Check if search term is ID or name
-            if ($request->filled('student_no')) {
-                $searchTerm = $request->student_no;
-                $query->where('student_no', $searchTerm)
-                      ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
-            }
+//             // Check if search term is ID or name
+//             if ($request->filled('student_no')) {
+//                 $searchTerm = $request->student_no;
+//                 $query->where('student_no', $searchTerm)
+//                       ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+//                       ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+//             }
 
-            $students = $query->limit(5)->get();
+//             $students = $query->limit(5)->get();
 
-            if ($students->count() > 0) {
-                return response()->json(['success' => true, 'data' => $students]);
-            } else {
-                return response()->json(['success' => false]);
-            }
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+//             if ($students->count() > 0) {
+//                 return response()->json(['success' => true, 'data' => $students]);
+//             } else {
+//                 return response()->json(['success' => false]);
+//             }
+//         } catch (Exception $e) {
+//             return response()->json(['error' => $e->getMessage()], 500);
+//         }
+//     }
+
+public function searchStudentSub(Request $request)
+{
+    $search = $request->input('search');
+
+    $students = Student::where('student_no', 'LIKE', "%{$search}%")
+        ->orWhere('first_name', 'LIKE', "%{$search}%")
+        ->orWhere('last_name', 'LIKE', "%{$search}%")
+        ->get();
+
+    if ($students->count() > 0) {
+        return response()->json([
+            'success' => true,
+            'students' => $students
+        ]);
+    } else {
+        return response()->json([
+            'success' => false,
+            'students' => []
+        ]);
     }
+}
 
-    public function searchStudentSub(Request $request)
-    {
-        try {
-            $query = AllStudent::query();
 
-            // Check if search term is ID or name
-            if ($request->filled('student_no')) {
-                $searchTerm = $request->student_no;
-                $query->where('student_no', $searchTerm)
-                      ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
-                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
-            }
-
-            $students = $query->limit(5)->get();
-
-            if ($students->count() > 0) {
-                return response()->json(['success' => true, 'data' => $students]);
-            } else {
-                return response()->json(['success' => false]);
-            }
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
 }

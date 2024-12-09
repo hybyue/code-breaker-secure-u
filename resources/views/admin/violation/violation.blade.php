@@ -8,9 +8,9 @@
 @section('content')
 <div class="container mt-3 pass-slip">
 
-    <div class="row">
+    <div class="row p-2">
         <div class="col-md-6">
-            <h4>Violation</h4>
+            <h4 class="font-weight-bold">Violation</h4>
         </div>
         <div class=" col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-backdrop="false" data-bs-target="#addViolationModalAd"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
@@ -46,7 +46,7 @@
 
 
     <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
-    <table id="violationTable" class="table table-bordered same-height-table">
+    <table id="violationTableAdmin" class="table table-bordered same-height-table">
         <thead>
             <tr>
                 <th class="text-start">Student Number</th>
@@ -108,24 +108,51 @@
 
 
 
-<div id="latestViolations">
+<div id="latestViolationsAdmin">
 {{-- Modal for showing all entries of a student --}}
 @foreach ($violations as $violation)
 <div class="modal fade" id="viewViolationAd-{{ $violation->id }}" tabindex="-1" aria-labelledby="viewViolationAdLabel-{{ $violation->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewViolationAdLabel-{{ $violation->id }}">Student Violations</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered">
+                <div class="container mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h5 class="mb-1 text-primary">
+                                        {{$violation->last_name}}, {{$violation->first_name}}
+                                        @if($violation->middle_name)
+                                            <span class="text-primary">{{$violation->middle_name}}.</span>
+                                        @endif
+                                    </h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="badge bg-light text-dark p-2">
+                                            <i class="bi bi-building me-1"></i>
+                                            {{$violation->course}}
+                                        </div>
+                                        <div class="badge bg-success text-white p-2">
+                                            <i class="bi bi-clock-history me-1"></i>
+                                            {{$violation->violation_count}} Violation Count
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered same-height-table" style="overflow-x:auto;">
                     <thead>
                         <tr>
-                            <th>Violation No.</th>
-                            <th>Date</th>
-                            <th>Violation Type</th>
-                            <th>Remarks</th>
+                            <th class="text-center">Violation No.</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Violation Type</th>
+                            <th class="text-center">Remarks</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,6 +162,9 @@
                             <td>{{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</td>
                             <td>{{ $entry->violation_type }}</td>
                             <td>{{ $entry->remarks }}</td>
+                            <td>
+                                <a href="#" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $violation->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $violation->id }}" onclick="$('#viewViolationAd-{{ $violation->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

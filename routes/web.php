@@ -123,7 +123,7 @@ Route::controller(ViolationController::class)->group(function () {
     Route::post('sub-admin/violation',  'store_violation')->name('sub-admin.store_violate');
     Route::put('/sub-admin/violation/update/{id}',  'update_violation')->name('violation.update');
     Route::get('/sub-admin/violation',  'filterViolation')->name('sub-admin.violation.violation');
-    Route::post('/sub-admin/search-student',  'searchStudentSub')->name('sub-admin.search_student');
+    Route::post('sub-admin/search-student',  'searchStudentSub')->name('sub-admin.search_student');
     Route::get('/sub-admin/violation/clear-filter', 'clearViolationFilter')->name('sub-admin.violation.clear-filter');
 
 });
@@ -299,7 +299,7 @@ Route::controller(ViolationController::class)->group(function (){
     Route::post('admin/violation', 'store_violation')->name('admin.store_violation');
     Route::put('/violation/update/{id}', 'update_violation')->name('violation.update.admin');
     Route::delete('/violation/archive/{id}', 'destroy_violation');
-    Route::post('/search-student',  'searchStudent')->name('admin.search_student');
+    Route::post('/search-student',  'searchStudentSub')->name('admin.search_student');
     Route::get('/admin/violation/clear-filter', 'clearViolationFilterAdmin')->name('admin.violation.clear-filter');
 
 });
@@ -322,7 +322,7 @@ Route::controller(LoopingController::class)->group(function () {
     Route::get('/admin/looping/clear-filter', 'clearLoopingFilterAdmin')->name('admin.looping.clear-filter');
     Route::put('/admin/looping/update/{id}', 'update')->name('update.looping_admin');
     Route::post('/admin/looping/store', 'store')->name('store.looping_admin');
-    route::post('/admin/search-looping', 'searchLooping')->name('subadmin.search_looping');
+    route::post('/admin/search-looping', 'searchLooping')->name('admin.search_looping');
 
 });
 

@@ -27,9 +27,9 @@
             </script>
         @endif
     </div>
-    <div class="row">
+    <div class="row p-3 mt-2">
         <div class="col-md-6">
-            <h4>Visitor</h4>
+            <h4 class="font-weight-bold">Visitor</h4>
         </div>
         <div class="col-md-6 text-end">
             <button class="btn text-white " style="background-color: #0B9B19" data-bs-toggle="modal"
@@ -156,7 +156,7 @@
         @foreach ($latestVisitors as $visit)
             <div class="modal fade" id="viewEntries-{{ $visit->id }}" tabindex="-1"
                 aria-labelledby="viewEntriesLabel-{{ $visit->id }}" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog w-100 mt-5 pt-4" style="max-width: 95%;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="viewEntriesLabel-{{ $visit->id }}">Visitor Information</h5>
@@ -193,7 +193,9 @@
                                     </div>
                                 </div>
                             </div>
-                             <table class="table table-bordered ">
+
+                            <div class="table-container">
+                             <table class="table table-bordered same-height-table" style="overflow-x:auto;">
                                  <thead>
                                      <tr>
                                          <th>Colleges/Deparment</th>
@@ -203,6 +205,7 @@
                                          <th>Visited Person Name</th>
                                          <th>Visited Person Position</th>
                                          <th>Remarks</th>
+                                         <th></th>
                                      </tr>
                                  </thead>
                                  <tbody>
@@ -215,10 +218,14 @@
                                          <td>{{ $entry->visited_person_name}}</td>
                                          <td>{{ $entry->visited_person_position}}</td>
                                          <td>{{ $entry->remarks}}</td>
+                                         <td>
+                                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitorSub-{{ $visit->id }}" onclick="$('#viewEntries-{{ $visit->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
+                                         </td>
                                      </tr>
                                      @endforeach
                                  </tbody>
                              </table>
+                            </div>
                         </div>
                     </div>
                 </div>

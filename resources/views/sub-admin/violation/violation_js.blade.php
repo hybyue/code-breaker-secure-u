@@ -21,7 +21,7 @@
             $('body').css('overflow', 'auto');
         });
 
-        new DataTable('#violationTable', {
+        new DataTable('#violationTableUser', {
             responsive: true,
             ordering: false,
         language: {
@@ -163,73 +163,127 @@
     });
 
 
-
-    async function searchStudent() {
-        const studentNo = $('#student_no').val();
-        const formData = new FormData();
-        formData.append('student_no', studentNo);
-
-        try {
-            const response = await $.ajax({
-                url: '{{ route('sub-admin.search_student') }}',
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: formData,
-                processData: false,
-                contentType: false
-            });
-
-            const students = response.data || [];
-            // Update the div with the response data
-            const resultsDiv = $('#student_results');
-            resultsDiv.empty();
-
-            if (students.length > 0) {
-                students.forEach(student => {
-                    const studentInfo = $('<a></a>')
-                        .attr('href', '#')
-                        .addClass('btn btn-primary w-100 text-start')
-                        .text(`Name: ${student.first_name} ${student.last_name}, Course: ${student.course}`)
-                        .on('click', () => populateForm(student));
-                    resultsDiv.append(studentInfo);
-                });
-            } else {
-                resultsDiv.text('No results found.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    function populateForm(student) {
-        $('#student_no').val(student.student_no);
-        $('#last_name').val(student.last_name);
-        $('#first_name').val(student.first_name);
-        $('#middle_initial').val(student.middle_initial || '');
-        $('#course').val(student.course);
-
-         // Clear the search results
-         $('#student_results').empty();
-    }
-
-    // Debounce the searchStudent function
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
-
-    const debouncedSearchStudent = debounce(searchStudent, 300);
-
-    // Attach the debounced function to the input event
-    $('#student_no').on('input', debouncedSearchStudent);
+    document.getElementById('loadingSpinner').style.display = 'none';
 
 
 });
+</script>
+
+
+<script>
+
+
+function searchStudentSub() {
+    let searchValue = document.getElementById('search_student').value;
+    let resultsContainer = document.getElementById('student_results');
+
+    // Clear results if search is empty or less than 2 characters
+    if (!searchValue || searchValue.length < 2) {
+        resultsContainer.innerHTML = '';
+        $('#searchSpinner').hide();
+        $('#clear_search').hide();
+        return;
+    }
+
+    $('#searchSpinner').show();
+    $('#clear_search').show();
+
+    let formData = new FormData();
+    formData.append('search', searchValue);
+
+    fetch('{{ route('sub-admin.search_student') }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.students.length > 0) {
+            $('#searchSpinner').hide();
+            resultsContainer.innerHTML = '';
+            data.students.forEach(student => {
+                let resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                resultItem.innerHTML = `
+                <div class="w-100 bg-primary">
+                    <a href="#" class="btn w-100 text-start text-white">
+                        ${student.student_no}, ${student.first_name} ${student.last_name} - ${student.course}
+                    </a>
+                </div>
+                `;
+                resultItem.onclick = function() {
+                    // Debugging: Log the student data
+                    console.log('Student Data:', student);
+
+                    // Get all form fields first
+                    const studentNoField = document.querySelector('#violationForms #student_no');
+                    const lastNameField = document.querySelector('#violationForms #last_name');
+                    const firstNameField = document.querySelector('#violationForms #first_name');
+                    const middleInitialField = document.querySelector('#violationForms #middle_name');
+                    const courseField = document.querySelector('#violationForms #course');
+
+                    // Log if fields are found
+                    console.log('Found fields:', {
+                        studentNo: !!studentNoField,
+                        lastName: !!lastNameField,
+                        firstName: !!firstNameField,
+                        middleInitial: !!middleInitialField,
+                        course: !!courseField
+                    });
+
+                    // Set values if fields exist
+                    if (studentNoField) studentNoField.value = student.student_no || '';
+                    if (lastNameField) lastNameField.value = student.last_name || '';
+                    if (firstNameField) firstNameField.value = student.first_name || '';
+                    if (middleInitialField) middleInitialField.value = student.middle_name || '';
+                    if (courseField) courseField.value = student.course || '';
+
+                    // Log the values after setting
+                    console.log('Set values:', {
+                        studentNo: studentNoField?.value,
+                        lastName: lastNameField?.value,
+                        firstName: firstNameField?.value,
+                        middleInitial: middleInitialField?.value,
+                        course: courseField?.value
+                    });
+
+                    // Clear search input and results
+                    document.getElementById('search_student').value = '';
+                    document.getElementById('student_results').innerHTML = '';
+                };
+
+                resultsContainer.appendChild(resultItem);
+            });
+        } else {
+            clearStudentFields();
+            resultsContainer.innerHTML = '<div class="no-results">No matching students found</div>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        resultsContainer.innerHTML = '<div class="error">An error occurred while searching</div>';
+    });
+}
+
+function clearSearch() {
+    $('#search_student').val('');
+    $('#student_results').empty();
+}
+
+
+
+function clearStudentFields() {
+    let fields = ['student_no', 'last_name', 'first_name', 'middle_name', 'course'];
+
+    fields.forEach(field => {
+        let element = document.getElementById(field);
+        if (element) {
+            element.value = '';
+        }
+    });
+}
 
 
 

@@ -23,7 +23,7 @@
     @endif
     </div>
 <div class="container mt-3">
-    <h5 class="text-black mb-0 p-2">DASHBOARD</h5>
+    <h5 class="text-black mb-0 p-2 font-weight-bold">DASHBOARD</h5>
 </div>
 
 <div class="row container mb-4 align-items-center">

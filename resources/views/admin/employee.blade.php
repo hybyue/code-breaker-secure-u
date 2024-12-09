@@ -3,16 +3,16 @@
 @section('title', 'Security Staff')
 
 @section('content')
-            <div class="row" style="padding: 16px;">
+            <div class="row mt-4" style="padding: 16px;">
                         <div class="col-md-6">
-                            <h4>Security Staff</h4>
+                            <h4 class="font-weight-bold">Security Staff</h4>
                         </div>
                     </div>
 
                     <div class="container p-3 bg-body-secondary rounded">
                         <div class="row">
                             <div class="col-12" style="overflow-x:auto;">
-                                <table id="securityTable" class="table table-striped table-bordered table-responsive table-center">
+                                <table id="securityTable" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Name</th>

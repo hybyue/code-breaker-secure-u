@@ -4,15 +4,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addPassSlipModalLabel">Add Pass Slip</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addPassForm" action="" method="POST">
                     @csrf
                     <div class="row">
                         <div class="mb-2 position-relative">
-                            <input type="text" class="form-control" id="search_employee"
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search_employee"
                                 placeholder="Type ID or Name" oninput="searchEmployee()">
+                                <button class="btn btn-primary" type="button" id="clear_search" onclick="clearSearch()">
+                                    <span class="spinner-border spinner-border-sm me-2" id="searchSpinner" role="status" style="display: none;"></span>
+                                    Clear
+                                </button>
+                            </div>
+
                             <div id="employee_results" class="col-md-12 results-container"></div>
                             <!-- This will show suggestions -->
                         </div>

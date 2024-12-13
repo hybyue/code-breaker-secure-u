@@ -25,10 +25,10 @@ class Visitor extends Model
         'remarks',
         'time_out',
         'id_type',
+        'id_number',
         'entry_count',
         'visited_person_name',
         'visited_person_position',
-        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -44,10 +44,10 @@ class Visitor extends Model
         'time_out',
         'id_type',
         'entry_count',
-        'id_image',
         'visited_person_name',
         'visited_person_position',
         'remarks',
+        'id_number'
     ];
 
 
@@ -67,9 +67,9 @@ class Visitor extends Model
                 'time_out',
                 'id_type',
                 'entry_count',
-                'id_image',
                 'visited_person_name',
                 'visited_person_position',
+                'id_number'
 
             ])
             ->logOnlyDirty()

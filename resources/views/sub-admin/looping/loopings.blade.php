@@ -134,7 +134,8 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table table-bordered same-height-table" style="overflow-x:auto;">
+                    <div class="table-container">
+                    <table class="table table-bordered same-height-table">
                         <thead>
                             <tr>
                                 <th class="text-center">Date</th>
@@ -164,6 +165,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>

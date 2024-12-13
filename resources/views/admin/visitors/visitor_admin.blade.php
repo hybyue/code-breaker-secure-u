@@ -6,8 +6,8 @@
     <div class="col-md-6">
         <h4 class="font-weight-bold">Visitor</h4>
     </div>
-    <div class="col-md-6 col-sm-4 text-end">
-        <div class="btn-group">
+    <div class="col-md-6 text-end">
+        <div class="p-2">
             <a href="javascript:void(0)" id="add-visitor-btn" class="btn text-white" style="background-color: #0B9B19" data-bs-toggle="modal" data-bs-target="#addVisitorModal">
                 <i class="bi bi-plus-circle-fill"></i> Add New
             </a>
@@ -58,7 +58,7 @@
                         <tr id="tr_{{$visit->id}}">
                             <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
                             <td>{{ $visit->last_name }},  {{$visit->first_name }} @if($visit->middle_name){{ $visit->middle_name }}.@endif </td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($visit->time_in)->format('Hi') }}H</td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($visit->time_in)->format('H:i') }}</td>
                             <td id="time-out-{{ $visit->id }}" class="text-center">
                                 @if (is_null($visit->time_out))
                                     <div>
@@ -71,7 +71,7 @@
                                         </button>
                                     </div>
                                 @else
-                                    {{ \Carbon\Carbon::parse($visit->time_out)->format('Hi') }}H
+                                    {{ \Carbon\Carbon::parse($visit->time_out)->format('H:i') }}
                                 @endif
                             </td>
                             <td>
@@ -166,36 +166,40 @@
                             </div>
                         </div>
                     </div>
-                     <table class="table table-bordered same-height-table" style="overflow-x:auto;">
-                         <thead>
-                             <tr>
-                                 <th>Colleges/Department</th>
-                                 <th>Purpose</th>
-                                 <th>Time in</th>
-                                 <th>Time out</th>
-                                 <th>Visited Person Name</th>
-                                 <th>Visited Person Position</th>
-                                 <th>Remarks</th>
-                                 <th></th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                             @foreach($allVisitors->where('last_name', $visit->last_name)->where('first_name', $visit->first_name)->where('middle_name', $visit->middle_name)->where('date', $visit->date)->where('id_type', $visit->id_type)->where('id_number', $visit->id_number) as $entry)
-                             <tr>
-                                 <td>{{ $entry->person_to_visit }}</td>
-                                 <td>{{ $entry->purpose }}</td>
-                                 <td>{{ \Carbon\Carbon::parse($entry->time_in)->format('H:i') }}</td>
-                                 <td>{{ \Carbon\Carbon::parse($entry->time_out)->format('H:i')}}</td>
-                                 <td>{{ $entry->visited_person_name}}</td>
-                                 <td>{{ $entry->visited_person_position}}</td>
-                                 <td>{{ $entry->remarks}}</td>
-                                 <td>
-                                    <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitor-{{ $visit->id }}" onclick="$('#viewEntries-{{ $visit->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
-                                 </td>
-                             </tr>
-                             @endforeach
-                         </tbody>
-                     </table>
+                    <div class="table-container">
+                        <table class="table table-bordered same-height-table">
+                            <thead>
+                                <tr>
+                                    <th>Colleges/Department</th>
+                                    <th>Purpose</th>
+                                    <th>Time in</th>
+                                    <th>Time out</th>
+                                    <th>Visited Person Name</th>
+                                    <th>Visited Person Position</th>
+                                    <th>Remarks</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($allVisitors->where('last_name', $visit->last_name)->where('first_name', $visit->first_name)->where('middle_name', $visit->middle_name)->where('date', $visit->date)->where('id_type', $visit->id_type)->where('id_number', $visit->id_number) as $entry)
+                                <tr>
+                                    <td>{{ $entry->person_to_visit }}</td>
+                                    <td>{{ $entry->purpose }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($entry->time_in)->format('H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($entry->time_out)->format('H:i')}}</td>
+                                    <td>{{ $entry->visited_person_name}}</td>
+                                    <td>{{ $entry->visited_person_position}}</td>
+                                    <td>{{ $entry->remarks}}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateVisitor-{{ $visit->id }}" onclick="$('#viewEntries-{{ $visit->id }}').modal('hide')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                  </div>
              </div>
          </div>

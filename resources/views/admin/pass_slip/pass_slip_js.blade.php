@@ -153,7 +153,6 @@
 
                 $('#passTable').load(location.href + ' #passTable');
                 $('#latestPassSlips').load(location.href + ' #latestPassSlips');
-                $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
 
                 const Toast = Swal.mixin({
                         toast: true,
@@ -193,6 +192,8 @@
         $('.modal').on('hidden.bs.modal', function() {
             $('.is-invalid').removeClass('is-invalid');
             $('.error-message').text('');
+            $('body').css('overflow', 'auto');
+
         });
 });
 

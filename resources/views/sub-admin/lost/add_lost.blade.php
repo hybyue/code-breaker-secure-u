@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="location" class="form-label">Location:</label>
+                            <label for="location" class="form-label">Location Found:</label>
                             <input type="text" class="form-control" id="location" name="location" required>
                         </div>
                         {{-- <div class="col-md-6 mb-3">
@@ -66,7 +66,7 @@
                         </div> --}}
 
                         <div class="col-md-6 mb-3">
-                            <label for="description" class="form-label">Description:</label>
+                            <label for="description" class="form-label">Object Description:</label>
                             <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
                         </div>
                         <div class="col-md-12 mb-2">

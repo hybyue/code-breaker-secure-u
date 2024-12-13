@@ -1,8 +1,13 @@
+@php
+use Illuminate\Support\Str;
+@endphp
+
 @extends('admin.layouts.sidebar_admin')
 
 @section('title', 'Pass slip')
 
 @section('content')
+
 <div class="container mt-4 pass-slip">
     <div class="row">
         <div class="col-md-6">
@@ -49,15 +54,15 @@
             </form>
         </div>
     <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
-        <table id="passTable" class="table table-bordered same-height-table">
+        <table id="passTable" class="table table-bordered same-height-table" style="min-width: 1100px;">
             <thead>
                 <tr>
                     <th>Pass Slip No.</th>
                     <th>Name</th>
                     <th>Office/Dept</th>
                     <th>Date</th>
-                    <th>Out</th>
-                    <th>In</th>
+                    <th>TimeOut</th>
+                    <th>Time In</th>
                     <th class="text-start">Exit Count</th>
                     <th></th>
                 </tr>
@@ -66,7 +71,12 @@
                 @foreach ($latestPassSlips as $passSlip)
                 <tr id="tr_{{$passSlip->id}}">
                     <td>{{ $passSlip->p_no }}</td>
-                    <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
+                    <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }}
+                                        @if($passSlip->middle_name)
+                                            {{ Str::endsWith($passSlip->middle_name, '.') ? $passSlip->middle_name : $passSlip->middle_name . '.' }}
+                                        @endif
+                    </td>
+
                     <td>{{ $passSlip->department }}</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
@@ -80,7 +90,7 @@
                         @if(is_null($passSlip->time_in))
                         <div>
                             <span id="time-in-display-{{ $passSlip->id }}"></span>
-                            <form action="{{ route('passSlip.checkout_admin', $passSlip->id) }}" method="POST">
+                            <form action="{{ route('passSlip.checkout_admin', $passSlip->id) }}" method="POST" onsubmit="event.preventDefault(); confirmCheckAdmin('{{ $passSlip->id }}', this);">
                                 @csrf
                                 <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
                             </form>
@@ -151,8 +161,8 @@
                                 <h5 class="mb-1 text-primary">
                                     {{$passSlip->last_name}}, {{$passSlip->first_name}}
                                     @if($passSlip->middle_name)
-                                        <span class="text-primary">{{$passSlip->middle_name}}.</span>
-                                    @endif
+                                    {{ Str::endsWith($passSlip->middle_name, '.') ? $passSlip->middle_name : $passSlip->middle_name . '.' }}
+                                @endif
                                 </h5>
                                 <div class="d-flex flex-wrap gap-3">
                                     <div class="badge bg-light text-dark p-2">
@@ -173,7 +183,8 @@
                     </div>
                 </div>
             </div>
-            <table class="table table-bordered same-height-table" style="overflow-x:auto;">
+            <div class="table-container">
+            <table class="table table-bordered same-height-table">
                 <thead>
                     <tr>
                         <th>Pass Slip No.</th>
@@ -238,6 +249,7 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>
@@ -388,4 +400,24 @@ function showPdfModalLooping() {
     }, 2000);
 }
     </script>
+
+    <script>
+        function confirmCheckAdmin(passSlipId, form) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'Do you want to check this pass slip?',
+                showCancelButton: true,
+                confirmButtonColor: '#069206',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, check it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        }
+    </script>
+
 @endsection

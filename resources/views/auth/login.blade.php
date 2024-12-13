@@ -11,90 +11,9 @@
     <title>Login</title>
     <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon">
     <link href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
     <link href="{{ asset('tailwindcharts/css/tailwind.min.css')}}" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
-    <style>
-        body {
-            background: url('{{ asset('images/bg-ucu.jpg') }}') no-repeat center center fixed;
-            background-size: cover;
-            position: relative;
-            z-index: 1;
-        }
-
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.336);
-            z-index: -1;
-        }
-        .navbar-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-logo {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .navbar-title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .login-container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .logo {
-            max-width: 100px;
-        }
-
-        .login-header {
-            text-align: center;
-        }
-
-        .login-form {
-            text-align: center;
-        }
-        .colored-toast.swal2-icon-success {
-    background-color: #48941c !important;
-}
-.colored-toast.swal2-icon-error {
-    background-color: #ff4747 !important;
-}
-.colored-toast.swal2-icon-warning {
-    background-color: #f8bb86 !important;
-}
-.colored-toast.swal2-icon-info {
-    background-color: #3fc3ee !important;
-}
-.colored-toast.swal2-icon-question {
-    background-color: #87adbd !important;
-}
-.colored-toast .swal2-title {
-    color: white;
-}
-.colored-toast .swal2-close {
-    color: white;
-}
-.colored-toast .swal2-html-container {
-    color: white;
-}
-.border-red-500 {
-    border-color: #ff4747 !important;
-}
-    </style>
 </head>
 
 <body>
@@ -106,7 +25,7 @@
             </div>
         </div>
     </nav>
-    <div class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+    <div class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-2">
         <div class="login-header">
             <img src="{{ URL('images/UCU-logo.png') }}" alt="UCU Logo" class="logo">
             <h1 class="h3 font-weight-normal text-white">Secure-U</h1>
@@ -114,16 +33,6 @@
         <div class="login-container mb-5">
             <form method="post" action="{{ route('login.action') }}">
                 @csrf
-                {{-- @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Error!</strong>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif --}}
                 <div class="container m-0 p-0">
                     <h3 class="text-center text-2xl font-extrabold">Login</h3>
                     <p class="text-center">Good day! welcome to Sercure-U website</p>
@@ -149,9 +58,7 @@
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
     <script src="{{ asset('offline_extender/js/sweetalert.js')}}"></script>
 

@@ -109,7 +109,6 @@ $(document).ready(function () {
                 $('.error-message').remove();
 
                 $('#tableLostAdmin').load(location.href + ' #tableLostAdmin');
-                $('#lostFoundUpdateAd').load(location.href + ' #lostFoundUpdateAd');
                 $('#viewLostFoundAd').load(location.href + ' #viewLostFoundAd');
 
                 Swal.fire({
@@ -150,6 +149,8 @@ $(document).ready(function () {
     $('.modal').on('hidden.bs.modal', function() {
         $('.is-invalid').removeClass('is-invalid');
         $('.error-message').text('');
+        $('body').css('overflow', 'auto');
+
     });
 });
 

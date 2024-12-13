@@ -144,7 +144,6 @@
                         // Refresh your tables
                         $('#passTable').load(location.href + ' #passTable');
                         $('#latestPassSlips').load(location.href + ' #latestPassSlips');
-                        $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
 
                         Swal.fire({
                             toast: true,
@@ -183,6 +182,7 @@
         $('.modal').on('hidden.bs.modal', function () {
             $('.is-invalid').removeClass('is-invalid');
             $('.error-message').text('');
+            $('body').css('overflow', 'auto');
         });
 });
 

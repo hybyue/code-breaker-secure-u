@@ -111,7 +111,6 @@ $(document).ready(function () {
                 $('.error-message').remove();
 
                 $('#lostTable').load(location.href + ' #lostTable');
-                $('#updateLostFoundsDynamic').load(location.href + ' #updateLostFoundsDynamic');
                 $('#viewModalLostFound').load(location.href + ' #viewModalLostFound');
 
                 Swal.fire({
@@ -153,6 +152,8 @@ $(document).ready(function () {
         $('.modal').on('hidden.bs.modal', function() {
             $('.is-invalid').removeClass('is-invalid');
             $('.error-message').text('');
+            $('body').css('overflow', 'auto');
+
         });
 
 });

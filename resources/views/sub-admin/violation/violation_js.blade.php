@@ -13,15 +13,16 @@
     $(document).ready(function () {
 
 
-        $('#violationModal').on('hidden.bs.modal', function () {
-            $('body').css('overflow', 'auto');
-        });
+        // $('#violationModal').on('hidden.bs.modal', function () {
+        //     $('body').css('overflow', 'auto');
+        // });
 
-        $('#updateViolationDynamic').on('hidden.bs.modal', function () {
-            $('body').css('overflow', 'auto');
-        });
+        // $('#updateViolationDynamic').on('hidden.bs.modal', function () {
+        //     $('body').css('overflow', 'auto');
+        // });
 
         new DataTable('#violationTableUser', {
+
             responsive: true,
             ordering: false,
         language: {
@@ -49,10 +50,6 @@
             data: formData,
             success: function(resp) {
                 if(resp.status == 'success') {
-                    $('#violationModal').modal('hide');
-                    $('.modal-backdrop').remove();
-
-
                     $('#violationForms')[0].reset();
                     $('.text-danger').html('');
                     $('#violationTableUser').load(location.href + ' #violationTableUser');
@@ -119,8 +116,8 @@
 
                     // Dynamically reload sections
                     $('#violationTableUser').load(location.href + ' #violationTableUser');
-                    $('#updateViolationDynamic').load(location.href + ' #updateViolationDynamic');
                     $('#showViolationDynamic').load(location.href + ' #showViolationDynamic');
+
 
                     Swal.fire({
                         toast: true,
@@ -160,6 +157,8 @@
     $('.modal').on('hidden.bs.modal', function() {
         $('.is-invalid').removeClass('is-invalid');
         $('.error-message').text('');
+        $('body').css('overflow', 'auto');
+
     });
 
 
@@ -174,12 +173,12 @@
 
 
 function searchStudentSub() {
-    let searchValue = document.getElementById('search_student').value;
-    let resultsContainer = document.getElementById('student_results');
+    let searchValue = $('#search_student').val(); // Use jQuery for consistency
+    let resultsContainer = $('#student_results');
 
     // Clear results if search is empty or less than 2 characters
     if (!searchValue || searchValue.length < 2) {
-        resultsContainer.innerHTML = '';
+        resultsContainer.empty();
         $('#searchSpinner').hide();
         $('#clear_search').hide();
         return;
@@ -191,79 +190,56 @@ function searchStudentSub() {
     let formData = new FormData();
     formData.append('search', searchValue);
 
-    fetch('{{ route('sub-admin.search_student') }}', {
-        method: 'POST',
+    $.ajax({
+        url: "{{ route('sub-admin.search_student') }}",
+        type: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.students.length > 0) {
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data) {
             $('#searchSpinner').hide();
-            resultsContainer.innerHTML = '';
-            data.students.forEach(student => {
-                let resultItem = document.createElement('div');
-                resultItem.classList.add('result-item');
-                resultItem.innerHTML = `
-                <div class="w-100 bg-primary">
-                    <a href="#" class="btn w-100 text-start text-white">
-                        ${student.student_no}, ${student.first_name} ${student.last_name} - ${student.course}
-                    </a>
-                </div>
-                `;
-                resultItem.onclick = function() {
-                    // Debugging: Log the student data
-                    console.log('Student Data:', student);
 
-                    // Get all form fields first
-                    const studentNoField = document.querySelector('#violationForms #student_no');
-                    const lastNameField = document.querySelector('#violationForms #last_name');
-                    const firstNameField = document.querySelector('#violationForms #first_name');
-                    const middleInitialField = document.querySelector('#violationForms #middle_name');
-                    const courseField = document.querySelector('#violationForms #course');
+            if (data.success && data.students.length > 0) {
+                resultsContainer.empty(); // Clear previous results
 
-                    // Log if fields are found
-                    console.log('Found fields:', {
-                        studentNo: !!studentNoField,
-                        lastName: !!lastNameField,
-                        firstName: !!firstNameField,
-                        middleInitial: !!middleInitialField,
-                        course: !!courseField
+                // Display the student suggestions
+                data.students.forEach(function(student) {
+                    let resultItem = $('<div></div>').addClass('result-item').html(`
+                        <div class="w-100 bg-primary">
+                            <a href="#" class="btn w-100 btn-primary text-start text-white">
+                                ${student.student_no}, ${student.first_name} ${student.last_name} - ${student.course}
+                            </a>
+                        </div>
+                    `);
+
+                    resultItem.on('click', function() {
+                        // Autofill the form fields when the user clicks an item
+                        $('#violationForms #student_no').val(student.student_no || '');
+                        $('#violationForms #last_name').val(student.last_name);
+                        $('#violationForms #first_name').val(student.first_name);
+                        $('#violationForms #middle_name').val(student.middle_name || '');
+                        $('#violationForms #course').val(student.course);
+
+                        // Clear the results after selection
+                        resultsContainer.empty();
+                        $('#search_student').val('');
                     });
 
-                    // Set values if fields exist
-                    if (studentNoField) studentNoField.value = student.student_no || '';
-                    if (lastNameField) lastNameField.value = student.last_name || '';
-                    if (firstNameField) firstNameField.value = student.first_name || '';
-                    if (middleInitialField) middleInitialField.value = student.middle_name || '';
-                    if (courseField) courseField.value = student.course || '';
-
-                    // Log the values after setting
-                    console.log('Set values:', {
-                        studentNo: studentNoField?.value,
-                        lastName: lastNameField?.value,
-                        firstName: firstNameField?.value,
-                        middleInitial: middleInitialField?.value,
-                        course: courseField?.value
-                    });
-
-                    // Clear search input and results
-                    document.getElementById('search_student').value = '';
-                    document.getElementById('student_results').innerHTML = '';
-                };
-
-                resultsContainer.appendChild(resultItem);
-            });
-        } else {
-            clearStudentFields();
-            resultsContainer.innerHTML = '<div class="no-results">No matching students found</div>';
+                    resultsContainer.append(resultItem);
+                });
+            } else {
+                clearStudentFields();
+                resultsContainer.html('<div class="no-results">No matching students found</div>');
+            }
+        },
+        error: function(error) {
+            $('#searchSpinner').hide();
+            console.error('Error:', error);
+            resultsContainer.html('<div class="error">An error occurred while searching</div>');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        resultsContainer.innerHTML = '<div class="error">An error occurred while searching</div>';
     });
 }
 

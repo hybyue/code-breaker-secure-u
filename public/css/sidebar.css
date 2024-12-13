@@ -356,7 +356,6 @@ a.sidebar-link {
     .table {
         min-width: 900px;  /* Minimum width to ensure content fits */
         width: 100%;        /* Takes full width of container */
-        border: 1px solid #2f3031;  /* Border around entire table */
         margin-bottom: 0;   /* Remove bottom margin */
     }
 
@@ -368,6 +367,7 @@ a.sidebar-link {
         background: #f8f9fa; /* Light background for the container */
         border-radius: 0.5rem; /* Rounded corners */
     }
+
 
     .sidebar-smo-logo {
         width: 50px;

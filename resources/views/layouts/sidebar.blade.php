@@ -16,7 +16,7 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
 
     <link href="{{ asset('css/sidebar.css')}}" rel="stylesheet" >
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('offline_extender/css/sweetalert2.min.css')}}">
     <link rel="stylesheet" href="{{ asset('offline_extender/css/dataTables.bootstrap5.min.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
@@ -173,8 +173,12 @@
     </div>
     <script src="{{ asset('js/sidebar.js') }}"></script>
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
+
+{{--
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
+
+
     <script src="{{ asset('offline_extender/js/dataTables.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('offline_extender/js/dataTables.bootstrap5.min.js')}}" type="text/javascript"></script>
 

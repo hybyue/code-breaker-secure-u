@@ -21,13 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const option = document.createElement('option');
                 option.value = province.name;
                 option.textContent = province.name;
+                option.dataset.code = province.code; // Store the code for API calls
                 if (province.name === currentProvince) {
                     option.selected = true;
-                    // Store the code as a data attribute for API calls
-                    option.dataset.code = province.code;
                     // Trigger change event to load municipalities
                     handleProvinceChange(province.code,
-                        provinceSelect.closest('.modal').querySelector('select[name="city"]'),
+                        provinceSelect.closest('.modal').querySelector('select[name="municipality"]'),
                         provinceSelect.closest('.modal').querySelector('select[name="barangay"]')
                     );
                 }
@@ -38,26 +37,27 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add change event listener
             provinceSelect.addEventListener('change', function() {
                 const modal = this.closest('.modal');
-                const citySelect = modal.querySelector('select[name="city"]');
+                const municipalitySelect = modal.querySelector('select[name="municipality"]');
                 const barangaySelect = modal.querySelector('select[name="barangay"]');
-                // Find the selected option and get its code from the data attribute
+
                 const selectedOption = this.options[this.selectedIndex];
                 const provinceCode = provinces.find(p => p.name === selectedOption.value)?.code;
-                handleProvinceChange(provinceCode, citySelect, barangaySelect);
+
+                handleProvinceChange(provinceCode, municipalitySelect, barangaySelect);
             });
         } catch (error) {
             console.error('Error loading provinces:', error);
         }
     }
 
-    async function handleProvinceChange(provinceCode, citySelect, barangaySelect) {
+    async function handleProvinceChange(provinceCode, municipalitySelect, barangaySelect) {
         try {
-            citySelect.disabled = false;
+            municipalitySelect.disabled = false;
             barangaySelect.disabled = true;
 
-            const currentCity = citySelect.querySelector('option[selected]')?.textContent;
+            const currentMunicipality = municipalitySelect.querySelector('option[selected]')?.textContent;
 
-            citySelect.innerHTML = '<option value="" disabled>Select Municipality</option>';
+            municipalitySelect.innerHTML = '<option value="" disabled>Select Municipality</option>';
 
             const [citiesResponse, muniResponse] = await Promise.all([
                 fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities/`),
@@ -76,15 +76,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.value = location.name;
                 option.textContent = location.name;
                 option.dataset.code = location.code;
-                if (location.name === currentCity) {
+                if (location.name === currentMunicipality) {
                     option.selected = true;
                     handleMunicipalityChange(location.code, barangaySelect);
                 }
-                citySelect.appendChild(option);
+                municipalitySelect.appendChild(option);
             });
 
-            // Add change event listener to city select
-            citySelect.addEventListener('change', function() {
+            // Add change event listener to municipality select
+            municipalitySelect.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
                 const locationCode = allLocations.find(l => l.name === selectedOption.value)?.code;
                 handleMunicipalityChange(locationCode, barangaySelect);
@@ -121,42 +121,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Store the selected text values instead of codes
-   // Handle form submissions
-   document.querySelectorAll('#addProfileFormAdmin, #updateProfileFormAdmin').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        const modal = this.closest('.modal');
+    // Handle form submissions
+    document.querySelectorAll('#addProfileForm, #updateProfileForm, #addProfileFormAdmin, #updateProfileFormAdmin').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const modal = this.closest('.modal');
 
-        // Get the selected text values from each dropdown
-        const provinceSelect = modal.querySelector('select[name="province"]');
-        const municipalitySelect = modal.querySelector('select[name="municipality"]');
-        const barangaySelect = modal.querySelector('select[name="barangay"]');
+            // Get the selected text values from each dropdown
+            const provinceSelect = modal.querySelector('select[name="province"]');
+            const municipalitySelect = modal.querySelector('select[name="municipality"]');
+            const barangaySelect = modal.querySelector('select[name="barangay"]');
 
-        // Create hidden inputs for each address component
-        if (provinceSelect && provinceSelect.selectedIndex > 0) {
-            const provinceInput = document.createElement('input');
-            provinceInput.type = 'hidden';
-            provinceInput.name = 'province';
-            provinceInput.value = provinceSelect.options[provinceSelect.selectedIndex].text;
-            this.appendChild(provinceInput);
-        }
+            // Create hidden inputs for each address component
+            if (provinceSelect && provinceSelect.selectedIndex > 0) {
+                const provinceInput = document.createElement('input');
+                provinceInput.type = 'hidden';
+                provinceInput.name = 'province';
+                provinceInput.value = provinceSelect.options[provinceSelect.selectedIndex].text;
+                this.appendChild(provinceInput);
+            }
 
-        if (municipalitySelect && municipalitySelect.selectedIndex > 0) {
-            const municipalityInput = document.createElement('input');
-            municipalityInput.type = 'hidden';
-            municipalityInput.name = 'municipality';
-            municipalityInput.value = municipalitySelect.options[municipalitySelect.selectedIndex].text;
-            this.appendChild(municipalityInput);
-        }
+            if (municipalitySelect && municipalitySelect.selectedIndex > 0) {
+                const municipalityInput = document.createElement('input');
+                municipalityInput.type = 'hidden';
+                municipalityInput.name = 'municipality';
+                municipalityInput.value = municipalitySelect.options[municipalitySelect.selectedIndex].text;
+                this.appendChild(municipalityInput);
+            }
 
-        if (barangaySelect && barangaySelect.selectedIndex > 0) {
-            const barangayInput = document.createElement('input');
-            barangayInput.type = 'hidden';
-            barangayInput.name = 'barangay';
-            barangayInput.value = barangaySelect.options[barangaySelect.selectedIndex].text;
-            this.appendChild(barangayInput);
-        }
+            if (barangaySelect && barangaySelect.selectedIndex > 0) {
+                const barangayInput = document.createElement('input');
+                barangayInput.type = 'hidden';
+                barangayInput.name = 'barangay';
+                barangayInput.value = barangaySelect.value;
+                this.appendChild(barangayInput);
+            }
+        });
     });
-});
 });
 

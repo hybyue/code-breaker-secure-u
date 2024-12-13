@@ -53,6 +53,21 @@
                 width: 100%;
             }
         }
+        .profile-picture-placeholder {
+    background-color: transparent;
+    font-size: 150px;
+    line-height: 150px;
+    text-align: center;
+    color: #ffffff;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    width: 150px;
+    border: 4px solid #ffffff;
+    border-radius: 50%;
+}
         .login-container {
             background: rgba(255, 255, 255, 0.9);
             padding: 30px;
@@ -198,11 +213,7 @@
     </div>
 
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
 
 <script>
     $(document).ready(function(){
@@ -236,8 +247,6 @@
         });
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </body>
 </html>

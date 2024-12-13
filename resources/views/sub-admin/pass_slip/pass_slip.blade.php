@@ -54,17 +54,17 @@
 
 
 </div>
-    <div class="container table-container bg-body-secondary rounded">
+    <div class="container table-container bg-body-secondary rounded" >
 
-        <table id="passTable" class="table table-bordered same-height-table">
+        <table id="passTable" class="table table-bordered table-rounded p-3 same-height-table" style="min-width: 1100px;">
             <thead>
                 <tr>
-                    <th>No.</th>
-                    <th>Name</th>
-                    <th>Office/Dept.</th>
-                    <th>Date</th>
-                    <th>Time Out</th>
-                    <th>Time In</th>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Office/Dept.</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Time Out</th>
+                    <th class="text-center">Time In</th>
                     <th class="text-center">Exit Count</th>
                     <th></th>
                 </tr>
@@ -90,7 +90,7 @@
                         @if(is_null($passSlip->time_in))
                         <div>
                             <span id="time-in-display-{{ $passSlip->id }}"></span>
-                            <form action="{{ route('passSlip.checkout', $passSlip->id) }}" method="POST">
+                            <form action="{{ route('passSlip.checkout', $passSlip->id) }}" method="POST" onsubmit="event.preventDefault(); confirmCheck('{{ $passSlip->id }}', this);">
                                 @csrf
                                 <button type="submit" class="btn btn-sm text-white" style="background-color: #069206">Check</button>
                             </form>
@@ -178,7 +178,7 @@
                     </div>
                 </div>
                 <div class="table-container">
-                    <table class="table table-bordered same-height-table" style="overflow-x:auto;">
+                    <table class="table table-bordered same-height-table">
                     <thead>
                         <tr>
                             <th>Pass Slip No.</th>
@@ -395,4 +395,25 @@ function showPdfModalLooping() {
         display: none;
     }
 </style>
+
+
+<script>
+    function confirmCheck(passSlipId, form) {
+        Swal.fire({
+            icon: 'question',
+            title: 'Are you sure?',
+            text: 'Do you want to check this pass slip?',
+            showCancelButton: true,
+            confirmButtonColor: '#069206',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, check it',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
+
 @endsection

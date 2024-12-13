@@ -24,82 +24,6 @@ class EmployeesController extends Controller
                          ->get();
         return view('admin.employee', compact('subAdmins'));
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'id_number' => 'required|string|max:255',
-    //         'first_name' => 'required|string|max:255',
-    //         'middle_name' => 'nullable|string|max:255',
-    //         'last_name' => 'required|string|max:255',
-    //         'gender' => 'required|string|max:255',
-    //         'civil_status' => 'required|string|max:255',
-    //         'contact_no' => 'required|string|max:255',
-    //         'date_birth' => 'required|date',
-    //         'employment_type' => 'required|string|max:255',
-    //     ]);
-
-    //     Employee::create([
-    //         'user_id' => Auth::id(),
-    //         'id_number' => $request->id_number,
-    //         'first_name' => $request->first_name,
-    //         'middle_name' => $request->middle_name,
-    //         'last_name' => $request->last_name,
-    //         'gender' => $request->gender,
-    //         'civil_status' => $request->civil_status,
-    //         'email_address' => Auth::user()->email,
-    //         'contact_no' => $request->contact_no,
-    //         'date_birth' => $request->date_birth,
-    //         'employment_type' => $request->employment_type,
-    //     ]);
-
-
-    //     return redirect()->route('admin.employee')->with('success', 'Employee created successfully.');
-    // }
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $employees = Employee::findOrFail($id);
-
-        return view('employee.show', compact('employees'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $employees = Employee::findOrFail($id);
-
-        return view('employee.edit', compact('employees'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $securityStaff = User::findOrFail($id);
-        $securityStaff->update($request->all());
-
-        return redirect()->route('admin.employee')->with('success', 'Security Staff updated successfully');
-    }
-
 
     /**
      * Remove the specified resource from storage.
@@ -124,9 +48,9 @@ class EmployeesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_number' => 'required|string|max:255|unique:users,id_number,' . $id,
-            'first_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'middle_name' => 'nullable|string|max:1|regex:/^[a-zA-Z\s]+$/',
-            'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:1',
+            'last_name' => 'required|string|max:255',
             'gender' => 'required|string|in:Male,Female,male,female',
             'employment_type' => 'required|string|in:Teaching,Non-Teaching',
             'civil_status' => 'required|string|in:Single,Married,Divorced,Widowed',
@@ -141,7 +65,7 @@ class EmployeesController extends Controller
                 'date',
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
-            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'emergency_contact_name' => 'required|string|max:255',
             'emergency_contact_number' => [
                 'required',
                 'string',
@@ -154,15 +78,15 @@ class EmployeesController extends Controller
             'schedule' => 'required|string|max:255',
             'position' => 'required|string|max:255',
         ], [
-            'first_name.regex' => 'The first name must contain only letters and spaces.',
-            'middle_name.regex' => 'The middle initial must contain only letters and spaces.',
+            'first_name.string' => 'The first name must contain only letters and spaces.',
+            'middle_name.string' => 'The middle initial must contain only letters and spaces.',
             'middle_name.max' => 'Must only have 1 letter.',
-            'last_name.regex' => 'The last name must contain only letters and spaces.',
+            'last_name.string' => 'The last name must contain only letters and spaces.',
             'contact_no.regex' => 'The contact number format is invalid.',
             'date_birth.before' => 'You must be at least 18 years old.',
             'id_number.unique' => 'This ID number is already taken.',
-            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
-            'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
+            'emergency_contact_name.string' => 'The emergency contact name must contain only letters and spaces.',
+            'emergency_contact_number.regex' => 'The emergency con   tact number format is invalid.',
             'badge_number.unique' => 'This badge number is already taken.',
         ]);
 
@@ -186,9 +110,9 @@ class EmployeesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_number' => 'required|string|max:255|unique:users,id_number,' . $id,
-            'first_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'middle_name' => 'nullable|string|max:1|regex:/^[a-zA-Z\s]+$/',
-            'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:1',
+            'last_name' => 'required|string|max:255',
             'employment_type' => 'required|string|in:Teaching,Non-Teaching',
             'gender' => 'required|string|in:Male,Female,male,female',
             'civil_status' => 'required|string|in:Single,Married,Divorced,Widowed',
@@ -203,7 +127,7 @@ class EmployeesController extends Controller
                 'date',
                 'before:' . now()->subYears(18)->format('Y-m-d')
             ],
-            'emergency_contact_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'emergency_contact_name' => 'required|string|max:255',
             'emergency_contact_number' => [
                 'required',
                 'string',
@@ -215,14 +139,14 @@ class EmployeesController extends Controller
             'schedule' => 'required|string|max:255',
             'position' => 'required|string|max:255',
         ], [
-            'first_name.regex' => 'The first name must contain only letters and spaces.',
-            'middle_name.regex' => 'Must contain only letters.',
+            'first_name.string' => 'The first name must contain only letters and spaces.',
+            'middle_name.string' => 'Must contain only letters.',
             'middle_name.max' => 'Must only have 1 letter.',
-            'last_name.regex' => 'The last name must contain only letters and spaces.',
+            'last_name.string' => 'The last name must contain only letters and spaces.',
             'contact_no.regex' => 'The contact number format is invalid.',
             'date_birth.before' => 'You must be at least 18 years old.',
             'id_number.unique' => 'This ID number is already taken.',
-            'emergency_contact_name.regex' => 'The emergency contact name must contain only letters and spaces.',
+            'emergency_contact_name.string' => 'The emergency contact name must contain only letters and spaces.',
             'emergency_contact_number.regex' => 'The emergency contact number format is invalid.',
             'badge_number.unique' => 'This badge number is already taken.',
         ]);

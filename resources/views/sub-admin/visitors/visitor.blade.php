@@ -1,8 +1,7 @@
 @extends('layouts.sidebar')
 
 @section('title', 'Visitors')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @section('content')
 
 
@@ -67,17 +66,15 @@
             </div>
         </form>
     </div>
-    <div class="container p-2 bg-body-secondary rounded">
-        <div class="row">
-            <div class="col-12" style="overflow-x:auto;">
-                <table id="visitorTableSubAdmin" class="table table-bordered table-rounded table-striped text-center same-height-table ">
+    <div class="table-container p-2 bg-body-secondary rounded">
+                <table id="visitorTableSubAdmin" class="table table-bordered table-rounded text-center same-height-table ">
                     <thead>
                         <tr>
                             <th>Date</th>
                             <th>Visitor's Name</th>
                             <th>Time in</th>
                             <th>Time out</th>
-                            <th class="text-start">Entry Count</th>
+                            <th class="text-center">Entry Count</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -144,12 +141,10 @@
         </tr>
     @endforeach
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
+     </tbody>
+    </table>
     </div>
+
 
     <div id="viewDynamicModal">
         {{-- Modal for showing all entries of a visitor --}}
@@ -232,9 +227,8 @@
             </div>
         @endforeach
     </div>
-    @include('sub-admin.visitors.add_visitor')
-    @include('sub-admin.visitors.update_visitor')
-    @include('sub-admin.visitors.visitor_js')
+
+
 
     <div id="timeOut_visitor">
         @foreach($latestVisitors as $visit)
@@ -270,7 +264,6 @@
         @endforeach
         </div>
 
-    <script src="{{ asset('js/visitor_sub.js') }}"></script>
 
     <script>
         function showPdfModalVisitor() {
@@ -351,6 +344,11 @@
     }
 
         </script>
+
+
+@include('sub-admin.visitors.add_visitor')
+@include('sub-admin.visitors.update_visitor')
+@include('sub-admin.visitors.visitor_sub_js')
 
 
     <style>

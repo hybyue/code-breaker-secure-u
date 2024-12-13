@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('offline_extender/js/jquery-3.7.1.js')}}"></script>
 </head>
 <body>
     <nav>@include('admin.layouts.admin')</nav>
-    <div class="p-3 mt-2">
+    <div>
         <button onclick="window.location.href='{{ route('admin.dashboard') }}';" class="btn btn-outline-dark back-button">
             <i class="bi bi-arrow-left"></i> Back
         </button>
@@ -33,7 +33,7 @@
                                 @if($user->profile_picture)
                                     <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture" id="main-profile-image">
                                 @else
-                                    <i class="bi bi-person-circle profile-picture-placeholder" id="main-profile-icon"></i>
+                                <i class="bi bi-person-circle profile-picture-placeholder" id="main-profile-icon"></i>
                                 @endif
                                 <label for="profile-picture-input" class="edit-overlay">
                                     <i class="bi bi-pencil-fill"></i>
@@ -243,18 +243,12 @@
                                         <label class="form-label">Municipality:</label>
                                         <select class="form-select" name="municipality" required>
                                             <option value="" disabled>Select Municipality/City</option>
-                                            @if($user->municipality)
-                                                <option value="{{ $user->municipality }}" selected>{{ $user->municipality }}</option>
-                                            @endif
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-2">
                                         <label class="form-label">Barangay:</label>
                                         <select class="form-select" name="barangay" required>
                                             <option value="" disabled>Select Barangay</option>
-                                            @if($user->barangay)
-                                                <option value="{{ $user->barangay }}" selected>{{ $user->barangay }}</option>
-                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -262,6 +256,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="position" class="form-label">Position:</label>
                                 <select class="form-select" id="position" name="position" required>
+                                    <option value="Secretary" {{ $user->position == 'Secretary' ? 'selected' : '' }}>Secretary</option>
                                     <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
                                     <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
                                     <option value="Security lll" {{ $user->position == 'Security lll' ? 'selected' : '' }}>Security lll</option>
@@ -382,27 +377,30 @@
                                         </div>
                                         <div class="col-md-6 mb-2">
                                             <label class="form-label">Province:</label>
-                                            <select class="form-select" name="province" required>
-                                                <option value="" disabled>Select Province</option>
-                                                @if($user->province)
+                                            <select class="form-select" name="province" required disabled>
+                                                 @if(is_null($user->province))
+                                                    <option value="" selected>Select Province</option>
+                                                @else
                                                     <option value="{{ $user->province }}" selected>{{ $user->province }}</option>
                                                 @endif
                                             </select>
                                         </div>
-                                        <div class="col-md-6 mb-2"
+                                        <div class="col-md-6 mb-2">
                                             <label class="form-label">Municipality:</label>
-                                            <select class="form-select" name="municipality" required>
-                                                <option value="" disabled>Select Municipality/City</option>
-                                                @if($user->municipality)
+                                            <select class="form-select" name="municipality" required disabled>
+                                                @if(is_null($user->municipality))
+                                                    <option value="" selected>Select Municipality/City</option>
+                                                @else
                                                     <option value="{{ $user->municipality }}" selected>{{ $user->municipality }}</option>
                                                 @endif
                                             </select>
                                         </div>
                                         <div class="col-md-6 mb-2">
                                             <label class="form-label">Barangay:</label>
-                                            <select class="form-select" name="barangay" required>
-                                                <option value="" disabled>Select Barangay</option>
-                                                @if($user->barangay)
+                                                <select class="form-select" name="barangay" required disabled>
+                                                @if(is_null($user->barangay))
+                                                    <option value="" selected>Select Barangay</option>
+                                                @else
                                                     <option value="{{ $user->barangay }}" selected>{{ $user->barangay }}</option>
                                                 @endif
                                             </select>
@@ -416,6 +414,8 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="position" class="form-label">Position:</label>
                                     <select class="form-select" id="position" name="position" required>
+                                        <option value="Head" {{ $user->position == 'Head' ? 'selected' : '' }}>Head</option>
+                                        <option value="Secretary" {{ $user->position == 'Secretary' ? 'selected' : '' }}>Secretary</option>
                                         <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
                                         <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
                                         <option value="Security lll" {{ $user->position == 'Security lll' ? 'selected' : '' }}>Security lll</option>

@@ -99,7 +99,7 @@
                         $('.error-message').remove();
 
                         $('#loopingTable').load(location.href + ' #loopingTable');
-                        $('#latestUpdateLooping').load(location.href + ' #latestUpdateLooping');
+                        $('#latestLoopings').load(location.href + ' #latestLoopings');
 
                         Swal.fire({
                             toast: true,
@@ -137,6 +137,8 @@
         $('.modal').on('hidden.bs.modal', function() {
             $('.is-invalid').removeClass('is-invalid');
             $('.error-message').text('');
+            $('body').css('overflow', 'auto');
+
         });
 
     });

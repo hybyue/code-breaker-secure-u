@@ -49,14 +49,9 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                <div class="d-flex justify-content-center align-items-center">
                                                     <div class="mx-1">
                                                     <a href="#" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewDataInformation-{{ $user->id }}"><i class="bi bi-eye"></i></a>
                                                     </div>
-                                                    <div class="mx-1">
-                                                        <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateEmployee-{{$user->id}}"><i class="bi bi-pencil-square"></i></a>
-                                                    </div>
-                                                </div>
                                             </td>
                                             @endif
 
@@ -133,23 +128,42 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="emergency_contact_name" class="form-label">Emergency Contact Name:</label>
-                        <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $employee->emergency_contact_name }}" required>
+                        <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $employee->emergency_contact_name }}" readonly>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
-                        <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $employee->emergency_contact_number }}" required>
+                        <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $employee->emergency_contact_number }}" readonly>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="date_hired" class="form-label">Date Hired:</label>
-                        <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $employee->date_hired ? \Carbon\Carbon::parse($employee->date_hired)->format('Y-m-d') : '' }}" required>
+                        <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $employee->date_hired ? \Carbon\Carbon::parse($employee->date_hired)->format('Y-m-d') : '' }}" readonly>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="badge_number" class="form-label">Badge Number:</label>
                         <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $employee->badge_number }}" readonly>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="address" class="form-label">Address:</label>
-                        <input type="text" class="form-control" id="address" name="address" value="{{ $employee->address }}" readonly>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Address Information:</label>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Street Address:</label>
+                                <input type="text" class="form-control" name="street" value="{{ $user->street }}" readonly>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Province:</label>
+                                <input class="form-control" name="province" value="{{ $user->province }}"  readonly>
+
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Municipality:</label>
+                                <input class="form-control" name="municipality" value="{{ $user->municipality }}"  readonly>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Barangay:</label>
+                                <input class="form-control" name="barangay" value="{{ $user->barangay }}"  readonly>
+
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="schedule" class="form-label">Schedule:</label>
@@ -166,115 +180,6 @@
 </div>
 @endforeach
 
-
-{{-- Edit employee Information --}}
-@foreach($subAdmins as $employee)
-<div class="modal fade" id="updateEmployee-{{ $employee->id }}" tabindex="-1" aria-labelledby="updateEmployeeModalLabel-{{ $employee->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateEmployeeModalLabel-{{ $employee->id }}">Edit Staff Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('employee.update', $employee->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="id_number" class="form-label">ID Number:</label>
-                            <input type="text" class="form-control" name="id_number" value="{{ $employee->id_number }}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">First Name:</label>
-                            <input type="text" class="form-control" name="first_name" value="{{ $employee->first_name }}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Middle Name:</label>
-                            <input type="text" class="form-control" name="middle_name" value="{{ $employee->middle_name }}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" name="last_name" value="{{ $employee->last_name }}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Gender:</label>
-                            <select class="form-select" name="gender">
-                                <option value="" selected disabled>{{ $employee->gender }}</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Civil Status:</label>
-                            <select class="form-select" name="civil_status">
-                                <option value="" selected disabled>{{ $employee->civil_status }}</option>
-                                <option value="Single">Single</option>
-                                <option value="Married">Married</option>
-                                <option value="Widowed">Widowed</option>
-                                <option value="Divorced">Divorced</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Email Address:</label>
-                            <input type="email" class="form-control" name="email" value="{{ $employee->email }}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Contact No.:</label>
-                            <input type="text" class="form-control" name="contact_no" value="{{ $employee->contact_no }}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Employment Type:</label>
-                            <select class="form-select" name="employment_type">
-                                <option value="" selected disabled>{{ $employee->employment_type }}</option>
-                                <option value="Part-Time">Part-Time</option>
-                                <option value="Full-Time">Full-Time</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="date_birth" class="form-label">Date of Birth:</label>
-                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ \Carbon\Carbon::parse($employee->date_birth)->format('Y-m-d') }}" >
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="emergency_contact_name" class="form-label">Emergency Contact Name:</label>
-                            <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" value="{{ $employee->emergency_contact_name }}" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="emergency_contact_number" class="form-label">Emergency Contact Number:</label>
-                            <input type="text" class="form-control" id="emergency_contact_number" name="emergency_contact_number" value="{{ $employee->emergency_contact_number }}" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="date_hired" class="form-label">Date Hired:</label>
-                            <input type="date" class="form-control" id="date_hired" name="date_hired" value="{{ $employee->date_hired ? \Carbon\Carbon::parse($employee->date_hired)->format('Y-m-d') : '' }}" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="badge_number" class="form-label">Badge Number:</label>
-                            <input type="text" class="form-control" id="badge_number" name="badge_number" value="{{ $employee->badge_number }}" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="address" class="form-label">Address:</label>
-                            <input type="text" class="form-control" id="address" name="address" value="{{ $employee->address }}" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="schedule" class="form-label">Schedule:</label>
-                            <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $employee->schedule }}" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="position" class="form-label">Position:</label>
-                            <input type="text" class="form-control" id="position" name="position" value="{{ $employee->position }}" required>
-                        </div>
-                        <div class="mt-3 d-flex justify-content-center text-center">
-                            <button type="submit" class="btn btn-primary">Update Employee</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

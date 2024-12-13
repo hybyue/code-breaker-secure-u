@@ -99,7 +99,6 @@
 
                         $('#loopingTableAdmin').load(location.href + ' #loopingTableAdmin');
                         $('#latestLoopingRecords').load(location.href + ' #latestLoopingRecords');
-                        $('#latestUpdateLooping').load(location.href + ' #latestUpdateLooping');
 
                         Swal.fire({
                             toast: true,
@@ -139,6 +138,8 @@
             $('.is-invalid').removeClass('is-invalid');
             $('.modal-backdrop').remove();
             $('.error-message').text('');
+            $('body').css('overflow', 'auto');
+
         });
     });
 
@@ -199,11 +200,11 @@
 
                             // Set values if fields exist
                             if (nameField) {
-                                let fullName = `${employee.last_name}`;
-                                if (employee.middle_name) {
-                                    fullName += ` ${employee.middle_name}`;
-                                }
+                                let fullName = `${employee.last_name},`;
                                 fullName += ` ${employee.first_name}`;
+                                if (employee.middle_name) {
+                                    fullName += ` ${employee.middle_name}.`;
+                                }
                                 nameField.value = fullName;
                             }
                             if (departmentField) departmentField.value = employee.department || '';

@@ -63,7 +63,7 @@
                         </div> --}}
 
                         <div class="col-md-6 mb-3">
-                            <label for="location-{{ $item->id }}" class="form-label">Location:</label>
+                            <label for="location-{{ $item->id }}" class="form-label">Location Found:</label>
                             <input type="text" class="form-control" id="location-{{ $item->id }}" name="location" value="{{ $item->location }}">
                         </div>
                         <div class="col-md-6 mb-3">
@@ -85,7 +85,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="description-{{ $item->id }}" class="form-label">Description:</label>
+                            <label for="description-{{ $item->id }}" class="form-label">Object Description:</label>
                             <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
                         </div>
                         <div class="col-md-12 mb-2">

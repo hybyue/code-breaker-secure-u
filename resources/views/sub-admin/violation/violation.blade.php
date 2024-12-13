@@ -140,7 +140,8 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered same-height-table" style="overflow-x:auto;">
+                <div class="table-container">
+                <table class="table table-bordered same-height-table">
                     <thead>
                         <tr>
                             <th>Violation No.</th>
@@ -166,6 +167,7 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
     </div>

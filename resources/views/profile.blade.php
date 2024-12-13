@@ -300,6 +300,8 @@
                                     <option value="Casual, Security" {{ $user->position == 'Casual, Security' ? 'selected' : '' }}>Casual, Security</option>
                                     <option value="Part-time Security" {{ $user->position == 'Part-time Security' ? 'selected' : '' }}>Part-time Security</option>
                                     <option value="Support Staff" {{ $user->position == 'Support Staff' ? 'selected' : '' }}>Support Staff</option>
+                                    <option value="Secretary" {{ $user->position == 'Secretary' ? 'selected' : '' }}>Secretary</option>
+                                    <option value="Head" {{ $user->position == 'Head' ? 'selected' : '' }}>Head</option>
                                     <option value="Other" {{ $user->position == 'Other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
@@ -455,6 +457,8 @@
                                         <option value="Casual, Security" {{ $user->position == 'Casual, Security' ? 'selected' : '' }}>Casual, Security</option>
                                         <option value="Part-time Security" {{ $user->position == 'Part-time Security' ? 'selected' : '' }}>Part-time Security</option>
                                         <option value="Support Staff" {{ $user->position == 'Support Staff' ? 'selected' : '' }}>Support Staff</option>
+                                        <option value="Secretary" {{ $user->position == 'Secretary' ? 'selected' : '' }}>Secretary</option>
+                                        <option value="Head" {{ $user->position == 'Head' ? 'selected' : '' }}>Head</option>
                                         <option value="Other" {{ $user->position == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>

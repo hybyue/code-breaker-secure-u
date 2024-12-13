@@ -1,0 +1,79 @@
+body {
+    background: url('../images/bg-ucu.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+}
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.336);
+    z-index: -1;
+}
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.navbar-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.logo {
+    max-width: 100px;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.login-form {
+    text-align: center;
+}
+.colored-toast.swal2-icon-success {
+background-color: #48941c !important;
+}
+.colored-toast.swal2-icon-error {
+background-color: #ff4747 !important;
+}
+.colored-toast.swal2-icon-warning {
+background-color: #f8bb86 !important;
+}
+.colored-toast.swal2-icon-info {
+background-color: #3fc3ee !important;
+}
+.colored-toast.swal2-icon-question {
+background-color: #87adbd !important;
+}
+.colored-toast .swal2-title {
+color: white;
+}
+.colored-toast .swal2-close {
+color: white;
+}
+.colored-toast .swal2-html-container {
+color: white;
+}
+.border-red-500 {
+border-color: #ff4747 !important;
+}

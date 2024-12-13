@@ -122,8 +122,6 @@
 
                 $('#visitorTable').load(location.href + ' #visitorTable');
                 $('#dynamicModals').load(location.href + ' #dynamicModals');
-                $('#updateDynamicModals').load(location.href + ' #updateDynamicModals');
-                $('#timeOut_visitor').load(location.href + ' #timeOut_visitor');
 
                 $('.error-message').remove();
                 const Toast = Swal.mixin({

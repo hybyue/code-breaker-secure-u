@@ -98,7 +98,7 @@
 @include('admin.looping.looping_js')
 
 
-<div id="latestLoopings">
+<div id="latestLoopingRecords">
     @foreach($latestLoopings as $looping)
     <div class="modal fade" id="viewLooping-{{ $looping->id }}" tabindex="-1" aria-labelledby="viewLoopingLabel-{{ $looping->id }}" aria-hidden="true">
         <div class="modal-dialog w-100 mt-5 pt-4" style="max-width: 95%;">
@@ -133,7 +133,8 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table table-bordered" style="overflow-x:auto;">
+                    <div class="table-container">
+                    <table class="table table-bordered same-height-table">
                         <thead>
                             <tr>
                                 <th class="text-center">Date</th>
@@ -163,6 +164,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
                 </div>
             </div>
         </div>

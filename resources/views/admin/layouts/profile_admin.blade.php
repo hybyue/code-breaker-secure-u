@@ -254,8 +254,13 @@
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label for="schedule" class="form-label">Schedule:</label>
+                                <input type="text" class="form-control" id="schedule" name="schedule" value="{{ $user->schedule }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label for="position" class="form-label">Position:</label>
                                 <select class="form-select" id="position" name="position" required>
+                                    <option value="" selected disabled>Select Security Position</option>
                                     <option value="Secretary" {{ $user->position == 'Secretary' ? 'selected' : '' }}>Secretary</option>
                                     <option value="Security l" {{ $user->position == 'Security l' ? 'selected' : '' }}>Security l</option>
                                     <option value="Security ll" {{ $user->position == 'Security ll' ? 'selected' : '' }}>Security ll</option>
@@ -468,6 +473,7 @@
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
+                        console.log(xhr.responseJSON.errors);
                         let errors = xhr.responseJSON.errors;
                         $('.error-message').remove();
 

@@ -24,23 +24,23 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="student_no">Student Number:</label>
-                            <input type="text" class="form-control" id="student_no" name="student_no" value="{{$violate->student_no}}" required>
+                            <input type="text" class="form-control" id="student_no" name="student_no" value="{{$violate->student_no}}" required readonly>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="last_name">Last Name:</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{$violate->last_name}}"  required>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{$violate->last_name}}"  required readonly>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="first_name">First Name:</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{$violate->first_name}}"  required>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{$violate->first_name}}"  required readonly>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="middle_initial">Middle Initial:</label>
-                            <input type="text" class="form-control" id="middle_initial" placeholder="Optional" value="{{$violate->middle_initial}}"  name="middle_initial">
+                            <input type="text" class="form-control" id="middle_initial" placeholder="Optional" value="{{$violate->middle_initial}}"  name="middle_initial" readonly>
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
-                            <input type="text" class="form-control" id="course" name="course" value="{{$violate->course}}"  required>
+                            <input type="text" class="form-control" id="course" name="course" value="{{$violate->course}}"  required readonly>
                         </div>
                         <div class="form-group">
                             <label for="violation_type">Violation Type:</label>

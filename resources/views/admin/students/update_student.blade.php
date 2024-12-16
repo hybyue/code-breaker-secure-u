@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="student_no">Student Number:</label>
-                            <input type="text" class="form-control" id="student_no" name="student_no" value="{{$student->student_no}}" required>
+                            <input type="text" class="form-control" id="student_no" name="student_no" value="{{$student->student_no}}" required readonly>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="last_name">Last Name:</label>
@@ -31,11 +31,11 @@
                         </div>
                         <div class="form-group">
                             <label for="course">Course:</label>
-                            <input type="text" class="form-control" id="course" name="course" value="{{$student->course}}" required>
+                            <input type="text" class="form-control" id="course" name="course" value="{{$student->course}}" required readonly>
                         </div>
                         <div class="form-group">
                             <label for="year">Year:</label>
-                            <input type="text" class="form-control" id="year_level" name="year_level" value="{{$student->year_level}}" required>
+                            <input type="text" class="form-control" id="year_level" name="year_level" value="{{$student->year_level}}" required readonly>
                         </div>
                         <div class="form-group">
                             <label for="section">Email:</label>
@@ -46,7 +46,7 @@
                             <label for="contact_number">Contact Number:</label>
                             <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{$student->contact_number}}" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="address">Address:</label>
                             <input type="text" class="form-control" id="address" name="address" value="{{$student->address}}" required>

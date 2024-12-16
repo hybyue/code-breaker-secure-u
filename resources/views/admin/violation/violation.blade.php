@@ -60,7 +60,24 @@
 
         </thead>
         <tbody>
-
+            @php
+            $courseMapping = [
+                'pharmacy' => 'College of Pharmacy',
+                'healthscience' => 'College of Health Sciences',
+                'law' => 'College of Law',
+                'artsandscience' => 'College of Arts and Sciences',
+                'criminaljustice' => 'College of Criminal Justice',
+                'graduateschool' => 'Graduate School',
+                'informationtechnology' => 'College of Information Technology',
+                'businessmanagement' => 'College of Business Management',
+                'humanscience' => 'College of Human Sciences',
+                'engineering' => 'College of Engineering',
+                'hospitality' => 'College of Hospitality Management',
+                'teacher' => 'College of Teacher Education',
+                'techvoc' => 'College of Technical Vocational Education',
+                'nstp' => 'National Service Training Program',
+            ];
+        @endphp
             @foreach ($violations as $violate)
             <tr  id="tr_{{$violate->id}}">
                 <td class="text-center">{{$violate->student_no}}</td>
@@ -69,7 +86,9 @@
                      {{$violate->middle_initial}}.
                     @endif
                 </td>
-                <td>{{$violate->course}}</td>
+                <td class="text-start">
+                    {{ $courseMapping[strtolower(trim($violate->course))] ?? $violate->course }}
+                </td>
                 <td>{{$violate->violation_type}}</td>
                 <td class="text-center">{{\Carbon\Carbon::parse($violate->date)->format('F d, Y')}}</td>
                 <td>
@@ -133,7 +152,8 @@
                                     <div class="d-flex flex-wrap gap-3">
                                         <div class="badge bg-light text-dark p-2">
                                             <i class="bi bi-building me-1"></i>
-                                            {{$violation->course}}
+                                                {{ $courseMapping[strtolower(trim($violation->course))] ?? $violation->course }}
+
                                         </div>
                                         <div class="badge bg-success text-white p-2">
                                             <i class="bi bi-clock-history me-1"></i>
@@ -163,7 +183,7 @@
                             <td>{{ \Carbon\Carbon::parse($entry->date)->format('F d, Y') }}</td>
                             <td>{{ $entry->violation_type }}</td>
                             <td>{{ $entry->remarks }}</td>
-                            <td>
+                            <td class="text-center">
                                 <a href="#" class="editModal btn btn-sm text-white" style="background-color: #063292" data-id="{{ $violation->id }}"   data-bs-toggle="modal" data-bs-target="#updateViolationModalAd-{{ $violation->id }}" onclick="$('#viewViolationAd-{{ $violation->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
                             </td>
                         </tr>

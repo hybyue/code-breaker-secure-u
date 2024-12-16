@@ -61,27 +61,48 @@
                 <th class="text-center">Email</th>
                 <th class="text-center">Address</th>
                 <th class="text-center">Year Level</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
+            @php
+            $courseMapping = [
+                'pharmacy' => 'College of Pharmacy',
+                'healthscience' => 'College of Health Sciences',
+                'law' => 'College of Law',
+                'artsandscience' => 'College of Arts and Sciences',
+                'criminaljustice' => 'College of Criminal Justice',
+                'graduateschool' => 'Graduate School',
+                'informationtechnology' => 'College of Information Technology',
+                'businessmanagement' => 'College of Business Management',
+                'humanscience' => 'College of Human Sciences',
+                'engineering' => 'College of Engineering',
+                'hospitality' => 'College of Hospitality Management',
+                'teacher' => 'College of Teacher Education',
+                'techvoc' => 'College of Technical Vocational Education',
+                'nstp' => 'National Service Training Program',
+            ];
+        @endphp
             @foreach ($students as $student)
             <tr id="tr_{{$student->id}}">
             <td class="text-start">{{$student->student_no}}</td>
             <td class="text-start">{{$student->last_name}}, {{$student->first_name}} @if ($student->middle_name)
                 {{$student->middle_name}}.
             @endif</td>
-            <td class="text-start">{{$student->course}}</td>
+            <td class="text-start">
+                {{ $courseMapping[strtolower(trim($student->course))] ?? $student->course }}
+            </td>
             <td class="text-start">{{$student->contact_number}}</td>
             <td class="text-start">{{$student->email}}</td>
             <td class="text-start">{{$student->address}}</td>
             <td class="text-center">{{$student->year_level}}</td>
 
-                {{-- <td class="text-center">
+                <td class="text-center">
                     <a href="" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateStudentModalAd-{{ $student->id }}">
                         <i class="bi bi-pencil-square"></i>
                     </a>
 
-                    <div class="d-flex justify-content-center align-items-center">
+                    {{-- <div class="d-flex justify-content-center align-items-center">
                         <div class="mx-1">
                             <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #1e1f1e"  data-bs-toggle="modal" data-bs-target="#viewStudentAd-{{ $student->id }}"><i class="bi bi-eye"></i></a>
                         </div>
@@ -92,8 +113,8 @@
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                         </div>
-                    </div>
-                </td> --}}
+                    </div> --}}
+                </td>
             </tr>
 
             @endforeach

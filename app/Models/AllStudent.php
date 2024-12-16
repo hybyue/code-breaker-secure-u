@@ -19,7 +19,12 @@ class AllStudent extends Model
         'last_name',
         'middle_name',
         'course',
-        'user_id'
+        'user_id',
+        'contact_number',
+        'address',
+        'year_level',
+        'email'
+
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -31,7 +36,11 @@ class AllStudent extends Model
                 'last_name',
                 'middle_name',
                 'course',
-                'user_id'
+                'user_id',
+                'contact_number',
+                'address',
+                'year_level',
+                'email'
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()

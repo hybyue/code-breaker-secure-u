@@ -60,7 +60,24 @@
             </tr>
         </thead>
         <tbody>
-
+            @php
+            $courseMapping = [
+                'pharmacy' => 'College of Pharmacy',
+                'healthscience' => 'College of Health Sciences',
+                'law' => 'College of Law',
+                'artsandscience' => 'College of Arts and Sciences',
+                'criminaljustice' => 'College of Criminal Justice',
+                'graduateschool' => 'Graduate School',
+                'informationtechnology' => 'College of Information Technology',
+                'businessmanagement' => 'College of Business Management',
+                'humanscience' => 'College of Human Sciences',
+                'engineering' => 'College of Engineering',
+                'hospitality' => 'College of Hospitality Management',
+                'teacher' => 'College of Teacher Education',
+                'techvoc' => 'College of Technical Vocational Education',
+                'nstp' => 'National Service Training Program',
+            ];
+        @endphp
             @foreach ($violations as $violate)
             <tr  id="tr_{{$violate->id}}">
                 <td class="text-center">{{$violate->student_no}}</td>
@@ -69,7 +86,9 @@
                      {{$violate->middle_initial}}.
                     @endif
                 </td>
-                <td>{{$violate->course}}</td>
+                <td>
+                    {{ $courseMapping[strtolower(trim($violate->course))] ?? $violate->course }}
+                </td>
                 <td>{{$violate->violation_type}}</td>
                 <td class="text-center">{{\Carbon\Carbon::parse($violate->date)->format('F d, Y')}}</td>
                 <td> @if ($violate->violation_count == 1)
@@ -128,7 +147,7 @@
                                     <div class="d-flex flex-wrap gap-3">
                                         <div class="badge bg-light text-dark p-2">
                                             <i class="bi bi-building me-1"></i>
-                                            {{$violation->course}}
+                                            {{ $courseMapping[strtolower(trim($violation->course))] ?? $violation->course }}
                                         </div>
                                         <div class="badge bg-success text-white p-2">
                                             <i class="bi bi-clock-history me-1"></i>

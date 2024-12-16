@@ -50,8 +50,8 @@
         </div> --}}
 
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
-    <table id="studentTable" class="table table-bordered same-height-table">
+    <div class="table-container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
+    <table id="studentTable" class="table table-bordered same-height-table" style="min-width: 1300px;">
         <thead>
             <tr>
                 <th class="text-center">Student Number</th>
@@ -61,7 +61,6 @@
                 <th class="text-center">Email</th>
                 <th class="text-center">Address</th>
                 <th class="text-center">Year Level</th>
-                <th class="text-center"></th>
             </tr>
         </thead>
         <tbody>
@@ -77,11 +76,11 @@
             <td class="text-start">{{$student->address}}</td>
             <td class="text-center">{{$student->year_level}}</td>
 
-                <td class="text-center">
+                {{-- <td class="text-center">
                     <a href="" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updateStudentModalAd-{{ $student->id }}">
                         <i class="bi bi-pencil-square"></i>
                     </a>
-                     {{--
+
                     <div class="d-flex justify-content-center align-items-center">
                         <div class="mx-1">
                             <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #1e1f1e"  data-bs-toggle="modal" data-bs-target="#viewStudentAd-{{ $student->id }}"><i class="bi bi-eye"></i></a>
@@ -92,9 +91,9 @@
                             <a href="javascript:void(0)" onclick="deleteStudent({{$student->id}})" class="btn btn-sm text-white" style="background-color: #920606">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
-                        </div> --}}
+                        </div>
                     </div>
-                </td>
+                </td> --}}
             </tr>
 
             @endforeach

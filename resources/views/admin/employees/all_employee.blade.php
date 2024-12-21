@@ -37,10 +37,18 @@
                 <form action="{{ route('import.employee') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline-flex align-items-center">
                     @csrf
                     <label class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;" onclick="showWarning()">
-                        <i class="bi bi-download"></i> Import Excel
+                        <i class="bi bi-download"></i> Import
                     </label>
                     <input type="file" class="d-none" id="file" name="excel_file_employees" onchange="document.getElementById('importForm').submit()">
                 </form>
+
+
+                <form action="{{ route('exports.all_employee_export') }}" method="GET" class="d-inline-flex align-items-center">
+                    <button class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;" type="submit">
+                        <i class="bi bi-forward"></i> Export
+                    </button>
+                </form>
+
 
         </div>
      </div>

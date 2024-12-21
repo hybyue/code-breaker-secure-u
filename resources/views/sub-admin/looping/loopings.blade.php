@@ -1,16 +1,16 @@
 @extends('layouts.sidebar')
 
-@section('title', 'Looping')
+@section('title', 'Loofing')
 
 @section('content')
 <div class="container mt-3 pass-slip">
     <div class="row p-3">
         <div class="col-md-6">
-            <h4 class="font-weight-bold">Looping</h4>
+            <h4 class="font-weight-bold">Loofing</h4>
         </div>
         <div class="col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addLoopingModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Looping Report</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Loofing Report</a>
 
 
         </div>
@@ -105,7 +105,7 @@
         <div class="modal-dialog w-100 mt-5 pt-4" style="max-width: 95%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewLoopingSubadminLabel-{{ $looping->id }}">Looping Information</h5>
+                    <h5 class="modal-title" id="viewLoopingSubadminLabel-{{ $looping->id }}">Loofing Information</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -178,7 +178,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel">PDF Preview Looping</h5>
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview Loofing</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

@@ -40,11 +40,24 @@
         </form>
     </div>
 
-    <div class="container p-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
+    @php
+        // Check if there are any 7-day-old, unclaimed, and untransferred items
+    $hasSevenDaysOldUnclaimed = $lost_found->some(function ($item) {
+        return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+            && !$item->is_claimed
+            && !$item->is_transferred;
+    });
+    @endphp
+    <div class="container p-3 mb-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
 
     <table id="tableLostAdmin" class="table table-bordered same-height-table">
         <thead>
             <tr>
+                @if($hasSevenDaysOldUnclaimed)
+                <th class="text-center">
+                    <input type="checkbox" title="Select all" id="selectAll" style="transform: scale(1.2); cursor: pointer;">
+                </th>
+                @endif
                 <th>Date</th>
                 <th>Types of Object</th>
                 <th>Finder's Name</th>
@@ -55,8 +68,18 @@
         </thead>
         <tbody>
                 @foreach($lost_found as $item)
-
+                @php
+                    $isSevenDaysOld = \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7;
+                    $isUnclaimedUntransferred = !$item->is_claimed && !$item->is_transferred;
+                @endphp
                 <tr id="tr_{{$item->id}}" class="text-center">
+                    @if($hasSevenDaysOldUnclaimed)
+                    <td class="@if($isSevenDaysOld && $isUnclaimedUntransferred) seven-days-old @endif">
+                        @if($isSevenDaysOld && !$item->is_claimed && !$item->is_transferred)
+                            <input type="checkbox" class="selectItem" value="{{ $item->id }}" style="transform: scale(1.2); cursor: pointer;">
+                        @endif
+                    </td>
+                @endif
                     <td>{{\Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
                     <td>{{ $item->object_type }}</td>
                     <td>{{ $item->last_name }}, {{ $item->first_name }}  @if($item->middle_name) {{ $item->middle_name }}. @endif
@@ -69,7 +92,6 @@
                         <p class="text-danger">Transferred</p>
                         @else
                         <button class="btn btn-sm btn-warning" title="Mark as Claimed" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
-                        <a href="javascript:void(0)" class="btn btn-sm bg-dark text-white" title="Transfer to CSLD" style="background-color: #1be225" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
 
                         @endif
                     </td>
@@ -94,6 +116,11 @@
             @endforeach
         </tbody>
     </table>
+    @if($hasSevenDaysOldUnclaimed)
+        <div class="mt-1 mb-4">
+            <button class="btn btn-dark" id="bulkTransferBtn"><i class="bi bi-truck"></i> Transfer</button>
+        </div>
+    @endif
 </div>
 
 </div>
@@ -230,6 +257,11 @@
     border: 1px solid #dee2e6;
     border-radius: 10px;
 }
+
+.seven-days-old {
+        background-color: #f7e5e5 !important;
+        z-index: 10000;
+    }
 </style>
 
 @endsection

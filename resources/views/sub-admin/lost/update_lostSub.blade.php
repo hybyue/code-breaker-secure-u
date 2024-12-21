@@ -24,7 +24,7 @@
                         @endif
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="lostType-{{ $item->id }}" class="form-label">Object type:</label>
+                                <label for="lostType-{{ $item->id }}" class="form-label">Lost Item:</label>
                                 <input type="text" class="form-control" id="lostType-{{ $item->id }}" name="object_type" value="{{ $item->object_type }}">
                             </div>
                             <div class="col-md-6 mb-3">
@@ -44,7 +44,7 @@
                                 <select class="form-select" id="course" name="course">
                                     <option value="Student" {{ $item->course == 'Student' ? 'selected' : '' }}>Student</option>
                                     <option value="Employee" {{ $item->course == 'Employee' ? 'selected' : '' }}>Employee</option>
-                                    <option value="Janitor" {{ $item->course == 'Janitor' ? 'selected' : '' }}>Janitor</option>
+                                    <option value="Dean" {{ $item->course == 'Dean' ? 'selected' : '' }}>Dean</option>
                                     <option value="Visitor" {{ $item->course == 'Visitor' ? 'selected' : '' }}>Visitor</option>
                                     <option value="Head" {{ $item->course == 'Head' ? 'selected' : '' }}>Head</option>
                                     <option value="President" {{ $item->course == 'President' ? 'selected' : '' }}>President</option>

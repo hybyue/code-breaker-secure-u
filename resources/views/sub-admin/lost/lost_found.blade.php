@@ -13,7 +13,6 @@
 
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLost()">Generate Report</a>
 
-            {{-- <a href="{{ route('pdf.generate-losts', request()->query()) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-losts.pdf"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a> --}}
         </div>
     </div>
 
@@ -41,58 +40,81 @@
             </div>
         </form>
     </div>
+    @php
+           // Check if there are any 7-day-old, unclaimed, and untransferred items
+        $hasSevenDaysOldUnclaimed = $lost_found->some(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+                && !$item->is_claimed
+                && !$item->is_transferred;
+        });
+    @endphp
 
-    <div class="container mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
-        <table id="lostTable" class="table table-bordered same-height-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Type of Object</th>
-                    <th>Finder's Name</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($lost_found as $item)
-                <tr class="text-center">
-                    <td>{{\Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
-                    <td>{{ $item->object_type }}</td>
-                    <td>{{ $item->last_name }}, {{ $item->first_name }}
-                        @if($item->middle_name) {{ $item->middle_name }}. @endif </td>
-                    <td>{{ $item->course }}</td>
-                    <td>
-                        @if($item->is_claimed == 1)
-                            <p class="text-success">Claimed</p>
-                        @elseif($item->is_transferred == 1)
-                        <p class="text-danger">Transferred</p>
-                        @else
-                        <button class="btn btn-sm btn-warning"  onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
-                        <a href="javascript:void(0)" class="btn btn-sm text-white bg-dark" title="Transfer to CSLD" onclick="markAsTransfer({{ $item->id }})"><i class="bi bi-share"></i></a>
-
+<div class="container mt-4 mb-3 bg-body-secondary rounded mb-3" style="overflow-x:auto;">
+    <table id="lostTable" class="table table-bordered same-height-table">
+        <thead>
+            <tr>
+                @if($hasSevenDaysOldUnclaimed)
+                    <th class="text-center">
+                        <input type="checkbox" title="Select all" id="selectAll" style="transform: scale(1.2); cursor: pointer;">
+                    </th>
+                @endif
+                <th>Date</th>
+                <th>Items</th>
+                <th>Finder's Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($lost_found as $item)
+            @php
+                $isSevenDaysOld = \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7;
+                $isUnclaimedUntransferred = !$item->is_claimed && !$item->is_transferred;
+            @endphp
+            <tr class="text-center">
+                @if($hasSevenDaysOldUnclaimed)
+                    <td class="@if($isSevenDaysOld && $isUnclaimedUntransferred) seven-days-old @endif">
+                        @if($isSevenDaysOld && !$item->is_claimed && !$item->is_transferred)
+                            <input type="checkbox" class="selectItem" value="{{ $item->id }}" style="transform: scale(1.2); cursor: pointer;">
                         @endif
                     </td>
-                    <td>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="mx-1">
+                @endif
+                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
+                <td>{{ $item->object_type }}</td>
+                <td>{{ $item->last_name }}, {{ $item->first_name }} @if($item->middle_name) {{ $item->middle_name }}. @endif</td>
+                <td>{{ $item->course }}</td>
+                <td>
+                    @if($item->is_claimed == 1)
+                        <p class="text-success">Claimed</p>
+                    @elseif($item->is_transferred == 1)
+                        <p class="text-danger">Transferred</p>
+                    @else
+                        <button class="btn btn-sm btn-warning" onclick="markAsClaimed({{ $item->id }})">Mark as Claimed</button>
+                    @endif
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="mx-1">
                             <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #1e1f1e" data-bs-toggle="modal" data-bs-target="#viewLostFound-{{ $item->id }}"><i class="bi bi-eye"></i></a>
-                            </div>
-                            <div class="mx-1">
-                                <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #063292" data-id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#updateLostFound-{{ $item->id }}"><i class="bi bi-pencil-square"></i></a>
-                            </div>
                         </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="text-center">No Data available in table</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                        <div class="mx-1">
+                            <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #063292" data-id="{{$item->id}}" data-bs-toggle="modal" data-bs-target="#updateLostFound-{{ $item->id }}"><i class="bi bi-pencil-square"></i></a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    @if($hasSevenDaysOldUnclaimed)
+        <div class="mt-1 mb-4">
+            <button class="btn btn-dark" id="bulkTransferBtn"><i class="bi bi-truck"></i> Transfer</button>
+        </div>
+    @endif
 </div>
+
 
 @include('sub-admin.lost.update_lostSub')
 
@@ -119,7 +141,7 @@
               @endif
           </div>
                   <div class="col-12">
-                      <p><strong>Object Type:</strong> {{ $item->object_type }}</p>
+                      <p><strong>Lost Item:</strong> {{ $item->object_type }}</p>
                       <p><strong>Finder's Name:</strong> {{ $item->last_name }}, {{ $item->first_name }} @if($item->middle_name) {{ $item->middle_name }}. @endif</p>
                       <p><strong>Role:</strong> {{ $item->course }}</p>
                       <p><strong>Location:</strong> {{ $item->location }}</p>
@@ -201,5 +223,10 @@
     border: 1px solid #dee2e6;
     border-radius: 10px;
 }
+
+    .seven-days-old {
+        background-color: #f7e5e5 !important;
+        z-index: 10000;
+    }
 </style>
 @endsection

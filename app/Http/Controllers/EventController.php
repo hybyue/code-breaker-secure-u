@@ -57,11 +57,19 @@ class EventController extends Controller
         // $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
         $todayPassSlips = PassSlip::whereDate('created_at', Carbon::today())->count();
 
+        $totalLost = Lost::count();
+
+        $sevenDayOldItems = Lost::whereDate('created_at', '<=', now()->subDays(7)->toDateString())
+        ->where('is_claimed', '!=', 1)
+        ->where('is_transferred', '!=', 1)
+        ->count();
+
+
         $events = Event::all();
         $todayEvents = Event::whereDate('date_start', Carbon::today())->get();
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
-        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents', 'totalViolation'));
+        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents', 'totalViolation', 'sevenDayOldItems', 'totalLost'));
     }
 
     public function updateEvents(Request $request, string $id)
@@ -128,7 +136,13 @@ class EventController extends Controller
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
 
-        return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon', 'totalEmployees', 'totalStudent', 'totalVisitor', 'totalViolation', 'totalLostFound', 'totalPassSlip'));
+        $sevenDayOldItems = Lost::whereDate('created_at', '<=', now()->subDays(7)->toDateString())
+        ->where('is_claimed', '!=', 1)
+        ->where('is_transferred', '!=', 1)
+        ->count();
+
+
+        return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon', 'totalEmployees', 'totalStudent', 'totalVisitor', 'totalViolation', 'totalLostFound', 'totalPassSlip','sevenDayOldItems'));
     }
     public function updateEventsAdmin(Request $request, $id)
     {

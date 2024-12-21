@@ -20,7 +20,7 @@
                     @endif
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="lostType" class="form-label">Object type:</label>
+                            <label for="lostType" class="form-label">Lost Item:</label>
                             <input type="text" class="form-control" id="lostType" name="object_type" required>
                         </div>
                         <div class="col-md-6  mb-3">
@@ -41,8 +41,8 @@
                                 <option value="" selected disabled>Choose finder's role</option>
                                 <option value="Student">Student</option>
                                 <option value="Employee">Employee</option>
-                                <option value="Janitor">Janitor</option>
                                 <option value="Visitor">Visitor</option>
+                                <option value="Dean">Dean</option>
                                 <option value="Head">Head</option>
                                 <option value="President">President</option>
                                 <option value="Other">Other</option>

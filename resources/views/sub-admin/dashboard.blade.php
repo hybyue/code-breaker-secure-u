@@ -57,6 +57,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card-onclick card text-white" style="background-color:#2c3539;" onclick="location.href='{{route('sub-admin.lost.lost_found')}}'">
+                <div class="card-body d-flex justify-content-between">
+                    <div class="icon-container text-center d-flex justify-content-center align-items-center">
+                        <i class="bi bi-calendar-week" style="font-size: 50px; color: white; vertical-align: middle;"></i>
+                    </div>
+                    <div class="container">
+                        <h5 class="card-title">Lost and Found</h5>
+                    <div class="row d-flex justify-content-between align-items-between">
+                        <div class="col-md-6"> <small class="text-end">To Transfer: {{ $sevenDayOldItems }}</small></div>
+                        <div class="col-md-4"><h4 class="text-end">{{ $totalLost }}</h4></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row">
@@ -80,7 +98,7 @@
 
         <!-- Pie Chart Column -->
         <div class="col-md-6">
-            <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
+            <div id="pieLabel" class="h4 font-weight-bold mb-4">Overall Percentages</div>
             <div class="chart-container-pie position-relative">
                 <div id="pieChartLoader" class="chart-loader d-none mt-4">
                     <div class="spinner-border text-primary" role="status">

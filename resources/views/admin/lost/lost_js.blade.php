@@ -261,42 +261,105 @@ $(document).ready(function () {
 }
 
 
-function markAsTransfer(id) {
-    Swal.fire({
-        icon: 'question',
-        title: 'Are you sure?',
-        text: 'Do you want to mark this item as transferred (CSLD)?',
-        showCancelButton: true,
-        confirmButtonColor: '#0B9B19',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, mark as transferred',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-          $.ajax({
-                url: `/admin/update_transfer/${id}`,
-                type: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    is_transferred: 1
-                },
-                success: function(response) {
-                    localStorage.setItem('successMessage', 'Item has been mark as transferred(CSLD)');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    console.error(xhr);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'There was a problem updating the claim status. Please try again.',
-                        confirmButtonColor: '#920606'
-                    });
-                }
-            });
-        }
+// function markAsTransfer(id) {
+//     Swal.fire({
+//         icon: 'question',
+//         title: 'Are you sure?',
+//         text: 'Do you want to mark this item as transferred (CSLD)?',
+//         showCancelButton: true,
+//         confirmButtonColor: '#0B9B19',
+//         cancelButtonColor: '#d33',
+//         confirmButtonText: 'Yes, mark as transferred',
+//         cancelButtonText: 'Cancel'
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//           $.ajax({
+//                 url: `/admin/update_transfer/${id}`,
+//                 type: 'POST',
+//                 data: {
+//                     _token: $('meta[name="csrf-token"]').attr('content'),
+//                     is_transferred: 1
+//                 },
+//                 success: function(response) {
+//                     localStorage.setItem('successMessage', 'Item has been mark as transferred(CSLD)');
+//                     location.reload();
+//                 },
+//                 error: function(xhr) {
+//                     console.error(xhr);
+//                     Swal.fire({
+//                         icon: 'error',
+//                         title: 'Error',
+//                         text: 'There was a problem updating the claim status. Please try again.',
+//                         confirmButtonColor: '#920606'
+//                     });
+//                 }
+//             });
+//         }
+//     });
+// }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Select/Deselect All functionality
+    document.getElementById('selectAll').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('.selectItem');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
     });
-}
+
+    // Handle Bulk Transfer
+    document.getElementById('bulkTransferBtn').addEventListener('click', function () {
+        const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
+            .map(checkbox => checkbox.value);
+
+        if (selectedIds.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one item to transfer.',
+                confirmButtonColor: '#0B9B19'
+            });
+            return;
+        }
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Are you sure?',
+            text: `You are about to transfer ${selectedIds.length} item(s).`,
+            showCancelButton: true,
+            confirmButtonColor: '#0B9B19',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, transfer',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send AJAX request
+                $.ajax({
+                    url: '/admin/update_transfer',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        ids: selectedIds
+                    },
+                    success: function (response) {
+                        localStorage.setItem('successMessage', response.message);
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: xhr.responseJSON.message || 'An error occurred while updating the items.',
+                            confirmButtonColor: '#0B9B19'
+                        });
+                    }
+                });
+
+            }
+        });
+    });
+});
+
 
 function showPdfModalLost() {
         document.getElementById('loadingBar').style.display = 'block';

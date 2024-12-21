@@ -63,6 +63,7 @@
                         </div>
                         <div class="row mb-2 ms-3">
                             <label class="form-label">Check Business:</label>
+
                             <div class="col-md-6 form-check">
                                 <input class="form-check-input" type="radio" id="commute" name="check_business" value="Commute">
                                 <label class="form-check-label" for="commute">Commute</label>
@@ -86,11 +87,11 @@
                             <span class="text-danger error-message" id="check_business_error"></span>
                         </div>
 
+
                         <div class="col-md-6">
                             <label for="driver_name" class="form-label">Driver Name:</label>
                             <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="Optional">
                             <span class="text-danger error-message" id="driver_name_error"></span>
-
                         </div>
                         <div class="col-md-6">
                             <label for="destination" class="form-label">Destination:</label>
@@ -117,11 +118,7 @@
                                 <option value="0.5">30 Minutes</option>
                                 <option value="1">1 Hour</option>
                                 <option value="1.5">1 Hour and 30 Minutes</option>
-                                <option value="2">2 Hours</option>
-                                <option value="2.5">2 Hours and 30 Minutes</option>
-                                <option value="3" selected>3 Hours</option>
-                                <option value="3.5">3 Hours and 30 Minutes</option>
-                                <option value="4">4 Hours</option>
+                                <option value="2" selected>2 Hours</option>
                             </select>
                             <span class="text-danger error-message" id="validity_hours_error"></span>
                         </div>
@@ -142,3 +139,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkBusinessRadios = document.querySelectorAll('input[name="check_business"]');
+        const driverNameInput = document.getElementById('driver_name');
+
+        checkBusinessRadios.forEach((radio) => {
+            radio.addEventListener('change', function () {
+                if (radio.id === 'commute' && radio.checked) {
+                    driverNameInput.disabled = true;
+                    driverNameInput.value = '';
+                } else {
+                    driverNameInput.disabled = false;
+                }
+            });
+        });
+    });
+</script>

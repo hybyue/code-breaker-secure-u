@@ -78,7 +78,7 @@
                 <div class="container">
                     <h5 class="card-title">Lost and Found</h5>
                     <div class="row d-flex justify-content-between align-items-between">
-                        <div class="col-md-4"><small class="text-end"></small></div>
+                        <div class="col-md-6"><small class="text-end">To Transfer: {{ $sevenDayOldItems }}</small></div>
                         <div class="col-md-4"><h4 class="text-end">{{ $totalLostFound }}</h4></div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
 
     <!-- Pie Chart Column -->
     <div class="col-md-6">
-        <div id="pieLabel" class="h4 font-weight-bold mb-4">Pie Chart</div>
+        <div id="pieLabel" class="h4 font-weight-bold mb-4">Overall Percentages</div>
         <div class="chart-container-pie position-relative">
             <div id="pieChartLoader" class="chart-loader d-none mt-4">
                 <div class="spinner-border text-primary" role="status">

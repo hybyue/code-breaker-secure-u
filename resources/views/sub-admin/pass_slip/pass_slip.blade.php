@@ -12,9 +12,6 @@
             <a href="#" class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addPassSlipModal">
                 <i class="bi bi-plus-circle-fill text-center"></i> Add New
             </a>
-            {{-- <a href="{{ route('pdf.generate-passes', array_merge(request()->query(), ['employee_type' => request('employee_type')])) }}" class="btn text-white" style="background-color: #0B9B19;" download="report-pass-slip.pdf">
-                <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-            </a> --}}
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModal()">Generate Report</a>
 
             </div>

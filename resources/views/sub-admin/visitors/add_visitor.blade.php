@@ -10,6 +10,11 @@
                     <form id="visitorForm" action="" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
+                            <div class="form-group">
+                                <label for="id_number">Visitor's Pass ID Number:</label>
+                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                                <span class="text-danger" id="id_number_error"></span>
+                            </div>
                             <div class="col-md-4 form-group">
                                 <label for="last_name">Last Name:</label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
@@ -27,7 +32,7 @@
                                     <span class="text-danger" id="middle_name_error"></span>
                             </div>
                             <div class="form-group">
-                                <label for="person_to_visit">Colleges/Deparment:</label>
+                                <label for="person_to_visit">Office/Deparment:</label>
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="" selected disabled>Select Department or Office</option>
                                         <!-- Colleges -->
@@ -98,16 +103,12 @@
                                     <option value="Driver License ID">Driver License ID</option>
                                     <option value="National ID">National ID</option>
                                     <option value="Employee ID">Employee ID</option>
-                                    <option value="PassPort">PassPort</option>
+                                    <option value="PassPort">Passport</option>
                                     <option value="Other">Other</option>
                                 </select>
                                 <span class="text-danger" id="id_type_error"></span>
                             </div>
-                            <div class="form-group">
-                                <label for="id_number">ID Number:</label>
-                                <input type="text" class="form-control" id="id_number" name="id_number" required>
-                                <span class="text-danger" id="id_number_error"></span>
-                            </div>
+
                             <div class="col-md-12 mb-2">
                                 <label for="remarks" class="form-label">Remarks:</label>
                                 <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>

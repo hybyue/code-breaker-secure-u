@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LostExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportExcel;
+use App\Models\AllEmployee;
+use Illuminate\Support\Facades\Redirect;
 
 class ImportExcelController extends Controller
 {
@@ -25,4 +28,14 @@ class ImportExcelController extends Controller
 
         return redirect()->back()->with('success', 'Employee List Imported Successfully');
     }
+
+    public function exportAllEmployees()
+    {
+        // Set a flash message in the session
+        session()->flash('success', 'Employee List Exported Successfully!');
+
+        // Return the Excel file download
+        return Excel::download(new LostExport, 'all_employees.xlsx');
+    }
+
 }

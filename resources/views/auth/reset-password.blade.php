@@ -107,18 +107,30 @@
                 </div>
                 <div class="form-group text-start">
                     <label for="password" class="block text-md font-medium text-gray-900">Password</label>
-                    <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
+                    <div class="relative">
+                        <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10" placeholder="••••••••" required>
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-3 text-gray-500 focus:outline-none">
+                            👁
+                        </button>
+                    </div>
                     @error('password')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+
                 <div class="form-group text-start">
                     <label for="password_confirmation" class="block text-md font-medium text-gray-900">Confirm Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" required>
+                    <div class="relative">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10" placeholder="••••••••" required>
+                        <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-3 text-gray-500 focus:outline-none">
+                            👁
+                        </button>
+                    </div>
                     @error('password_confirmation')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+
                 <button type="submit" class="w-full flex justify-center py-2 mt-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-white-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Submit</button>
 
                 <p >
@@ -130,6 +142,23 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+       document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordField = document.getElementById('password');
+    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordField.setAttribute('type', type);
+    this.textContent = type === 'password' ? '👁' : '🙈';
+});
+
+document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+    const confirmPasswordField = document.getElementById('password_confirmation');
+    const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    confirmPasswordField.setAttribute('type', type);
+    this.textContent = type === 'password' ? '👁' : '🙈';
+});
+
+    </script>
 </body>
 
 </html>

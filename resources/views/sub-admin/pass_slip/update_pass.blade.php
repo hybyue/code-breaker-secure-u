@@ -112,10 +112,6 @@
                                 <option value="1" {{ $passSlip->validity_hours == '1' ? 'selected' : '' }}>1 Hour</option>
                                 <option value="1.5" {{ $passSlip->validity_hours == '1.5' ? 'selected' : '' }}>1 Hour and 30 Minutes</option>
                                 <option value="2" {{ $passSlip->validity_hours == '2' ? 'selected' : '' }}>2 Hours</option>
-                                <option value="2.5" {{ $passSlip->validity_hours == '2.5' ? 'selected' : '' }}>2 Hours and 30 Minutes</option>
-                                <option value="3" {{ $passSlip->validity_hours == '3' ? 'selected' : '' }}>3 Hours</option>
-                                <option value="3.5" {{ $passSlip->validity_hours == '3.5' ? 'selected' : '' }}>3 Hours and 30 Minutes</option>
-                                <option value="4" {{ $passSlip->validity_hours == '4' ? 'selected' : '' }}>4 Hours</option>
                             </select>
 
                         </div>
@@ -137,3 +133,40 @@
 </div>
 @endforeach
 </div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+       const latestUpdatePassSlip = document.getElementById('latestUpdatePassSlip');
+
+       latestUpdatePassSlip.addEventListener('change', function (event) {
+           // Ensure the event is triggered by a "check_business" radio button
+           if (event.target.name === 'check_business') {
+               const currentModal = event.target.closest('.modal'); // Find the nearest modal container
+               const driverInput = currentModal.querySelector('[id^="driver_name"]'); // Find driver input in the same modal
+
+               if (event.target.value === 'Commute' && event.target.checked) {
+                   driverInput.disabled = true;
+                   driverInput.value = '';
+               } else {
+                   driverInput.disabled = false;
+               }
+           }
+       });
+
+       // Initialize the state of driver_name inputs based on pre-checked radios
+       const allRadios = latestUpdatePassSlip.querySelectorAll('input[name="check_business"]:checked');
+       allRadios.forEach((radio) => {
+           const currentModal = radio.closest('.modal');
+           const driverInput = currentModal.querySelector('[id^="driver_name"]');
+
+           if (radio.value === 'Commute') {
+               driverInput.disabled = true;
+               driverInput.value = '';
+           }
+       });
+   });
+
+   </script>
+

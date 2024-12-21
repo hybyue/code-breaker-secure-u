@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\LostExport;
 use App\Exports\UsersExport;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthController;
@@ -101,7 +102,7 @@ Route::controller(LostFoundController::class)->group(function () {
     Route::post('sub-admin/store_lost',  'store_lost')->name('sub-admin.store_losts');
     Route::put('/sub-admin/lost_found/update/{id}',  'updateLostFound')->name('update.lost_found');
     Route::post('/sub-admin/update_claimed/{id}', 'updateClaimed');
-    Route::post('/sub-admin/update_transfer/{id}', 'updateTransfer');
+    Route::post('/sub-admin/update_transfer', 'updateTransfer');
     Route::get('/sub-admin/lost_found',  'filterLostFounds')->name('sub-admin.lost.lost_found');
     Route::post('/sub-admin/batch_transfered/', 'batchTransferUnclaimed');
     Route::get('/sub-admin/lost_found/clear-filter', 'clearFilter')->name('sub-admin.lost.clear-filter');
@@ -151,6 +152,9 @@ Route::controller(LoopingController::class)->group(function () {
 
 
 
+Route::get('/export-custom-employee', function () {
+    return Excel::download(new LostExport, 'employee.xlsx');
+});
 
 //for admin po
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
@@ -265,7 +269,7 @@ Route::controller(LostFoundController::class)->group(function () {
     Route::get('/admin/lost_found', 'filterLostFoundAdmin')->name('admin.lost.lost_found_admin');
     Route::get('/admin/lost_found/clear-filter', 'clearFilterAdmin')->name('admin.lost.clear-filter');
     Route::post('/admin/update_claimed/{id}', 'updateClaimed')->name('update_claimed');
-    Route::post('/admin/update_transfer/{id}', 'updateTransfer');
+    Route::post('/admin/update_transfer', 'updateTransfer');
 
 });
 
@@ -328,6 +332,7 @@ Route::controller(LoopingController::class)->group(function () {
 
 Route::post('/excel_import_student', [ImportExcelController::class, 'import_excel'])->name('import.student');
 Route::post('/excel_import_employee', [ImportExcelController::class, 'import_excel_employee'])->name('import.employee');
+Route::get('/export/employees', [ImportExcelController::class, 'exportAllEmployees'])->name('exports.all_employee_export');
 
 });
 

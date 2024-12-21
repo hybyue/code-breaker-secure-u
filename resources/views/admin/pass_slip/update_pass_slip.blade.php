@@ -1,12 +1,13 @@
 
 {{-- Edit pass slip Information --}}
-@foreach($latestPassSlips as $passSlip)
+
 <div id="latestUpdatePassSlip">
+    @foreach($latestPassSlips as $passSlip)
 <div class="modal fade" id="updatePassSlipAd-{{ $passSlip->id }}" tabindex="-1" aria-labelledby="updatePassSlipAdModalLabel-{{ $passSlip->id }}" aria-hidden="true">
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="updatePassSlipAdModalLabel-{{ $passSlip->id }}">Edit Employee</h5>
+            <h5 class="modal-title" id="updatePassSlipAdModalLabel-{{ $passSlip->id }}">Edit Pass Slip</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -110,18 +111,14 @@
                     <div class="col-md-12 mb-2">
                         <label for="validity_hours" class="form-label">Pass Slip Validity:</label>
                         <select class="form-select" id="validity_hours" name="validity_hours" required>
+                            <option value="" disabled>Select Pass Slip Validity</option>
                             <option value="0.5" {{ $passSlip->validity_hours == '0.5' ? 'selected' : '' }}>30 Minutes</option>
                             <option value="1" {{ $passSlip->validity_hours == '1' ? 'selected' : '' }}>1 Hour</option>
                             <option value="1.5" {{ $passSlip->validity_hours == '1.5' ? 'selected' : '' }}>1 Hour and 30 Minutes</option>
                             <option value="2" {{ $passSlip->validity_hours == '2' ? 'selected' : '' }}>2 Hours</option>
-                            <option value="2.5" {{ $passSlip->validity_hours == '2.5' ? 'selected' : '' }}>2 Hours and 30 Minutes</option>
-                            <option value="3" {{ $passSlip->validity_hours == '3' ? 'selected' : '' }}>3 Hours</option>
-                            <option value="3.5" {{ $passSlip->validity_hours == '3.5' ? 'selected' : '' }}>3 Hours and 30 Minutes</option>
-                            <option value="4" {{ $passSlip->validity_hours == '4' ? 'selected' : '' }}>4 Hours</option>
                         </select>
-
                     </div>
-                    <div class="col-md-12 mb-2">
+                    <div class="mb-2">
                         <label for="remarks" class="form-label">Remarks:</label>
                         <textarea class="form-control" id="remarks-{{ $passSlip->id }}" name="remarks" rows="2" placeholder="Optional">{{$passSlip->remarks}}</textarea>
                     </div>
@@ -139,3 +136,37 @@
 </div>
 @endforeach
 </div>
+
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const latestUpdatePassSlip = document.getElementById('latestUpdatePassSlip');
+
+    latestUpdatePassSlip.addEventListener('change', function (event) {
+        // Ensure the event is triggered by a "check_business" radio button
+        if (event.target.name === 'check_business') {
+            const currentModal = event.target.closest('.modal'); // Find the nearest modal container
+            const driverInput = currentModal.querySelector('[id^="driver_name"]'); // Find driver input in the same modal
+
+            if (event.target.value === 'Commute' && event.target.checked) {
+                driverInput.disabled = true;
+                driverInput.value = '';
+            } else {
+                driverInput.disabled = false;
+            }
+        }
+    });
+
+    // Initialize the state of driver_name inputs based on pre-checked radios
+    const allRadios = latestUpdatePassSlip.querySelectorAll('input[name="check_business"]:checked');
+    allRadios.forEach((radio) => {
+        const currentModal = radio.closest('.modal');
+        const driverInput = currentModal.querySelector('[id^="driver_name"]');
+
+        if (radio.value === 'Commute') {
+            driverInput.disabled = true;
+            driverInput.value = '';
+        }
+    });
+});
+
+</script>

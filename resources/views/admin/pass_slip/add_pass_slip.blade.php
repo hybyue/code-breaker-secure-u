@@ -112,11 +112,7 @@
                                 <option value="0.5">30 Minutes</option>
                                 <option value="1">1 Hour</option>
                                 <option value="1.5">1 Hour and 30 Minutes</option>
-                                <option value="2">2 Hours</option>
-                                <option value="2.5">2 Hours and 30 Minutes</option>
-                                <option value="3" selected>3 Hours</option>
-                                <option value="3.5">3 Hours and 30 Minutes</option>
-                                <option value="4">4 Hours</option>
+                                <option value="2" selected>2 Hours</option>
                             </select>
                             <span class="text-danger error-message" id="validity_hours_error"></span>
                         </div>
@@ -126,8 +122,8 @@
                             <span class="text-danger error-message" id="remarks_error"></span>
                         </div>
 
-                        <div class="mt-2 d-flew justify-content-end align-items-end text-end">
-                            <button type="submit" class="btn btn-success add_pass_slip">
+                        <div class="mt-2 text-center">
+                            <button type="submit" class="btn btn-success w-50 add_pass_slip">
                                 <span class="spinner-border spinner-border-sm me-2" id="loadingSpinner" role="status" style="display: none;"></span>
                                 Save
                             </button>
@@ -150,3 +146,20 @@
 </style>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkBusinessRadios = document.querySelectorAll('input[name="check_business"]');
+        const driverNameInput = document.getElementById('driver_name');
+
+        checkBusinessRadios.forEach((radio) => {
+            radio.addEventListener('change', function () {
+                if (radio.id === 'commute' && radio.checked) {
+                    driverNameInput.disabled = true;
+                    driverNameInput.value = '';
+                } else {
+                    driverNameInput.disabled = false;
+                }
+            });
+        });
+    });
+</script>

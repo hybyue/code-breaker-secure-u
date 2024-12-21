@@ -171,12 +171,15 @@
                                                 </h5>
                                                 <div class="d-flex flex-wrap gap-3">
                                                     <div class="badge bg-light text-dark p-2">
+                                                       Visitor's Pass ID Nmuber: {{$visit->id_number}}
+                                                    </div>
+                                                    <div class="badge bg-light text-dark p-2">
                                                         <i class="bi bi-calendar me-1"></i>
                                                         {{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}
                                                     </div>
                                                     <div class="badge bg-light text-dark p-2">
                                                         <i class="bi bi-card-text me-1"></i>
-                                                        {{$visit->id_type}}: {{$visit->id_number}}
+                                                        {{$visit->id_type}}
                                                     </div>
                                                     <div class="badge bg-success text-white p-2">
                                                         <i class="bi bi-clock-history me-1"></i>

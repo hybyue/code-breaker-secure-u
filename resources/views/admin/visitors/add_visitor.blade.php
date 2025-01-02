@@ -15,6 +15,11 @@
                                 <input type="text" class="form-control" id="search_visitor" placeholder="Search by name" onkeyup="searchVisitors()">
                                 <div id="visitorSuggestions" class="list-group mt-2"></div>
                             </div> --}}
+                            <div class="form-group">
+                                <label for="id_number">Visitor Pass ID No.:</label>
+                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                                <span class="text-danger" id="id_number_error"></span>
+                            </div>
                         <div class="col-md-4  form-group">
                             <label for="last_name">Last Name:</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" required>
@@ -105,11 +110,7 @@
                             </select>
                             <span class="text-danger" id="id_type_error"></span>
                         </div>
-                        <div class="form-group">
-                            <label for="id_number">ID Number:</label>
-                            <input type="text" class="form-control" id="id_number" name="id_number" required>
-                            <span class="text-danger" id="id_number_error"></span>
-                        </div>
+
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>
                             <textarea class="form-control" id="remarks" name="remarks" rows="2" placeholder="Optional"></textarea>

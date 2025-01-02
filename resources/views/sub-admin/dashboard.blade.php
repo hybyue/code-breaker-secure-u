@@ -50,7 +50,7 @@
                     <div class="container">
                         <h5 class="card-title">Pass Slip</h5>
                         <div class="row d-flex justify-content-between align-items-between">
-                            <div class="col-md-4"><small class="text-end">Today: {{ $todayPassSlips }}</small></div>
+                            <div class="col-md-6"><small class="text-end">Late: {{ $latePassSlips }}</small></div>
                             <div class="col-md-4"><h4 class="text-end">{{ $totalPassSlips }}</h4></div>
                         </div>
                     </div>

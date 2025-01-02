@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addLoopingModalLabel">Add Loofing Record</h5>
+                <h5 class="modal-title" id="addLoopingModalLabel">Add Loafing Record</h5>
                 <button type="button" class="btn-close btn-close-white text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -76,3 +76,47 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Function to update the time_out field dynamically
+    function updateTimeOutField() {
+        const now = new Date();
+
+        // Get hours and minutes in 24-hour format
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        // Format the current time
+        const formattedTime = `${hours}:${minutes}`;
+
+        // Update the time_out field
+        $('#time_out').val(formattedTime);
+
+        // Trigger the time_in update as well
+        updateTimeInField();
+    }
+
+    // Function to update time_in based on time_out
+    function updateTimeInField() {
+        const timeOutValue = $('#time_out').val();
+        $('#time_out').val(timeOutValue);
+    }
+
+    // AJAX to trigger the time update dynamically
+    $(document).ready(function () {
+        const modal = $('#addLoopingModal');
+
+        // When the modal is opened, update the time_out field dynamically
+        modal.on('show.bs.modal', function () {
+            updateTimeOutField();
+        });
+
+        // Add an interval to update the time_out field every minute
+        setInterval(() => {
+            if (modal.hasClass('show')) {
+                // Update the time only if the modal is visible
+                updateTimeOutField();
+            }
+        }, 60000); // Update every 60 seconds (1 minute)
+    });
+</script>

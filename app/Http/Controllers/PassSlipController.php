@@ -208,6 +208,7 @@ private function generatePassNoSub()
 
         // Update pass slip
         $passSlip->update([
+            'time_in_by' => Auth::user()->id,
             'destination' => $request->destination,
             'employee_type' => $request->employee_type,
             'purpose' => $request->purpose,

@@ -66,23 +66,72 @@
                     <th></th>
                 </tr>
             </thead>
+            @php
+            $abbreviations = [
+                    "Institute of Graduate and Advanced Studies" => "IGAS",
+                    "College of Law" => "COL",
+                    "College of Pharmacy" => "COP",
+                    "College of Human Sciences" => "CHS",
+                    "College of Teacher Education" => "CTE",
+                    "College of Business Management and Accountancy" => "CBMA",
+                    "College of Health Sciences" => "CHS",
+                    "College of Hospitality and Tourism Management" => "CHTM",
+                    "College of Engineering and Architecture" => "CEA",
+                    "College of Criminal Justice Education" => "CCJE",
+                    "College of Arts and Sciences" => "CAS",
+                    "College of Information and Technology Education" => "CITE",
+                    "Center for Student Leadership and Development" => "CSLD",
+                    "Center for Research and Development" => "CRD",
+                    "Office of the External Affairs and Linkages" => "OEAL",
+                    "Psychological Assessment and Counseling Center" => "PACC",
+                    "Institutional Planning and Development" => "IPD",
+                    "Disaster Risk Reduction and Management Office" => "DRRMO",
+                    "Center for Community Development and Extension Services" => "CCD",
+                    "School of Midwifery (CHS)" => "SOM",
+                    "Center for Training and Professional Development" => "CTPD",
+                    "Research Ethics Committee" => "REC",
+                    "University Registrar" => "Registrar",
+                    "Accounting Office" => "Accounting",
+                    "Human Capital Management Office" => "HCMO",
+                    "University Library" => "Library",
+                    "Technical Vocational Institute" => "TVI",
+                    "Security Management Office" => "SMO",
+                    "Events Management Office" => "EMO",
+                    "Records Management System" => "RMS",
+                    "NSTP Department" => "NSTP",
+                    "Management Information Systems" => "MIS",
+                    "Maintenance and General Services" => "MGS",
+                    "University Cashier" => "Cashier",
+                    "Gender and Development" => "GAD",
+                    "Audit Office" => "Audit",
+                    "Engineering Management & Auxiliary Services" => "EMAS",
+                    "Committee for Publication and Communication Affairs" => "CPCA",
+                    "University Chaplain" => "Chaplain",
+                    "University Clinic" => "Clinic",
+                    "University Nurse" => "Nurse",
+                ];
+                @endphp
             <tbody>
 
                     @foreach ($latestPassSlips as $passSlip)
+                    @php
+                    // Check if the pass slip is late based on the condition
+                        $isLate = is_null($passSlip->time_in) &&
+                                \Carbon\Carbon::parse($passSlip->time_out)->diffInMinutes(now()) > ($passSlip->validity_hours * 60);
+                    @endphp
+
                         <tr>
                         <td>{{ $passSlip->p_no }}</td>
                         <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }} @if($passSlip->middle_name) {{ $passSlip->middle_name }}. @endif</td>
-                        <td>{{ $passSlip->department}}</td>
+                        <td>{{ $abbreviations[$passSlip->department] ?? $passSlip->department }}</td>
                         <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
+                        <td id="time--{{ $passSlip->id }}" class="text-center" @if($isLate)
+                        style="background-color: red; color: white;"
+                        title="Already late from the scheduled time."
+                        @endif>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
                         <td id="time-in-{{ $passSlip->id }}" class="text-center"
                             @if($passSlip->is_exceeded)
                             style="background-color: red; color: white;"
-                            title="Exceeded validity period of {{ number_format($passSlip->validity_hours, 1) }} hours by {{
-                                $passSlip->late_minutes >= 60
-                                ? floor($passSlip->late_minutes / 60) . ' hr ' . ($passSlip->late_minutes % 60) . ' min'
-                                : $passSlip->late_minutes . ' min'
-                            }}"
                         @endif>
                         @if(is_null($passSlip->time_in))
                         <div>

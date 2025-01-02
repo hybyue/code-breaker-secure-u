@@ -51,7 +51,7 @@
                             timer: 2500,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Looping record added successfully',
+                            title: 'Loafing record added successfully',
                         });
                     }
                 },
@@ -111,7 +111,7 @@
                             timer: 2500,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Looping record updated successfully',
+                            title: 'Loafing record updated successfully',
                         });
                     }
                 },

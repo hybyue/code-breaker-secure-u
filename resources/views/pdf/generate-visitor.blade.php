@@ -157,17 +157,65 @@
             <tr>
                 <th>Date</th>
                 <th>Visitor's Name</th>
-                <th>Person to Visit/Depart.</th>
+                <th>Office/Depart.</th>
                 <th>Duration</th>
+                <th>Remarks</th>
             </tr>
         </thead>
+        @php
+        $abbreviations = [
+                "Institute of Graduate and Advanced Studies" => "IGAS",
+                "College of Law" => "COL",
+                "College of Pharmacy" => "COP",
+                "College of Human Sciences" => "CHS",
+                "College of Teacher Education" => "CTE",
+                "College of Business Management and Accountancy" => "CBMA",
+                "College of Health Sciences" => "CHS",
+                "College of Hospitality and Tourism Management" => "CHTM",
+                "College of Engineering and Architecture" => "CEA",
+                "College of Criminal Justice Education" => "CCJE",
+                "College of Arts and Sciences" => "CAS",
+                "College of Information and Technology Education" => "CITE",
+                "Center for Student Leadership and Development" => "CSLD",
+                "Center for Research and Development" => "CRD",
+                "Office of the External Affairs and Linkages" => "OEAL",
+                "Psychological Assessment and Counseling Center" => "PACC",
+                "Institutional Planning and Development" => "IPD",
+                "Disaster Risk Reduction and Management Office" => "DRRMO",
+                "Center for Community Development and Extension Services" => "CCD",
+                "School of Midwifery (CHS)" => "SOM",
+                "Center for Training and Professional Development" => "CTPD",
+                "Research Ethics Committee" => "REC",
+                "University Registrar" => "Registrar",
+                "Accounting Office" => "Accounting",
+                "Human Capital Management Office" => "HCMO",
+                "University Library" => "Library",
+                "Technical Vocational Institute" => "TVI",
+                "Security Management Office" => "SMO",
+                "Events Management Office" => "EMO",
+                "Records Management System" => "RMS",
+                "NSTP Department" => "NSTP",
+                "Management Information Systems" => "MIS",
+                "Maintenance and General Services" => "MGS",
+                "University Cashier" => "Cashier",
+                "Gender and Development" => "GAD",
+                "Audit Office" => "Audit",
+                "Engineering Management & Auxiliary Services" => "EMAS",
+                "Committee for Publication and Communication Affairs" => "CPCA",
+                "University Chaplain" => "Chaplain",
+                "University Clinic" => "Clinic",
+                "University Nurse" => "Nurse",
+            ];
+            @endphp
         <tbody>
             @foreach($visitors as $visit)
+
             <tr>
-                <td>{{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}</td>
-                <td>{{ $visit->first_name }} {{ $visit->middle_name }}. {{ $visit->last_name }}</td>
-                <td>{{$visit->person_to_visit}}</td>
+                <td>{{ $visit->date }}</td>
+                <td>{{ $visit->first_name }} @if($visit->middle_name){{ $visit->middle_name }}.@endif{{ $visit->last_name }}</td>
+                <td> {{ $abbreviations[$visit->person_to_visit] ?? $visit->person_to_visit }}</td>
                 <td>{{ \Carbon\Carbon::parse($visit->time_in)->format('H:i ') }} - {{ \Carbon\Carbon::parse($visit->time_out)->format('H:i ') }}</td>
+                <td>{{$visit->remarks}} </td>
             </tr>
             @endforeach
         </tbody>

@@ -163,7 +163,7 @@ class LostFoundController extends Controller
 
         // Order by the custom condition: first by being 7 days old and unclaimed/untransferred, then by created_at
         $lost_found = $query->orderByRaw('
-            (DATEDIFF(now(), created_at) >= 7 AND is_claimed = 0 AND is_transferred = 0) DESC,
+            (DATEDIFF(now(), created_at) > 6 AND is_claimed = 0 AND is_transferred = 0) DESC,
             created_at DESC
         ')->get();
 
@@ -293,7 +293,7 @@ public function lost_found_admin(Request $request)
         }
 
         $lost_found = $query->orderByRaw('
-        (DATEDIFF(now(), created_at) >= 7 AND is_claimed = 0 AND is_transferred = 0) DESC,
+        (DATEDIFF(now(), created_at) > 6 AND is_claimed = 0 AND is_transferred = 0) DESC,
         created_at DESC
     ')->get();
 

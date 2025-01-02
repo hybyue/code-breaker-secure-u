@@ -47,8 +47,11 @@
                     <i class="bi bi-pass" style="font-size: 50px; color: white; vertical-align: middle;"></i>
                 </div>
                 <div class="container">
-                    <h5 class="card-title">Pass Slip</h5>
-                    <h4 class="text-end">{{$totalPassSlip}}</h4>
+                     <h5 class="card-title">Pass Slip</h5>
+                        <div class="row d-flex justify-content-between align-items-between">
+                            <div class="col-md-6"><small class="text-end">Late: {{ $latePassSlips }}</small></div>
+                            <div class="col-md-4"><h4 class="text-end">{{ $totalPassSlip }}</h4></div>
+                        </div>
                 </div>
             </div>
         </div>

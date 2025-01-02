@@ -19,23 +19,28 @@
                     </div>
                     @endif
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="lostType" class="form-label">Lost Item:</label>
                             <input type="text" class="form-control" id="lostType" name="object_type" required>
                         </div>
-                        <div class="col-md-6  mb-3">
-                            <label for="lostName" class="form-label">Finder First Name:</label>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Finder's full name:</label>
+                            <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="lostName" class="form-label">First Name:</label>
                             <input type="text" class="form-control" id="lostName" name="first_name" required>
                         </div>
-                        <div class="col-md-6  mb-3">
-                            <label for="lostName" class="form-label">Finder Middle Initial:</label>
+                        <div class="col-md-4 mb-3">
+                            <label for="lostName" class="form-label">Middle Initial:</label>
                             <input type="text" class="form-control" id="lostName" name="middle_name" >
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lostName" class="form-label">Finder Last Name:</label>
+                        <div class="col-md-4 mb-3">
+                            <label for="lostName" class="form-label">Last Name:</label>
                             <input type="text" class="form-control" id="lostName" name="last_name" required>
                         </div>
-                        <div class="mb-3">
+                            </div>
+                        </div>
+                            <div class="mb-3">
                             <label for="lostCourse" class="form-label">Role:</label>
                             <select class="form-select" id="course" name="course">
                                 <option value="" selected disabled>Choose finder's role</option>

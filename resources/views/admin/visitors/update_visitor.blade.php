@@ -106,7 +106,7 @@
                                     <option value="Other">Other</option>
                                 </select>
                               </div>
-                        </div>
+
                         <input type="hidden" name="time_in" id="time_in_{{ $visit->id }}" value="{{ $visit->time_in }}">
                         <input type="hidden" name="time_out" id="time_out_{{ $visit->id }}" value="{{ $visit->time_out }}">
 
@@ -115,22 +115,38 @@
                             <input type="text" class="form-control" id="id_number_{{ $visit->id }}" name="id_number" value="{{ $visit->id_number }}" required>
                         </div>
 
-                        <div class="form-group mt-3">
-                            <label for="visited_person_name_{{ $visit->id }}">Person Visited Name:</label>
-                            <input type="text" class="form-control" id="visited_person_name_{{ $visit->id }}"
-                                name="visited_person_name" value="{{ $visit->visited_person_name }}">
+                        <div class="row mt-2">
+                            @if($visit->visited_person_name && $visit->visited_person_position)
+                            <div class="col-12">
+                                <p>Visited Person Details:</p>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="visited_person_name_{{ $visit->id }}" class="form-label">Name:</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="visited_person_name_{{ $visit->id }}"
+                                       name="visited_person_name"
+                                       value="{{ $visit->visited_person_name }}"
+                                       required>
+                            </div>
+
+                            <div class="col-md-6 form-group">
+                                <label for="visited_person_position_{{ $visit->id }}" class="form-label">Position/Designation:</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="visited_person_position_{{ $visit->id }}"
+                                       name="visited_person_position"
+                                       value="{{ $visit->visited_person_position }}"
+                                       required>
+                            </div>
+                            @endif
                         </div>
 
-                        <div class="form-group mt-3">
-                            <label for="visited_person_position_{{ $visit->id }}">Person Visited Position:</label>
-                            <input type="text" class="form-control" id="visited_person_position_{{ $visit->id }}"
-                                name="visited_person_position" value="{{ $visit->visited_person_position }}">
-                        </div>
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>
                             <textarea class="form-control" id="remarks-{{ $visit->id }}" name="remarks" rows="2" placeholder="Optional">{{$visit->remarks}}</textarea>
                         </div>
-
+                    </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn w-50 btn-primary update_visitor">

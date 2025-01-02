@@ -26,6 +26,10 @@
                                 </div>
                             @endif
                         <div class="row">
+                            <div class="form-group">
+                                <label for="id_number_{{ $visitor->id }}">Visitor Pass ID:</label>
+                                <input type="text" class="form-control" id="id_number_{{ $visitor->id }}" name="id_number" value="{{ $visitor->id_number }}" required>
+                            </div>
                             <div class="col-md-4 form-group">
                                 <label for="last_name_{{ $visitor->id }}">Last Name:</label>
                                 <input type="text" class="form-control" id="last_name_{{ $visitor->id }}" name="last_name" value="{{ $visitor->last_name }}" required>
@@ -112,25 +116,26 @@
 
                         <input type="hidden" name="time_in" id="time_in_{{ $visitor->id }}" value="{{ $visitor->time_in }}">
                         <input type="hidden" name="time_out" id="time_out_{{ $visitor->id }}" value="{{ $visitor->time_out }}">
+                        <div class="row mt-2">
+                            @if($visitor->visited_person_name && $visitor->visited_person_position)
+                            <div class="col-12">
+                                <p>Visited Person Details:</p>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="id_number_{{ $visitor->id }}">ID Number:</label>
-                            <input type="text" class="form-control" id="id_number_{{ $visitor->id }}" name="id_number" value="{{ $visitor->id_number }}" required>
-                        </div>
-                        @if($visitor->visited_person_name)
                         <div class="col-md-6 form-group">
-                            <label for="visited_person_name_{{ $visitor->id }}">Person Visited Name:</label>
+                            <label for="visited_person_name_{{ $visitor->id }}">Name:</label>
                             <input type="text" class="form-control" id="visited_person_name_{{ $visitor->id }}"
                                 name="visited_person_name" value="{{ $visitor->visited_person_name }}">
                         </div>
-                        @endif
-                        @if($visitor->visited_person_position)
                         <div class="col-md-6 form-group">
-                            <label for="visited_person_position_{{ $visitor->id }}">Person Visited Position:</label>
+                            <label for="visited_person_position_{{ $visitor->id }}">Position/Designation:</label>
                             <input type="text" class="form-control" id="visited_person_position_{{ $visitor->id }}"
                                 name="visited_person_position" value="{{ $visitor->visited_person_position }}">
                         </div>
                         @endif
+                        </div>
+
+
                         <div class="col-md-12 mb-2">
                             <label for="remarks" class="form-label">Remarks:</label>
                             <textarea class="form-control" id="remarks_{{ $visitor->id }}" name="remarks" rows="2" placeholder="Optional">{{$visitor->remarks}}</textarea>

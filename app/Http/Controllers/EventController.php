@@ -64,12 +64,17 @@ class EventController extends Controller
         ->where('is_transferred', '!=', 1)
         ->count();
 
+         // Count late pass slips
+        $latePassSlips = PassSlip::whereNull('time_in')
+        ->whereRaw('TIMESTAMPDIFF(MINUTE, time_out, NOW()) > validity_hours * 60')
+        ->count();
+
 
         $events = Event::all();
         $todayEvents = Event::whereDate('date_start', Carbon::today())->get();
         $upcomingEvents = Event::whereDate('date_start', '>', Carbon::today())->get();
 
-        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents', 'totalViolation', 'sevenDayOldItems', 'totalLost'));
+        return view('sub-admin.dashboard', compact('totalVisitors', 'totalPassSlips', 'todayVisitors', 'todayPassSlips', 'events', 'todayEvents', 'upcomingEvents', 'totalViolation', 'sevenDayOldItems', 'totalLost', 'latePassSlips'));
     }
 
     public function updateEvents(Request $request, string $id)
@@ -141,8 +146,14 @@ class EventController extends Controller
         ->where('is_transferred', '!=', 1)
         ->count();
 
+          // Count late pass slips
+          $latePassSlips = PassSlip::whereNull('time_in')
+          ->whereRaw('TIMESTAMPDIFF(MINUTE, time_out, NOW()) > validity_hours * 60')
+          ->count();
 
-        return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon', 'totalEmployees', 'totalStudent', 'totalVisitor', 'totalViolation', 'totalLostFound', 'totalPassSlip','sevenDayOldItems'));
+
+
+        return view('admin.dashboard', compact('todayEvents', 'upcomingEvents', 'events', 'totalEmployee', 'totalEvents', 'totalRegular', 'todaysEvents', 'totalTrainee', 'totalTeaching', 'totalNon', 'totalEmployees', 'totalStudent', 'totalVisitor', 'totalViolation', 'totalLostFound', 'totalPassSlip','sevenDayOldItems', 'latePassSlips'));
     }
     public function updateEventsAdmin(Request $request, $id)
     {

@@ -41,9 +41,8 @@
         </form>
     </div>
     @php
-           // Check if there are any 7-day-old, unclaimed, and untransferred items
         $hasSevenDaysOldUnclaimed = $lost_found->some(function ($item) {
-            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) > 6
                 && !$item->is_claimed
                 && !$item->is_transferred;
         });
@@ -69,7 +68,7 @@
         <tbody>
             @foreach($lost_found as $item)
             @php
-                $isSevenDaysOld = \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7;
+                $isSevenDaysOld = \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) > 6;
                 $isUnclaimedUntransferred = !$item->is_claimed && !$item->is_transferred;
             @endphp
             <tr class="text-center">

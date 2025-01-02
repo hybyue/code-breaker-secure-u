@@ -11,7 +11,7 @@
                         @csrf
                         <div class="row">
                             <div class="form-group">
-                                <label for="id_number">Visitor's Pass ID Number:</label>
+                                <label for="id_number">Visitor Pass ID No.:</label>
                                 <input type="text" class="form-control" id="id_number" name="id_number" required>
                                 <span class="text-danger" id="id_number_error"></span>
                             </div>

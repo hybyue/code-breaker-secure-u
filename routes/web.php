@@ -139,10 +139,10 @@ Route::controller(PdfController::class)->group(function () {
 });
 
 Route::controller(LoopingController::class)->group(function () {
-    Route::get('/sub-admin/looping', 'index')->name('sub-admin.looping.loopings');
-    Route::get('/sub-admin/looping/clear-filter', 'clearLoopingFilter')->name('sub-admin.looping.clear-filter');
-    Route::put('/sub-admin/looping/update/{id}', 'update')->name('update.looping');
-    Route::post('/sub-admin/looping/store', 'store')->name('store.looping');
+    Route::get('/sub-admin/loafing', 'index')->name('sub-admin.looping.loopings');
+    Route::get('/sub-admin/loafing/clear-filter', 'clearLoopingFilter')->name('sub-admin.looping.clear-filter');
+    Route::put('/sub-admin/loafing/update/{id}', 'update')->name('update.looping');
+    Route::post('/sub-admin/loafing/store', 'store')->name('store.looping');
     route::post('/sub-admin/search-looping', 'searchLooping')->name('subadmin.search_looping');
 
 });
@@ -322,10 +322,10 @@ Route::controller(ListController::class)->group(function (){
 });
 
 Route::controller(LoopingController::class)->group(function () {
-    Route::get('/admin/looping', 'index_admin')->name('admin.looping.loopings');
-    Route::get('/admin/looping/clear-filter', 'clearLoopingFilterAdmin')->name('admin.looping.clear-filter');
-    Route::put('/admin/looping/update/{id}', 'update')->name('update.looping_admin');
-    Route::post('/admin/looping/store', 'store')->name('store.looping_admin');
+    Route::get('/admin/loafing', 'index_admin')->name('admin.looping.loopings');
+    Route::get('/admin/loafing/clear-filter', 'clearLoopingFilterAdmin')->name('admin.looping.clear-filter');
+    Route::put('/admin/loafing/update/{id}', 'update')->name('update.looping_admin');
+    Route::post('/admin/loafing/store', 'store')->name('store.looping_admin');
     route::post('/admin/search-looping', 'searchLooping')->name('admin.search_looping');
 
 });

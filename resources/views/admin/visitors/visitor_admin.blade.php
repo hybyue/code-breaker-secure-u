@@ -148,14 +148,17 @@
                                             @endif
                                         </h5>
                                         <div class="d-flex flex-wrap gap-3">
-                                            <div class="badge bg-light text-dark p-2">
-                                                <i class="bi bi-calendar me-1"></i>
-                                                {{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}
-                                            </div>
-                                            <div class="badge bg-light text-dark p-2">
-                                                <i class="bi bi-card-text me-1"></i>
-                                                {{$visit->id_type}}: {{$visit->id_number}}
-                                            </div>
+                                                <div class="badge bg-light text-dark p-2">
+                                                   Visitor Pass ID: {{$visit->id_number}}
+                                                </div>
+                                                <div class="badge bg-light text-dark p-2">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($visit->date)->format('F d, Y') }}
+                                                </div>
+                                                <div class="badge bg-light text-dark p-2">
+                                                    <i class="bi bi-card-text me-1"></i>
+                                                    {{$visit->id_type}}
+                                                </div>
                                             <div class="badge bg-success text-white p-2">
                                                 <i class="bi bi-clock-history me-1"></i>
                                                 {{$visit->entry_count}} Entry Count
@@ -174,8 +177,8 @@
                                     <th>Purpose</th>
                                     <th>Time in</th>
                                     <th>Time out</th>
-                                    <th>Visited Person Name</th>
-                                    <th>Visited Person Position</th>
+                                    <th>Visited Person's Name</th>
+                                    <th>Visited Person's Position</th>
                                     <th>Remarks</th>
                                     <th></th>
                                 </tr>
@@ -222,12 +225,12 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="visited_person_name" class="form-label">Person Visited Name</label>
+                                    <label for="visited_person_name" class="form-label">Name: </label>
                                     <input type="text" class="form-control" id="visited_person_name" value="{{$visit->visited_person_name}}"
                                         name="visited_person_name" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="visited_person_position" class="form-label">Person Visited Position</label>
+                                    <label for="visited_person_position" class="form-label">Position/Designation:</label>
                                     <input type="text" class="form-control" id="visited_person_position" value="{{$visit->visited_person_position}}"
                                         name="visited_person_position" required>
                                 </div>

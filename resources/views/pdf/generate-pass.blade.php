@@ -166,11 +166,56 @@
                     <th>In</th>
                 </tr>
             </thead>
+            @php
+            $abbreviations = [
+                    "Institute of Graduate and Advanced Studies" => "IGAS",
+                    "College of Law" => "COL",
+                    "College of Pharmacy" => "COP",
+                    "College of Human Sciences" => "CHS",
+                    "College of Teacher Education" => "CTE",
+                    "College of Business Management and Accountancy" => "CBMA",
+                    "College of Health Sciences" => "CHS",
+                    "College of Hospitality and Tourism Management" => "CHTM",
+                    "College of Engineering and Architecture" => "CEA",
+                    "College of Criminal Justice Education" => "CCJE",
+                    "College of Arts and Sciences" => "CAS",
+                    "College of Information and Technology Education" => "CITE",
+                    "Center for Student Leadership and Development" => "CSLD",
+                    "Center for Research and Development" => "CRD",
+                    "Office of the External Affairs and Linkages" => "OEAL",
+                    "Psychological Assessment and Counseling Center" => "PACC",
+                    "Institutional Planning and Development" => "IPD",
+                    "Disaster Risk Reduction and Management Office" => "DRRMO",
+                    "Center for Community Development and Extension Services" => "CCD",
+                    "School of Midwifery (CHS)" => "SOM",
+                    "Center for Training and Professional Development" => "CTPD",
+                    "Research Ethics Committee" => "REC",
+                    "University Registrar" => "Registrar",
+                    "Accounting Office" => "Accounting",
+                    "Human Capital Management Office" => "HCMO",
+                    "University Library" => "Library",
+                    "Technical Vocational Institute" => "TVI",
+                    "Security Management Office" => "SMO",
+                    "Events Management Office" => "EMO",
+                    "Records Management System" => "RMS",
+                    "NSTP Department" => "NSTP",
+                    "Management Information Systems" => "MIS",
+                    "Maintenance and General Services" => "MGS",
+                    "University Cashier" => "Cashier",
+                    "Gender and Development" => "GAD",
+                    "Audit Office" => "Audit",
+                    "Engineering Management & Auxiliary Services" => "EMAS",
+                    "Committee for Publication and Communication Affairs" => "CPCA",
+                    "University Chaplain" => "Chaplain",
+                    "University Clinic" => "Clinic",
+                    "University Nurse" => "Nurse",
+                ];
+                @endphp
             <tbody>
                 @forelse ($passSlips as $passSlip)
                     <tr>
                         <td>{{ $passSlip->first_name }} {{ $passSlip->middle_name }}. {{ $passSlip->last_name }}</td>
-                        <td>{{$passSlip->department}}</td>
+                        <td>{{ $abbreviations[$passSlip->department] ?? $passSlip->department }}</td>
                         <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i ') }}</td>
                         <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i ') }}</td>

@@ -1,23 +1,23 @@
 @extends('layouts.sidebar')
 
-@section('title', 'Loofing')
+@section('title', 'Loafing')
 
 @section('content')
 <div class="container mt-3 pass-slip">
     <div class="row p-3">
         <div class="col-md-6">
-            <h4 class="font-weight-bold">Loofing</h4>
+            <h4 class="font-weight-bold">Loafing</h4>
         </div>
         <div class="col-md-6 text-end">
             <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addLoopingModal"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Loofing Report</a>
+            <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLooping()">Loafing Report</a>
 
 
         </div>
     </div>
 
     <div class="container mt-4">
-        <form action="/sub-admin/looping" method="GET">
+        <form action="/sub-admin/loafing" method="GET">
             <div class="row pb-3">
                 <div class="col-md-2">
                     <label for="start_date">Start Date:</label>
@@ -43,7 +43,7 @@
 
                 @if(session()->has('looping_filter'))
                 <div class="col-md-0 mt-4 pt-2">
-                    <a href="{{ url('/sub-admin/looping/clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
+                    <a href="{{ url('/sub-admin/loafing/clear-filter') }}" class="btn btn-secondary">Clear Filter</a>
                 </div>
                 @endif
             </div>
@@ -105,7 +105,7 @@
         <div class="modal-dialog w-100 mt-5 pt-4" style="max-width: 95%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewLoopingSubadminLabel-{{ $looping->id }}">Loofing Information</h5>
+                    <h5 class="modal-title" id="viewLoopingSubadminLabel-{{ $looping->id }}">Loafing Information</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -178,7 +178,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel">PDF Preview Loofing</h5>
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview Loafing</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -206,7 +206,7 @@ function showPdfModalLooping() {
         Swal.fire({
             icon: 'warning',
             title: 'Required Filters',
-            text: 'Please select Employee Type before generating the Looping Report.',
+            text: 'Please select an Employee Type before generating the Loafing Report.',
             confirmButtonColor: '#0B9B19'
         });
         return;

@@ -126,12 +126,12 @@
                         <td>{{ $abbreviations[$passSlip->department] ?? $passSlip->department }}</td>
                         <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
                         <td id="time--{{ $passSlip->id }}" class="text-center" @if($isLate)
-                        style="background-color: red; color: white;"
+                        style="background-color: rgb(251, 228, 228);"
                         title="Already late from the scheduled time."
                         @endif>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
                         <td id="time-in-{{ $passSlip->id }}" class="text-center"
                             @if($passSlip->is_exceeded)
-                            style="background-color: red; color: white;"
+                            style="background-color: rgb(251, 228, 228);"
                         @endif>
                         @if(is_null($passSlip->time_in))
                         <div>
@@ -370,63 +370,6 @@
     $('#pdfModal').modal('show');
 }
 
-function showPdfModalLooping() {
-    const employeeType = $('#employee_type').val();
-    const violationFilter = $('#violation_filter').val();
-
-    if (!employeeType || !violationFilter) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Required Filters',
-            text: 'Please select both Employee Type and Violation Filter before generating the Looping Report.',
-            confirmButtonColor: '#0B9B19'
-        });
-        return;
-    }
-
-    document.getElementById('loadingBarLoop').style.display = 'block';
-    document.getElementById('pdfIframeLoop').style.display = 'none';
-
-    const url = '/sub-admin/generate-pdf/looping?' + $.param({
-        start_date: $('#start_date').val(),
-        end_date: $('#end_date').val(),
-        employee_type: employeeType,
-        violation_filter: violationFilter
-    });
-
-    // Get iframe element
-    const iframe = document.getElementById('pdfIframeLoop');
-
-    // Add load event listener to iframe
-    iframe.onload = function() {
-        document.getElementById('loadingBarLoop').style.display = 'none';
-        iframe.style.display = 'block';
-    };
-
-    // Set iframe src to trigger loading
-    iframe.src = url;
-
-    $('#pdfModalLooping').modal({
-        backdrop:'static',
-        keyboard: false,
-        focus: false,
-        show: false,
-        scrollY: false,
-        scrollX: true,
-        width: '100%',
-        height: 'auto',
-        aspectRatio: 1.5,
-        responsive: true,
-        zoom: {
-            enabled: true,
-            scroll: true,
-            wheel: false,
-            pinch: false,
-        }
-    });
-
-    $('#pdfModalLooping').modal('show');
-}
     </script>
 <style>
     .same-height-table td {
@@ -448,11 +391,11 @@ function showPdfModalLooping() {
         Swal.fire({
             icon: 'question',
             title: 'Are you sure?',
-            text: 'Do you want to check this pass slip?',
+            text: 'Confirm time-in for this pass slip?',
             showCancelButton: true,
             confirmButtonColor: '#069206',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, check it',
+            confirmButtonText: 'Confirm',
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {

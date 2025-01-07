@@ -159,10 +159,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Types of Object</th>
+                <th>Lost Item</th>
                 <th>Finder's Name</th>
-                <th>Location Found</th>
                 <th>Status</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -170,9 +170,6 @@
                 <tr class="text-center">
                     <td>{{ $item->object_type }}</td>
                     <td>{{ $item->first_name }} @if($item->middle_name){{ $item->middle_name }}.@endif {{ $item->last_name }}</td>
-                    <td>
-                       {{ $item->location }}
-                    </td>
                     <td>
                         @if($item->is_claimed == 1)
                             <span class="text-success">Claimed</span>
@@ -182,6 +179,7 @@
                             <span class="text-warning">Pending</span>
                         @endif
                     </td>
+                    <td>{{$item->remarks}}</td>
                 </tr>
                 @empty
                 <tr>

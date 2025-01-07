@@ -46,12 +46,13 @@
                 <div class="mb-2 relative">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input type="password" name="password" id="password" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-red-500 focus:border-red-500 w-full p-2.5" placeholder="••••••••" required>
-                    <span class="text-red-500 text-sm" id="passwordError"></span>
                     <!-- Show Password Toggle -->
                     <button type="button" id="togglePassword" class="mt-4 absolute inset-y-0 right-3 text-gray-500 focus:outline-none">
                         👁
                     </button>
                 </div>
+                <span class="text-red-500 text-sm" id="passwordError"></span>
+
                 <div class="flex items-center justify-between">
                     <label for="remember" class="flex items-center">
 

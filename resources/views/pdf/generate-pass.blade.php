@@ -160,10 +160,10 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Department</th>
+                    <th>Office/Depart.</th>
                     <th>Date</th>
-                    <th>Out</th>
-                    <th>In</th>
+                    <th>Duration</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             @php
@@ -217,8 +217,8 @@
                         <td>{{ $passSlip->first_name }} {{ $passSlip->middle_name }}. {{ $passSlip->last_name }}</td>
                         <td>{{ $abbreviations[$passSlip->department] ?? $passSlip->department }}</td>
                         <td>{{ \Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i ') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i ') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i ') }} - {{ \Carbon\Carbon::parse($passSlip->time_in)->format('H:i ') }}</td>
+                        <td>{{$passSlip->remarks}}</td>
                     </tr>
                 @empty
                     <tr>

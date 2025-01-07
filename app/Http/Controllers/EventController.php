@@ -51,7 +51,7 @@ class EventController extends Controller
         $totalViolation = Violation::count();
 
         $todayVisitors = Visitor::withoutGlobalScopes()->whereDate('created_at', now()->toDateString())->count();
-        $totalVisitors = Visitor::withoutGlobalScopes()->whereYear('created_at', now()->year)->count();
+        $totalVisitors = Visitor::count();
 
         // Today's counts
         // $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
@@ -121,7 +121,7 @@ class EventController extends Controller
         $totalEvents = Event::count();
         $totalEmployees = AllEmployee::count();
         $totalStudent = Student::count();
-        $totalVisitor = Visitor::withoutGlobalScopes()->whereYear('created_at', now()->year)->count();
+        $totalVisitor = Visitor::count();
         $totalViolation = Violation::count();
         $totalLostFound = Lost::count();
         $totalPassSlip = PassSlip::count();

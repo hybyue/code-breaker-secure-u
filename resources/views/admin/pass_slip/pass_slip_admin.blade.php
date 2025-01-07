@@ -114,6 +114,10 @@ use Illuminate\Support\Str;
                 @endphp
             <tbody>
                 @foreach ($latestPassSlips as $passSlip)
+                @php
+                    $isLate = is_null($passSlip->time_in) &&
+                            \Carbon\Carbon::parse($passSlip->time_out)->diffInMinutes(now()) > ($passSlip->validity_hours * 60);
+                @endphp
                 <tr id="tr_{{$passSlip->id}}">
                     <td>{{ $passSlip->p_no }}</td>
                     <td>{{ $passSlip->last_name }}, {{ $passSlip->first_name }}
@@ -124,10 +128,13 @@ use Illuminate\Support\Str;
 
                     <td>{{ $abbreviations[$passSlip->department] ?? $passSlip->department }}</td>
                     <td>{{\Carbon\Carbon::parse($passSlip->date)->format('F d, Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
+                    <td id="time--{{ $passSlip->id }}" class="text-center" @if($isLate)
+                        style="background-color: rgb(251, 228, 228);"
+                        title="Already late from the scheduled time."
+                        @endif >{{ \Carbon\Carbon::parse($passSlip->time_out)->format('H:i')}}</td>
                     <td id="time-in-{{ $passSlip->id }}" class="text-center"
                         @if($passSlip->is_exceeded)
-                            style="background-color: red; color: white;"
+                            style="background-color: rgb(251, 228, 228);"
                         @endif>
                         @if(is_null($passSlip->time_in))
                         <div>
@@ -448,11 +455,11 @@ function showPdfModalLooping() {
             Swal.fire({
                 icon: 'question',
                 title: 'Are you sure?',
-                text: 'Do you want to check this pass slip?',
+                text: 'Confirm time-in for this pass slip?',
                 showCancelButton: true,
                 confirmButtonColor: '#069206',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, check it',
+                confirmButtonText: 'Confirm',
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {

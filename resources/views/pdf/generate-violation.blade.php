@@ -161,20 +161,55 @@
                 <th>Course</th>
                 <th>Violation</th>
                 <th>Date</th>
-                <th>Status</th>
+                <th>Remarks</th>
             </tr>
         </thead>
+        @php
+        $courseMapping = [
+            'pharmacy' => 'College of Pharmacy',
+            'healthscience' => 'College of Health Sciences',
+            'law' => 'College of Law',
+            'artsandscience' => 'College of Arts and Sciences',
+            'criminaljustice' => 'College of Criminal Justice',
+            'graduateschool' => 'Graduate School',
+            'informationtechnology' => 'College of Information Technology',
+            'businessmanagement' => 'College of Business Management',
+            'humanscience' => 'College of Human Sciences',
+            'engineering' => 'College of Engineering',
+            'hospitality' => 'College of Hospitality Management',
+            'teacher' => 'College of Teacher Education',
+            'techvoc' => 'College of Technical Vocational Education',
+            'nstp' => 'National Service Training Program',
+        ];
+    @endphp
         <tbody>
-            @foreach($violations as $violate)
-            <tr>
-                <td>{{$violate->last_name}}, {{$violate->first_name}} @if($violate->middle_initial){{$violate->middle_initial}}.@endif
-                </td>
-                <td>{{$violate->course}}</td>
-                <td>{{$violate->violation_type}}</td>
-                <td>{{$violate->date}}</td>
-                <td>{{$violate->violation_count}} violation(s)</td>
-            </tr>
+            @foreach($violations as $name => $courses) <!-- Outer loop: group by name -->
+            @foreach($courses as $course => $violationGroup) <!-- Inner loop: group by course -->
+                @php
+                    $rowCount = count($violationGroup); // Count violations for the same name and course
+                @endphp
+                @foreach($violationGroup as $index => $violate) <!-- Loop through violations -->
+                    <tr>
+                        <!-- Merge Name Column -->
+                        @if ($loop->parent->first && $index === 0)
+                            <td rowspan="{{ $rowCount }}">{{ $name }}</td>
+                        @endif
+
+                        <!-- Merge Course Column -->
+                        @if ($index === 0)
+                            <td rowspan="{{ $rowCount }}">{{ $course }}</td>
+                        @endif
+
+                        <!-- Other Columns -->
+                        <td>{{ $violate->violation_type }}</td>
+                        <td>{{ \Carbon\Carbon::parse($violate->created_at)->format('m-d-Y') }}</td>
+                        <td>{{ $violate->remarks }}</td>
+                    </tr>
+                @endforeach
             @endforeach
+        @endforeach
+
+
         </tbody>
     </table>
 

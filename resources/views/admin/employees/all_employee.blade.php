@@ -45,7 +45,7 @@
 
                 <form action="{{ route('exports.all_employee_export') }}" method="GET" class="d-inline-flex align-items-center">
                     <button class="btn btn-outline-primary d-flex align-items-center" style="gap: 5px;" type="submit">
-                        <i class="bi bi-forward"></i> Export
+                        <i class="bi bi-box-arrow-up"></i> Export
                     </button>
                 </form>
 

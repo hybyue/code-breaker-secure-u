@@ -102,11 +102,11 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="time_out" class="form-label">Time Out:</label>
-                        <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" min="06:00" max="15:00" value="{{ $passSlip->time_out }}" required>
+                        <input type="time" class="form-control" id="time_out-{{ $passSlip->id }}" name="time_out" min="09:00" max="15:00" value="{{ $passSlip->time_out }}" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="time_in" class="form-label">Time In:</label>
-                        <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" value="{{ $passSlip->time_in }}">
+                        <input type="time" class="form-control" id="time_in-{{ $passSlip->id }}" name="time_in" min="09:00" max="15:00" value="{{ $passSlip->time_in }}">
                     </div>
                     <div class="col-md-12 mb-2">
                         <label for="validity_hours" class="form-label">Pass Slip Validity:</label>

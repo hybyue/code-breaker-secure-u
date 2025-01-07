@@ -109,7 +109,7 @@
                         </div> --}}
                         <div class="col-md-6 mb-2">
                             <label for="time_out" class="form-label">Time Out</label>
-                            <input type="time" class="form-control" id="time_out" name="time_out" min="06:00" max="15:00">
+                            <input type="time" class="form-control" id="time_out" name="time_out" min="09:00" max="15:00">
                             <span class="text-danger error-message" id="time_out_error"></span>
                         </div>
                         <div class="col-md-12 mb-2">

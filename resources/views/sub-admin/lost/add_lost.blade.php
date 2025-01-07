@@ -24,8 +24,8 @@
                             <input type="text" class="form-control" id="lostType" name="object_type" required>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label class="form-label">Finder's full name:</label>
-                            <div class="row">
+                            <label class="form-label fw-bold">Turnover By:</label>
+                            <div class="row p-2">
                         <div class="col-md-4 mb-3">
                             <label for="lostName" class="form-label">First Name:</label>
                             <input type="text" class="form-control" id="lostName" name="first_name" required>
@@ -38,12 +38,10 @@
                             <label for="lostName" class="form-label">Last Name:</label>
                             <input type="text" class="form-control" id="lostName" name="last_name" required>
                         </div>
-                            </div>
-                        </div>
-                            <div class="mb-3">
+                        <div class="mb-3">
                             <label for="lostCourse" class="form-label">Role:</label>
                             <select class="form-select" id="course" name="course">
-                                <option value="" selected disabled>Choose finder's role</option>
+                                <option value="" selected disabled>Choose person's Role</option>
                                 <option value="Student">Student</option>
                                 <option value="Employee">Employee</option>
                                 <option value="Visitor">Visitor</option>
@@ -53,8 +51,11 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
-                            <label for="lostImage" class="form-label">Image:</label>
+                            <label for="lostImage" class="form-label">Upload Item Image:</label>
                                 <input type="file" class="form-control" id="cameraInput" name="object_img" accept="image/*" capture="environment">
 
                             <div id="imagePreview" class="mt-2">
@@ -62,7 +63,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="location" class="form-label">Location Found:</label>
+                            <label for="location" class="form-label">Found at:</label>
                             <input type="text" class="form-control" id="location" name="location" required>
                         </div>
                         {{-- <div class="col-md-6 mb-3">
@@ -71,7 +72,7 @@
                         </div> --}}
 
                         <div class="col-md-6 mb-3">
-                            <label for="description" class="form-label">Object Description:</label>
+                            <label for="description" class="form-label">Description of Item:</label>
                             <textarea class="form-control" placeholder="Optional" id="description" name="description"></textarea>
                         </div>
                         <div class="col-md-12 mb-2">

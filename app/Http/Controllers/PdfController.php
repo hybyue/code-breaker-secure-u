@@ -132,10 +132,24 @@ class PdfController extends Controller
                   ->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $violations = $query->latest()->get();
+        // Group data by name and course
+             // Group data by name and course
+    $violations = $query->orderBy('last_name')
+            ->orderBy('first_name')
+            ->orderBy('course')
+            ->latest()
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->last_name . ', ' . $item->first_name . ' ' . ($item->middle_initial ?? '');
+            })
+            ->map(function ($groupedByName) {
+                return $groupedByName->groupBy('course');
+            });
+
+
         $user = Auth::user();
         $data = [
-            'title' => 'Reports for Violation',
+            'title' => 'Reports for Students Violation',
             'date' => now()->format('F d, Y'),
             'violations' => $violations,
             'user' => $user
@@ -144,7 +158,6 @@ class PdfController extends Controller
         $pdf = Pdf::loadView('pdf.generate-violation', $data);
 
         return $pdf->stream();
-
     }
 
 

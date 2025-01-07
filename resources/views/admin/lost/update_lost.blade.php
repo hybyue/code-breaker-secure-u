@@ -14,25 +14,29 @@
                     @csrf
                     @method('PUT')
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="lostType-{{ $item->id }}" class="form-label">Lost Item:</label>
                             <input type="text" class="form-control" id="lostType-{{ $item->id }}" name="object_type" value="{{ $item->object_type }}">
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Turnover By:</label>
+                            <div class="row p-2">
+                        <div class="col-md-4 mb-3">
                             <label for="firstName-{{ $item->id }}" class="form-label">First Name:</label>
                             <input type="text" class="form-control" id="firstName-{{ $item->id }}" name="first_name" value="{{ $item->first_name }}">
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="middleName-{{ $item->id }}" class="form-label">Middle Initial:</label>
                             <input type="text" class="form-control" id="middleName-{{ $item->id }}" name="middle_name" value="{{ $item->middle_name }}">
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="lastName-{{ $item->id }}" class="form-label">Last Name:</label>
                             <input type="text" class="form-control" id="lastName-{{ $item->id }}" name="last_name" value="{{ $item->last_name }}">
                         </div>
                         <div class="mb-3">
                             <label for="lostCourse-{{ $item->id }}" class="form-label">Role:</label>
                             <select class="form-select" id="course" name="course">
+                                <option value="" selected disabled>Choose person's Role</option>
                                 <option value="Student" {{ $item->course == 'Student' ? 'selected' : '' }}>Student</option>
                                 <option value="Employee" {{ $item->course == 'Employee' ? 'selected' : '' }}>Employee</option>
                                 <option value="Dean" {{ $item->course == 'Dean' ? 'selected' : '' }}>Dean</option>
@@ -42,9 +46,11 @@
                                 <option value="Other" {{ $item->course == 'Other' ? 'selected' : '' }}>Other</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="lostImage-{{ $item->id }}" class="form-label">Image:</label>
-                            <input type="file" class="form-control" id="cameraInput-{{ $item->id }}" name="object_img" accept="image/*" onchange="previewImage(event, {{ $item->id }})">
+                            </div>
+                        </div>
+                        {{-- <div class="mb-3">
+                            <label for="lostImage-{{ $item->id }}" class="form-label">Upload Item Image:</label>
+                            <input type="file" class="form-control" id="cameraInput-{{ $item->id }}" name="object_img" accept="image/*" onchange="previewImage(event, {{ $item->id }})"> --}}
 
                             {{-- <div class="d-flex justify-content-center">
                                 <div class="container p-1">
@@ -61,9 +67,9 @@
                                 </div>
                             </div>
                         </div> --}}
-                    </div>
+                    {{-- </div> --}}
                         <div class="col-md-6 mb-3">
-                            <label for="location-{{ $item->id }}" class="form-label">Location Found:</label>
+                            <label for="location-{{ $item->id }}" class="form-label">Found at:</label>
                             <input type="text" class="form-control" id="location-{{ $item->id }}" name="location" value="{{ $item->location }}">
                         </div>
                         <div class="col-md-6 mb-3">
@@ -85,7 +91,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="description-{{ $item->id }}" class="form-label">Object Description:</label>
+                            <label for="description-{{ $item->id }}" class="form-label">Description of item:</label>
                             <textarea class="form-control" id="description-{{ $item->id }}" name="description">{{ $item->description }}</textarea>
                         </div>
                         <div class="col-md-12 mb-2">

@@ -43,11 +43,11 @@
                                 <input type="text" class="form-control" id="middle_name_{{ $visitor->id }}" name="middle_name" value="{{ $visitor->middle_name }}">
                             </div>
                             <div class="form-group">
-                                <label for="person_to_visit">Colleges/Deparment:</label>
+                                <label for="person_to_visit">Office/Deparment:</label>
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="{{ $visitor->person_to_visit }}" selected>{{ $visitor->person_to_visit }}</option>
                                         <!-- Colleges -->
-                                        <optgroup label="Colleges">
+                                        <optgroup label="Offices">
                                             <option value="Institute of Graduate and Advanced Studies">Institute of Graduate and Advanced Studies</option>
                                             <option value="College of Law">College of Law</option>
                                             <option value="College of Pharmacy">College of Pharmacy</option>
@@ -97,12 +97,12 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-12 form-group">
                                 <label for="purpose_{{ $visitor->id }}">Purpose:</label>
                                 <textarea class="form-control" id="purpose_{{ $visitor->id }}" name="purpose" required>{{ $visitor->purpose }}</textarea>
                             </div>
-                            <div class="col-md-6 form-group">
-                                <label for="id_type">ID Type:</label>
+                            <div class="col-md-12 form-group">
+                                <label for="id_type">Type of ID Surrendered:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="{{$visitor->id_type}}" selected>{{$visitor->id_type}}</option>
                                     <option value="Student ID">Student ID</option>

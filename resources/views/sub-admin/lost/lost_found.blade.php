@@ -16,6 +16,15 @@
         </div>
     </div>
 
+    @if($seven_days_old->count() > 0)
+        <div class="text-start p-3">
+            <a href="javascript:void(0)" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sevenDaysOldModal">
+                <i class="bi bi-truck"></i> Transfer to CSLD!
+            </a>
+        </div>
+    @endif
+
+
     <div class="container mt-4">
         <form action="/sub-admin/lost_found" method="GET">
             <div class="row pb-3">
@@ -40,24 +49,17 @@
             </div>
         </form>
     </div>
-    @php
-     $hasSevenDaysOldUnclaimed = $lost_found->some(function ($item) {
-        return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7 // Check 7 days old
-            && !$item->is_claimed
-            && !$item->is_transferred;
-    });
 
-    @endphp
 
 <div class="container mt-4 mb-3 bg-body-secondary rounded mb-3" style="overflow-x:auto;">
     <table id="lostTable" class="table table-bordered same-height-table">
         <thead>
             <tr>
-                @if($hasSevenDaysOldUnclaimed)
+                {{-- @if($hasSevenDaysOldUnclaimed)
                     <th class="text-center">
                         <input type="checkbox" title="Select all" id="selectAll" style="transform: scale(1.2); cursor: pointer;">
                     </th>
-                @endif
+                @endif --}}
                 <th>Date</th>
                 <th>Items</th>
                 <th>Finder's Name</th>
@@ -67,19 +69,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($lost_found as $item)
-            @php
-                $isSevenDaysOld = \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7;
-                $isUnclaimedUntransferred = !$item->is_claimed && !$item->is_transferred;
-            @endphp
+            @foreach($regular_items as $item)
             <tr class="text-center">
-                @if($hasSevenDaysOldUnclaimed)
+                {{-- @if($hasSevenDaysOldUnclaimed)
                     <td class="@if($isSevenDaysOld && $isUnclaimedUntransferred) seven-days-old @endif">
                         @if($isSevenDaysOld && !$item->is_claimed && !$item->is_transferred)
                             <input type="checkbox" class="selectItem" value="{{ $item->id }}" style="transform: scale(1.2); cursor: pointer;">
                         @endif
                     </td>
-                @endif
+                @endif --}}
                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
                 <td>{{ $item->object_type }}</td>
                 <td>{{ $item->last_name }}, {{ $item->first_name }} @if($item->middle_name) {{ $item->middle_name }}. @endif</td>
@@ -108,18 +106,18 @@
         </tbody>
     </table>
 
-    @if($hasSevenDaysOldUnclaimed)
+    {{-- @if($hasSevenDaysOldUnclaimed)
         <div class="mt-1 mb-4">
-            <button class="btn btn-dark" id="bulkTransferBtn"><i class="bi bi-truck"></i> Transfer</button>
+            <a href="javascript:void(0)"  class="btn btn-dark" id="bulkTransferBtn"><i class="bi bi-truck"></i> Transfer</a>
         </div>
-    @endif
+    @endif --}}
 </div>
 
 
 @include('sub-admin.lost.update_lostSub')
 
 <div id="viewModalLostFound">
-@foreach($lost_found as $item)
+@foreach($regular_items as $item)
 <!-- View Modal -->
 <div class="modal fade" id="viewLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="viewLostFoundLabel-{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -182,9 +180,13 @@
 @endforeach
 </div>
 
-@include('sub-admin.lost.add_lost')
 
+@include('sub-admin.lost.add_lost')
 @include('sub-admin.lost.lost_js')
+
+
+
+
 
 <style>
 

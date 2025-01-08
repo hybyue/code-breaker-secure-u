@@ -11,6 +11,7 @@ use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class PdfController extends Controller
 {
@@ -121,6 +122,39 @@ class PdfController extends Controller
         return $pdf->stream('report-losts.pdf');
 
     }
+
+    // public function generateTransfer(Request $request)
+    // {
+    //     $query = Lost::query();
+
+    //     // Filter by selected IDs if provided
+    //     if ($request->filled('ids')) {
+    //         $ids = explode(',', $request->ids);
+    //         $query->whereIn('id', $ids);
+    //     }
+
+    //     // Additional filtering for start and end date
+    //     if ($request->filled('start_date') && $request->filled('end_date')) {
+    //         $query->whereDate('created_at', '>=', $request->start_date)
+    //               ->whereDate('created_at', '<=', $request->end_date);
+    //     }
+
+    //     $lost_found = $query->latest()->get();
+    //     $user = Auth::user();
+
+    //     $data = [
+    //         'title' => 'Transfer to CSLD Report',
+    //         'date' => now()->format('F d, Y'),
+    //         'lost_found' => $lost_found,
+    //         'user' => $user
+    //     ];
+
+    //     $pdf = Pdf::loadView('pdf.generate-transfer', $data);
+
+    //     return $pdf->stream('report-transfer.pdf');
+    // }
+
+
 
     public function generate_violation(Request $request)
     {
@@ -239,6 +273,47 @@ class PdfController extends Controller
 
 //     return $pdf->stream();
 // }
+
+public function generateTransferReport(Request $request)
+{
+    if (!$request->has('items') || empty($request->input('items'))) {
+        return response()->json(['success' => false, 'message' => 'No items to generate a report.'], 400);
+    }
+
+    $transferredItems = collect($request->input('items'));
+    $user = Auth::user();
+    // Prepare the data for the report
+    $data = [
+        'title' => 'Transfer to CSLD Report',
+        'date' => now()->format('F d, Y'),
+        'user' => $user,
+        'transferredItems' => $transferredItems
+    ];
+
+    // Generate the PDF
+    $pdf = Pdf::loadView('pdf.transferred-items-report', $data);
+
+    // Save the PDF to a public path or return it directly
+    $fileName = 'transferred-items-report-' . now()->format('Y-m-d-H-i-s') . '.pdf';
+
+    $filePath = public_path('reports/' . $fileName);
+
+    // Ensure the directory exists
+    if (!File::exists(public_path('reports'))) {
+        File::makeDirectory(public_path('reports'), 0777, true, true);
+    }
+
+    // Save the PDF to the file path
+    $pdf->save($filePath);
+
+    // Return the PDF URL
+    return response()->json([
+        'success' => true,
+        'message' => 'Report generated successfully.',
+        'pdf_url' => asset('reports/' . $fileName)
+    ]);
+}
+
 
 }
 

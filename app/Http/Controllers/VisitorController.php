@@ -10,6 +10,7 @@ use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
@@ -351,7 +352,45 @@ public function getVisitorStats($timeframe)
         return response()->json($data);
     }
 
-    public function getVisitorData(Request $request)
+    public function getNextVisitorId()
+    {
+        try {
+            $date = now()->format('Ymd'); // Current date in YYYYMMDD format
+
+            // Get the latest visitor_id for today
+            $latestVisitor = DB::table('visitors')
+                ->whereDate('created_at', now()->format('Y-m-d')) // Only today's records
+                ->orderBy('id_number', 'desc') // Get the latest visitor_id
+                ->first();
+
+            // Extract the last number
+            $nextNumber = $latestVisitor ? ((int) substr($latestVisitor->id_number, -3) + 1) : 1;
+
+            // Limit check
+            if ($nextNumber > 150) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Maximum visitor ID limit reached for today.'
+                ], 400);
+            }
+
+            $formattedId = 'V-' . $date . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+            return response()->json([
+                'success' => true,
+                'visitor_id' => $formattedId
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching visitor ID: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching the Visitor ID.'
+            ], 500);
+        }
+    }
+
+
+        public function getVisitorData(Request $request)
     {
         $timePeriod = $request->query('timePeriod');
         $labels = [];

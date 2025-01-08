@@ -219,33 +219,12 @@ $(document).ready(function () {
 }
 
 
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Select/Deselect All functionality
-    document.getElementById('selectAll').addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('.selectItem');
-        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-    });
-
-    // Handle Bulk Transfer
     document.getElementById('bulkTransferBtn').addEventListener('click', function () {
-        const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
-            .map(checkbox => checkbox.value);
-
-        if (selectedIds.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'No Selection',
-                text: 'Please select at least one item to transfer.',
-                confirmButtonColor: '#0B9B19'
-            });
-            return;
-        }
-
         Swal.fire({
             icon: 'question',
             title: 'Are you sure?',
-            text: `You are about to transfer ${selectedIds.length} item(s).`,
+            text: 'You are about to mark all the lost items as transferred.',
             showCancelButton: true,
             confirmButtonColor: '#0B9B19',
             cancelButtonColor: '#d33',
@@ -253,33 +232,66 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Send AJAX request
+                // Send AJAX request to mark as transferred
                 $.ajax({
                     url: '/sub-admin/update_transfer',
                     type: 'POST',
                     data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        ids: selectedIds
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
-                        localStorage.setItem('successMessage', response.message);
-                        location.reload();
+                        if (response.success) {
+                            // Generate the report
+                            $.ajax({
+                                url: '/sub-admin/generate_transfer_report',
+                                type: 'POST',
+                                data: {
+                                    _token: $('meta[name="csrf-token"]').attr('content'),
+                                    items: response.transferredItems
+                                },
+                                success: function (reportResponse) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Transferred',
+                                        text: response.message,
+                                        confirmButtonColor: '#0B9B19'
+                                    }).then(() => {
+                                        const pdfWindow = window.open();
+                                        pdfWindow.location = reportResponse.pdf_url;
+                                        localStorage.setItem('successMessage', response.message);
+                                        location.reload();
+                                    });
+                                },
+                                error: function (xhr) {
+                                    console.error(xhr);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: xhr.responseJSON.message || 'An error occurred while generating the report.',
+                                        confirmButtonColor: '#0B9B19'
+                                    });
+                                }
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
                     },
                     error: function (xhr) {
                         console.error(xhr);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: xhr.responseJSON.message || 'An error occurred while updating the items.',
+                            text: xhr.responseJSON.message || 'An error occurred while transferring the items.',
                             confirmButtonColor: '#0B9B19'
                         });
                     }
                 });
-
             }
         });
     });
 });
+
+
 
 function showPdfModalLost() {
         document.getElementById('loadingBar').style.display = 'block';

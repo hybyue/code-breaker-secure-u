@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lost;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -135,7 +136,6 @@ class LostFoundController extends Controller
         ]);
     }
 
-
     public function filterLostFounds(Request $request)
     {
         if ($request->filled('start_date') || $request->filled('end_date')) {
@@ -161,15 +161,24 @@ class LostFoundController extends Controller
             $query->whereDate('created_at', '<=', $filterData['end_date']);
         }
 
-        // Order by the custom condition: first by being 7 days old and unclaimed/untransferred, then by created_at
-        $lost_found = $query->orderByRaw('
-            (DATEDIFF(now(), created_at) > 6 AND is_claimed = 0 AND is_transferred = 0) DESC,
-            created_at DESC
-        ')->get();
+        // Fetch all items based on the applied filters
+        $lost_found = $query->latest()->get();
 
-        return view('sub-admin.lost.lost_found', compact('lost_found', 'request', 'user'));
+        // Separate the items into two groups: 7 days old and regular items
+        $seven_days_old = $lost_found->filter(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+                && !$item->is_claimed
+                && !$item->is_transferred;
+        });
+
+        $regular_items = $lost_found->reject(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+                && !$item->is_claimed
+                && !$item->is_transferred;
+        });
+
+        return view('sub-admin.lost.lost_found', compact('seven_days_old', 'regular_items', 'request', 'user'));
     }
-
 
 
     public function clearFilter()
@@ -215,42 +224,34 @@ class LostFoundController extends Controller
 //         return response()->json(['success' => false], 404);
 //     }
 // }
-
-public function updateTransfer(Request $request, $id = null)
+public function updateTransfer(Request $request)
 {
-    // Check if the request has multiple IDs for bulk transfer
-    if ($request->has('ids')) {
-        $ids = $request->input('ids');
+    try {
+        // Get current date minus 7 days
+        $sevenDaysAgo = Carbon::now()->subDays(7);
 
-        if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'No items selected.'], 400);
+        // Fetch items that are untransferred and created more than 7 days ago
+        $transferredItems = Lost::where('is_claimed', 0)
+            ->where('is_transferred', 0)
+            ->whereDate('created_at', '<=', $sevenDaysAgo)
+            ->get();
+
+        if ($transferredItems->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No items older than 7 days to transfer.'], 400);
         }
 
-        // Update all selected items
-        try {
-            Lost::whereIn('id', $ids)->update(['is_transferred' => 1]);
-            return response()->json(['success' => true, 'message' => 'Selected items have been marked as transferred.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'An error occurred while updating the items.'], 500);
-        }
+        // Mark these items as transferred
+        Lost::whereIn('id', $transferredItems->pluck('id'))->update(['is_transferred' => 1]);
+
+        // Return the transferred items
+        return response()->json([
+            'success' => true,
+            'message' => 'Items older than 7 days have been marked as transferred.',
+            'transferredItems' => $transferredItems
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'An error occurred while transferring the items.'], 500);
     }
-
-    // Handle single item transfer
-    if ($id) {
-        $lostItem = Lost::find($id);
-
-        if ($lostItem) {
-            $lostItem->is_transferred = $request->input('is_transferred', 1); // Default to 1 if not provided
-            $lostItem->save();
-
-            return response()->json(['success' => true, 'message' => 'Item has been marked as transferred.']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Item not found.'], 404);
-        }
-    }
-
-    // If no IDs or single ID is provided
-    return response()->json(['success' => false, 'message' => 'Invalid request.'], 400);
 }
 
 public function lost_found_admin(Request $request)

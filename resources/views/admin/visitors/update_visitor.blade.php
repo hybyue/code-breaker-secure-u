@@ -36,11 +36,11 @@
                                 <input type="text" class="form-control" id="middle_name_{{ $visit->id }}" name="middle_name" value="{{ $visit->middle_name }}">
                             </div>
                             <div class="form-group">
-                                <label for="person_to_visit">Colleges/Deparment:</label>
+                                <label for="person_to_visit">Office/Deparment:</label>
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="{{ $visit->person_to_visit }}" selected>{{ $visit->person_to_visit }}</option>
                                         <!-- Colleges -->
-                                        <optgroup label="Colleges">
+                                        <optgroup label="Offices">
                                             <option value="Institute of Graduate and Advanced Studies">Institute of Graduate and Advanced Studies</option>
                                             <option value="College of Law">College of Law</option>
                                             <option value="College of Pharmacy">College of Pharmacy</option>
@@ -95,7 +95,7 @@
                                 <textarea class="form-control" id="purpose_{{ $visit->id }}" name="purpose" required>{{ $visit->purpose }}</textarea>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label for="id_type">ID Type:</label>
+                                <label for="id_type">Type of ID Surrendered:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="{{$visit->id_type}}" selected>{{$visit->id_type}}</option>
                                     <option value="Student ID">Student ID</option>

@@ -78,7 +78,7 @@ Route::controller(VisitorController::class)->group(function () {
     Route::get('/validateField',  'validateField')->name('sub-admin.validate');
     Route::get('/sub-admin/visitor/clear-filter', 'clearVisitorFilter');
     Route::post('/sub-admin/visitor/{id}/duplicate', 'duplicateEntrySubAdmin')->name('visitor.duplicate.sub-admin');
-
+    Route::get('/sub-admin/visitors/next-id',  'getNextVisitorId')->name('auto_visitor_id');
 });
 
 
@@ -135,6 +135,8 @@ Route::controller(PdfController::class)->group(function () {
     Route::get('/generate-passSlip', 'generate_passSlip')->name('pdf.generate-passes');
     Route::get('/sub-admin/generate-pdf/visitor', 'generate_visitor')->name('pdf.generate-visitors');
     Route::get('/sub-admin/generate-pdf/looping', 'generateLoopingEmployee');
+    Route::post('/sub-admin/generate_transfer_report',  'generateTransferReport');
+
 
 });
 

@@ -1,7 +1,7 @@
 
 {{-- edit lost and found details --}}
 <div id="updateLostFoundsDynamic">
-    @foreach($lost_found as $item)
+    @foreach($regular_items as $item)
     <div class="modal fade" id="updateLostFound-{{ $item->id }}" tabindex="-1" aria-labelledby="updateLostFoundModalLabel-{{ $item->id }}" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -46,11 +46,8 @@
                                 <label for="lostCourse-{{ $item->id }}" class="form-label">Role:</label>
                                 <select class="form-select" id="course" name="course">
                                     <option value="Student" {{ $item->course == 'Student' ? 'selected' : '' }}>Student</option>
-                                    <option value="Employee" {{ $item->course == 'Employee' ? 'selected' : '' }}>Employee</option>
-                                    <option value="Dean" {{ $item->course == 'Dean' ? 'selected' : '' }}>Dean</option>
+                                    <option value="UCU Employee" {{ $item->course == 'UCU Employee' ? 'selected' : '' }}>UCU Employee</option>
                                     <option value="Visitor" {{ $item->course == 'Visitor' ? 'selected' : '' }}>Visitor</option>
-                                    <option value="Head" {{ $item->course == 'Head' ? 'selected' : '' }}>Head</option>
-                                    <option value="President" {{ $item->course == 'President' ? 'selected' : '' }}>President</option>
                                     <option value="Other" {{ $item->course == 'Other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
@@ -99,3 +96,48 @@
     </div>
     @endforeach
     </div>
+
+
+
+
+
+    @if($seven_days_old)
+<div class="modal fade" id="sevenDaysOldModal" tabindex="-1" aria-labelledby="sevenDaysOldModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sevenDaysOldModalLabel">Transfer to CSLD</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                <table class="table table-bordered same-height-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Finder's Name</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($seven_days_old as $item)
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
+                            <td>{{ $item->object_type }}</td>
+                            <td>{{ $item->last_name }}, {{ $item->first_name }}</td>
+                            <td>{{ $item->course }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" id="bulkTransferBtn">Transfer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif

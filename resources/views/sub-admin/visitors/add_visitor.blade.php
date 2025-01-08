@@ -12,7 +12,7 @@
                         <div class="row">
                             <div class="form-group">
                                 <label for="id_number">Visitor Pass ID No.:</label>
-                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                                <input type="text" class="form-control" id="id_number" name="id_number" readonly required>
                                 <span class="text-danger" id="id_number_error"></span>
                             </div>
                             <div class="col-md-4 form-group">
@@ -36,7 +36,7 @@
                                 <select class="form-select" id="person_to_visit" name="person_to_visit" required>
                                     <option value="" selected disabled>Select Department or Office</option>
                                         <!-- Colleges -->
-                                        <optgroup label="Colleges">
+                                        <optgroup label="Offices">
                                             <option value="Institute of Graduate and Advanced Studies">Institute of Graduate and Advanced Studies</option>
                                             <option value="College of Law">College of Law</option>
                                             <option value="College of Pharmacy">College of Pharmacy</option>
@@ -90,13 +90,13 @@
                                 </select>
                                 <span class="text-danger" id="person_to_visit_error"></span>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-12 form-group">
                                 <label for="purpose">Purpose:</label>
                                 <textarea class="form-control" id="purpose" name="purpose" required></textarea>
                                 <span class="text-danger" id="purpose_error"></span>
                             </div>
-                            <div class="col-md-6 form-group">
-                                <label for="id_type">ID Type:</label>
+                            <div class="col-md-12 form-group">
+                                <label for="id_type">Type of ID Surrendered:</label>
                                 <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="" selected disabled>Select ID Type</option>
                                     <option value="Student ID">Student ID</option>

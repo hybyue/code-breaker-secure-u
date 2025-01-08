@@ -44,11 +44,7 @@
                         <select class="form-select" id="course" name="course">
                             <option value="" selected disabled>Choose person's Role</option>
                             <option value="Student">Student</option>
-                            <option value="Employee">Employee</option>
-                            <option value="Visitor">Visitor</option>
-                            <option value="Dean">Dean</option>
-                            <option value="Head">Head</option>
-                            <option value="President">President</option>
+                            <option value="UCU Employee">UCU Employee</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>

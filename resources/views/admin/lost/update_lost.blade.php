@@ -38,11 +38,7 @@
                             <select class="form-select" id="course" name="course">
                                 <option value="" selected disabled>Choose person's Role</option>
                                 <option value="Student" {{ $item->course == 'Student' ? 'selected' : '' }}>Student</option>
-                                <option value="Employee" {{ $item->course == 'Employee' ? 'selected' : '' }}>Employee</option>
-                                <option value="Dean" {{ $item->course == 'Dean' ? 'selected' : '' }}>Dean</option>
-                                <option value="Visitor" {{ $item->course == 'Visitor' ? 'selected' : '' }}>Visitor</option>
-                                <option value="Head" {{ $item->course == 'Head' ? 'selected' : '' }}>Head</option>
-                                <option value="President" {{ $item->course == 'President' ? 'selected' : '' }}>President</option>
+                                <option value="UCU Employee" {{ $item->course == 'UCU Employee' ? 'selected' : '' }}>UCU Employee</option>
                                 <option value="Other" {{ $item->course == 'Other' ? 'selected' : '' }}>Other</option>
                             </select>
                         </div>

@@ -11,6 +11,22 @@
 
     $(document).ready(function () {
 
+
+                     $.ajax({
+                        url: "{{ route('auto_visitor_id') }}",
+                        method: 'GET',
+                        success: function (resp) {
+                            if (resp.success) {
+                                $('#id_number').val(resp.visitor_id);
+                            } else {
+                                alert(resp.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Failed to fetch the next Visitor ID. Please try again.');
+                        }
+                    });
+
         new DataTable('#visitorTableSubAdmin', {
             responsive: true,
             ordering: false,
@@ -45,6 +61,21 @@
                 success: function (resp) {
                     if (resp.status == 'success') {
 
+                        $.ajax({
+                        url: "{{ route('auto_visitor_id') }}",
+                        method: 'GET',
+                        success: function (resp) {
+                            if (resp.success) {
+                                $('#id_number').val(resp.visitor_id);
+                            } else {
+                                alert(resp.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Failed to fetch the next Visitor ID. Please try again.');
+                        }
+                    });
+                    
                         $('#visitorForm')[0].reset();
                         removeDynamicFields();
                         $('.text-danger').html('');
@@ -233,7 +264,9 @@
 
         });
 
-
     });
+
+
+
 
 </script>

@@ -13,6 +13,22 @@
 
 <script>
    $(document).ready(function () {
+
+    $.ajax({
+        url: "{{ route('auto_visitor_id.admin') }}",
+        method: 'GET',
+        success: function (resp) {
+            if (resp.success) {
+                $('#id_number').val(resp.visitor_id);
+            } else {
+                alert(resp.message);
+            }
+        },
+        error: function () {
+            alert('Failed to fetch the next Visitor ID. Please try again.');
+        }
+    });
+
     new DataTable('#visitorTable', {
         responsive: true,
         "ordering": false,
@@ -38,14 +54,30 @@
 
         let formData = new FormData(this);
 
-        $.ajax({
-            url: "{{ route('visitor.store') }}",
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success:function(resp){
-                if(resp.status == 'success'){
+                $.ajax({
+                    url: "{{ route('visitor.store') }}",
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success:function(resp){
+                        if(resp.status == 'success'){
+
+                            $.ajax({
+                            url: "{{ route('auto_visitor_id.admin') }}",
+                            method: 'GET',
+                            success: function (resp) {
+                                if (resp.success) {
+                                    $('#id_number').val(resp.visitor_id);
+                                } else {
+                                    alert(resp.message);
+                                }
+                            },
+                            error: function () {
+                                alert('Failed to fetch the next Visitor ID. Please try again.');
+                            }
+            });
+
                     $('#addVisitorForm')[0].reset();
                     $('#visitorTable').load(location.href + ' #visitorTable');
                     $('#dynamicModals').load(location.href + ' #dynamicModals');

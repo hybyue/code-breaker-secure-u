@@ -28,14 +28,25 @@
     <div class="container mt-4">
         <form action="/sub-admin/lost_found" method="GET">
             <div class="row pb-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="start_date">Start Date:</label>
                     <input type="date" name="start_date" id="start_date" class="form-control"  value="{{ session('lost_found_filter.start_date', request('start_date')) }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="end_date">End Date:</label>
                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ session('lost_found_filter.end_date', request('end_date')) }}">
                 </div>
+                <div class="col-md-2">
+                    <label for="status">Status:</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All</option>
+                        <option value="Claimed" {{ session('lost_found_filter.status') == 'Claimed' ? 'selected' : '' }}>Claimed</option>
+                        <option value="Transfer" {{ session('lost_found_filter.status') == 'Transfer' ? 'selected' : '' }}>Transfer</option>
+                        <option value="Pending" {{ session('lost_found_filter.status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                    </select>
+                </div>
+
+
 
                 <div class="col-md-1 mt-4 pt-2">
                     <button type="submit" class="btn btn-dark">Filter</button>

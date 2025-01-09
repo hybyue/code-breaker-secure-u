@@ -116,7 +116,38 @@
                         let errorMessage = errors[field][0]; // Get first error message
                         $(`#${field}_error`).text(errorMessage); // Set the error message text
                     });
-                }
+                }else if (err.responseJSON && err.responseJSON.message) {
+                        // Handle specific custom errors from the server
+                        let errorMessage = err.responseJSON.message;
+
+                        if (errorMessage.includes('pending')) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pending Pass Slip',
+                                text: 'The employee still outside the campus.',
+                            });
+                        } else if (errorMessage.includes('maximum number of pass slips')) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Maximum Reached',
+                                text: 'The employee already has reach the maximum number of pass slips for today.',
+                            });
+                        } else {
+                            // General error fallback
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage,
+                            });
+                        }
+                    } else {
+                        // Fallback for unexpected errors
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unexpected Error',
+                            text: 'An unknown error occurred. Please try again.',
+                        });
+                    }
             },
             complete: function() {
                 $('#loadingSpinner').hide();

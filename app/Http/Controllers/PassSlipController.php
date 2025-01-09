@@ -108,71 +108,111 @@ private function generatePassNoSub()
         ->first();
 
     if ($latestPassSlip) {
-        $latestNumber = (int) substr($latestPassSlip->p_no, -1);
+        // Extract the number after the last dash
+        $latestNumber = (int) substr($latestPassSlip->p_no, strrpos($latestPassSlip->p_no, '-') + 1);
         $nextNumber = $latestNumber + 1;
     } else {
         $nextNumber = 1;
     }
 
+    // Generate the new pass slip number
     $newPassNumber = 'P-' . $date . '-' . $nextNumber;
 
     return $newPassNumber;
 }
 
 
-    public function store_slip(Request $request)
-    {
-        $request->validate([
-            'p_no' => 'required|string|max:255',
-            'first_name' => 'required|string|max:100',
-            'middle_name' => 'nullable|string|max:100',
-            'last_name' => 'required|string|max:100',
-            'department' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'destination' => 'required|string|max:100',
-            'employee_type' => 'required|string|max:255',
-            'purpose' => 'required|string|max:255',
-            'time_out' => 'required|date_format:H:i',
-            'check_business' => 'required|string',
-            'driver_name' => 'nullable|string|max:100',
-            'remarks' => 'nullable|string|max:255',
-            'validity_hours' => 'required|numeric|min:0.5',
-        ],
-        [
-            'destination.max' => 'Destination must be less than 100 characters.',
-            'check_business.required' => 'Check Business is required.',
-            'check_business.string' => 'Check Business must be a string.',
-            'purpose.max' => 'Purpose must be less than 255 characters.',
-            'driver_name.max' => 'Driver Name must be less than 100 characters.',
-            'validity_hours.required' => 'Validity period is required.',
-            'validity_hours.numeric' => 'Validity must be a number.',
-            'validity_hours.min' => 'Validity must be at least 30 minutes.',
-        ]);
-        PassSlip::create([
-            'user_id' => Auth::id(),
-            'p_no' => $request->p_no,
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'department' => $request->department,
-            'designation' => $request->designation,
-            'destination' => $request->destination,
-            'employee_type' => $request->employee_type,
-            'purpose' => $request->purpose,
-            'date' => now()->format('Y-m-d H:i:s'),
-            'time_out' =>  Carbon::parse($request->time_out)->format('H:i'),
-            'time_out_by' => Auth::user()->id,
-            'check_business' => $request->check_business,
-            'driver_name' => $request->driver_name,
-            'remarks' => $request->remarks,
-            'validity_hours' => $request->validity_hours,
-        ]);
+        public function store_slip(Request $request)
+        {
+            $request->validate([
+                'p_no' => 'required|string|max:255',
+                'first_name' => 'required|string|max:100',
+                'middle_name' => 'nullable|string|max:100',
+                'last_name' => 'required|string|max:100',
+                'department' => 'required|string|max:255',
+                'designation' => 'required|string|max:255',
+                'destination' => 'required|string|max:100',
+                'employee_type' => 'required|string|max:255',
+                'purpose' => 'required|string|max:255',
+                'time_out' => 'required|date_format:H:i',
+                'check_business' => 'required|string',
+                'driver_name' => 'nullable|string|max:100',
+                'remarks' => 'nullable|string|max:255',
+                'validity_hours' => 'required|numeric|min:0.5',
+            ], [
+                'destination.max' => 'Destination must be less than 100 characters.',
+                'check_business.required' => 'Check Business is required.',
+                'check_business.string' => 'Check Business must be a string.',
+                'purpose.max' => 'Purpose must be less than 255 characters.',
+                'driver_name.max' => 'Driver Name must be less than 100 characters.',
+                'validity_hours.required' => 'Validity period is required.',
+                'validity_hours.numeric' => 'Validity must be a number.',
+                'validity_hours.min' => 'Validity must be at least 30 minutes.',
+            ]);
+
+             // Check if there is a pending pass slip (time_in is null)
+            $pendingSlip = PassSlip::where('date', now()->format('Y-m-d'))
+            ->where('first_name', $request->first_name)
+            ->where('middle_name', $request->middle_name)
+            ->where('last_name', $request->last_name)
+            ->where('designation', $request->designation)
+            ->where('department', $request->department)
+            ->where('employee_type', $request->employee_type)
+            ->whereNull('time_in')
+            ->exists();
+
+        if ($pendingSlip) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The employee still has a pending pass slip without time-in. Cannot create a new pass slip.',
+            ], 400);
+        }
+
+        // Check if the employee already has three pass slip records for the same date
+        $existingSlipsCount = PassSlip::where('date', now()->format('Y-m-d'))
+            ->where('first_name', $request->first_name)
+            ->where('middle_name', $request->middle_name)
+            ->where('last_name', $request->last_name)
+            ->where('designation', $request->designation)
+            ->where('department', $request->department)
+            ->where('employee_type', $request->employee_type)
+            ->count();
+
+        if ($existingSlipsCount >= 3) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The employee already has the maximum number of pass slips (3).',
+            ], 400);
+        }
 
 
-        return response()->json([
-            'status' => 'success'
-        ]);
-    }
+            // Create the new pass slip
+            PassSlip::create([
+                'user_id' => Auth::id(),
+                'p_no' => $request->p_no,
+                'first_name' => $request->first_name,
+                'middle_name' => $request->middle_name,
+                'last_name' => $request->last_name,
+                'department' => $request->department,
+                'designation' => $request->designation,
+                'destination' => $request->destination,
+                'employee_type' => $request->employee_type,
+                'purpose' => $request->purpose,
+                'date' => now()->format('Y-m-d H:i:s'),
+                'time_out' => Carbon::parse($request->time_out)->format('H:i'),
+                'time_out_by' => Auth::user()->id,
+                'check_business' => $request->check_business,
+                'driver_name' => $request->driver_name,
+                'remarks' => $request->remarks,
+                'validity_hours' => $request->validity_hours,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pass slip added successfully!'
+            ]);
+        }
+
 
     public function updatePassSlip(Request $request, string $id)
 {
@@ -331,12 +371,14 @@ private function generatePassNumber()
         ->first();
 
     if ($latestPassSlip) {
-        $latestNumber = (int) substr($latestPassSlip->p_no, -1);
+        // Extract the number after the last dash
+        $latestNumber = (int) substr($latestPassSlip->p_no, strrpos($latestPassSlip->p_no, '-') + 1);
         $nextNumber = $latestNumber + 1;
     } else {
         $nextNumber = 1;
     }
 
+    // Generate the new pass slip number
     $newPassNumber = 'P-' . $date . '-' . $nextNumber;
 
     return $newPassNumber;

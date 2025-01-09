@@ -107,6 +107,17 @@ class PdfController extends Controller
             $query->whereDate('created_at', '>=', $request->start_date)
                   ->whereDate('created_at', '<=', $request->end_date);
         }
+        if (!empty($request['status'])) {
+            if ($request['status'] === 'Claimed') {
+                $query->where('is_claimed', 1);
+            } elseif ($request['status'] === 'Transfer') {
+                $query->where('is_transferred', 1);
+            } elseif ($request['status'] === 'Pending') {
+                $query->where('is_claimed', 0)
+                    ->where('is_transferred', 0);
+            }
+        }
+
 
         $lost_found = $query->latest()->get();
         $user = Auth::user();

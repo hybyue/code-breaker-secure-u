@@ -138,10 +138,11 @@ class LostFoundController extends Controller
 
     public function filterLostFounds(Request $request)
     {
-        if ($request->filled('start_date') || $request->filled('end_date')) {
+        if ($request->filled('start_date') || $request->filled('end_date') || $request->filled('status')) {
             session(['lost_found_filter' => [
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
+                'status' => $request->status,
             ]]);
         }
 
@@ -151,6 +152,7 @@ class LostFoundController extends Controller
         $filterData = session('lost_found_filter', [
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
+            'status' => $request->status,
         ]);
 
         if (!empty($filterData['start_date'])) {
@@ -160,6 +162,19 @@ class LostFoundController extends Controller
         if (!empty($filterData['end_date'])) {
             $query->whereDate('created_at', '<=', $filterData['end_date']);
         }
+
+        // Filter by status
+        if (!empty($filterData['status'])) {
+            if ($filterData['status'] === 'Claimed') {
+                $query->where('is_claimed', 1);
+            } elseif ($filterData['status'] === 'Transfer') {
+                $query->where('is_transferred', 1);
+            } elseif ($filterData['status'] === 'Pending') {
+                $query->where('is_claimed', 0)
+                    ->where('is_transferred', 0);
+            }
+        }
+
 
         // Fetch all items based on the applied filters
         $lost_found = $query->latest()->get();
@@ -270,10 +285,11 @@ public function lost_found_admin(Request $request)
 
         public function filterLostFoundAdmin(Request $request)
     {
-        if ($request->filled('start_date') || $request->filled('end_date')) {
+        if ($request->filled('start_date') || $request->filled('end_date') || $request->filled('status')) {
             session(['lost_found_admin_filter' => [
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
+                'status' => $request->status,
             ]]);
         }
 
@@ -283,6 +299,7 @@ public function lost_found_admin(Request $request)
         $filterData = session('lost_found_admin_filter', [
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
+            'status' => $request->status,
         ]);
 
         if (!empty($filterData['start_date'])) {
@@ -293,12 +310,37 @@ public function lost_found_admin(Request $request)
             $query->whereDate('created_at', '<=', $filterData['end_date']);
         }
 
-        $lost_found = $query->orderByRaw('
-        (DATEDIFF(now(), created_at) > 6 AND is_claimed = 0 AND is_transferred = 0) DESC,
-        created_at DESC
-    ')->get();
+        // Filter by status
+        if (!empty($filterData['status'])) {
+            if ($filterData['status'] === 'Claimed') {
+                $query->where('is_claimed', 1);
+            } elseif ($filterData['status'] === 'Transfer') {
+                $query->where('is_transferred', 1);
+            } elseif ($filterData['status'] === 'Pending') {
+                $query->where('is_claimed', 0)
+                    ->where('is_transferred', 0);
+            }
+        }
 
-        return view('admin.lost.lost_found_admin', compact('lost_found', 'request', 'user'));
+
+        // Fetch all items based on the applied filters
+        $lost_found = $query->latest()->get();
+
+        // Separate the items into two groups: 7 days old and regular items
+        $seven_days_old = $lost_found->filter(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+                && !$item->is_claimed
+                && !$item->is_transferred;
+        });
+
+        $regular_items = $lost_found->reject(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
+                && !$item->is_claimed
+                && !$item->is_transferred;
+        });
+
+
+        return view('admin.lost.lost_found_admin', compact('lost_found', 'request', 'user', 'seven_days_old', 'regular_items'));
     }
 
     public function clearFilterAdmin()

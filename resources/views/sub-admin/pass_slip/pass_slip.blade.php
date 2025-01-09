@@ -283,7 +283,7 @@
                             </td>
                             <td>{{ $entry->remarks }}</td>
                             <td>
-                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlip-{{ $passSlip->id }}" onclick="$('#viewPassSlip-{{ $passSlip->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
+                            <a href="#" class="btn btn-sm text-white" style="background-color: #063292" data-bs-toggle="modal" data-bs-target="#updatePassSlip-{{ $entry->id }}" onclick="$('#viewPassSlip-{{ $passSlip->id }}').modal('hide')"><i class="bi bi-pencil-square"></i></a>
                             </td>
                         </tr>
                         @endforeach

@@ -20,7 +20,7 @@
                     </div>
                 @endif
                     <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label for="lostType" class="form-label">Lost Item:</label>
                         <input type="text" class="form-control" id="lostType" name="object_type" required>
                     </div>

@@ -109,3 +109,47 @@
 </div>
 @endforeach
 </div>
+
+
+
+
+@if($seven_days_old)
+<div class="modal fade" id="sevenDaysOldModalAdmin" tabindex="-1" aria-labelledby="sevenDaysOldModalAdminLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sevenDaysOldModalAdminLabel">Transfer to CSLD</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                <table class="table table-bordered same-height-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Finder's Name</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($seven_days_old as $item)
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
+                            <td>{{ $item->object_type }}</td>
+                            <td>{{ $item->last_name }}, {{ $item->first_name }}</td>
+                            <td>{{ $item->course }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" id="bulkTransferBtn">Transfer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif

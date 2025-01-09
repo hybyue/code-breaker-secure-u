@@ -250,6 +250,7 @@ Route::controller(VisitorController::class)->group(function () {
     Route::delete('/admin/delete_visitor/{id}', 'destroy');
     Route::get('/admin/visitor/clear-filter', 'clearVisitorFilterAdmin')->name('visitors.clear-filter-admin');
     Route::post('/admin/visitor/{id}/duplicate', 'duplicateEntry')->name('visitor.duplicate');
+    Route::get('/admin/visitors/next-id',  'getNextVisitorId')->name('auto_visitor_id.admin');
 
 });
 
@@ -296,6 +297,7 @@ Route::controller(PdfController::class)->group(function (){
     Route::get('/admin/generate-pdf/violation', 'generate_violation')->name('pdf.generate-violation');
     Route::get('/admin/generate-pdf/lost_found', 'generate_lost')->name('pdf.generate-lost');
     Route::get('/admin/generate-pdf/looping', 'generateLoopingEmployee');
+    Route::post('/admin/generate_transfer_report',  'generateTransferReport');
 
 });
 

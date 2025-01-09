@@ -250,17 +250,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                     items: response.transferredItems
                                 },
                                 success: function (reportResponse) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Transferred',
-                                        text: response.message,
-                                        confirmButtonColor: '#0B9B19'
-                                    }).then(() => {
                                         const pdfWindow = window.open();
                                         pdfWindow.location = reportResponse.pdf_url;
                                         localStorage.setItem('successMessage', response.message);
                                         location.reload();
-                                    });
                                 },
                                 error: function (xhr) {
                                     console.error(xhr);
@@ -299,7 +292,8 @@ function showPdfModalLost() {
 
     const url = '/generate-pdf/lost_found?' + $.param({
         start_date: $('#start_date').val(),
-        end_date: $('#end_date').val()
+        end_date: $('#end_date').val(),
+        status: $('#status').val()
     });
 
     const iframe = document.getElementById('pdfLostFrame');

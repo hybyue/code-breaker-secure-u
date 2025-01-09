@@ -153,6 +153,20 @@ class LoopingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        $pending = Looping::where('name', $request->name)
+            ->where('department', $request->department)
+            ->where('employee_type', $request->employee_type)
+            ->whereNull('time_in')
+            ->exists();
+
+        if ($pending) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The employee still has a pending pass slip without time-in. Cannot create a new pass slip.',
+            ], 400);
+        }
+
+
         try {
             Looping::create([
                 'user_id' => Auth::user()->id,

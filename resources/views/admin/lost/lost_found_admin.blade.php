@@ -15,19 +15,37 @@
         </div>
     </div>
 
+    @if($seven_days_old->count() > 0)
+        <div class="text-start p-3">
+            <a href="javascript:void(0)" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sevenDaysOldModalAdmin">
+                <i class="bi bi-truck"></i> Transfer to CSLD!
+            </a>
+        </div>
+    @endif
+
     <div class="container mt-4">
         <form action="/admin/lost_found" method="GET">
             <div class="row pb-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="start_date">Start Date:</label>
                     <input type="date" name="start_date" id="start_date" class="form-control"
                         value="{{ session('lost_found_admin_filter.start_date', request('start_date')) }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="end_date">End Date:</label>
                     <input type="date" name="end_date" id="end_date" class="form-control"
                         value="{{ session('lost_found_admin_filter.end_date', request('end_date')) }}">
                 </div>
+                <div class="col-md-2">
+                    <label for="status">Status:</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All</option>
+                        <option value="Claimed" {{ session('lost_found_admin_filter.status') == 'Claimed' ? 'selected' : '' }}>Claimed</option>
+                        <option value="Transfer" {{ session('lost_found_admin_filter.status') == 'Transfer' ? 'selected' : '' }}>Transfer</option>
+                        <option value="Pending" {{ session('lost_found_admin_filter.status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                    </select>
+                </div>
+
                 <div class="col-md-1 mt-4 pt-2">
                     <button type="submit" class="btn btn-dark">Filter</button>
                 </div>
@@ -40,24 +58,11 @@
         </form>
     </div>
 
-    @php
-        // Check if there are any 7-day-old, unclaimed, and untransferred items
-    $hasSevenDaysOldUnclaimed = $lost_found->some(function ($item) {
-        return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
-            && !$item->is_claimed
-            && !$item->is_transferred;
-    });
-    @endphp
     <div class="container p-3 mb-3 mt-4 bg-body-secondary rounded" style="overflow-x:auto;">
 
     <table id="tableLostAdmin" class="table table-bordered same-height-table">
         <thead>
             <tr>
-                @if($hasSevenDaysOldUnclaimed)
-                <th class="text-center">
-                    <input type="checkbox" title="Select all" id="selectAll" style="transform: scale(1.2); cursor: pointer;">
-                </th>
-                @endif
                 <th>Date</th>
                 <th>Types of Object</th>
                 <th>Finder's Name</th>
@@ -67,19 +72,8 @@
             </tr>
         </thead>
         <tbody>
-                @foreach($lost_found as $item)
-                @php
-                    $isSevenDaysOld = \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7;
-                    $isUnclaimedUntransferred = !$item->is_claimed && !$item->is_transferred;
-                @endphp
+                @foreach($regular_items as $item)
                 <tr id="tr_{{$item->id}}" class="text-center">
-                    @if($hasSevenDaysOldUnclaimed)
-                    <td class="@if($isSevenDaysOld && $isUnclaimedUntransferred) seven-days-old @endif">
-                        @if($isSevenDaysOld && !$item->is_claimed && !$item->is_transferred)
-                            <input type="checkbox" class="selectItem" value="{{ $item->id }}" style="transform: scale(1.2); cursor: pointer;">
-                        @endif
-                    </td>
-                @endif
                     <td>{{\Carbon\Carbon::parse($item->created_at)->format('F d, Y') }}</td>
                     <td>{{ $item->object_type }}</td>
                     <td>{{ $item->last_name }}, {{ $item->first_name }}  @if($item->middle_name) {{ $item->middle_name }}. @endif
@@ -116,11 +110,6 @@
             @endforeach
         </tbody>
     </table>
-    @if($hasSevenDaysOldUnclaimed)
-        <div class="mt-1 mb-4">
-            <button class="btn btn-dark" id="bulkTransferBtn"><i class="bi bi-truck"></i> Transfer</button>
-        </div>
-    @endif
 </div>
 
 </div>

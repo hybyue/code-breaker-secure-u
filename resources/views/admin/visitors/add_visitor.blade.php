@@ -17,7 +17,7 @@
                             </div> --}}
                             <div class="form-group">
                                 <label for="id_number">Visitor Pass ID No.:</label>
-                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                                <input type="text" class="form-control" id="id_number" name="id_number" readonly required>
                                 <span class="text-danger" id="id_number_error"></span>
                             </div>
                         <div class="col-md-4  form-group">

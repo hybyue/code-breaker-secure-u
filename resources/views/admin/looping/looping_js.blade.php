@@ -64,6 +64,17 @@
                             let errorMessage = errors[field][0];
                             $(`#${field}_error`).text(errorMessage);
                         });
+                    }else if (err.responseJSON && err.responseJSON.message) {
+                        // Handle specific custom errors from the server
+                        let errorMessage = err.responseJSON.message;
+
+                        if (errorMessage.includes('pending')) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pending',
+                                text: 'The employee still outside the campus.',
+                            });
+                        }
                     }
                 },
                 complete: function() {

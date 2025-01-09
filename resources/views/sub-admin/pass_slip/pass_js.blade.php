@@ -39,43 +39,46 @@
     ]
         });
 
-        $('#addPassForm').on('submit', function(e) {
+        $('#addPassForm').on('submit', function (e) {
             e.preventDefault();
 
-            $('.error-message').empty();
+            $('.error-message').empty(); // Clear all error messages
 
             // Show loading spinner and disable submit button
             let submitButton = $('.add_pass_slip');
             submitButton.prop('disabled', true);
             $('#loadingSpinner').show();
+
             let formData = $(this).serialize();
 
             $.ajax({
                 url: "{{ route('pass_slips.store') }}",
                 method: 'POST',
                 data: formData,
-                success: function(resp) {
-                    if (resp.status == 'success') {
+                success: function (resp) {
+                    if (resp.status === 'success') {
                         $.ajax({
-                            url: "{{ route('pass_slip.next_number_sub') }}", // Your new route for generating the next pass number
+                            url: "{{ route('pass_slip.next_number_sub') }}", // Route to generate next pass number
                             method: 'GET',
-                            success: function(resp) {
+                            success: function (resp) {
                                 // Update the pass number field with the next available pass number
                                 $('#p_no').val(resp.passNumber);
                             },
-                            error: function() {
+                            error: function () {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: 'Failed to generate the next pass number',
+                                    text: 'Failed to generate the next pass number.',
                                 });
                             }
                         });
-                        $('#addPassForm')[0].reset();
-                        $('.error-message').empty();
+
+                        $('#addPassForm')[0].reset(); // Reset the form
+                        $('.error-message').empty(); // Clear any existing error messages
                         $('#passTable').load(location.href + ' #passTable');
                         $('#latestPassSlips').load(location.href + ' #latestPassSlips');
                         $('#latestUpdatePassSlip').load(location.href + ' #latestUpdatePassSlip');
+
                         Swal.fire({
                             toast: true,
                             position: 'top-right',
@@ -87,32 +90,63 @@
                             timer: 2500,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Pass Slip added successfully',
+                            title: 'Pass slip added successfully!',
                         });
                     }
                 },
-                error: function(err) {
-                // Clear all error messages first
-                $('.error-message').html('');
+                error: function (err) {
+                    // Clear all error messages first
+                    $('.error-message').html('');
 
-                if (err.responseJSON && err.responseJSON.errors) {
-                    let errors = err.responseJSON.errors;
+                    if (err.responseJSON && err.responseJSON.errors) {
+                        let errors = err.responseJSON.errors;
 
-                    // Loop through each error and display it
-                    Object.keys(errors).forEach(function(field) {
-                        let errorMessage = errors[field][0]; // Get first error message
-                        $(`#${field}_error`).text(errorMessage); // Set the error message text
-                    });
+                        // Loop through each error and display it
+                        Object.keys(errors).forEach(function (field) {
+                            let errorMessage = errors[field][0]; // Get the first error message
+                            $(`#${field}_error`).text(errorMessage); // Set the error message text
+                        });
+                    } else if (err.responseJSON && err.responseJSON.message) {
+                        // Handle specific custom errors from the server
+                        let errorMessage = err.responseJSON.message;
+
+                        if (errorMessage.includes('pending')) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pending Pass Slip',
+                                text: 'The employee still outside the campus.',
+                            });
+                        } else if (errorMessage.includes('maximum number of pass slips')) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Maximum Reached',
+                                text: 'The employee already has reach the maximum number of pass slips for today.',
+                            });
+                        } else {
+                            // General error fallback
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage,
+                            });
+                        }
+                    } else {
+                        // Fallback for unexpected errors
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unexpected Error',
+                            text: 'An unknown error occurred. Please try again.',
+                        });
+                    }
+                },
+
+                complete: function () {
+                    // Hide loading spinner and enable submit button
+                    $('#loadingSpinner').hide();
+                    submitButton.prop('disabled', false);
                 }
-            },
-            complete: function() {
-                // Hide loading spinner and enable submit button
-                $('#loadingSpinner').hide();
-                submitButton.prop('disabled', false);
-            }
             });
         });
-
 
         $(document).on('submit','.updatePassSlipFormSub', function(e) {
         e.preventDefault();

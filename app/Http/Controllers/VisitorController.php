@@ -389,7 +389,6 @@ public function getVisitorStats($timeframe)
         }
     }
 
-
         public function getVisitorData(Request $request)
     {
         $timePeriod = $request->query('timePeriod');

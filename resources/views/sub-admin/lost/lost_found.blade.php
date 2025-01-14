@@ -6,15 +6,36 @@
 <div class="container mt-3 pass-slip">
     <div class="row p-3">
         <div class="col-md-6">
-            <h4 class="font-weight-bold">Lost and Found</h4>
-        </div>
+            <h4 class="font-weight-bold d-inline-block">
+                Lost and Found
+            </h4>
+            <div class="reminder-container">
+            @if($grouped_reminders->count() > 0)
+                <h2 class="d-inline-block text-danger font-weight-bold reminder-trigger">
+                    *
+                    <div class="custom-tooltip">
+                        @foreach($grouped_reminders as $group)
+                            <div class="tooltip-item">
+                                <span class="tooltip-date">Transfer on: {{ $group['transfer_date'] }}</span>
+                                <span class="tooltip-items">| Items: {{ $group['count'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </h2>
+            @endif
+            </div>
+
+
+    </div>
         <div class="col-md-6 text-end">
-            <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addNewLostModalSub"><i class="bi bi-plus-circle-fill text-center"></i> Add New</button>
-
+            <button class="btn text-white" style="background-color: #0B9B19;" data-bs-toggle="modal" data-bs-target="#addNewLostModalSub">
+                <i class="bi bi-plus-circle-fill text-center"></i> Add New
+            </button>
             <a href="javascript:void(0)" class="btn text-white" style="background-color: #0B9B19;" onclick="showPdfModalLost()">Generate Report</a>
-
         </div>
     </div>
+
+
 
     @if($seven_days_old->count() > 0)
         <div class="text-start p-3">
@@ -241,5 +262,89 @@
         background-color: #f7e5e5 !important;
         z-index: 10000;
     }
+
+    /* Container styling for the tooltip */
+.reminder-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip styling */
+.custom-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    z-index: 10;
+    display: none; /* Initially hidden */
+}
+
+/* Tooltip item styling */
+.tooltip-item {
+    margin: 5px 0;
+}
+
+.tooltip-date {
+    font-weight: bold;
+    color: #ffdd57;
+}
+
+.tooltip-items {
+    color: #ffffff;
+}
+
+/* Show the tooltip on hover */
+.reminder-trigger:hover .custom-tooltip {
+    display: block;
+}
+/* Container styling for the tooltip */
+.reminder-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+}
+
+/* Tooltip styling */
+.custom-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    z-index: 10;
+    display: none; /* Initially hidden */
+}
+
+/* Tooltip item styling */
+.tooltip-item {
+    margin: 5px 0;
+}
+
+.tooltip-date {
+    font-weight: bold;
+    color: #ffdd57;
+}
+
+.tooltip-items {
+    color: #ffffff;
+}
+
+/* Show the tooltip on hover */
+.reminder-trigger:hover .custom-tooltip {
+    display: block;
+}
+
 </style>
 @endsection

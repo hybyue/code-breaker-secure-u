@@ -175,10 +175,25 @@ class LostFoundController extends Controller
             }
         }
 
-
         // Fetch all items based on the applied filters
         $lost_found = $query->latest()->get();
 
+                // Fetch reminders directly from the database
+            $reminders = Lost::where('is_claimed', 0)
+                ->where('is_transferred', 0)
+                ->whereRaw('DATEDIFF(NOW(), created_at) BETWEEN 5 AND 6')
+                ->get();
+
+           // Group reminders by transfer_date
+            $grouped_reminders = $reminders->groupBy(function ($item) {
+                return \Carbon\Carbon::parse($item->created_at)->addDays(7)->format('F d, Y');
+            })->map(function ($items, $date) {
+                return [
+                    'transfer_date' => $date,
+                    'count' => $items->count(),
+                    'items' => $items->pluck('item_name'), // Optional: Include item names
+                ];
+            });
         // Separate the items into two groups: 7 days old and regular items
         $seven_days_old = $lost_found->filter(function ($item) {
             return \Carbon\Carbon::parse($item->created_at)->diffInDays(now()) >= 7
@@ -192,7 +207,7 @@ class LostFoundController extends Controller
                 && !$item->is_transferred;
         });
 
-        return view('sub-admin.lost.lost_found', compact('seven_days_old', 'regular_items', 'request', 'user'));
+        return view('sub-admin.lost.lost_found', compact('seven_days_old', 'regular_items', 'request', 'user', 'grouped_reminders', 'notification_count'));
     }
 
 
